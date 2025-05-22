@@ -1,0 +1,257 @@
+#homepage {
+  background: linear-gradient(to bottom, #fff1f2 0%, #ffffff 100%);
+  color: #2e2e2e;
+  min-height: 100vh;
+}
+
+#homepage .hero {
+  padding: 8rem 2rem;
+  max-width: 650px;
+  font-family: Inter;
+  font-style: normal;
+}
+
+#homepage .tag {
+  color: #be123c;
+  padding: 0.4rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+#homepage .hero h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+#homepage .hero p {
+  font-size: 1.125rem;
+  color: #6b7280;
+  margin-bottom: 2rem;
+}
+
+#homepage .hero-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+#homepage .consult-btn {
+  background-color: #2e2e2e;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#homepage .method-btn {
+  background-color: white;
+  color: #2e2e2e;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid #2e2e2e;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#homepage .stats {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 60px 20px;
+  flex-wrap: wrap;
+}
+
+#homepage .stat {
+  text-align: center;
+  margin: 20px;
+}
+
+#homepage .stat h2 {
+  font-size: 2.5rem;
+  color: #e33464; /* Màu đỏ hồng như trong hình */
+  margin-bottom: 10px;
+}
+
+#homepage .stat p {
+  font-size: 1rem;
+  color: #555;
+}
+
+#homepage .services {
+  padding: 80px 20px;
+  background-color: #fafafa;
+  text-align: center;
+}
+
+#homepage .section-tag {
+  color: #e91e63;
+  font-size: 14px;
+  background-color: #ffe4ec;
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+#homepage .services h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: #111;
+}
+
+#homepage .services p {
+  font-size: 1.1rem;
+  color: #666;
+  max-width: 700px;
+  margin: 0 auto 40px auto;
+}
+
+#homepage .services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  max-width: 900px;
+  margin: 0 auto 40px;
+}
+
+#homepage .service-item {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: left;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+#homepage .service-item:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transform: translateY(-4px);
+}
+
+#homepage .service-item h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 10px;
+}
+
+#homepage .service-item p {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 16px;
+  height: 56px;
+}
+
+#homepage .service-item a {
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: #111;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+#homepage .service-item a:hover {
+  color: #007B8F;
+}
+
+#homepage .services .all-services-btn {
+  padding: 12px 24px;
+  font-size: 1rem;
+  background-color: #111;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#homepage .services .all-services-btn:hover {
+  background-color: #333;
+}
+
+#homepage .care-quality {
+  background-color: #fff;
+  padding: 80px 20px;
+  text-align: left;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+#homepage .care-quality h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 12px;
+}
+
+#homepage .care-quality .care-subtitle {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 24px;
+  max-width: 700px;
+}
+
+#homepage .care-list {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 32px;
+}
+
+#homepage .care-list li {
+  font-size: 1rem;
+  margin-bottom: 12px;
+  color: #111;
+  position: relative;
+  padding-left: 28px;
+}
+
+#homepage .care-list li::before {
+  content: "✔";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #e91e63;
+  font-size: 1.1rem;
+}
+
+#homepage .care-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+#homepage .care-btn {
+  padding: 12px 24px;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#homepage .care-btn.primary {
+  background-color: #111;
+  color: #fff;
+  border: none;
+}
+
+#homepage .care-btn.primary:hover {
+  background-color: #333;
+}
+
+#homepage .care-btn.outline {
+  background-color: transparent;
+  color: #111;
+  border: 2px solid #ccc;
+}
+
+#homepage .care-btn.outline:hover {
+  border-color: #111;
+}

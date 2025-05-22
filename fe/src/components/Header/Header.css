@@ -1,0 +1,45 @@
+
+#header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: white;
+  border-bottom: 1px solid #ddd;
+}
+
+#header .logo {
+  color: #be123c;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+#header .nav-links a {
+  margin: 0 1rem;
+  color: #2e2e2e;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+#header .actions {
+  display: flex;
+  gap: 1rem;
+}
+
+#header .login-btn {
+  background-color: white;
+  color: #2e2e2e;
+  border: 1px solid #ddd;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#header .appointment-btn {
+  background-color: #be123c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
