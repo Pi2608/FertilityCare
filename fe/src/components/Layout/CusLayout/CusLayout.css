@@ -1,0 +1,7 @@
+.cus_layout .content {
+    display: flex;
+}
+
+.cus_layout .content > div:last-child {
+    padding: 20px;
+}

@@ -1,11 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import Header from '@/Components/Header/Header'
 import Footer from '@/Components/Footer/Footer'
 
-const CustomerLayout = () => {
+const PageLayout = () => {
+
+  useEffect(() => {
+      window.scrollTo(0, 0);
+  }, []);
+
   return (
-    <div className="customer-layout">
+    <div className="page_layout">
         <Header />
         <main className="content">
             <Outlet />
@@ -15,4 +20,4 @@ const CustomerLayout = () => {
   )
 }
 
-export default CustomerLayout
+export default PageLayout
