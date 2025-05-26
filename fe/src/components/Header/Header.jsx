@@ -1,10 +1,14 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import './Header.css'
 
 const Header = () => {
+
+  const navigate = useNavigate()
+
   return (
     <header id="header">
-        <div className="logo">Trung Tâm Hiếm Muộn</div>
+        <div className="logo" onClick={() => navigate('/homepage')}>Trung Tâm Hiếm Muộn</div>
         <nav className="nav-links">
           <a href="#">Phương Pháp Điều Trị</a>
           <a href="#">Đội Ngũ Bác Sĩ</a>

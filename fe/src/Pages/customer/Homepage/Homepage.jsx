@@ -1,7 +1,11 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./Homepage.css";
 
 const Homepage = () => {
+
+  const navigate = useNavigate();
+
   return (
     <div id="homepage">
       <section className="hero">
@@ -117,6 +121,11 @@ const Homepage = () => {
           <button className="care-btn primary">Về Phòng Khám Của Chúng Tôi</button>
           <button className="care-btn outline">Gặp Gỡ Đội Ngũ Bác Sĩ</button>
         </div>
+      </section>
+
+      <section className="dashboards">
+        <button onClick={() => navigate('/doctor-dashboard')}>Doctor Dashboard</button>
+        <button onClick={() => navigate('/patient-dashboard')}>Patient Dashboard</button>
       </section>
 
     </div>

@@ -5,15 +5,15 @@
 }
 
 #homepage .hero {
-  padding: 8rem 2rem;
-  max-width: 650px;
+  padding: 8rem 2rem 2rem;
+  max-width: 50%;
   font-family: Inter;
   font-style: normal;
 }
 
 #homepage .tag {
   color: #be123c;
-  padding: 0.4rem 1rem;
+  padding: .4rem 1rem;
   border-radius: 9999px;
   font-size: 0.875rem;
   display: inline-block;
@@ -254,4 +254,25 @@
 
 #homepage .care-btn.outline:hover {
   border-color: #111;
+}
+
+#homepage .dashboards {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px 20px;
+}
+
+#homepage .dashboards button {
+  padding: 12px 24px;
+  background-color: #111;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#homepage .dashboards button:hover {
+  background-color: #333;
+  color: #fff;
 }
