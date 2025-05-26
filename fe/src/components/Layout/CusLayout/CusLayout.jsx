@@ -4,7 +4,6 @@ import Header from '@components/Header/Header'
 import Footer from '@components/Footer/Footer'
 import Sidebar from '@components/Sidebar/Sidebar'
 import './CusLayout.css'
-import { useEffect } from 'react'
 
 const CusLayout = () => {
 
