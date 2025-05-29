@@ -6,6 +6,7 @@ import DocLayout from '@components/Layout/DocLayout/DocLayout';
 import Homepage from "@customerpages/Homepage/Homepage.jsx";
 import CusDashboard from './Pages/customer/Dashboard/CusDashboard';
 import DocDashboard from './Pages/doctor/Dashboard/DocDashboard';
+import Overview from './Pages/doctor/Dashboard/Overview';
 
 const USER_TYPES = {
   NORMAL_USER: "Customer",
@@ -93,7 +94,7 @@ export const router = createBrowserRouter([
       children: [
         {
           index: true, // tương đương path: "/doctor-dashboard"
-          element: <DocDashboard />,
+          element: <Overview />,
         },
         {
           index: false, // không phải là trang chính
