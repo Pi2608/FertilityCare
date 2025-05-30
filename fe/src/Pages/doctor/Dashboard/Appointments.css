@@ -1,0 +1,214 @@
+.schedule-container {
+    width: 90%;
+    background: #fff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  
+  .schedule-header {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  
+  
+  .schedule-header h2 {
+    margin: 0;
+    font-size: 22px;
+  }
+  
+  
+  .schedule-header p {
+    margin: 0;
+    color: #666;
+  }
+  
+  
+  .schedule-actions input,
+  .schedule-actions select,
+  .schedule-actions button {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    margin-right: 8px;
+  }
+  
+  
+  .btn.red {
+    background: #e11d48;
+    color: #fff;
+    border: none;
+  }
+  
+  
+  .schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  
+  .schedule-table th,
+  .schedule-table td {
+    padding: 14px;
+    border-bottom: 1px solid #f1f1f1;
+    text-align: center;
+    vertical-align: middle;
+  }
+  
+  
+  .patient-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  
+  .patient-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  
+  
+  .patient-id {
+    color: #888;
+    font-size: 13px;
+  }
+  
+  
+  .date {
+    color: #666;
+    font-size: 13px;
+  }
+  
+  
+  .badge {
+    padding: 4px 10px;
+    font-size: 13px;
+    border-radius: 12px;
+    display: inline-block;
+  }
+  
+  
+  .badge.blue {
+    background: #e0f2fe;
+    color: #0284c7;
+  }
+  
+  
+  .badge.purple {
+    background: #ede9fe;
+    color: #7c3aed;
+  }
+  
+  
+  .badge.green {
+    background: #dcfce7;
+    color: #16a34a;
+  }
+  
+  
+  .badge.red {
+    background: #fee2e2;
+    color: #dc2626;
+  }
+  
+  
+  .pagination {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  
+  .pagination button {
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    margin: 0 8px;
+    border-radius: 6px;
+    background: #fff;
+  }
+  
+  
+  /* PHẦN LỊCH LÀM VIỆC */
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 16px;
+    margin: 24px 0 40px;
+  }
+  
+  
+  .calendar-day {
+    position: relative;
+    padding: 16px;
+    background: #f9fafb;
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    min-height: 100px;
+    border: 1px solid #e5e7eb;
+    transition: background 0.2s ease;
+  }
+  
+  
+  .calendar-day:hover {
+    background: #f3f4f6;
+  }
+  
+  
+  .calendar-day.off {
+    background: #fef2f2;
+    color: #b91c1c;
+  }
+  
+  
+  .day-label {
+    font-weight: bold;
+    white-space: pre-line;
+  }
+  
+  
+  .shift-count {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #16a34a;
+    font-weight: 500;
+  }
+  
+  
+  .shift-off {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #999;
+  }
+  
+  
+  .tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    white-space: nowrap;
+    z-index: 10;
+    margin-bottom: 8px;
+  }
+  
+  .schedule-table .btn {
+    margin-right: 8px;
+  }
+  
+  
+  
