@@ -8,6 +8,7 @@ import CusDashboard from './Pages/customer/Dashboard/CusDashboard';
 import DocDashboard from './Pages/doctor/Dashboard/DocDashboard';
 import Overview from './Pages/doctor/Dashboard/Overview';
 import Appointments from './Pages/doctor/Dashboard/Appointments';
+import Patients from './Pages/doctor/Dashboard/Patients';
 
 const USER_TYPES = {
   NORMAL_USER: "Customer",
@@ -105,7 +106,7 @@ export const router = createBrowserRouter([
         {
           index: false, 
           path: "patients",
-          element: <DocDashboard />,
+          element: <Patients />,
         },
         {
           index: false, 
