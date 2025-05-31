@@ -6,6 +6,9 @@ import DocLayout from '@components/Layout/DocLayout/DocLayout';
 import Homepage from "@customerpages/Homepage/Homepage.jsx";
 import CusDashboard from './Pages/customer/Dashboard/CusDashboard';
 import DocDashboard from './Pages/doctor/Dashboard/DocDashboard';
+import ManagerLayout from '@components/Layout/ManagerLayout/ManagerLayout.jsx';
+import Appointment from './Pages/manager/Appointment/Appointment';
+
 
 const USER_TYPES = {
   NORMAL_USER: "Customer",
@@ -33,15 +36,35 @@ const DoctorElement = ({ children }) => {
 
 export const router = createBrowserRouter([
     {
-        path: "/homepage",
-        element: <PageLayout />,
-        children: [
-            {
-                index: true, // tương đương path: "/"
-                element: <Homepage />,
-            },
-        ]
-    },
+    path: "/", // ➤ Đây là dòng thêm vào
+    // element: <Navigate to="/homepage" replace />,
+    element: <Navigate to="/manager-dashboard" replace />,
+  },
+  // {
+  //   path: "/homepage",
+  //   element: <PageLayout />,
+  //   children: [
+  //     {
+  //       index: true,
+  //       element: <Homepage />,
+  //     },
+  //   ],
+  // },
+
+  {
+    path: "/manager-dashboard",
+    element: <ManagerLayout />,
+    children: [
+      {
+        index: true,
+        element: <Navigate to="/manager-dashboard/appointments" replace />,
+      },
+      {
+        path: "appointments",
+        element: <Appointment />,
+      },
+    ],
+  },
     {
       path: "/patient-dashboard",
       element: <CusLayout />,
@@ -52,16 +75,16 @@ export const router = createBrowserRouter([
         },
         {
           index: false, // không phải là trang chính
-          path: "appointments", 
+          path: "appointments",
           element: <CusDashboard />,
         },
         {
-          index: false, 
-          path: "medical-records",  
+          index: false,
+          path: "medical-records",
           element: <CusDashboard />,
         },
         {
-          index: false, 
+          index: false,
           path: "pills",
           element: <CusDashboard />,
         },
@@ -97,17 +120,17 @@ export const router = createBrowserRouter([
         },
         {
           index: false, // không phải là trang chính
-          path: "appointments", 
+          path: "appointments",
           element: <DocDashboard />,
         },
         {
-          index: false, 
+          index: false,
           path: "patients",
           element: <DocDashboard />,
         },
         {
-          index: false, 
-          path: "medical-records",  
+          index: false,
+          path: "medical-records",
           element: <DocDashboard />,
         },
         {
@@ -131,5 +154,10 @@ export const router = createBrowserRouter([
           element: <DocDashboard />,
         }
       ]
-    }
+    },
+//     {
+//   path: "/manager-dashboard",
+//   element: <ManagerLayout />,
+// }
+
 ]);
