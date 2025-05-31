@@ -10,6 +10,7 @@ import Overview from './Pages/doctor/Dashboard/Overview';
 import Appointments from './Pages/doctor/Dashboard/Appointments';
 import Patients from './Pages/doctor/Dashboard/Patients';
 import Message from './Pages/doctor/Dashboard/Message';
+import PatientTrackingDetail from './Pages/doctor/Dashboard/PatientTrackingDetail';
 
 const USER_TYPES = {
   NORMAL_USER: "Customer",
@@ -111,8 +112,8 @@ export const router = createBrowserRouter([
         },
         {
           index: false, 
-          path: "medical-records",  
-          element: <DocDashboard />,
+          path: "patients-tracking",  
+          element: <PatientTrackingDetail />,
         },
         {
           index: false, // không phải là trang chính
