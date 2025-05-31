@@ -9,6 +9,7 @@ import DocDashboard from './Pages/doctor/Dashboard/DocDashboard';
 import Overview from './Pages/doctor/Dashboard/Overview';
 import Appointments from './Pages/doctor/Dashboard/Appointments';
 import Patients from './Pages/doctor/Dashboard/Patients';
+import Message from './Pages/doctor/Dashboard/Message';
 
 const USER_TYPES = {
   NORMAL_USER: "Customer",
@@ -116,7 +117,7 @@ export const router = createBrowserRouter([
         {
           index: false, // không phải là trang chính
           path: "messages",
-          element: <DocDashboard />,
+          element: <Message />,
         },
         {
           index: false, // không phải là trang chính
