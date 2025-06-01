@@ -1,13 +1,21 @@
 import React, { useEffect } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation  } from 'react-router-dom'
 import Header from '@components/Header/Header'
 import Footer from '@components/Footer/Footer'
 import Sidebar from '@components/Sidebar/Sidebar'
 import './DocLayout.css'
 
 const DocLayout = () => {
-
+    
+    const location = useLocation();
     const userType = localStorage.getItem('userType') || 'Doctor';
+
+    const pagesWithoutSidebar = [
+        '/doctor-dashboard/settings',
+        '/doctor-dashboard/notifications'
+    ];
+
+    const shouldShowSidebar = !pagesWithoutSidebar.includes(location.pathname);
 
     const list = [
         {name: 'Tổng quan', path: '/doctor-dashboard', icon: <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 12 12"><g fill="none" stroke="currentColor" stroke-width="1"><circle cx="6" cy="6" r="5.5"/><path stroke-linecap="round" stroke-linejoin="round" d="M5.5 3v3.5H8"/></g></svg>},
@@ -27,8 +35,8 @@ const DocLayout = () => {
     return (
         <div className="cus_layout">
             <Header />
-            <main className="content">
-                <Sidebar role={userType} list={list}/>
+            <main className={`content ${!shouldShowSidebar ? 'no-sidebar' : ''}`}>
+                {shouldShowSidebar && <Sidebar role={userType} list={list}/>}
                 <Outlet />
             </main>
             <Footer />
