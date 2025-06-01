@@ -3,6 +3,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import PageLayout from '@components/Layout/PageLayout/PageLayout';
 import CusLayout from '@components/Layout/CusLayout/CusLayout';
 import DocLayout from '@components/Layout/DocLayout/DocLayout';
+import ManagerLayout from '@components/Layout/ManagerLayout/ManagerLayout.jsx';
 import Homepage from "@customerpages/Homepage/Homepage";
 import TreatmentMethod from '@customerpages/TreatmentMethod/TreatmentMethod';
 import IvfDetail from '@customerpages/IvfDetail/IvfDetail';
@@ -10,6 +11,7 @@ import CusDashboard from '@customerpages/Dashboard/CusDashboard';
 import DocDashboard from '@doctorpages/Dashboard/DocDashboard';
 import Overview from './Pages/doctor/Dashboard/Overview';
 import Appointments from './Pages/doctor/Dashboard/Appointments';
+import Appointment from './Pages/manager/Appointment/Appointment';
 import Patients from './Pages/doctor/Dashboard/Patients';
 import Message from './Pages/doctor/Dashboard/Message';
 import PatientTrackingDetail from './Pages/doctor/Dashboard/PatientTrackingDetail';
@@ -157,5 +159,19 @@ export const router = createBrowserRouter([
         element: <DocDashboard />,
       }
     ]
-  }
+  },
+  {
+    path: "/manager-dashboard",
+    element: <ManagerLayout />,
+    children: [
+      {
+        index: true,
+        element: <Navigate to="/manager-dashboard/appointments" replace />,
+      },
+      {
+        path: "appointments",
+        element: <Appointment />,
+      },
+    ],
+  },
 ]);
