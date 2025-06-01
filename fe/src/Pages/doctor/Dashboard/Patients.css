@@ -1,0 +1,113 @@
+.patients-container {
+    width: 90%;
+    background: #fff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+    font-family: 'Segoe UI', sans-serif;
+  }
+ 
+  .patients-header {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+ 
+  .patients-header h2 {
+    margin: 0;
+    font-size: 22px;
+  }
+ 
+  .patients-header p {
+    margin: 0;
+    color: #666;
+  }
+ 
+  .patients-actions input,
+  .patients-actions select,
+  .patients-actions button {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    margin-right: 8px;
+  }
+ 
+  .btn.red {
+    background: #e11d48;
+    color: #fff;
+    border: none;
+  }
+ 
+  .patients-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+  }
+ 
+  .patients-table th,
+  .patients-table td {
+    padding: 14px;
+    border-bottom: 1px solid #f1f1f1;
+    text-align: center;
+    vertical-align: middle;
+  }
+ 
+  .patient-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+ 
+  .patient-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+ 
+  .patient-id {
+    color: #888;
+    font-size: 13px;
+  }
+ 
+  .badge {
+    padding: 4px 10px;
+    font-size: 13px;
+    border-radius: 12px;
+    display: inline-block;
+  }
+ 
+  .badge.active {
+    background: #dcfce7;
+    color: #16a34a;
+  }
+ 
+  .badge.new {
+    background: #e0f2fe;
+    color: #0284c7;
+  }
+ 
+  .badge.urgent {
+    background: #fee2e2;
+    color: #dc2626;
+  }
+ 
+  .pagination {
+    margin-top: 20px;
+    text-align: center;
+  }
+ 
+  .pagination button {
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    margin: 0 8px;
+    border-radius: 6px;
+    background: #fff;
+  }
+ 
+  .patients-table .btn {
+    margin-right: 8px;
+  }
