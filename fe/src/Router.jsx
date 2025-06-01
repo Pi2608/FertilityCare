@@ -8,6 +8,11 @@ import TreatmentMethod from '@customerpages/TreatmentMethod/TreatmentMethod';
 import IvfDetail from '@customerpages/IvfDetail/IvfDetail';
 import CusDashboard from '@customerpages/Dashboard/CusDashboard';
 import DocDashboard from '@doctorpages/Dashboard/DocDashboard';
+import Overview from './Pages/doctor/Dashboard/Overview';
+import Appointments from './Pages/doctor/Dashboard/Appointments';
+import Patients from './Pages/doctor/Dashboard/Patients';
+import Message from './Pages/doctor/Dashboard/Message';
+import PatientTrackingDetail from './Pages/doctor/Dashboard/PatientTrackingDetail';
 
 const USER_TYPES = {
   NORMAL_USER: "Customer",
@@ -114,27 +119,27 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true, // tương đương path: "/doctor-dashboard"
-        element: <DocDashboard />,
+        element: <Overview />,
       },
       {
         index: false, // không phải là trang chính
         path: "appointments",
-        element: <DocDashboard />,
+        element: <Appointments />,
       },
       {
         index: false,
         path: "patients",
-        element: <DocDashboard />,
+        element: <Patients />,
       },
       {
         index: false,
-        path: "medical-records",
-        element: <DocDashboard />,
+        path: "patients-tracking",
+        element: <PatientTrackingDetail />,
       },
       {
         index: false, // không phải là trang chính
         path: "messages",
-        element: <DocDashboard />,
+        element: <Message />,
       },
       {
         index: false, // không phải là trang chính
