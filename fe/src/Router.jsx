@@ -1,11 +1,13 @@
 import React from 'react'
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import PageLayout from '@components/Layout/PageLayout/PageLayout.jsx';
-import CusLayout from '@components/Layout/CusLayout/CusLayout.jsx';
+import PageLayout from '@components/Layout/PageLayout/PageLayout';
+import CusLayout from '@components/Layout/CusLayout/CusLayout';
 import DocLayout from '@components/Layout/DocLayout/DocLayout';
-import Homepage from "@customerpages/Homepage/Homepage.jsx";
-import CusDashboard from './Pages/customer/Dashboard/CusDashboard';
-import DocDashboard from './Pages/doctor/Dashboard/DocDashboard';
+import Homepage from "@customerpages/Homepage/Homepage";
+import TreatmentMethod from '@customerpages/TreatmentMethod/TreatmentMethod';
+import IvfDetail from '@customerpages/IvfDetail/IvfDetail';
+import CusDashboard from '@customerpages/Dashboard/CusDashboard';
+import DocDashboard from '@doctorpages/Dashboard/DocDashboard';
 import Overview from './Pages/doctor/Dashboard/Overview';
 import Appointments from './Pages/doctor/Dashboard/Appointments';
 import Patients from './Pages/doctor/Dashboard/Patients';
@@ -37,104 +39,123 @@ const DoctorElement = ({ children }) => {
 }
 
 export const router = createBrowserRouter([
-    {
-        path: "/homepage",
-        element: <PageLayout />,
-        children: [
-            {
-                index: true, // tương đương path: "/"
-                element: <Homepage />,
-            },
-        ]
-    },
-    {
-      path: "/patient-dashboard",
-      element: <CusLayout />,
-      children: [
-        {
-          index: true, // tương đương path: "/customer-dashboard"
-          element: <CusDashboard />,
-        },
-        {
-          index: false, // không phải là trang chính
-          path: "appointments", 
-          element: <CusDashboard />,
-        },
-        {
-          index: false, 
-          path: "medical-records",  
-          element: <CusDashboard />,
-        },
-        {
-          index: false, 
-          path: "pills",
-          element: <CusDashboard />,
-        },
-        {
-          index: false, // không phải là trang chính
-          path: "messages",
-          element: <CusDashboard />,
-        },
-        {
-          index: false, // không phải là trang chính
-          path: "documents",
-          element: <CusDashboard />,
-        },
-        {
-          index: false, // không phải là trang chính
-          path: "notifications",
-          element: <CusDashboard />,
-        },
-        {
-          index: false, // không phải là trang chính
-          path: "settings",
-          element: <CusDashboard />,
-        }
-      ]
-    },
-    {
-      path: "/doctor-dashboard",
-      element: <DocLayout />,
-      children: [
-        {
-          index: true, // tương đương path: "/doctor-dashboard"
-          element: <Overview />,
-        },
-        {
-          index: false, // không phải là trang chính
-          path: "appointments", 
-          element: <Appointments />,
-        },
-        {
-          index: false, 
-          path: "patients",
-          element: <Patients />,
-        },
-        {
-          index: false, 
-          path: "patients-tracking",  
-          element: <PatientTrackingDetail />,
-        },
-        {
-          index: false, // không phải là trang chính
-          path: "messages",
-          element: <Message />,
-        },
-        {
-          index: false, // không phải là trang chính
-          path: "reports",
-          element: <DocDashboard />,
-        },
-        {
-          index: false, // không phải là trang chính
-          path: "notifications",
-          element: <DocDashboard />,
-        },
-        {
-          index: false, // không phải là trang chính
-          path: "settings",
-          element: <DocDashboard />,
-        }
-      ]
-    }
+  {
+    path: "/",
+    element: <Navigate to="/homepage" replace />,
+  },
+  {
+    path: "/homepage",
+    element: <PageLayout />,
+    children: [
+      {
+        index: true, // tương đương path: "/"
+        element: <Homepage />,
+      },
+    ]
+  },
+  {
+    path: "/treatment-method",
+    element: <PageLayout />,
+    children: [
+      {
+        index: true, // tương đương path: "/"
+        element: <TreatmentMethod />,
+      },
+      {
+        index: false, 
+        path: "ivf",
+        element: <IvfDetail />,
+      }
+    ]
+  },
+  {
+    path: "/patient-dashboard",
+    element: <CusLayout />,
+    children: [
+      {
+        index: true, // tương đương path: "/customer-dashboard"
+        element: <CusDashboard />,
+      },
+      {
+        index: false, // không phải là trang chính
+        path: "appointments",
+        element: <CusDashboard />,
+      },
+      {
+        index: false,
+        path: "medical-records",
+        element: <CusDashboard />,
+      },
+      {
+        index: false,
+        path: "pills",
+        element: <CusDashboard />,
+      },
+      {
+        index: false, // không phải là trang chính
+        path: "messages",
+        element: <CusDashboard />,
+      },
+      {
+        index: false, // không phải là trang chính
+        path: "documents",
+        element: <CusDashboard />,
+      },
+      {
+        index: false, // không phải là trang chính
+        path: "notifications",
+        element: <CusDashboard />,
+      },
+      {
+        index: false, // không phải là trang chính
+        path: "settings",
+        element: <CusDashboard />,
+      }
+    ]
+  },
+  {
+    path: "/doctor-dashboard",
+    element: <DocLayout />,
+    children: [
+      {
+        index: true, // tương đương path: "/doctor-dashboard"
+        element: <Overview />,
+      },
+      {
+        index: false, // không phải là trang chính
+        path: "appointments",
+        element: <Appointments />,
+      },
+      {
+        index: false,
+        path: "patients",
+        element: <Patients />,
+      },
+      {
+        index: false,
+        path: "patients-tracking",
+        element: <PatientTrackingDetail />,
+      },
+      {
+        index: false, // không phải là trang chính
+        path: "messages",
+        element: <Message />,
+      },
+      {
+        index: false, // không phải là trang chính
+        path: "reports",
+        element: <DocDashboard />,
+      },
+      {
+        index: false, // không phải là trang chính
+        path: "notifications",
+        element: <DocDashboard />,
+      },
+      {
+        index: false, // không phải là trang chính
+        path: "settings",
+        element: <DocDashboard />,
+      }
+    ]
+  }
 ]);

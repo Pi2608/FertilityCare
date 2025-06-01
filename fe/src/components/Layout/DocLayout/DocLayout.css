@@ -5,3 +5,17 @@
 .cus_layout .content > div:last-child {
     padding: 20px;
 }
+
+.cus_layout .content {
+    display: flex;
+    min-height: calc(100vh - header-height - footer-height);
+}
+
+.cus_layout .content.no-sidebar {
+    padding-left: 0;
+}
+
+.cus_layout .content.no-sidebar > div {
+    width: 100%;
+    max-width: none;
+}

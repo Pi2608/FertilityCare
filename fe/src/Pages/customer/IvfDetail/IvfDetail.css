@@ -1,0 +1,551 @@
+.ivf-detail-container {
+  min-height: 100vh;
+}
+
+/* Breadcrumb */
+.ivf-detail-container .breadcrumb {
+  max-width: 1200px;
+  padding: 2rem 2rem 0;
+  color: #6c757d;
+  font-size: 0.875rem;
+}
+
+/* Page Title Section */
+.ivf-detail-container .page-title-section {
+  max-width: 1200px;
+  padding: 1rem 2rem 1rem;
+  text-align: left;
+}
+
+.ivf-detail-container .page-title-section h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #212529;
+  margin-bottom: 0.5rem;
+}
+
+.ivf-detail-container .subtitle {
+  font-size: 1rem;
+  color: #6c757d;
+  max-width: 600px;
+}
+
+/* Brief Description */
+.ivf-detail-container .brief-description {
+  max-width: 1200px;
+  padding: 2rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.ivf-detail-container .brief-description h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 1rem;
+}
+
+.ivf-detail-container .brief-description p {
+  font-size: 1.125rem;
+  color: #6c757d;
+  max-width: 800px;
+  margin-bottom: 2rem;
+}
+
+.ivf-detail-container .action-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.primary-btn {
+  width: fit-content;
+  background-color: #171717;
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: .8rem;
+  transition: all 0.2s;
+}
+
+.primary-btn:hover {
+  background-color: #2e2e2e;
+}
+
+.secondary-btn {
+  background-color: #ffffff;
+  border: 2px solid #e5e5e5;
+  padding: 0.75rem 2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: .8rem;
+  transition: all 0.2s;
+}
+
+.secondary-btn:hover {
+  background-color: #f5f5f5;
+  color: #353535;
+}
+
+/* Navigation Bar */
+.ivf-detail-container .nav-bar {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.ivf-detail-container .nav-item {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: .6rem;
+  cursor: pointer;
+  font-weight: 500;
+  color: #6c757d;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.ivf-detail-container .nav-item:hover {
+  background-color: #e9ecef;
+  color: #495057;
+}
+
+.ivf-detail-container .nav-item.active {
+  background-color: #e11d48;
+  color: white;
+}
+
+/* Main Content */
+.ivf-detail-container .main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem 4rem;
+}
+
+.ivf-detail-container .content-section {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 2rem;
+}
+
+.ivf-detail-container .content-section h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 1.5rem;
+}
+
+.ivf-detail-container .content-section h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 1rem;
+}
+
+.ivf-detail-container .content-section p {
+  color: #6c757d;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+/* Definition Section */
+.ivf-detail-container .content-section .content {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.ivf-detail-container .definition-section {
+  flex: 1;
+  margin-bottom: 3rem;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 15px;
+}
+
+.ivf-detail-container .definition-section .suitable h4 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.ivf-detail-container .definition-section .suitable li {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  line-height: 1.5;
+  color: #6c757d;
+  gap: 5px;
+}
+
+.ivf-detail-container .definition-section .suitable li p {
+  margin: 0;
+}
+
+/* Benefits Grid */
+.ivf-detail-container .benefits-section {
+  flex: 1;
+  margin-bottom: 3rem;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 15px;
+}
+
+.ivf-detail-container .benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.ivf-detail-container .benefit-card {
+  list-style: none;
+  display: flex;  
+  border-radius: 8px;
+  align-items: center;
+  gap: 5px;
+}
+
+.ivf-detail-container .benefit-card div:first-child{
+  display: flex;
+  padding: 5px;
+  aspect-ratio: 1;
+  height: fit-content;
+  background-color: #ffe4e6;
+  border-radius: 50%;
+  margin-bottom: 25px;
+}
+
+.ivf-detail-container .benefit-card h3 {
+  color: #e11d48;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.ivf-detail-container .benefit-card p {
+  color: #6c757d;
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+/* Advantages Grid */
+.ivf-detail-container .advantages-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.ivf-detail-container .advantage-card {
+  background-color: #fff;
+  padding: 1.5rem;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.ivf-detail-container .ivf-detail-container .advantage-card:hover {
+  border-color: #e11d48;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(214,51,132,0.1);
+}
+
+.ivf-detail-container .advantage-card > div {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  gap: 5px;
+}
+
+.ivf-detail-container .advantage-card h3 {
+  color: #495057;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.ivf-detail-container .advantage-card p {
+  color: #6c757d;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+/* Process Steps */
+.ivf-detail-container .process-description {
+  font-size: 1.125rem;
+  color: #6c757d;
+  margin-bottom: 2rem;
+}
+
+.ivf-detail-container .process-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.ivf-detail-container .process-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.ivf-detail-container .process-step:hover {
+  background-color: #e3f2fd;
+  transform: translateX(5px);
+}
+
+.ivf-detail-container .step-number {
+  background-color: #e11d48;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1.125rem;
+  flex-shrink: 0;
+}
+
+.ivf-detail-container .step-content h3 {
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.ivf-detail-container .step-content p {
+  color: #6c757d;
+  margin: 0;
+}
+
+.ivf-detail-container .duration {
+  display: inline-block;
+  background-color: #e3f2fd;
+  color: #1976d2;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+/* Success Rates */
+.ivf-detail-container .rates-description {
+  font-size: 1.125rem;
+  color: #6c757d;
+  margin-bottom: 2rem;
+}
+
+.ivf-detail-container .rates-table {
+  margin-bottom: 2rem;
+}
+
+.ivf-detail-container .rates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.ivf-detail-container .rate-card {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.ivf-detail-container .rate-card:hover {
+  border-color: #e11d48;
+  transform: translateY(-2px);
+}
+
+.ivf-detail-container .age-group {
+  font-size: 0.875rem;
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+}
+
+.ivf-detail-container .success-rate {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #e11d48;
+  margin-bottom: 0.5rem;
+}
+
+.ivf-detail-container .rate-change {
+  font-size: 0.75rem;
+  color: #28a745;
+  font-weight: 500;
+}
+
+.ivf-detail-container .success-factors {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.ivf-detail-container .success-factors ul {
+  list-style: none;
+  margin-top: 1rem;
+}
+
+.ivf-detail-container .success-factors li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e9ecef;
+  color: #6c757d;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.ivf-detail-container .success-factors li:before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #28a745;
+  font-weight: 600;
+}
+
+.ivf-detail-container .success-factors li:last-child {
+  border-bottom: none;
+}
+
+/* FAQ Section */
+.ivf-detail-container .faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.ivf-detail-container .faq-item {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border-left: 4px solid #e11d48;
+  transition: all 0.2s;
+}
+
+.ivf-detail-container .faq-item:hover {
+  background-color: #e3f2fd;
+  transform: translateX(5px);
+}
+
+.ivf-detail-container .faq-question {
+  color: #495057;
+  font-size: 1.125rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.ivf-detail-container .faq-answer {
+  color: #6c757d;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+
+  .ivf-detail-container .page-title-section h1 {
+    font-size: 2rem;
+  }
+
+  .ivf-detail-container .brief-description {
+    margin: 0 1rem 2rem;
+    padding: 1.5rem;
+  }
+
+  .ivf-detail-container .nav-bar {
+    margin: 0 1rem 2rem;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .ivf-detail-container .nav-item {
+    text-align: left;
+    padding: 0.5rem 1rem;
+  }
+
+  .ivf-detail-container .main-content {
+    padding: 0 1rem 4rem;
+  }
+
+  .ivf-detail-container .content-section {
+    padding: 1.5rem;
+  }
+
+  .ivf-detail-container .benefits-grid,
+  .ivf-detail-container .advantages-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ivf-detail-container .process-step {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .ivf-detail-container .step-number {
+    align-self: center;
+  }
+
+  .ivf-detail-container .rates-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ivf-detail-container .action-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .ivf-detail-container .primary-btn,
+  .ivf-detail-container .secondary-btn {
+    width: 100%;
+    padding: 0 1rem;
+  }
+
+}
+
+@media (max-width: 480px) {
+  .ivf-detail-container .page-title-section h1 {
+    font-size: 1.75rem;
+  }
+
+  .ivf-detail-container .rates-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ivf-detail-container .process-step {
+    padding: 1rem;
+  }
+
+  .ivf-detail-container .faq-item {
+    padding: 1rem;
+  }
+}
+
+/* Animation and Transitions */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ivf-detail-container .content-section {
+  animation: fadeIn 0.3s ease-out;
+}
