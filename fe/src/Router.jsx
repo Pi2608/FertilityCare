@@ -15,6 +15,7 @@ import Appointment from './Pages/manager/Appointment/Appointment';
 import Patients from './Pages/doctor/Dashboard/Patients';
 import Message from './Pages/doctor/Dashboard/Message';
 import PatientTrackingDetail from './Pages/doctor/Dashboard/PatientTrackingDetail';
+import Doctor from './Pages/manager/Doctor/Doctor';
 
 const USER_TYPES = {
   NORMAL_USER: "Customer",
@@ -166,11 +167,15 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to="/manager-dashboard/appointments" replace />,
+        element: <Navigate to="/manager-dashboard/appointment" replace />,
       },
       {
-        path: "appointments",
+        path: "appointment",
         element: <Appointment />,
+      },
+      {
+        path: "doctor",
+        element: <Doctor/>,
       },
     ],
   },

@@ -50,7 +50,7 @@ export default function Appointments() {
           <p>Quản lý tất cả các cuộc hẹn của bạn</p>
         </div>
         <div className="schedule-actions">
-          <input type="text" placeholder="🔍 Tìm kiếm bệnh nhân..." />
+          <input type="text" placeholder="Tìm kiếm bệnh nhân..." />
           <select>
             <option>Hôm nay</option>
             <option>Ngày mai</option>
