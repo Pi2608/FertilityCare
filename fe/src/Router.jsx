@@ -16,6 +16,10 @@ import Patients from './Pages/doctor/Dashboard/Patients';
 import Message from './Pages/doctor/Dashboard/Message';
 import PatientTrackingDetail from './Pages/doctor/Dashboard/PatientTrackingDetail';
 import Doctor from './Pages/manager/Doctor/Doctor';
+import TreatmentService from './Pages/manager/TreatmentService/TreatmentService';
+import SuccessRate from './Pages/manager/TreatmentService/SuccessRate';
+import ProcessEdit from './Pages/manager/TreatmentService/ProcessEdit';
+
 
 const USER_TYPES = {
   NORMAL_USER: "Customer",
@@ -176,6 +180,18 @@ export const router = createBrowserRouter([
       {
         path: "doctor",
         element: <Doctor/>,
+      },
+      {
+        path: "treatment-service",
+        element: <TreatmentService/>,
+      },
+      {
+        path: "treatment-service/success-rate/:serviceId",
+        element: <SuccessRate/>,
+      },
+      {
+        path: "treatment-service/process/:serviceId",
+        element: <ProcessEdit/>,
       },
     ],
   },

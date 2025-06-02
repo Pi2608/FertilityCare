@@ -1,0 +1,369 @@
+/* Success Rate Page Styles */
+.success-rate-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+/* Header */
+.success-rate-header {
+  background-color: white;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.back-btn {
+  padding: 8px 16px;
+  background-color: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #64748b;
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+  background-color: #e2e8f0;
+  color: #374151;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.notification-bell {
+  position: relative;
+  cursor: pointer;
+  font-size: 20px;
+  color: #64748b;
+}
+
+.notification-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 12px;
+  height: 12px;
+  background-color: #ef4444;
+  border-radius: 50%;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  background-color: #e2e8f0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.user-info {
+  text-align: left;
+}
+
+.user-name {
+  font-weight: 500;
+  color: #1e293b;
+  font-size: 14px;
+  margin: 0;
+}
+
+.user-role {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Content */
+.success-rate-content {
+  flex: 1;
+  padding: 24px;
+  background-color: white;
+  margin: 24px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.content-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.add-row-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background-color: #10b981;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.add-row-btn:hover {
+  background-color: #059669;
+}
+
+.add-row-btn span {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Table */
+.table-wrapper {
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  border: 1px solid #f1f5f9;
+  overflow-x: auto;
+  /* Custom scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+/* Custom Scrollbar for Webkit browsers */
+.table-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.success-rate-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.success-rate-table th {
+  background-color: #f8fafc;
+  padding: 16px;
+  text-align: left;
+  font-weight: 600;
+  color: #374151;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.success-rate-table td {
+  padding: 16px;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 14px;
+  color: #6b7280;
+  vertical-align: middle;
+}
+
+.success-rate-table tr:last-child td {
+  border-bottom: none;
+}
+
+.success-rate-table tr:hover {
+  background-color: #f9fafb;
+}
+
+/* Comparison Text */
+.comparison-text {
+  color: #10b981;
+  font-weight: 500;
+}
+
+/* Edit Inputs */
+.edit-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.edit-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Action Buttons */
+.action-cell {
+  white-space: nowrap;
+}
+
+.edit-actions,
+.view-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-btn,
+.save-btn {
+  padding: 6px 12px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.edit-btn:hover,
+.save-btn:hover {
+  background-color: #2563eb;
+}
+
+.delete-btn,
+.cancel-btn {
+  padding: 6px 12px;
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.delete-btn:hover,
+.cancel-btn:hover {
+  background-color: #dc2626;
+}
+
+.cancel-btn {
+  background-color: #6b7280;
+}
+
+.cancel-btn:hover {
+  background-color: #4b5563;
+}
+
+/* Save Section */
+.save-section {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.save-all-btn {
+  padding: 12px 24px;
+  background-color: #10b981;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.save-all-btn:hover {
+  background-color: #059669;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .success-rate-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .header-left {
+    width: 100%;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .success-rate-content {
+    margin: 16px;
+    padding: 16px;
+  }
+
+  .content-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+  }
+
+  .success-rate-table {
+    min-width: 800px;
+  }
+}
+
+@media (max-width: 480px) {
+  .success-rate-content {
+    margin: 8px;
+    padding: 12px;
+  }
+
+  .add-row-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
