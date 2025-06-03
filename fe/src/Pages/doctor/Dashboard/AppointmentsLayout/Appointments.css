@@ -36,6 +36,16 @@
   margin-right: 8px;
 }
 
+.schedule-container .btn {
+  padding: 8px 12px;
+  margin-right: 6px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  background: #f3f4f6;
+}
+
 .schedule-container .btn.red {
   background: #e11d48;
   color: #fff;
