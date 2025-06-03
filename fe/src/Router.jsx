@@ -19,6 +19,7 @@ import Doctor from './Pages/manager/Doctor/Doctor';
 import TreatmentService from './Pages/manager/TreatmentService/TreatmentService';
 import SuccessRate from './Pages/manager/TreatmentService/SuccessRate';
 import ProcessEdit from './Pages/manager/TreatmentService/ProcessEdit';
+import Medicine from './Pages/manager/Medicine/Medicine';
 
 
 const USER_TYPES = {
@@ -192,6 +193,10 @@ export const router = createBrowserRouter([
       {
         path: "treatment-service/process/:serviceId",
         element: <ProcessEdit/>,
+      },
+      {
+        path: "medicine-inventory",
+        element: <Medicine/>,
       },
     ],
   },
