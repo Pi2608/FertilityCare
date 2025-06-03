@@ -1,0 +1,144 @@
+.message-wrapper {
+  display: flex;
+  height: calc(100vh - 40px);
+  width: 90%;
+  background: #fff;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.message-wrapper .sidebar {
+  width: 320px;
+  height: 600px;
+  border-right: 1px solid #e5e7eb;
+  overflow-y: auto;
+  background: #fff;
+}
+
+.message-wrapper .sidebar h3 {
+  margin: 0 0 20px 0;
+  padding-left: 16px;
+}
+
+.message-wrapper .patient-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.message-wrapper .patient-item:hover {
+  background: #e5e7eb;
+}
+
+.message-wrapper .patient-item.active {
+  background: #dbeafe;
+}
+
+.message-wrapper .patient-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.message-wrapper .name {
+  font-weight: 600;
+}
+
+.message-wrapper .preview {
+  font-size: 13px;
+  color: #666;
+}
+
+.message-wrapper .chat-box {
+  flex: 1;
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+  background: #f3f4f6;
+}
+
+.message-wrapper .chat-header {
+  padding: 13px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.message-wrapper .chat-header img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.message-wrapper .chat-header h4 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.message-wrapper .chat-content {
+  height: 410px;
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.message-wrapper .message-bubble {
+  max-width: 70%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  position: relative;
+}
+
+.message-wrapper .message-bubble.patient {
+  background: #e2e8f0;
+  align-self: flex-start;
+  border-top-left-radius: 0;
+}
+
+.message-wrapper .message-bubble.doctor {
+  background: #dcfce7;
+  align-self: flex-end;
+  border-top-right-radius: 0;
+}
+
+.message-wrapper .message-bubble .time {
+  font-size: 11px;
+  color: #666;
+  margin-top: 4px;
+  text-align: right;
+}
+
+.message-wrapper .chat-input {
+  padding: 16px;
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  gap: 12px;
+}
+
+.message-wrapper .chat-input input {
+  flex: 1;
+  padding: 12px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.message-wrapper .chat-input button {
+  background: #e11d48;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  font-size: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}

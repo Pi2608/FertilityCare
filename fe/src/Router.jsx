@@ -9,12 +9,12 @@ import TreatmentMethod from '@customerpages/TreatmentMethod/TreatmentMethod';
 import IvfDetail from '@customerpages/IvfDetail/IvfDetail';
 import CusDashboard from '@customerpages/Dashboard/CusDashboard';
 import DocDashboard from '@doctorpages/Dashboard/DocDashboard';
-import Overview from './Pages/doctor/Dashboard/Overview';
-import Appointments from './Pages/doctor/Dashboard/Appointments';
+import Overview from './Pages/doctor/Dashboard/OverviewLayout/Overview';
+import Appointments from './Pages/doctor/Dashboard/AppointmentsLayout/Appointments';
 import Appointment from './Pages/manager/Appointment/Appointment';
-import Patients from './Pages/doctor/Dashboard/Patients';
-import Message from './Pages/doctor/Dashboard/Message';
-import PatientTrackingDetail from './Pages/doctor/Dashboard/PatientTrackingDetail';
+import Patients from './Pages/doctor/Dashboard/PatientsLayout/Patients';
+import Message from './Pages/doctor/Dashboard/MessageLayout/Message';
+import PatientTrackingDetail from './Pages/doctor/Dashboard/PatientTrackingDetailLayout/PatientTrackingDetail';
 
 const USER_TYPES = {
   NORMAL_USER: "Customer",
