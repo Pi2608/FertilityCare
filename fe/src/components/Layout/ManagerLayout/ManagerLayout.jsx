@@ -14,17 +14,8 @@ const ManagerLayout = () => {
 
   const menuItems = [
     {
-      name: "Tổng quan",
-      path: "/manager-dashboard",
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
-          <path fill="currentColor" d="M13 9V3h8v6zM3 13V3h8v10zm10 8V11h8v10zM3 21v-6h8v6z" />
-        </svg>
-      ),
-    },
-    {
       name: "Lịch hẹn",
-      path: "/manager-dashboard/appointments",
+      path: "/manager-dashboard/appointment",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16">
           <path
@@ -36,7 +27,7 @@ const ManagerLayout = () => {
     },
     {
       name: "Bác sĩ",
-      path: "/manager-dashboard/doctors",
+      path: "/manager-dashboard/doctor",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
           <path
@@ -48,7 +39,7 @@ const ManagerLayout = () => {
     },
     {
       name: "Bệnh nhân",
-      path: "/manager-dashboard/patients",
+      path: "/manager-dashboard/patient",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
           <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
@@ -60,7 +51,7 @@ const ManagerLayout = () => {
     },
     {
       name: "Tin nhắn",
-      path: "/manager-dashboard/messages",
+      path: "/manager-dashboard/message",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
           <path
@@ -98,7 +89,7 @@ const ManagerLayout = () => {
     },
     {
       name: "Báo cáo",
-      path: "/manager-dashboard/reports",
+      path: "/manager-dashboard/report",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
           <path fill="currentColor" d="M3 3v17a1 1 0 0 0 1 1h17v-2H5V3z" />

@@ -18,6 +18,7 @@ import Message from './Pages/doctor/Dashboard/MessageLayout/Message';
 import PatientProfileLayout from './Pages/doctor/Dashboard/PatientProfileLayout/PatientProfileLayout';
 import PatientAppointment from './Pages/doctor/Dashboard/PatientAppointment/PatientAppointment';
 
+import Doctor from './Pages/manager/Doctor/Doctor';
 
 const USER_TYPES = {
   NORMAL_USER: "Customer",
@@ -185,11 +186,15 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to="/manager-dashboard/appointments" replace />,
+        element: <Navigate to="/manager-dashboard/appointment" replace />,
       },
       {
-        path: "appointments",
+        path: "appointment",
         element: <Appointment />,
+      },
+      {
+        path: "doctor",
+        element: <Doctor/>,
       },
     ],
   },

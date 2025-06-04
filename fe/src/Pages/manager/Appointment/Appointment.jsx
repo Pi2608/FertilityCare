@@ -148,7 +148,7 @@ const Appointment = () => {
     <div className="appointment-page">
       {/* Header */}
       <header className="appointment-header">
-        <h1 className="page-title">Appointments</h1>
+        <h1 className="page-title">Thông tin cuộc hẹn</h1>
 
         <div className="header-actions">
           <div className="notification-bell">
@@ -174,22 +174,15 @@ const Appointment = () => {
         <div className="content-header">
           <div className="tabs-container">
             <button className={`tab ${activeTab === "new" ? "active" : ""}`} onClick={() => setActiveTab("new")}>
-              NEW APPOINTMENTS
+              CUỘC HẸN MỚI
             </button>
             <button
               className={`tab ${activeTab === "completed" ? "active" : ""}`}
               onClick={() => setActiveTab("completed")}
             >
-              COMPLETED APPOINTMENTS
+              CUỘC HẸN ĐÃ HOÀN THÀNH
             </button>
           </div>
-
-          {/* {activeTab === "completed" && (
-            <button className="new-appointment-btn">
-              <span>+</span>
-              New Appointment
-            </button>
-          )} */}
         </div>
 
         <div className="tab-content">
@@ -199,7 +192,7 @@ const Appointment = () => {
               <span className="search-icon">🔍</span>
               <input
                 type="text"
-                placeholder="Search"
+                placeholder="Tìm kiếm"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -217,7 +210,7 @@ const Appointment = () => {
                 onClick={() => setSelectedDate("")}
               >
                 <span>📅</span>
-                Clear Filter
+                Xoá bộ lọc
               </button>
             </div>
           </div>
@@ -229,12 +222,12 @@ const Appointment = () => {
                 <table className="appointments-table">
                   <thead>
                     <tr>
-                      <th>Time ▼</th>
-                      <th>Date ▼</th>
-                      <th>Patient Name ▼</th>
-                      <th>Patient Age ▼</th>
-                      <th>Doctor ▼</th>
-                      <th>Type</th>
+                      <th>Thời gian</th>
+                      <th>Ngày</th>
+                      <th>Họ và tên</th>
+                      <th>Tuổi</th>
+                      <th>Bác sĩ</th>
+                      <th>Phân loại</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -263,7 +256,7 @@ const Appointment = () => {
 
               {/* Pagination */}
               <div className="pagination-section">
-                <button className="pagination-btn prev">Previous</button>
+                <button className="pagination-btn prev">Trước đó</button>
 
                 <div className="page-numbers">
                   <button className="page-btn active">1</button>
@@ -272,7 +265,7 @@ const Appointment = () => {
                   <button className="page-btn">4</button>
                 </div>
 
-                <button className="pagination-btn next">Next</button>
+                <button className="pagination-btn next">Tiếp theo</button>
               </div>
             </>
           ) : (
