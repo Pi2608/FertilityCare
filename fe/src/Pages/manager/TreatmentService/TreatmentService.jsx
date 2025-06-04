@@ -94,7 +94,7 @@ const TreatmentService = () => {
     <div className="treatment-service-page">
       {/* Header */}
       <header className="treatment-service-header">
-        <h1 className="page-title">Treatment Services</h1>
+        <h1 className="page-title">Dịch vụ điều trị</h1>
 
         <div className="header-actions">
           <div className="notification-bell">
