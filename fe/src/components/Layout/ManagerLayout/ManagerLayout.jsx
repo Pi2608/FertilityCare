@@ -37,15 +37,15 @@ const ManagerLayout = () => {
         </svg>
       ),
     },
-    {
-      name: "Bệnh nhân",
-      path: "/manager-dashboard/patient",
+        {
+      name: "Dịch vụ điều trị",
+      path: "/manager-dashboard/treatment-service",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
-          <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
-            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-          </g>
+          <path
+            fill="currentColor"
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"
+          />
         </svg>
       ),
     },
@@ -64,18 +64,6 @@ const ManagerLayout = () => {
       ),
     },
     {
-      name: "Nội dung giáo dục",
-      path: "/manager-dashboard/education-content",
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
-          <path
-            fill="currentColor"
-            d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9zm6.82 6L12 12.72L5.18 9L12 5.28zM17 15.99l-5 2.73l-5-2.73v-3.72L12 15l5-2.73z"
-          />
-        </svg>
-      ),
-    },
-    {
       name: "Kho thuốc",
       path: "/manager-dashboard/medicine-inventory",
       icon: (
@@ -88,21 +76,8 @@ const ManagerLayout = () => {
       ),
     },
     {
-      name: "Báo cáo",
-      path: "/manager-dashboard/report",
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
-          <path fill="currentColor" d="M3 3v17a1 1 0 0 0 1 1h17v-2H5V3z" />
-          <path
-            fill="currentColor"
-            d="M15.293 14.707a1 1 0 0 0 1.414 0l5-5l-1.414-1.414L16 12.586l-2.293-2.293a1 1 0 0 0-1.414 0l-5 5l1.414 1.414L13 12.414z"
-          />
-        </svg>
-      ),
-    },
-    {
       name: "Cài đặt",
-      path: "/manager-dashboard/settings",
+      path: "/manager-dashboard/setting",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16">
           <g fill="none" stroke="currentColor" strokeWidth="1">

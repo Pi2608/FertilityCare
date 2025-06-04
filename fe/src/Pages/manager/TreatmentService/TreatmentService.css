@@ -1,5 +1,5 @@
-/* Doctor Page Styles */
-.doctor-page {
+/* Treatment Service Page Styles */
+.treatment-service-page {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -8,7 +8,7 @@
 }
 
 /* Header */
-.doctor-header {
+.treatment-service-header {
   background-color: white;
   border-bottom: 1px solid #e2e8f0;
   padding: 16px 24px;
@@ -84,39 +84,25 @@
 }
 
 /* Content */
-.doctor-content {
+.treatment-service-content {
   flex: 1;
   padding: 24px;
   background-color: white;
   margin: 24px;
   border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 2px solid #3b82f6;
 }
 
-/* Section Header */
-.section-header {
+/* Content Header */
+.content-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 24px;
-}
-
-.section-title {
-  font-size: 20px;
-  font-weight: 600;
-  color: #1e293b;
-  margin: 0 0 8px 0;
-}
-
-.section-underline {
-  width: 60px;
-  height: 3px;
-  background-color: #3b82f6;
-  border-radius: 2px;
 }
 
 /* Search */
-.search-section {
-  margin-bottom: 24px;
-}
-
 .search-box {
   position: relative;
   max-width: 320px;
@@ -148,6 +134,31 @@
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
+/* Add Service Button */
+.add-service-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.add-service-btn:hover {
+  background-color: #2563eb;
+}
+
+.add-service-btn span {
+  font-size: 16px;
+  font-weight: bold;
+}
+
 /* Table */
 .table-wrapper {
   background-color: white;
@@ -155,14 +166,39 @@
   overflow: hidden;
   margin-bottom: 24px;
   border: 1px solid #f1f5f9;
+  overflow-x: auto; /* Thêm scroll ngang */
+  /* Firefox scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
 }
 
-.doctors-table {
+/* Custom Scrollbar for Webkit browsers */
+.table-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.services-table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 1200px; /* Đảm bảo width tối thiểu */
 }
 
-.doctors-table th {
+.services-table th {
   background-color: #f8fafc;
   padding: 16px;
   text-align: left;
@@ -170,148 +206,176 @@
   color: #374151;
   font-size: 14px;
   border-bottom: 1px solid #e5e7eb;
+  white-space: nowrap; /* Ngăn text xuống dòng */
+  min-width: fit-content; /* Đảm bảo width tối thiểu */
 }
 
-.doctors-table td {
+/* Thiết lập width cụ thể cho từng cột */
+.services-table th:nth-child(1) {
+  /* Số lượng */
+  width: 80px;
+  min-width: 80px;
+}
+
+.services-table th:nth-child(2) {
+  /* Dịch vụ */
+  width: 120px;
+  min-width: 120px;
+}
+
+.services-table th:nth-child(3) {
+  /* Tổng quan */
+  width: 300px;
+  min-width: 250px;
+}
+
+.services-table th:nth-child(4) {
+  /* Tỷ lệ thành công */
+  width: 150px;
+  min-width: 150px;
+}
+
+.services-table th:nth-child(5) {
+  /* Quy trình */
+  width: 120px;
+  min-width: 120px;
+}
+
+.services-table th:nth-child(6) {
+  /* Chi phí */
+  width: 140px;
+  min-width: 140px;
+}
+
+.services-table th:nth-child(7) {
+  /* Hành động */
+  width: 150px;
+  min-width: 150px;
+}
+
+.services-table td {
   padding: 16px;
   border-bottom: 1px solid #f3f4f6;
   font-size: 14px;
   color: #6b7280;
   vertical-align: middle;
+  white-space: nowrap; /* Ngăn text xuống dòng */
 }
 
-.doctors-table tr:last-child td {
+/* Cho phép cột Tổng quan wrap text vì nội dung dài */
+.services-table td:nth-child(3) {
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 300px;
+}
+
+.services-table tr:last-child td {
   border-bottom: none;
 }
 
-.doctors-table tr:hover {
+.services-table tr:hover {
   background-color: #f9fafb;
 }
 
-/* Doctor Name Cell */
-.doctor-name-cell {
-  padding: 12px 16px;
-}
-
-.doctor-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.doctor-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 14px;
-  color: #4f7df3;
-  background-color: #eff6ff;
-}
-
-.doctor-name {
-  font-weight: 500;
-  color: #1f2937;
-}
-
-/* Specialty Badge */
-.specialty-badge {
-  padding: 4px 12px;
-  border-radius: 16px;
-  font-size: 12px;
-  font-weight: 500;
-  text-transform: uppercase;
-}
-
-.specialty-badge.ivf {
-  background-color: #dbeafe;
-  color: #1d4ed8;
-}
-
-.specialty-badge.iui {
-  background-color: #dcfce7;
-  color: #16a34a;
-}
-
-/* Rating */
-.rating {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.rating-value {
-  color: #1f2937;
-}
-
-/* Edit Controls */
+/* Edit Inputs */
 .edit-input {
   width: 100%;
-  padding: 6px 8px;
+  padding: 8px 12px;
   border: 1px solid #d1d5db;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 14px;
-  background-color: white;
   outline: none;
   transition: border-color 0.2s ease;
 }
 
 .edit-input:focus {
   border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.action-buttons {
+.edit-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  resize: vertical;
+  min-height: 60px;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+}
+
+.edit-textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Link Button */
+.link-btn {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 14px;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.link-btn:hover {
+  color: #2563eb;
+}
+
+/* Action Buttons */
+.action-cell {
+  white-space: nowrap;
+}
+
+.edit-actions,
+.view-actions {
   display: flex;
   gap: 8px;
-  align-items: center;
 }
 
-.edit-btn {
+.edit-btn,
+.save-btn {
   padding: 6px 12px;
   background-color: #3b82f6;
   color: white;
   border: none;
   border-radius: 4px;
+  cursor: pointer;
   font-size: 12px;
   font-weight: 500;
-  cursor: pointer;
   transition: background-color 0.2s ease;
 }
 
-.edit-btn:hover {
+.edit-btn:hover,
+.save-btn:hover {
   background-color: #2563eb;
 }
 
-.save-btn {
+.delete-btn,
+.cancel-btn {
   padding: 6px 12px;
-  background-color: #10b981;
+  background-color: #ef4444;
   color: white;
   border: none;
   border-radius: 4px;
+  cursor: pointer;
   font-size: 12px;
   font-weight: 500;
-  cursor: pointer;
   transition: background-color 0.2s ease;
 }
 
-.save-btn:hover {
-  background-color: #059669;
+.delete-btn:hover,
+.cancel-btn:hover {
+  background-color: #dc2626;
 }
 
 .cancel-btn {
-  padding: 6px 12px;
   background-color: #6b7280;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
 }
 
 .cancel-btn:hover {
@@ -381,21 +445,9 @@
   background-color: #f3f4f6;
 }
 
-/* Empty State */
-.empty-state {
-  text-align: center;
-  padding: 48px;
-  color: #6b7280;
-}
-
-.empty-state p {
-  margin: 0;
-  font-size: 16px;
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
-  .doctor-header {
+  .treatment-service-header {
     flex-direction: column;
     gap: 16px;
     align-items: flex-start;
@@ -406,9 +458,15 @@
     justify-content: space-between;
   }
 
-  .doctor-content {
+  .treatment-service-content {
     margin: 16px;
     padding: 16px;
+  }
+
+  .content-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
   }
 
   .search-box {
@@ -419,8 +477,8 @@
     overflow-x: auto;
   }
 
-  .doctors-table {
-    min-width: 700px;
+  .services-table {
+    min-width: 900px;
   }
 
   .pagination-section {
@@ -430,22 +488,13 @@
 }
 
 @media (max-width: 480px) {
-  .doctor-content {
+  .treatment-service-content {
     margin: 8px;
     padding: 12px;
   }
 
-  .section-title {
-    font-size: 18px;
-  }
-
-  .doctor-avatar {
-    width: 32px;
-    height: 32px;
-    font-size: 12px;
-  }
-
-  .doctor-name {
-    font-size: 13px;
+  .add-service-btn {
+    width: 100%;
+    justify-content: center;
   }
 }
