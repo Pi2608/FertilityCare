@@ -4,16 +4,14 @@
 
 /* Breadcrumb */
 .ivf-detail-container .breadcrumb {
-  max-width: 1200px;
-  padding: 2rem 2rem 0;
+  padding: 2rem 10rem 0;
   color: #6c757d;
   font-size: 0.875rem;
 }
 
 /* Page Title Section */
 .ivf-detail-container .page-title-section {
-  max-width: 1200px;
-  padding: 1rem 2rem 1rem;
+  padding: 1rem 10rem 1rem;
   text-align: left;
 }
 
@@ -32,8 +30,7 @@
 
 /* Brief Description */
 .ivf-detail-container .brief-description {
-  max-width: 1200px;
-  padding: 2rem;
+  padding: 2rem 10rem;
   border-radius: 8px;
   margin-bottom: 2rem;
 }
@@ -300,7 +297,7 @@
 }
 
 .ivf-detail-container .process-step:hover {
-  background-color: #e3f2fd;
+  background-color: #fff1f2;
   transform: translateX(5px);
 }
 
@@ -328,10 +325,14 @@
   margin: 0;
 }
 
+.ivf-detail-container .step-content .note .note-item {
+  margin: 10px 0;
+}
+
 .ivf-detail-container .duration {
   display: inline-block;
-  background-color: #e3f2fd;
-  color: #1976d2;
+  background-color: #fff1f2;
+  color: #e11d48;
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   font-size: 0.75rem;

@@ -5,14 +5,14 @@
     font-family: 'Segoe UI', sans-serif;
   }
  
-  .columns {
+.dashboard-wrapper  .columns {
     display: flex;
     flex-wrap: wrap;
     gap: 24px;
     margin-bottom: 40px;
   }
  
-  section {
+.dashboard-wrapper  section {
     flex: 1;
     min-width: 320px;
     background: #fff;
@@ -21,19 +21,19 @@
     box-shadow: 0 1px 6px rgba(0,0,0,0.05);
   }
  
-  h2 {
+.dashboard-wrapper  h2 {
     font-size: 20px;
     font-weight: 600;
     margin-bottom: 8px;
   }
  
-  .sub-heading, .desc {
+.dashboard-wrapper  .sub-heading, .desc {
     color: #888;
     font-size: 14px;
     margin-bottom: 16px;
   }
  
-  .appointment-card {
+.dashboard-wrapper  .appointment-card {
     background: #f9fafb;
     border-left: 4px solid #ef4444;
     padding: 16px;
@@ -43,28 +43,28 @@
     margin-bottom: 12px;
   }
  
-  .patient-name {
+.dashboard-wrapper  .patient-name {
     font-weight: 600;
     font-size: 15px;
     margin: 0;
   }
  
-  .appointment-note {
+.dashboard-wrapper .appointment-note {
     font-size: 14px;
     color: #555;
   }
  
-  .actions a {
+.dashboard-wrapper  .actions a {
     font-size: 13px;
     color: #dc2626;
     text-decoration: none;
   }
  
-  .actions a:hover {
+.dashboard-wrapper  .actions a:hover {
     text-decoration: underline;
   }
  
-  .appointment-time {
+.dashboard-wrapper  .appointment-time {
     font-size: 14px;
     font-weight: bold;
     color: #1d4ed8;
@@ -73,18 +73,18 @@
     border-radius: 6px;
   }
  
-  .see-more {
+.dashboard-wrapper  .see-more {
     text-align: center;
     margin-top: 16px;
   }
  
-  .see-more a {
+.dashboard-wrapper  .see-more a {
     color: #1d4ed8;
     text-decoration: none;
     font-weight: 500;
   }
  
-  .tracking-card {
+.dashboard-wrapper  .tracking-card {
     border-left: 4px solid #facc15;
     background: #fefce8;
     padding: 16px;
@@ -94,28 +94,28 @@
     justify-content: space-between;
   }
  
-  .tracking-card.urgent {
+.dashboard-wrapper  .tracking-card.urgent {
     background: #fef2f2;
     border-color: #f87171;
   }
  
-  .name {
+.dashboard-wrapper  .name {
     font-weight: 600;
   }
  
-  .cycle, .note {
+.dashboard-wrapper  .cycle, .note {
     font-size: 14px;
     margin-top: 4px;
     color: #444;
   }
  
-  .links a {
+.dashboard-wrapper  .links a {
     font-size: 13px;
     color: #dc2626;
     text-decoration: none;
   }
  
-  .label {
+.dashboard-wrapper  .label {
     font-size: 12px;
     font-weight: bold;
     padding: 6px 10px;
@@ -124,38 +124,38 @@
     height: fit-content;
   }
  
-  .tracking-card.urgent .label {
+.dashboard-wrapper  .tracking-card.urgent .label {
     background: #f87171;
   }
  
-  .tracking-card.watch .label {
+.dashboard-wrapper  .tracking-card.watch .label {
     background: #facc15;
     color: #000;
   }
  
-  .recent-activity ul {
+.dashboard-wrapper  .recent-activity ul {
     list-style: none;
     padding: 0;
     margin: 0;
   }
  
-  .recent-activity li {
+.dashboard-wrapper  .recent-activity li {
     display: flex;
     gap: 10px;
     align-items: flex-start;
     margin-bottom: 12px;
   }
  
-  .icon {
+.dashboard-wrapper  .icon {
     font-size: 18px;
   }
  
-  .time {
+.dashboard-wrapper  .time {
     font-size: 12px;
     color: #888;
   }
  
-  .notifications .noti-card {
+.dashboard-wrapper  .notifications .noti-card {
     padding: 12px 16px;
     margin-bottom: 12px;
     border-radius: 8px;
@@ -163,32 +163,32 @@
     background: #f9fafb;
   }
  
-  .notifications .noti-card.important {
+.dashboard-wrapper  .notifications .noti-card.important {
     background: #fef2f2;
     border-color: #f87171;
   }
  
-  .notifications .noti-card.info {
+.dashboard-wrapper  .notifications .noti-card.info {
     background: #eff6ff;
     border-color: #3b82f6;
   }
  
-  .notifications .noti-card.system {
+.dashboard-wrapper  .notifications .noti-card.system {
     background: #fefce8;
     border-color: #facc15;
   }
  
-  .noti-title {
+.dashboard-wrapper  .noti-title {
     font-weight: 600;
   }
  
-  .noti-time, .noti-note {
+.dashboard-wrapper  .noti-time, .noti-note {
     font-size: 13px;
     color: #374151;
   }
 
 
-  .doctor-header {
+.dashboard-wrapper  .doctor-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -196,23 +196,23 @@
     flex-wrap: wrap;
   }
  
-  .header-left h1 {
+.dashboard-wrapper  .header-left h1 {
     font-size: 24px;
     font-weight: 700;
   }
  
-  .header-left p {
+.dashboard-wrapper  .header-left p {
     color: #888;
     margin-top: 4px;
   }
  
-  .tabs {
+.dashboard-wrapper  .tabs {
     margin-top: 16px;
     display: flex;
     gap: 12px;
   }
  
-  .tab {
+.dashboard-wrapper  .tab {
     padding: 6px 14px;
     background: #f1f5f9;
     border: none;
@@ -221,19 +221,19 @@
     font-size: 14px;
   }
  
-  .tab.active {
+.dashboard-wrapper  .tab.active {
     background: #fff;
     border: 1px solid #e5e7eb;
     font-weight: 600;
   }
  
-  .header-actions {
+.dashboard-wrapper  .header-actions {
     display: flex;
     gap: 12px;
     margin-top: 12px;
   }
  
-  .btn {
+.dashboard-wrapper  .btn {
     padding: 8px 16px;
     border-radius: 6px;
     cursor: pointer;
@@ -241,24 +241,24 @@
     border: none;
   }
  
-  .btn.red {
+.dashboard-wrapper  .btn.red {
     background-color: #e11d48;
     color: white;
   }
  
-  .btn.outline {
+.dashboard-wrapper  .btn.outline {
     border: 1px solid #d1d5db;
     background: white;
   }
  
-  .overview-cards {
+.dashboard-wrapper  .overview-cards {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
     margin-bottom: 40px;
   }
  
-  .overview-card {
+.dashboard-wrapper  .overview-card {
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 1px 6px rgba(0,0,0,0.05);
@@ -270,28 +270,28 @@
     min-width: 220px;
   }
  
-  .card-info p {
+.dashboard-wrapper  .card-info p {
     margin: 0;
     font-size: 14px;
     color: #444;
   }
  
-  .card-info h3 {
+.dashboard-wrapper  .card-info h3 {
     font-size: 24px;
     margin: 8px 0;
   }
  
-  .card-info span.green {
+.dashboard-wrapper  .card-info span.green {
     color: #10b981;
     font-size: 13px;
   }
  
-  .card-icon {
+.dashboard-wrapper  .card-icon {
     font-size: 28px;
     padding-left: 12px;
   }
  
-  .schedule-container {
+.dashboard-wrapper  .schedule-container {
     width: 90%;
     /* margin: 40px auto; */
     background: #fff;
@@ -301,14 +301,14 @@
     font-family: 'Segoe UI', sans-serif;
   }
 
-  .calendar-grid {
+.dashboard-wrapper  .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 16px;
     margin: 24px 0 40px;
   }
   
-  .calendar-day {
+.dashboard-wrapper  .calendar-day {
     position: relative;
     padding: 16px;
     background: #f9fafb;
@@ -320,34 +320,34 @@
     transition: background 0.2s ease;
   }
   
-  .calendar-day:hover {
+.dashboard-wrapper  .calendar-day:hover {
     background: #f3f4f6;
   }
   
-  .calendar-day.off {
+.dashboard-wrapper  .calendar-day.off {
     background: #fef2f2;
     color: #b91c1c;
   }
   
-  .day-label {
+.dashboard-wrapper .day-label {
     font-weight: bold;
     white-space: pre-line;
   }
   
-  .shift-count {
+.dashboard-wrapper  .shift-count {
     margin-top: 8px;
     font-size: 14px;
     color: #16a34a;
     font-weight: 500;
   }
   
-  .shift-off {
+.dashboard-wrapper  .shift-off {
     margin-top: 8px;
     font-size: 13px;
     color: #999;
   }
   
-  .tooltip {
+.dashboard-wrapper  .tooltip {
     position: absolute;
     bottom: 100%;
     left: 50%;

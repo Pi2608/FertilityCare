@@ -1,5 +1,6 @@
 import React from 'react'
 import { createBrowserRouter, Navigate } from "react-router-dom";
+import Authentication from './Pages/authentication/authentication';
 import PageLayout from '@components/Layout/PageLayout/PageLayout';
 import CusLayout from '@components/Layout/CusLayout/CusLayout';
 import DocLayout from '@components/Layout/DocLayout/DocLayout';
@@ -7,6 +8,7 @@ import ManagerLayout from '@components/Layout/ManagerLayout/ManagerLayout.jsx';
 import Homepage from "@customerpages/Homepage/Homepage";
 import TreatmentMethod from '@customerpages/TreatmentMethod/TreatmentMethod';
 import IvfDetail from '@customerpages/IvfDetail/IvfDetail';
+import Booking from '@customerpages/Booking/Booking';
 import CusDashboard from '@customerpages/Dashboard/CusDashboard';
 import DocDashboard from '@doctorpages/Dashboard/DocDashboard';
 import Overview from './Pages/doctor/Dashboard/Overview';
@@ -46,6 +48,25 @@ export const router = createBrowserRouter([
     element: <Navigate to="/homepage" replace />,
   },
   {
+    path: "/authentication",
+    element: <PageLayout />,
+    children: [
+      {
+        path: "login",
+        element: <Authentication />
+      },
+      {
+        path: "register", 
+        element: <Authentication />
+      },
+      {
+        // Redirect /authentication to /authentication/login by default
+        index: true,
+        element: <Navigate to="login" replace />
+      }
+    ]
+  },
+  {
     path: "/homepage",
     element: <PageLayout />,
     children: [
@@ -68,6 +89,16 @@ export const router = createBrowserRouter([
         path: "ivf",
         element: <IvfDetail />,
       }
+    ]
+  },
+  {
+    path: "/booking",
+    element: <PageLayout />,
+    children: [
+      {
+        index: true, // tương đương path: "/booking"
+        element: <Booking />,
+      },
     ]
   },
   {

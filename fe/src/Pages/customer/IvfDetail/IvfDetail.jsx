@@ -51,24 +51,124 @@ const IvfDetail = () => {
         {
           title: "Kích Thích Buồng Trứng",
           desc: "Sử dụng hàng lô axy IVF tiêm vào cơ thể để tích thích buồng trứng sản xuất nhiều trứng.",
-          duration: "8-14 ngày"
+          duration: "8-14 ngày",
+          note: [
+            { 
+              miniStep: "Thuốc Kích Thích Buồng Trứng",
+              desc:"Bạn sẽ được kê đơn thuốc kích thích buồng trứng, thường được tiêm hàng ngày trong khoảng 8-14 ngày. Những thuốc này chứa hormone kích thích nang trứng (FSH) và/hoặc hormone hoàng thể hóa (LH) để kích thích buồng trứng sản xuất nhiều trứng hơn."
+            },
+            { 
+              miniStep: "Theo Dõi Và Điều Chỉnh",
+              desc:"Trong giai đoạn này, bạn sẽ có các cuộc hẹn theo dõi thường xuyên (thường là 2-3 ngày một lần) để kiểm tra sự phát triển của nang trứng thông qua siêu âm và xét nghiệm máu. Liều thuốc có thể được điều chỉnh dựa trên phản ứng của bạn."
+            },
+            { 
+              miniStep: "Ngăn Chặn Rụng Trứng Sớm",
+              desc:"Bạn cũng sẽ được dùng thuốc để ngăn cơ thể rụng trứng sớm, đảm bảo trứng có thể được lấy ra vào thời điểm tối ưu."
+            },
+            { 
+              miniStep: "Kích Hoạt Sự Trưởng Thành Cuối Cùng",
+              desc:"Khi nang trứng đạt kích thước thích hợp (thường là khoảng 18-20mm), bạn sẽ được tiêm \"mũi tiêm kích hoạt\" để hoàn thiện sự trưởng thành của trứng và chuẩn bị cho việc lấy trứng."
+            },
+          ]
         },
         {
           title: "Lấy Trứng", 
           desc: "Thu thập trứng từ buồng trứng bằng thủ thuật nội soi thông qua âm đạo.",
-          duration: "20-30 phút cho thủ thuật"
+          duration: "20-30 phút cho thủ thuật",
+          note: [
+            { 
+              miniStep: "Thủ Thuật Lấy Trứng",
+              desc:"Đây là một thủ thuật ngoại trú được thực hiện dưới gây mê nhẹ. Bác sĩ sẽ sử dụng siêu âm để hướng dẫn một kim nhỏ qua thành âm đạo vào buồng trứng để hút trứng từ các nang trứng."
+            },
+            { 
+              miniStep: "Sau Thủ Thuật",
+              desc:"Sau khi lấy trứng, bạn sẽ được theo dõi trong phòng hồi phục trong vài giờ. Một số phụ nữ có thể cảm thấy đau nhẹ hoặc chuột rút, nhưng hầu hết có thể trở lại các hoạt động bình thường vào ngày hôm sau."
+            },
+            { 
+              miniStep: "Thu Thập Tinh Trùng",
+              desc:"Vào ngày lấy trứng, người bạn đời nam sẽ cung cấp mẫu tinh trùng, hoặc tinh trùng đã đông lạnh hoặc hiến tặng sẽ được chuẩn bị."
+            },
+          ]
         },
         {
           title: "Thụ Tinh",
-          desc: "Kết hợp trứng với tinh trùng trong phòng thí nghiệm để tạo ra phôi."
+          desc: "Kết hợp trứng với tinh trùng trong phòng thí nghiệm để tạo ra phôi.",
+          duration: "16-18 giờ để xác nhận thụ tinh",
+          note: [
+            { 
+              miniStep: "Thụ Tinh Thông Thường",
+              desc:"Trong IVF thông thường, trứng và tinh trùng được đặt cùng nhau trong một đĩa nuôi cấy và tinh trùng thụ tinh trứng một cách tự nhiên."
+            },
+            { 
+              miniStep: "Tiêm Tinh Trùng Vào Bào Tương Trứng (ICSI)",
+              desc:"Trong một số trường hợp, đặc biệt là khi có vấn đề về tinh trùng, một kỹ thuật gọi là ICSI có thể được sử dụng. Trong ICSI, một tinh trùng được tiêm trực tiếp vào trứng để thụ tinh."
+            },
+            { 
+              miniStep: "Kiểm Tra Thụ Tinh",
+              desc:"Khoảng 16-18 giờ sau khi trứng và tinh trùng được đặt cùng nhau, phòng thí nghiệm sẽ kiểm tra xem trứng đã được thụ tinh chưa. Trứng đã thụ tinh (giờ được gọi là hợp tử) sẽ được nuôi cấy trong vài ngày."
+            },
+          ]
         },
         {
           title: "Nuôi Cấy Phôi",
-          desc: "Theo dõi và phát triển phôi trong 3-5 ngày."
+          desc: "Theo dõi và phát triển phôi trong 3-5 ngày.",
+          duration: "3-5 ngày",
+          note: [
+            { 
+              miniStep: "Theo Dõi Sự Phát Triển",
+              desc:"Phôi học viên sẽ theo dõi sự phát triển của phôi, đánh giá chất lượng dựa trên các yếu tố như số lượng tế bào, tốc độ phân chia và cấu trúc."
+            },
+            { 
+              miniStep: "Phôi Ngày 3 vs. Phôi Nang Ngày 5",
+              desc:"Phôi có thể được chuyển vào ngày thứ 3 (giai đoạn phân chia) hoặc được nuôi cấy đến ngày thứ 5 (giai đoạn phôi nang). Phôi nang ngày 5 thường có tỷ lệ làm tổ cao hơn."
+            },
+            { 
+              miniStep: "Sàng Lọc Di Truyền (Tùy Chọn)",
+              desc:"Trong một số trường hợp, phôi có thể được xét nghiệm để phát hiện bất thường di truyền trước khi chuyển. Điều này được gọi là Sàng lọc Di truyền Tiền làm tổ (PGT)."
+            },
+          ]
         },
         {
           title: "Chuyển Phôi",
-          desc: "Chuyển phôi tốt nhất vào tử cung qua thủ thuật đơn giản."
+          desc: "Chuyển phôi tốt nhất vào tử cung qua thủ thuật đơn giản.",
+          duration: "5-10 phút cho thủ thuật",
+          note: [
+            { 
+              miniStep: "Thủ Thuật Chuyển Phôi",
+              desc:"Chuyển phôi là một thủ thuật đơn giản, không đau và không cần gây mê. Bác sĩ sẽ sử dụng một ống catheter mỏng để đặt phôi vào tử cung của bạn, được hướng dẫn bằng siêu âm."
+            },
+            { 
+              miniStep: "Số Lượng Phôi",
+              desc:"Số lượng phôi được chuyển phụ thuộc vào nhiều yếu tố, bao gồm tuổi, chất lượng phôi và lịch sử điều trị. Xu hướng hiện nay là chuyển một phôi duy nhất để giảm nguy cơ đa thai."
+            },
+            { 
+              miniStep: "Sau Chuyển Phôi",
+              desc:"Sau khi chuyển phôi, bạn có thể được khuyên nghỉ ngơi trong một thời gian ngắn, nhưng hầu hết các hoạt động bình thường có thể được tiếp tục. Không cần nghỉ ngơi tại giường kéo dài."
+            },
+            { 
+              miniStep: "Trữ Đông Phôi Dư",
+              desc:"Bất kỳ phôi chất lượng tốt nào còn lại có thể được đông lạnh (trữ đông) để sử dụng trong tương lai."
+            },
+          ]
+        },
+        {
+          title: "Sau Chuyển Phôi",
+          desc: "Sau khi chuyển phôi, bạn sẽ bắt đầu giai đoạn chờ đợi để xem liệu phôi có làm tổ thành công không.",
+          duration: "9-14 ngày cho đến khi xét nghiệm thai",
+          note: [
+            { 
+              miniStep: "Hỗ Trợ Giai Đoạn Hoàng Thể",
+              desc:"Bạn sẽ được kê đơn progesterone (và đôi khi là estrogen) để hỗ trợ niêm mạc tử cung và tạo điều kiện cho việc làm tổ. Những thuốc này thường được tiếp tục trong vài tuần nếu bạn mang thai."
+            },
+            { 
+              miniStep: "Xét Nghiệm Thai",
+              desc:"Khoảng 9-14 ngày sau khi chuyển phôi, bạn sẽ làm xét nghiệm máu để xác định xem bạn có mang thai không. Xét nghiệm máu đo nồng độ hormone hCG, được sản xuất khi phôi làm tổ."
+            },
+            { 
+              miniStep: "Theo Dõi Sớm",
+              desc:"Nếu xét nghiệm thai dương tính, bạn sẽ được theo dõi chặt chẽ trong những tuần đầu. Siêu âm sẽ được thực hiện để xác nhận thai trong tử cung và kiểm tra nhịp tim thai."
+            },
+          ]
         }
       ]
     },
@@ -97,19 +197,19 @@ const IvfDetail = () => {
       questions: [
         {
           q: "IVF có đau không?",
-          a: "Hầu hết các bước quan cần qua IVF đều cho thấy mức độ đau nhẹ đến trung bình hoặc không đau. Thủ thuật lấy trứng được thực hiện dưới gây mê nhẹ, vì vậy bạn sẽ không cảm thấy đau trong quá trình này."
+          a: "Hầu hết các bệnh nhân cảm thấy khó chịu nhẹ trong quá trình kích thích buồng trứng do tiêm thuốc và buồng trứng phình to. Thủ thuật lấy trứng được thực hiện dưới gây mê nhẹ, vì vậy bạn sẽ không cảm thấy đau trong quá trình này. Sau khi lấy trứng, một số phụ nữ có thể cảm thấy đau nhẹ hoặc chuột rút trong 1-2 ngày. Thủ thuật chuyển phôi thường không đau và tương tự như xét nghiệm Pap."
         },
         {
-          q: "Bao nhiêu cơ chế trả ốm IVF không?",
-          a: "Bảo hiểm y tế ở Việt Nam thường không chi trả cho điều trị hiếm muộn, bao gồm IVF. Tuy nhiên, một số cơ sở hiến máu có thể chi trả một phần chi phí. Chúng tôi khuyến bạn nên kiểm tra với công ty bảo hiểm của mình để biết chi tiết."
+          q: "Bảo hiểm có chi trả cho IVF không?",
+          a: "Bảo hiểm y tế ở Việt Nam thường không chi trả cho điều trị hiếm muộn, bao gồm IVF. Tuy nhiên, một số bảo hiểm tư nhân có thể chi trả một phần chi phí. Chúng tôi khuyên bạn nên kiểm tra với công ty bảo hiểm của mình về phạm vi bảo hiểm cụ thể. Đội ngũ tài chính của chúng tôi có thể giúp bạn điều hướng các lựa chọn bảo hiểm và tài chính.Bảo hiểm y tế ở Việt Nam thường không chi trả cho điều trị hiếm muộn, bao gồm IVF. Tuy nhiên, một số cơ sở hiến máu có thể chi trả một phần chi phí. Chúng tôi khuyến bạn nên kiểm tra với công ty bảo hiểm của mình để biết chi tiết."
         },
         {
-          q: "Tôi có cơ hội mang thai nhiều không?",
-          a: "Cơ hội mang thai bội số (sinh đôi, ba...) là khoảng 20-25% trong chu kỳ IVF đơn lẻ, tùy thuộc vào số lượng phôi được chuyển."
+          q: "Tôi có thể làm việc trong quá trình điều trị IVF không?",
+          a: "Hầu hết bệnh nhân có thể duy trì lịch làm việc bình thường trong quá trình điều trị IVF, với một số điều chỉnh cho các cuộc hẹn theo dõi. Bạn có thể cần nghỉ làm vào ngày lấy trứng (một ngày) và có thể là vào ngày chuyển phôi (vài giờ). Một số bệnh nhân chọn nghỉ làm thêm vài ngày sau khi chuyển phôi, mặc dù không có bằng chứng y tế cho thấy nghỉ ngơi tại giường cải thiện kết quả."
         },
         {
           q: "IVF có an toàn không?",
-          a: "IVF là một phương pháp điều trị an toàn khi được thực hiện bởi các chuyên gia có kinh nghiệm. Tuy nhiên, như mọi thủ thuật y tế, có thể có một số rủi ro nhỏ."
+          a: "IVF nói chung là an toàn, nhưng như mọi thủ thuật y tế, có một số rủi ro. Rủi ro chính bao gồm hội chứng quá kích buồng trứng (OHSS), đa thai, và các biến chứng hiếm gặp từ thủ thuật lấy trứng. Tại phòng khám của chúng tôi, chúng tôi thực hiện nhiều biện pháp để giảm thiểu những rủi ro này, bao gồm theo dõi cẩn thận và các phác đồ kích thích được cá nhân hóa. Chúng tôi sẽ thảo luận chi tiết về các rủi ro cụ thể trong buổi tư vấn của bạn."
         }
       ]
     }
@@ -182,6 +282,14 @@ const IvfDetail = () => {
             <div className="step-content">
               <h3>{step.title}</h3>
               <p>{step.desc}</p>
+              <div className="note">
+                {step.note.map((noteItem, noteIndex) => (
+                  <div key={noteIndex} className="note-item">
+                    <p><strong>{noteItem.miniStep}:</strong></p>
+                    <p> {noteItem.desc}</p>
+                  </div>
+                ))}
+              </div>
               {step.duration && <span className="duration">{step.duration}</span>}
             </div>
           </div>
@@ -271,8 +379,8 @@ const IvfDetail = () => {
         <h2>Giải Pháp Hiệu Quả Cho Hiếm Muộn</h2>
         <p>{pageData.description}</p>
         <div className="action-buttons">
-          <button className="primary-btn">Các Bước Tiếp Theo</button>
-          <button className="secondary-btn">Đặt Lịch Tư Vấn</button>
+          <button className="primary-btn">Đặt Lịch Tư Vấn</button>
+          <button className="secondary-btn">Gặp gỡ đội ngũ bác sĩ</button>
         </div>
       </div>
 

@@ -11,9 +11,9 @@ export default defineConfig({
       '@lib': path.resolve(__dirname, './src/lib'),
       '@features': path.resolve(__dirname, './src/features'),
       '@components': path.resolve(__dirname, './src/components'),
-      '@customerpages': path.resolve(__dirname, './src/pages/customer'),
-      '@adminpages': path.resolve(__dirname, './src/pages/admin'),
-      '@doctorpages': path.resolve(__dirname, './src/pages/doctor'),
+      '@customerpages': path.resolve(__dirname, './src/Pages/customer'),
+      '@adminpages': path.resolve(__dirname, './src/Pages/admin'),
+      '@doctorpages': path.resolve(__dirname, './src/Pages/doctor'),
     },
   },
 })
