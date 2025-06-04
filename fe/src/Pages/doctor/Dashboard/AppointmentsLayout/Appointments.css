@@ -46,10 +46,25 @@
   background: #f3f4f6;
 }
 
-.schedule-container .btn.red {
-  background: #e11d48;
-  color: #fff;
-  border: none;
+.schedule-container .btn.btn-start {
+  background: #10b981;
+  color: white;
+}
+
+.schedule-container .btn.btn-message {
+  background: #3b82f6;
+  color: white;
+}
+
+.schedule-container .btn.btn-not-ready {
+  background: #9ca3af;
+  color: white;
+  cursor: not-allowed;
+}
+
+.schedule-container .btn.btn-not-ready:hover {
+  background: #9ca3af;
+  cursor: not-allowed;
 }
 
 .schedule-container .schedule-table {
@@ -71,10 +86,11 @@
   gap: 12px;
 }
 
-.schedule-container .patient-info img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+.schedule-container .patient-name {
+  font-weight: 600;
+  font-size: 15px;
+  color: #111827;
+  margin-bottom: 2px;
 }
 
 .schedule-container .patient-id {
@@ -87,31 +103,18 @@
   font-size: 13px;
 }
 
-.schedule-container .badge {
+.schedule-container .treatment-badge {
   padding: 4px 10px;
   font-size: 13px;
   border-radius: 12px;
   display: inline-block;
-}
-
-.schedule-container .badge.blue {
   background: #e0f2fe;
   color: #0284c7;
 }
 
-.schedule-container .badge.purple {
-  background: #ede9fe;
-  color: #7c3aed;
-}
-
-.schedule-container .badge.green {
-  background: #dcfce7;
+.schedule-container .treatment-badge.consultation {
+  background: #f0fdf4;
   color: #16a34a;
-}
-
-.schedule-container .badge.red {
-  background: #fee2e2;
-  color: #dc2626;
 }
 
 .schedule-container .pagination {
@@ -189,6 +192,4 @@
   margin-bottom: 8px;
 }
 
-.schedule-container .schedule-table .btn {
-  margin-right: 8px;
-}
+

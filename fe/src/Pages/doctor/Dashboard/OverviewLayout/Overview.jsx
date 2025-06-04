@@ -71,22 +71,7 @@ export default function Overview() {
     },
   ];
 
-  const patients = [
-    {
-      id: 1,
-      name: "Lê Thị Hương",
-      cycle: "IVF Chu kỳ #3 - Ngày 12",
-      note: "Phản ứng quá mức với thuốc kích trứng",
-      urgency: "Ưu tiên cao",
-    },
-    {
-      id: 2,
-      name: "Trần Thị Thanh",
-      cycle: "IVF Chu kỳ #1 - Ngày 8",
-      note: "Đáp ứng chậm với thuốc kích trứng",
-      urgency: "Theo dõi",
-    },
-  ];
+
 
   return (
     <div className="dashboard-wrapper">
@@ -128,59 +113,29 @@ export default function Overview() {
         ))}
       </div>
 
-      <div className="columns">
-        <section className="appointment-section">
-          <h2>Lịch hẹn hôm nay</h2>
-          <p className="sub-heading">Thứ Hai, 20/05/2024</p>
-          <div className="appointment-list">
-            {appointments.map((appt) => (
-              <div key={appt.id} className="appointment-card">
-                <div className="appointment-info">
-                  <p className="patient-name">{appt.name}</p>
-                  <p className="appointment-note">{appt.note}</p>
-                  <div className="actions">
-                    <a href="#">Xem hồ sơ</a>
-                    <span> · </span>
-                    <a href="#">Ghi chú</a>
-                  </div>
-                </div>
-                <div className="appointment-time">{appt.time}</div>
-              </div>
-            ))}
-          </div>
-          <div className="see-more">
-            <a href="#">Xem tất cả lịch hẹn</a>
-          </div>
-        </section>
-
-        <section className="patient-tracking">
-          <h2>Theo dõi bệnh nhân</h2>
-          <p className="desc">Bệnh nhân cần lưu ý đặc biệt</p>
-          {patients.map((p) => (
-            <div
-              key={p.id}
-              className={`tracking-card ${
-                p.urgency === "Ưu tiên cao" ? "urgent" : "watch"
-              }`}
-            >
-              <div>
-                <p className="name">{p.name}</p>
-                <p className="cycle">{p.cycle}</p>
-                <p className="note">Cần theo dõi: {p.note}</p>
-                <div className="links">
-                  <a href="#">Xem hồ sơ</a>
+      <section className="appointment-section">
+        <h2>Lịch hẹn hôm nay</h2>
+        <p className="sub-heading">Thứ Hai, 20/05/2024</p>
+        <div className="appointment-list">
+          {appointments.map((appt) => (
+            <div key={appt.id} className="appointment-card">
+              <div className="appointment-info">
+                <p className="patient-name">{appt.name}</p>
+                <p className="appointment-note">{appt.note}</p>
+                <div className="actions">
+                  <a href="/patient-profile">Xem hồ sơ</a>
                   <span> · </span>
-                  <a href="#">Liên hệ</a>
+                  <a href="#">Ghi chú</a>
                 </div>
               </div>
-              <div className="label">{p.urgency}</div>
+              <div className="appointment-time">{appt.time}</div>
             </div>
           ))}
-          <div className="see-more">
-            <a href="#">Xem tất cả bệnh nhân theo dõi</a>
-          </div>
-        </section>
-      </div>
+        </div>
+        <div className="see-more">
+          <a href="#">Xem tất cả lịch hẹn</a>
+        </div>
+      </section>
     </div>
   );
 }

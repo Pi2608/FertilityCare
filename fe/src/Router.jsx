@@ -14,7 +14,10 @@ import Appointments from './Pages/doctor/Dashboard/AppointmentsLayout/Appointmen
 import Appointment from './Pages/manager/Appointment/Appointment';
 import Patients from './Pages/doctor/Dashboard/PatientsLayout/Patients';
 import Message from './Pages/doctor/Dashboard/MessageLayout/Message';
-import PatientTrackingDetail from './Pages/doctor/Dashboard/PatientTrackingDetailLayout/PatientTrackingDetail';
+
+import PatientProfileLayout from './Pages/doctor/Dashboard/PatientProfileLayout/PatientProfileLayout';
+import PatientAppointment from './Pages/doctor/Dashboard/PatientAppointment/PatientAppointment';
+
 
 const USER_TYPES = {
   NORMAL_USER: "Customer",
@@ -68,6 +71,26 @@ export const router = createBrowserRouter([
         path: "ivf",
         element: <IvfDetail />,
       }
+    ]
+  },
+  {
+    path: "/patient-profile",
+    element: <PageLayout />,
+    children: [
+      {
+        index: true, // tương đương path: "/"
+        element: <PatientProfileLayout />,
+      },
+    ]
+  },
+  {
+    path: "/patient-appointment",
+    element: <PageLayout />,
+    children: [
+      {
+        index: true, // tương đương path: "/"
+        element: <PatientAppointment />,
+      },
     ]
   },
   {
@@ -133,11 +156,7 @@ export const router = createBrowserRouter([
         path: "patients",
         element: <Patients />,
       },
-      {
-        index: false,
-        path: "patients-tracking",
-        element: <PatientTrackingDetail />,
-      },
+
       {
         index: false, // không phải là trang chính
         path: "messages",

@@ -71,10 +71,11 @@
   gap: 12px;
 }
 
-.patients-container .patient-info img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+.patients-container .patient-name {
+  font-weight: 600;
+  font-size: 15px;
+  color: #111827;
+  margin-bottom: 2px;
 }
 
 .patients-container .patient-id {
@@ -99,9 +100,37 @@
   color: #0284c7;
 }
 
-.patients-container .badge.urgent {
-  background: #fee2e2;
-  color: #dc2626;
+.patients-container .badge.completed {
+  background: transparent;
+  color: #374151;
+  border: none;
+  padding: 0;
+  font-size: 14px;
+}
+
+/* Treatment badge styles */
+.patients-container .treatment-badge {
+  padding: 4px 10px;
+  font-size: 13px;
+  border-radius: 12px;
+  display: inline-block;
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.patients-container .treatment-badge.consultation {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+.patients-container .treatment-stage {
+  font-size: 14px;
+}
+
+/* Button styles */
+.patients-container .btn.btn-message {
+  background: #3b82f6;
+  color: white;
 }
 
 .patients-container .pagination {
