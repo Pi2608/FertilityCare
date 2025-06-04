@@ -1,7 +1,11 @@
 import React from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 import './TreatmentCard.css';
 
 function TreatmentCard({ title, miniTitle, content, image, info }) {
+
+  const navigate = useNavigate();
+
   return (
     <div className="treatment-card">
       <div className="img-container">
@@ -21,7 +25,7 @@ function TreatmentCard({ title, miniTitle, content, image, info }) {
           </ul>
         }
       </div>
-      <button className="card-button">Tìm Hiểu Thêm →</button>
+      <button className="card-button" onClick={() => navigate('/treatment-method/ivf')}>Tìm Hiểu Thêm →</button>
     </div>
   );
 }

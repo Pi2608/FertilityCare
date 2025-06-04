@@ -1,5 +1,5 @@
 .treatment-method {
-  padding: 20px;
+  padding: 50px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -26,9 +26,9 @@
 }
 
 .treatment-method .button-section {
-    display: flex;
-    margin: 20px 0 20px 0;
-    gap: 10px;
+  display: flex;
+  margin: 20px 0 20px 0;
+  gap: 10px;
 }
 
 
