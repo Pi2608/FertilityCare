@@ -1,0 +1,151 @@
+.patients-container {
+  width: 90%;
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.patients-container .patients-header {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.patients-container .patients-header h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.patients-container .patients-header p {
+  margin: 0;
+  color: #666;
+}
+
+.patients-container .patients-actions input,
+.patients-container .patients-actions select,
+.patients-container .patients-actions button {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  margin-right: 8px;
+}
+
+.patients-container .btn {
+  padding: 8px 12px;
+  margin-right: 6px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  background: #f3f4f6;
+}
+
+.patients-container .btn.red {
+  background: #e11d48;
+  color: white;
+}
+
+.patients-container .patients-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+.patients-container .patients-table th,
+.patients-container .patients-table td {
+  padding: 14px;
+  border-bottom: 1px solid #f1f1f1;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.patients-container .patient-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.patients-container .patient-name {
+  font-weight: 600;
+  font-size: 15px;
+  color: #111827;
+  margin-bottom: 2px;
+}
+
+.patients-container .patient-id {
+  color: #888;
+  font-size: 13px;
+}
+
+.patients-container .badge {
+  padding: 4px 10px;
+  font-size: 13px;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+.patients-container .badge.active {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.patients-container .badge.new {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.patients-container .badge.completed {
+  background: transparent;
+  color: #374151;
+  border: none;
+  padding: 0;
+  font-size: 14px;
+}
+
+/* Treatment badge styles */
+.patients-container .treatment-badge {
+  padding: 4px 10px;
+  font-size: 13px;
+  border-radius: 12px;
+  display: inline-block;
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.patients-container .treatment-badge.consultation {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+.patients-container .treatment-stage {
+  font-size: 14px;
+}
+
+/* Button styles */
+.patients-container .btn.btn-message {
+  background: #3b82f6;
+  color: white;
+}
+
+.patients-container .pagination {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.patients-container .pagination button {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  margin: 0 8px;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.patients-container .patients-table .btn {
+  margin-right: 8px;
+}

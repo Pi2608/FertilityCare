@@ -35,21 +35,22 @@ export default function Message() {
   return (
     <div className="message-wrapper">
       <div className="sidebar">
-      <h3> </h3>
         <h3>Bệnh nhân</h3>
-        {patients.map((p) => (
-          <div
-            key={p.id}
-            className={`patient-item ${selectedPatient.id === p.id ? 'active' : ''}`}
-            onClick={() => setSelectedPatient(p)}
-          >
-            <img src={p.avatar} alt="avatar" />
-            <div>
-              <div className="name">{p.name}</div>
-              <div className="preview">{p.lastMessage}</div>
+        <div className="patient-list">
+          {patients.map((p) => (
+            <div
+              key={p.id}
+              className={`patient-item ${selectedPatient.id === p.id ? 'active' : ''}`}
+              onClick={() => setSelectedPatient(p)}
+            >
+              <img src={p.avatar} alt="avatar" />
+              <div>
+                <div className="name">{p.name}</div>
+                <div className="preview">{p.lastMessage}</div>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
 

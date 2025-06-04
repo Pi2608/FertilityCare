@@ -9,12 +9,15 @@ import TreatmentMethod from '@customerpages/TreatmentMethod/TreatmentMethod';
 import IvfDetail from '@customerpages/IvfDetail/IvfDetail';
 import CusDashboard from '@customerpages/Dashboard/CusDashboard';
 import DocDashboard from '@doctorpages/Dashboard/DocDashboard';
-import Overview from './Pages/doctor/Dashboard/Overview';
-import Appointments from './Pages/doctor/Dashboard/Appointments';
+import Overview from './Pages/doctor/Dashboard/OverviewLayout/Overview';
+import Appointments from './Pages/doctor/Dashboard/AppointmentsLayout/Appointments';
 import Appointment from './Pages/manager/Appointment/Appointment';
-import Patients from './Pages/doctor/Dashboard/Patients';
-import Message from './Pages/doctor/Dashboard/Message';
-import PatientTrackingDetail from './Pages/doctor/Dashboard/PatientTrackingDetail';
+import Patients from './Pages/doctor/Dashboard/PatientsLayout/Patients';
+import Message from './Pages/doctor/Dashboard/MessageLayout/Message';
+
+import PatientProfileLayout from './Pages/doctor/Dashboard/PatientProfileLayout/PatientProfileLayout';
+import PatientAppointment from './Pages/doctor/Dashboard/PatientAppointment/PatientAppointment';
+
 
 const USER_TYPES = {
   NORMAL_USER: "Customer",
@@ -68,6 +71,26 @@ export const router = createBrowserRouter([
         path: "ivf",
         element: <IvfDetail />,
       }
+    ]
+  },
+  {
+    path: "/patient-profile",
+    element: <PageLayout />,
+    children: [
+      {
+        index: true, // tương đương path: "/"
+        element: <PatientProfileLayout />,
+      },
+    ]
+  },
+  {
+    path: "/patient-appointment",
+    element: <PageLayout />,
+    children: [
+      {
+        index: true, // tương đương path: "/"
+        element: <PatientAppointment />,
+      },
     ]
   },
   {
@@ -133,11 +156,7 @@ export const router = createBrowserRouter([
         path: "patients",
         element: <Patients />,
       },
-      {
-        index: false,
-        path: "patients-tracking",
-        element: <PatientTrackingDetail />,
-      },
+
       {
         index: false, // không phải là trang chính
         path: "messages",

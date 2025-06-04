@@ -5,38 +5,42 @@ const scheduleData = [
   {
     id: "PT-2024-0123",
     name: "Nguyễn Thị Hoa",
-    avatar: "https://i.pravatar.cc/100?img=1",
+    age: 34,
     time: "09:00 - 09:30",
     date: "20/05/2024",
-    type: "Tư vấn",
-    typeColor: "blue",
+    treatmentType: "IVF chu kỳ 2",
+    treatmentStage: "Kích trứng",
+    status: "ready",
   },
   {
     id: "PT-2024-0145",
     name: "Trần Văn Linh",
-    avatar: "https://i.pravatar.cc/100?img=2",
+    age: 28,
     time: "10:30 - 11:15",
     date: "20/05/2024",
-    type: "Tư vấn ban đầu",
-    typeColor: "purple",
+    treatmentType: "Tư vấn",
+    treatmentStage: "Kích trứng",
+    status: "not_ready",
   },
   {
     id: "PT-2024-0098",
     name: "Phạm Thị Mai",
-    avatar: "https://i.pravatar.cc/100?img=3",
+    age: 31,
     time: "13:15 - 13:45",
     date: "20/05/2024",
-    type: "Siêu âm",
-    typeColor: "green",
+    treatmentType: "IUI chu kỳ cuối",
+    treatmentStage: "Kích trứng",
+    status: "not_ready",
   },
   {
     id: "PT-2024-0112",
     name: "Lê Thị Hương",
-    avatar: "https://i.pravatar.cc/100?img=4",
+    age: 29,
     time: "14:30 - 15:00",
     date: "20/05/2024",
-    type: "Khẩn cấp",
-    typeColor: "red",
+    treatmentType: "Tư vấn",
+    treatmentStage: "Kích trứng",
+    status: "not_ready",
   },
 ];
 
@@ -63,8 +67,10 @@ export default function Appointments() {
         <thead>
           <tr>
             <th>Bệnh nhân</th>
+            <th>Tuổi</th>
             <th>Thời gian</th>
-            <th>Loại</th>
+            <th>Loại điều trị</th>
+            <th>Giai đoạn điều trị</th>
             <th>Hành động</th>
           </tr>
         </thead>
@@ -73,24 +79,42 @@ export default function Appointments() {
             <tr key={index}>
               <td>
                 <div className="patient-info">
-                  <img src={item.avatar} alt="avatar" />
                   <div>
-                    <div>{item.name}</div>
+                    <div className="patient-name">{item.name}</div>
                     <span className="patient-id">ID: {item.id}</span>
                   </div>
                 </div>
               </td>
               <td>
-                <div>{item.time}</div>
-                <div className="date">{item.date}</div>
+                <span className="patient-age">{item.age}</span>
               </td>
               <td>
-                <span className={`badge ${item.typeColor}`}>{item.type}</span>
+                <div className="time-info">
+                  <div>{item.time}</div>
+                  <div className="date">{item.date}</div>
+                </div>
+              </td>
+              <td>
+                <span className={`treatment-badge ${item.treatmentType === "Tư vấn" ? "consultation" : ""}`}>
+                  {item.treatmentType}
+                </span>
+              </td>
+              <td>
+                <span className="treatment-stage">{item.treatmentStage}</span>
               </td>
               <td>
                 <div className="actions">
-                  <button className="btn">Chi tiết</button>
-                  <button className="btn red">Bắt đầu</button>
+                  {item.status === "ready" ? (
+                    <>
+                      <button className="btn btn-start">Bắt đầu</button>
+                      <button className="btn btn-message">Nhắn tin</button>
+                    </>
+                  ) : (
+                    <>
+                      <button className="btn btn-not-ready">Chưa mở</button>
+                      <button className="btn btn-message">Nhắn tin</button>
+                    </>
+                  )}
                 </div>
               </td>
             </tr>

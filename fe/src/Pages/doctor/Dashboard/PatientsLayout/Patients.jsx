@@ -6,38 +6,38 @@ const patients = [
   {
     id: 'PT-2024-0123',
     name: 'Nguyễn Thị Hoa',
-    age: '34',
+    age: 34,
+    treatmentType: 'IVF chu kỳ 2',
+    treatmentStage: 'Kích trứng',
     status: 'Đang điều trị',
     statusType: 'active',
-    treatment: 'IVF Chu kỳ #2',
-    avatar: 'https://i.pravatar.cc/100?img=1',
   },
   {
     id: 'PT-2024-0145',
     name: 'Trần Văn Linh',
-    age: '38',
-    status: 'Mới',
-    statusType: 'new',
-    treatment: 'Đánh giá ban đầu',
-    avatar: 'https://i.pravatar.cc/100?img=2',
+    age: 28,
+    treatmentType: 'Tư vấn',
+    treatmentStage: 'Kích trứng',
+    status: 'Hoàn thành điều trị',
+    statusType: 'completed',
   },
   {
     id: 'PT-2024-0098',
     name: 'Phạm Thị Mai',
-    age: '32',
-    status: 'Đang điều trị',
-    statusType: 'active',
-    treatment: 'IVF Chu kỳ #1',
-    avatar: 'https://i.pravatar.cc/100?img=3',
+    age: 31,
+    treatmentType: 'IUI chu kỳ cuối',
+    treatmentStage: 'Kích trứng',
+    status: 'Hoàn thành điều trị',
+    statusType: 'completed',
   },
   {
     id: 'PT-2024-0112',
     name: 'Lê Thị Hương',
-    age: '39',
-    status: 'Ưu tiên',
-    statusType: 'urgent',
-    treatment: 'IVF Chu kỳ #3',
-    avatar: 'https://i.pravatar.cc/100?img=4',
+    age: 29,
+    treatmentType: 'Tư vấn',
+    treatmentStage: 'Kích trứng',
+    status: 'Hoàn thành điều trị',
+    statusType: 'completed',
   },
 ];
 
@@ -55,10 +55,9 @@ export default function Patients() {
           <select>
             <option>Tất cả</option>
             <option>Đang điều trị</option>
-            <option>Mới</option>
-            <option>Ưu tiên</option>
+            <option>Hoàn thành điều trị</option>
           </select>
-          
+
         </div>
       </div>
 
@@ -68,8 +67,9 @@ export default function Patients() {
           <tr>
             <th>Bệnh nhân</th>
             <th>Tuổi</th>
+            <th>Loại điều trị</th>
+            <th>Giai đoạn điều trị</th>
             <th>Trạng thái</th>
-            <th>Điều trị</th>
             <th>Hành động</th>
           </tr>
         </thead>
@@ -78,22 +78,28 @@ export default function Patients() {
             <tr key={i}>
               <td>
                 <div className="patient-info">
-                  <img src={p.avatar} alt="avatar" />
                   <div>
-                    <div>{p.name}</div>
+                    <div className="patient-name">{p.name}</div>
                     <span className="patient-id">ID: {p.id}</span>
                   </div>
                 </div>
               </td>
               <td>{p.age}</td>
               <td>
+                <span className={`treatment-badge ${p.treatmentType === "Tư vấn" ? "consultation" : ""}`}>
+                  {p.treatmentType}
+                </span>
+              </td>
+              <td>
+                <span className="treatment-stage">{p.treatmentStage}</span>
+              </td>
+              <td>
                 <span className={`badge ${p.statusType}`}>{p.status}</span>
               </td>
-              <td>{p.treatment}</td>
               <td>
                 <div className="actions">
                   <button className="btn">Hồ sơ</button>
-                  <button className="btn red">Xem</button>
+                  <button className="btn btn-message">Nhắn tin</button>
                 </div>
               </td>
             </tr>
