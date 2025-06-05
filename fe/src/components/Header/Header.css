@@ -12,6 +12,7 @@
   color: #e11d48;
   font-size: 1.5rem;
   font-weight: bold;
+  cursor: pointer;
 }
 
 #header .nav-links a {

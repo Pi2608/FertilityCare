@@ -1,5 +1,6 @@
 import React from 'react'
 import { createBrowserRouter, Navigate } from "react-router-dom";
+import Authentication from '@/Pages/Authentication/Authentication';
 import PageLayout from '@components/Layout/PageLayout/PageLayout';
 import CusLayout from '@components/Layout/CusLayout/CusLayout';
 import DocLayout from '@components/Layout/DocLayout/DocLayout';
@@ -61,6 +62,16 @@ export const router = createBrowserRouter([
       {
         index: true, // tương đương path: "/"
         element: <Homepage />,
+      },
+    ]
+  },
+  {
+    path: "/authentication",
+    element: <PageLayout />,
+    children: [
+      {
+        index: true,
+        element: <Authentication />
       },
     ]
   },
