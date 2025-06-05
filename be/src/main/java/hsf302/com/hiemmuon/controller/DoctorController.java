@@ -81,4 +81,17 @@ public class DoctorController {
         );
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/{doctorId}")
+    public ResponseEntity<ApiResponse<?>> getDoctorById(
+            @PathVariable("doctorId") int doctorId) {
+        Doctor doctor = doctorService.getDoctorByUserId (doctorId);
+
+        ApiResponse<Doctor> response = new ApiResponse<>(
+                200,
+                "Doctor retrieved successfully",
+                doctor
+        );
+        return ResponseEntity.ok(response);
+    }
 }

@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 public interface DoctorService {
 
-    Optional<Doctor> getDoctorByUserId(int userId);
+    Doctor getDoctorByUserId(int userId);
 
     Doctor createDoctor(CreateDoctorDTO request);
 

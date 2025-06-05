@@ -25,7 +25,7 @@ public class DoctorServiceImpl implements DoctorService {
     @Autowired
     private DoctorRepository doctorRepository;
 
-    public Optional<Doctor> getDoctorByUserId(int userId) {
+    public Doctor getDoctorByUserId(int userId) {
         return doctorRepository.findByUserUserId(userId);
     }
 
@@ -61,8 +61,7 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public Doctor updateDoctor(int id, UpdateDoctorDTO updateDoctorDTO) {
-        Doctor existingDoctor = getDoctorByUserId(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid doctor Id: " + id));
+        Doctor existingDoctor = getDoctorByUserId(id);
 
         User existingUser = existingDoctor.getUser();
 
@@ -89,8 +88,7 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public Doctor updateDoctorActive(int id, boolean active) {
-        Doctor doctor = getDoctorByUserId(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid doctor ID: " + id));
+        Doctor doctor = getDoctorByUserId(id);
         ;
         doctor.setIsActive(active);
         return saveDoctor(doctor);
