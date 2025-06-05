@@ -21,7 +21,7 @@
 }
 
 .dashboard-wrapper .appointment-section {
-  width: 100%;
+  width: 97%;
   max-width: none;
   margin-bottom: 40px;
 }
@@ -203,7 +203,6 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 32px;
   flex-wrap: wrap;
 }
 

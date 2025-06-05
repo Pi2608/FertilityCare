@@ -14,6 +14,7 @@ import Appointments from './Pages/doctor/Dashboard/AppointmentsLayout/Appointmen
 import Appointment from './Pages/manager/Appointment/Appointment';
 import Patients from './Pages/doctor/Dashboard/PatientsLayout/Patients';
 import Message from './Pages/doctor/Dashboard/MessageLayout/Message';
+import ProfileLayout from './Pages/doctor/Dashboard/ProfileLayout/ProfileLayout';
 
 import PatientProfileLayout from './Pages/doctor/Dashboard/PatientProfileLayout/PatientProfileLayout';
 import PatientAppointment from './Pages/doctor/Dashboard/PatientAppointment/PatientAppointment';
@@ -159,7 +160,7 @@ export const router = createBrowserRouter([
       },
       {
         index: false,
-        path: " ",
+        path: "patients",
         element: <Patients />,
       },
 
@@ -180,8 +181,8 @@ export const router = createBrowserRouter([
       },
       {
         index: false, // không phải là trang chính
-        path: "settings",
-        element: <DocDashboard />,
+        path: "profile",
+        element: <ProfileLayout />,
       }
     ]
   },
