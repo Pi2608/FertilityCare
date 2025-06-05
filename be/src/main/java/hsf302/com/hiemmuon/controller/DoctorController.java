@@ -6,10 +6,8 @@ import hsf302.com.hiemmuon.dto.UpdateDoctorDTO;
 import hsf302.com.hiemmuon.entity.Doctor;
 import hsf302.com.hiemmuon.service.DoctorServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -25,60 +23,62 @@ public class DoctorController {
         return doctorService.findAll();
     }
 
-//    @PostMapping
-//    public ResponseEntity<ApiResponse<?>> createDoctor(@RequestBody CreateDoctorDTO request) {
-//        try {
-//            doctorService.createDoctor(request);
-//        } catch (Exception e) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-//        }
-//    }
+    @PostMapping
+    public ResponseEntity<ApiResponse<?>> createDoctor(@RequestBody CreateDoctorDTO request) {
+
+        Doctor doctor = doctorService.createDoctor(request);
+
+        ApiResponse<Doctor> response = new ApiResponse<>(
+                200,
+                "Doctor created successfully",
+                doctor
+        );
+        return ResponseEntity.ok(response);
+    }
+
 
     @PutMapping("/{doctorId}")
     public ResponseEntity<ApiResponse<?>> updateDoctor(
             @PathVariable("doctorId") int id,
             @RequestBody UpdateDoctorDTO updateDoctorDTO) {
-        try {
-            Doctor savedDoctor = doctorService.updateDoctor(id, updateDoctorDTO);
+        Doctor savedDoctor = doctorService.updateDoctor(id, updateDoctorDTO);
 
-            ApiResponse<Doctor> response = new ApiResponse<>(
-                    200,
-                    "Doctor updated successfully",
-                    savedDoctor
-            );
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
+        ApiResponse<Doctor> response = new ApiResponse<>(
+                200,
+                "Doctor updated successfully",
+                savedDoctor
+        );
+        return ResponseEntity.ok(response);
 
-            ApiResponse<?> errResponse = new ApiResponse<>(
-                    400,
-                    "Error: " + e.getMessage(),
-                    e.getMessage()
-            );
-            return ResponseEntity.badRequest().body(errResponse);
-        }
     }
 
     @PatchMapping("/{doctorId}/status")
     public ResponseEntity<ApiResponse<?>> updateDoctorStatus(
             @PathVariable("doctorId") int doctorId,
             @RequestParam("active") boolean active) {
-        try {
-            Doctor updatedDoctor = doctorService.updateDoctorActive(doctorId, active);
-            String statusText = active ? "activated" : "deactivated";
 
-            ApiResponse<Doctor> response = new ApiResponse<>(
-                    200,
-                    "Doctor " + updatedDoctor.getUser().getName() + " has been " + statusText,
-                    updatedDoctor
-            );
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            ApiResponse<?> errorResponse = new ApiResponse<>(
-                    400,
-                    "Error: " + e.getMessage(),
-                    e.getMessage()
-            );
-            return ResponseEntity.badRequest().body(errorResponse);
-        }
+        Doctor updatedDoctor = doctorService.updateDoctorActive(doctorId, active);
+        String statusText = active ? "activated" : "deactivated";
+
+        ApiResponse<Doctor> response = new ApiResponse<>(
+                200,
+                "Doctor " + updatedDoctor.getUser().getName() + " has been " + statusText,
+                updatedDoctor
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/description")
+    public ResponseEntity<ApiResponse<?>> getDoctorBySpecialization(
+            @RequestParam("description") String description) {
+
+        List<Doctor> doctors = doctorService.getDoctorByDescription(description);
+
+        ApiResponse<List<Doctor>> response = new ApiResponse<>(
+                200,
+                "Doctors with specialization " + description + " retrieved successfully",
+                doctors
+        );
+        return ResponseEntity.ok(response);
     }
 }

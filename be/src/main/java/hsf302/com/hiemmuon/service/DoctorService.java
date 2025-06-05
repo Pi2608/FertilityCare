@@ -13,6 +13,8 @@ public interface DoctorService {
 
     Optional<Doctor> getDoctorByUserId(int userId);
 
+    Doctor createDoctor(CreateDoctorDTO request);
+
     Doctor saveDoctor(Doctor doctor);
 
     List<Doctor> findAll();
@@ -21,6 +23,6 @@ public interface DoctorService {
 
     Doctor updateDoctorActive(int id, boolean active);
 
-    void createDoctor(CreateDoctorDTO request);
+    List<Doctor> getDoctorByDescription(String description);
 }
 
