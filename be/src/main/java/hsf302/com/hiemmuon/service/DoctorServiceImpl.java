@@ -67,20 +67,15 @@ public class DoctorServiceImpl implements DoctorService {
 
         if (updateDoctorDTO.getPassword() != null) {
             existingUser.setPassword(updateDoctorDTO.getPassword());
-        }
-        if (updateDoctorDTO.getName() != null) {
+        } else if (updateDoctorDTO.getName() != null) {
             existingUser.setName(updateDoctorDTO.getName());
-        }
-        if (updateDoctorDTO.getPhone() != null) {
+        } else if (updateDoctorDTO.getPhone() != null) {
             existingUser.setPhone(updateDoctorDTO.getPhone());
-        }
-        if (updateDoctorDTO.getDob() != null) {
+        } else if (updateDoctorDTO.getDob() != null) {
             existingUser.setDob(updateDoctorDTO.getDob());
-        }
-        if (updateDoctorDTO.getGender() != null) {
+        } else if (updateDoctorDTO.getGender() != null) {
             existingUser.setGender(updateDoctorDTO.getGender());
-        }
-        if (updateDoctorDTO.getDescription() != null) {
+        } else if (updateDoctorDTO.getDescription() != null) {
             existingDoctor.setDescription(updateDoctorDTO.getDescription());
         }
         return saveDoctor(existingDoctor);
@@ -97,5 +92,10 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public List<Doctor> getDoctorByDescription(String description) {
         return doctorRepository.findByDescription(description);
+    }
+
+    @Override
+    public List<Doctor> getDoctorByIsActive() {
+        return doctorRepository.findByIsActive(true);
     }
 }

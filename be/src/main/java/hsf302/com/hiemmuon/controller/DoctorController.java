@@ -18,7 +18,7 @@ public class DoctorController {
     @Autowired
     private DoctorServiceImpl doctorService;
 
-    @GetMapping
+    @GetMapping("/all")
     public List<Doctor> getAllDoctors() {
         return doctorService.findAll();
     }
@@ -91,6 +91,18 @@ public class DoctorController {
                 200,
                 "Doctor retrieved successfully",
                 doctor
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping()
+    public ResponseEntity<ApiResponse<?>> getDoctorByStatus() {
+        List<Doctor> doctors = doctorService.getDoctorByIsActive();
+
+        ApiResponse<List<Doctor>> response = new ApiResponse<>(
+                200,
+                "Doctors retrieved successfully",
+                doctors
         );
         return ResponseEntity.ok(response);
     }

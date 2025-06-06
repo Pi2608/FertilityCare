@@ -24,5 +24,7 @@ public interface DoctorService {
     Doctor updateDoctorActive(int id, boolean active);
 
     List<Doctor> getDoctorByDescription(String description);
+
+    List<Doctor> getDoctorByIsActive();
 }
 
