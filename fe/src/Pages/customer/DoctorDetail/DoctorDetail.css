@@ -185,6 +185,8 @@
 
 .doctor-detail .doctor-card {
     width: 310px;
+    display: flex;
+    flex-direction: column;
     border: 1px solid #e2e8f0;
     border-radius: 1rem;
     overflow: hidden;

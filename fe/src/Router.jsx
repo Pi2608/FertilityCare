@@ -61,16 +61,6 @@ export const router = createBrowserRouter([
     element: <Navigate to="/homepage" replace />,
   },
   {
-    path: "/homepage",
-    element: <PageLayout />,
-    children: [
-      {
-        index: true, // tương đương path: "/"
-        element: <Homepage />,
-      },
-    ]
-  },
-  {
     path: "/authentication",
     element: <PageLayout />,
     children: [
@@ -81,9 +71,13 @@ export const router = createBrowserRouter([
     ]
   },
   {
-    path: "/treatment-method",
+    path: "/homepage",
     element: <PageLayout />,
     children: [
+      {
+        index: true, // tương đương path: "/"
+        element: <Homepage />,
+      },
       {
         index: false,
         path: "treatment-method",
