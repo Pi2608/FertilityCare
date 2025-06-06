@@ -17,7 +17,7 @@ const Header = () => {
           <a href="#">Liên Hệ</a>
         </nav>
         <div className="actions">
-          <button className="login-btn" onClick={() => navigate('/authentication')}>Đăng Nhập</button>
+          <button className="login-btn" onClick={() => navigate('/authentication')}>Đăng Nhập/Đăng ký</button>
           <button className="appointment-btn">Đặt Lịch Hẹn</button>
         </div>
     </header>
