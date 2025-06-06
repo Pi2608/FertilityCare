@@ -1,0 +1,118 @@
+.tracking-list-container {
+  width: 90%;
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.tracking-list-container .patients-header {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.tracking-list-container .patients-header h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.tracking-list-container .patients-header p {
+  margin: 0;
+  color: #666;
+}
+
+.tracking-list-container .patients-actions input,
+.tracking-list-container .patients-actions select {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  margin-right: 8px;
+}
+
+.tracking-list-container .tracking-actions {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.tracking-list-container .tracking-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.tracking-list-container .tracking-table th,
+.tracking-list-container .tracking-table td {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.tracking-list-container .status-badge {
+  padding: 6px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+.tracking-list-container .status-badge.Đã\ uống {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.tracking-list-container .status-badge.Quên {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.tracking-list-container .status-badge.Trễ {
+  background: #fef9c3;
+  color: #92400e;
+}
+
+.tracking-list-container .priority-badge {
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+.tracking-list-container .priority-badge.Cao {
+  background: #fee2e2;
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+.tracking-list-container .priority-badge.Trung\ bình {
+  background: #e0f2fe;
+  color: #2563eb;
+}
+
+.tracking-list-container .priority-badge.Thấp {
+  background: #f0fdf4;
+  color: #15803d;
+}
+
+.tracking-list-container .btn {
+  padding: 8px 12px;
+  margin-right: 6px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  background: #f3f4f6;
+}
+
+.tracking-list-container .btn.red {
+  background: #e11d48;
+  color: white;
+}
