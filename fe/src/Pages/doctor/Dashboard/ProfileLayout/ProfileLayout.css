@@ -1,0 +1,261 @@
+/* Profile Container - matching patients page format */
+.profile-container {
+  width: 90%;
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+  font-family: 'Segoe UI', sans-serif;
+}
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.profile-header h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.profile-header p {
+  margin: 0;
+  color: #666;
+}
+
+
+.profile-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.doctor-info-section,
+.reviews-section {
+  background: #f9fafb;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+.doctor-info-section h3,
+.reviews-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #1e293b;
+}
+.doctor-card {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.doctor-avatar img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e5e7eb;
+}
+
+.doctor-details {
+  flex: 1;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-item label {
+  font-weight: 600;
+  color: #374151;
+  font-size: 14px;
+}
+
+.info-item span {
+  color: #6b7280;
+  font-size: 14px;
+  padding: 4px 0;
+}
+
+.edit-input,
+.edit-select {
+  padding: 12px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 44px;
+  appearance: none;
+}
+
+.edit-input:focus,
+.edit-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.edit-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 12px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-right: 40px;
+}
+.btn-save {
+  background: #10b981;
+  color: white;
+  border: 1px solid #10b981;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 16px;
+}
+
+.btn-save:hover {
+  background: #059669;
+}
+.reviews-summary {
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.rating-number {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1e293b;
+  display: block;
+}
+
+.stars {
+  margin: 8px 0;
+}
+
+.star {
+  font-size: 16px;
+  filter: grayscale(100%);
+}
+
+.star.filled {
+  filter: none;
+}
+
+.total-reviews {
+  color: #6b7280;
+  font-size: 12px;
+}
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.review-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.patient-info h4 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.treatment-type {
+  background: #dbeafe;
+  color: #1e40af;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.review-meta {
+  text-align: right;
+}
+
+.review-meta .rating {
+  margin-bottom: 4px;
+}
+
+.review-meta .star {
+  font-size: 12px;
+}
+
+.review-date {
+  color: #6b7280;
+  font-size: 11px;
+}
+
+.review-content p {
+  margin: 0;
+  color: #374151;
+  line-height: 1.5;
+  font-size: 13px;
+}
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .profile-content {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-container {
+    width: 95%;
+    padding: 16px;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .doctor-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .review-header {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .review-meta {
+    text-align: left;
+  }
+}

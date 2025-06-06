@@ -25,7 +25,7 @@ function TreatmentCard({ title, miniTitle, content, image, info }) {
           </ul>
         }
       </div>
-      <button className="card-button" onClick={() => navigate('/treatment-method/ivf')}>Tìm Hiểu Thêm →</button>
+      <button className="card-button" onClick={() => navigate('ivf')}>Tìm Hiểu Thêm →</button>
     </div>
   );
 }

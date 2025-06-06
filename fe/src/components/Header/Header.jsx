@@ -10,8 +10,8 @@ const Header = () => {
     <header id="header">
         <div className="logo" onClick={() => navigate('/homepage')}>Trung Tâm Hiếm Muộn</div>
         <nav className="nav-links">
-          <a href="/treatment-method">Phương Pháp Điều Trị</a>
-          <a href="#">Đội Ngũ Bác Sĩ</a>
+          <a href="/homepage/treatment-method">Phương Pháp Điều Trị</a>
+          <a href="/homepage/doctor-list">Đội Ngũ Bác Sĩ</a>
           <a href="#">Về Chúng Tôi</a>
           <a href="#">Blog</a>
           <a href="#">Liên Hệ</a>
