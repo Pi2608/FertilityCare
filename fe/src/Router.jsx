@@ -4,10 +4,13 @@ import PageLayout from '@components/Layout/PageLayout/PageLayout';
 import CusLayout from '@components/Layout/CusLayout/CusLayout';
 import DocLayout from '@components/Layout/DocLayout/DocLayout';
 import ManagerLayout from '@components/Layout/ManagerLayout/ManagerLayout.jsx';
+
 import Homepage from "@customerpages/Homepage/Homepage";
 import TreatmentMethod from '@customerpages/TreatmentMethod/TreatmentMethod';
 import IvfDetail from '@customerpages/IvfDetail/IvfDetail';
+import DoctorList from '@customerpages/DoctorList/DoctorList';
 import CusDashboard from '@customerpages/Dashboard/CusDashboard';
+
 import DocDashboard from '@doctorpages/Dashboard/DocDashboard';
 import Overview from './Pages/doctor/Dashboard/OverviewLayout/Overview';
 import Appointments from './Pages/doctor/Dashboard/AppointmentsLayout/Appointments';
@@ -24,6 +27,7 @@ import TreatmentService from './Pages/manager/TreatmentService/TreatmentService'
 import SuccessRate from './Pages/manager/TreatmentService/SuccessRate';
 import ProcessEdit from './Pages/manager/TreatmentService/ProcessEdit';
 import Medicine from './Pages/manager/Medicine/Medicine';
+import DoctorDetail from './Pages/customer/DoctorDetail/DoctorDetail';
 
 
 const USER_TYPES = {
@@ -63,21 +67,36 @@ export const router = createBrowserRouter([
         index: true, // tương đương path: "/"
         element: <Homepage />,
       },
-    ]
-  },
-  {
-    path: "/treatment-method",
-    element: <PageLayout />,
-    children: [
       {
-        index: true, // tương đương path: "/"
-        element: <TreatmentMethod />,
+        index: false,
+        path: "treatment-method",
+        children: [
+          {
+            index: true,
+            element: <TreatmentMethod />,
+          },
+          {
+            index: false, 
+            path: "ivf",
+            element: <IvfDetail />,
+          }
+        ]
       },
       {
-        index: false, 
-        path: "ivf",
-        element: <IvfDetail />,
-      }
+        index: false, // không phải là trang chính
+        path: "doctor-list",
+        children: [
+          {
+            index: true, // tương đương path: "/doctor-list"
+            element: <DoctorList />,
+          },
+          {
+            index: false,
+            path: "doctor-detail/:doctorId",
+            element: <DoctorDetail />,
+          },
+        ]
+      },
     ]
   },
   {
