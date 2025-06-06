@@ -1,0 +1,268 @@
+.doctor-detail {
+    padding: 50px 120px;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 20px;
+}
+
+.doctor-detail .doctor {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.doctor-detail .doctor-specialties {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+}
+
+.doctor-detail .nav-bar {
+    width: 100%s;
+    margin: 0 auto 2rem;
+    padding: 5px;
+    display: flex;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.doctor-detail .nav-item {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: .5rem;
+    cursor: pointer;
+    color: #6c757d;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.doctor-detail .nav-item:hover {
+    background-color: #e9ecef;
+    color: #495057;
+    border-radius: 4px;
+}
+
+.doctor-detail .nav-item.active {
+    background-color: #e11d48;
+    color: white;
+    border-radius: 4px;
+}
+
+.doctor-detail .detail-content > div {
+    color: black;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.doctor-detail .detail-content > div > div {
+    padding: 10px 20px 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+}
+
+.doctor-detail .detail-content > div > div > h1 {
+    margin-bottom: .6rem;
+}
+
+.doctor-detail .detail-content > div > div p {
+    font-size: 1rem;
+}
+
+.doctor-detail .detail-content .edu-cert .education .edu-list,
+.doctor-detail .detail-content .edu-cert .certificate .cert-list,
+.doctor-detail .detail-content .exp .exprience .exp-list,
+.doctor-detail .detail-content .exp .activity .act-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.doctor-detail .detail-content .edu-cert .education .edu-list > div,
+.doctor-detail .detail-content .edu-cert .certificate .cert-list > div,
+.doctor-detail .detail-content .exp .exprience .exp-list > div,
+.doctor-detail .detail-content .exp .activity .act-list > div {
+    position: relative;
+    padding-left: 10px;
+}
+
+.doctor-detail .detail-content .edu-cert .education .edu-list > div::before,
+.doctor-detail .detail-content .edu-cert .certificate .cert-list > div::before,
+.doctor-detail .detail-content .exp .exprience .exp-list > div::before,
+.doctor-detail .detail-content .exp .activity .act-list > div::before {
+    content: '';
+    position: absolute;
+    left: 0px;
+    display: block;
+    width: 2px;
+    height: 100%;
+    background-color: #e11d48;
+}
+
+.doctor-detail .detail-content .edu-cert .education .edu-list > div > p:not(.degree),
+.doctor-detail .detail-content .edu-cert .certificate .cert-list > div > p:not(.degree) {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.doctor-detail .detail-content .exp .exprience .exp-list > div > p:not(.position),
+.doctor-detail .detail-content .exp .activity .act-list > div > p:not(.workplace),
+.doctor-detail .detail-content .exp .activity .act-list > div > p:not(.act),
+.doctor-detail .detail-content .exp .exprience .exp-list > div  ul li,
+.doctor-detail .detail-content .exp .activity .act-list > div  ul li {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.doctor-detail .detail-content .exp .exprience .exp-list > div  ul li,
+.doctor-detail .detail-content .exp .activity .act-list > div  ul li {
+    margin-left: 20px;
+    list-style-type: disc;
+}
+
+.doctor-detail .working-hours-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+}
+
+.doctor-detail .working-hours-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 16px;
+    text-align: left;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    background-color: white;
+    transition: box-shadow 0.3s ease;
+}
+
+.doctor-detail .working-hours-card:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.doctor-detail .day {
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+.doctor-detail .time {
+    font-size: 14px;
+    color: #555;
+}
+
+.doctor-detail .specialties-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.doctor-detail .specialty-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.doctor-detail .specialty-label {
+    background-color: #fcdde2;
+    color: #b80039;
+    font-weight: 600;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 13px;
+    margin-right: 12px;
+    white-space: nowrap;
+}
+
+.doctor-detail .specialty-description {
+    font-size: 0.8rem;
+    color: #333;
+}
+
+.doctor-detail .doctor-card {
+    width: 310px;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+.doctor-detail .img-container {
+    width: 100%;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+}
+
+.doctor-detail .doctor-avatar {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 0;
+}
+
+.doctor-detail .doctor-info {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 16px;
+}
+
+.doctor-detail .doctor-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.doctor-detail .doctor-specialty {
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.doctor-detail .doctor-rating {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.doctor-detail .stars {
+    color: #fbc02d;
+    font-size: 15px;
+}
+
+.doctor-detail .rating-value {
+    font-weight: bold;
+}
+
+.doctor-detail .rating-count {
+    color: #777;
+}
+
+.doctor-detail .doctor-meta p {
+    margin: 4px 0;
+    font-size: 14px;
+    color: #444;
+}
+
+.doctor-detail .appointment-button {
+    margin-top: 12px;
+    width: 100%;
+    background-color: #000;
+    color: white;
+    border: none;
+    padding: 10px 0;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.doctor-detail .appointment-button:hover {
+    background-color: #222;
+}
