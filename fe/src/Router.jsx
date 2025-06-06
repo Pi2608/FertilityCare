@@ -11,6 +11,7 @@ import TreatmentMethod from '@customerpages/TreatmentMethod/TreatmentMethod';
 import IvfDetail from '@customerpages/IvfDetail/IvfDetail';
 import DoctorList from '@customerpages/DoctorList/DoctorList';
 import CusDashboard from '@customerpages/Dashboard/CusDashboard';
+import Profile from '@customerpages/Profile/Profile';
 
 import DocDashboard from '@doctorpages/Dashboard/DocDashboard';
 import Overview from './Pages/doctor/Dashboard/OverviewLayout/Overview';
@@ -107,6 +108,16 @@ export const router = createBrowserRouter([
             element: <DoctorDetail />,
           },
         ]
+      },
+    ]
+  },
+  {
+    path: "/profile",
+    element: <PageLayout />,
+    children: [
+      {
+        index: true, // tương đương path: "/"
+        element: <Profile />,
       },
     ]
   },
