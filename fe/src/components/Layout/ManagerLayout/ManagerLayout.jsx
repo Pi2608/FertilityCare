@@ -63,18 +63,7 @@ const ManagerLayout = () => {
         </svg>
       ),
     },
-    {
-      name: "Kho thuốc",
-      path: "/manager-dashboard/medicine-inventory",
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
-          <path
-            fill="currentColor"
-            d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2-2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2m6 2a6 6 0 0 0-6 6c0 3.31 2.69 6 6 6s6-2.69 6-6a6 6 0 0 0-6-6m0 2c2.21 0 4 1.79 4 4s-1.79 4-4 4s-4-1.79-4-4s1.79-4 4-4m-1 1v2h-2v2h2v2h2v-2h2V9h-2V7z"
-          />
-        </svg>
-      ),
-    },
+
     {
       name: "Cài đặt",
       path: "/manager-dashboard/setting",
