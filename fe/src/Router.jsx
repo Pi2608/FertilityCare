@@ -4,6 +4,7 @@ import PageLayout from '@components/Layout/PageLayout/PageLayout';
 import CusLayout from '@components/Layout/CusLayout/CusLayout';
 import DocLayout from '@components/Layout/DocLayout/DocLayout';
 import ManagerLayout from '@components/Layout/ManagerLayout/ManagerLayout.jsx';
+import AdminLayout from '@components/Layout/AdminLayout/AdminLayout.jsx';
 import Homepage from "@customerpages/Homepage/Homepage";
 import TreatmentMethod from '@customerpages/TreatmentMethod/TreatmentMethod';
 import IvfDetail from '@customerpages/IvfDetail/IvfDetail';
@@ -212,6 +213,44 @@ export const router = createBrowserRouter([
       {
         path: "treatment-service/process/:serviceId",
         element: <ProcessEdit/>,
+      },
+    ],
+  },
+  {
+    path: "/admin-dashboard",
+    element: <AdminLayout />,
+    children: [
+      {
+        index: true,
+        element: <Navigate to="/admin-dashboard/overview" replace />,
+      },
+      {
+        path: "overview",
+        element: <div>Admin Overview - Coming Soon</div>,
+      },
+      {
+        path: "users",
+        element: <div>User Management - Coming Soon</div>,
+      },
+      {
+        path: "doctors",
+        element: <div>Admin Doctor Management - Coming Soon</div>,
+      },
+      {
+        path: "services",
+        element: <div>Admin Service Management - Coming Soon</div>,
+      },
+      {
+        path: "reports",
+        element: <div>Reports & Analytics - Coming Soon</div>,
+      },
+      {
+        path: "messages",
+        element: <div>Admin Messages - Coming Soon</div>,
+      },
+      {
+        path: "settings",
+        element: <div>System Settings - Coming Soon</div>,
       },
     ],
   },
