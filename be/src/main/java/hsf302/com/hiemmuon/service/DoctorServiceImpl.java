@@ -67,15 +67,20 @@ public class DoctorServiceImpl implements DoctorService {
 
         if (updateDoctorDTO.getPassword() != null) {
             existingUser.setPassword(updateDoctorDTO.getPassword());
-        } else if (updateDoctorDTO.getName() != null) {
+        }
+        if (updateDoctorDTO.getName() != null) {
             existingUser.setName(updateDoctorDTO.getName());
-        } else if (updateDoctorDTO.getPhone() != null) {
+        }
+        if (updateDoctorDTO.getPhone() != null) {
             existingUser.setPhone(updateDoctorDTO.getPhone());
-        } else if (updateDoctorDTO.getDob() != null) {
+        }
+        if (updateDoctorDTO.getDob() != null) {
             existingUser.setDob(updateDoctorDTO.getDob());
-        } else if (updateDoctorDTO.getGender() != null) {
+        }
+        if (updateDoctorDTO.getGender() != null) {
             existingUser.setGender(updateDoctorDTO.getGender());
-        } else if (updateDoctorDTO.getDescription() != null) {
+        }
+        if (updateDoctorDTO.getDescription() != null) {
             existingDoctor.setDescription(updateDoctorDTO.getDescription());
         }
         return saveDoctor(existingDoctor);
