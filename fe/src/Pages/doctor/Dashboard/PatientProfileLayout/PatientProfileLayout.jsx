@@ -1,13 +1,17 @@
 import { useState } from "react"
 import "./PatientProfileLayout.css"
 
+
 const PatientProfileLayout = () => {
   const [activeTab, setActiveTab] = useState("overview")
   const [expandedSections, setExpandedSections] = useState({
     medicalHistory: true,
     familyHistory: true,
     allergies: true,
+    medicalRecords: false,
+    prescribedMeds: false,
   })
+
 
   const toggleSection = (section) => {
     setExpandedSections((prev) => ({
@@ -15,6 +19,7 @@ const PatientProfileLayout = () => {
       [section]: !prev[section],
     }))
   }
+
 
   const patientData = {
     name: "Nguyễn Thị Hoa",
@@ -25,24 +30,110 @@ const PatientProfileLayout = () => {
     gender: "Nữ",
     phone: "0912345678",
     email: "hoa.nguyen@email.com",
-    address: "123 Đường Lê Lợi, Quận ...",
+    address: "123 Đường Lê Lợi, Quận 1, TP.HCM",
     treatment: "IVF Chu kỳ #2",
     startDate: "01/04/2024",
     doctor: "BS. Nguyễn Lan Anh",
+    medicalHistory: [
+      "Vô sinh nguyên phát",
+      "Lạc nội mạc tử cung nhẹ",
+      "Đã trải qua 1 chu kỳ IVF không thành công (12/2023)"
+    ],
+    familyHistory: [
+      "Không có tiền sử gia đình về vô sinh",
+      "Mẹ có tiền sử lạc nội mạc tử cung"
+    ],
+    allergies: ["Không có"],
+    currentAppointment: {
+      date: "20/05/2024",
+      time: "09:00 - 09:30",
+      status: "Đang diễn ra",
+     
+    }
   }
+
 
   const tabs = [
     { id: "overview", label: "Tổng quan", icon: "👤" },
     { id: "schedule", label: "Lịch hẹn", icon: "📅" },
+    { id: "notes", label: "Ghi chú khám", icon: "📝" },
     { id: "results", label: "Kết quả xét nghiệm", icon: "📋" },
     { id: "medications", label: "Thuốc", icon: "💊" },
   ]
+
+
+  // Data for timeline - linked to other tabs
+  const treatmentPhases = [
+    {
+      id: 1,
+      title: "Giai đoạn 1: Chuẩn bị",
+      period: "01/04 - 30/04/2024",
+      status: "completed",
+      notes: [
+        {
+          date: "30/04/2024",
+          content: "Bệnh nhân đã hoàn thành tất cả xét nghiệm cần thiết. Kết quả tốt, sẵn sàng cho chu kỳ điều trị IVF.",
+          doctor: "BS. Nguyễn Lan Anh"
+        }
+      ],
+      results: [
+        { name: "AMH", value: "2.8 ng/ml", status: "Bình thường", date: "25/04/2024" },
+        { name: "FSH", value: "6.2 mIU/ml", status: "Tốt", date: "25/04/2024" },
+        { name: "Siêu âm buồng trứng", value: "12 nang trứng", status: "Tốt", date: "28/04/2024" }
+      ],
+      medications: [
+        { name: "Folic Acid 5mg", usage: "Uống 1 viên/ngày, sau ăn", period: "01/04 - 30/04/2024" },
+        { name: "Vitamin D3 1000IU", usage: "Uống 1 viên/ngày, buổi sáng", period: "01/04 - 30/04/2024" }
+      ]
+    },
+    {
+      id: 2,
+      title: "Giai đoạn 2: Kích thích buồng trứng",
+      period: "01/05 - 20/05/2024",
+      status: "active",
+      notes: [
+        {
+          date: "20/05/2024",
+          content: "Phản ứng tốt với thuốc kích thích. Nang trứng phát triển đều, kích thước phù hợp. Chuẩn bị trigger shot.",
+          doctor: "BS. Nguyễn Lan Anh"
+        },
+        {
+          date: "15/05/2024",
+          content: "Theo dõi phản ứng kích thích. E2 tăng tốt, nang trứng phát triển đồng đều. Tiếp tục protocol.",
+          doctor: "BS. Nguyễn Lan Anh"
+        }
+      ],
+      results: [
+        { name: "E2", value: "1200 pg/ml", status: "Tốt", date: "18/05/2024" },
+        { name: "Siêu âm theo dõi", value: "8 nang trứng >14mm", status: "Đạt yêu cầu", date: "18/05/2024" },
+        { name: "LH", value: "2.1 mIU/ml", status: "Ổn định", date: "18/05/2024" }
+      ],
+      medications: [
+        { name: "Gonal-F 450 IU", usage: "Tiêm dưới da, buổi tối (21:00)", period: "01/05 - 18/05/2024" },
+        { name: "Cetrotide 0.25mg", usage: "Tiêm dưới da, buổi sáng (08:00)", period: "10/05 - 18/05/2024" },
+        { name: "Ovitrelle 250mcg", usage: "Tiêm dưới da, trigger shot", period: "20/05/2024" }
+      ]
+    },
+    {
+      id: 3,
+      title: "Giai đoạn 3: Lấy trứng",
+      period: "",
+      status: "upcoming",
+      notes: [
+       
+      ],
+      results: [],
+      medications: []
+    }
+  ]
+
 
   const renderOverviewTab = () => (
     <div className="patient-profile-tab-content">
       <div className="patient-profile-treatment-plan">
         <h3>Kế hoạch điều trị</h3>
         <p className="patient-profile-treatment-subtitle">Thông tin về kế hoạch điều trị hiện tại</p>
+
 
         <div className="patient-profile-treatment-cards">
           <div className="patient-profile-treatment-card patient-profile-current">
@@ -55,6 +146,7 @@ const PatientProfileLayout = () => {
             </div>
           </div>
 
+
           <div className="patient-profile-treatment-card patient-profile-next">
             <div className="patient-profile-card-icon">
               <span className="patient-profile-icon-blue">📅</span>
@@ -62,46 +154,105 @@ const PatientProfileLayout = () => {
             <div className="patient-profile-card-content">
               <h4>Giai đoạn tiếp theo</h4>
               <p>Thu trứng</p>
-              <span className="patient-profile-date">Dự kiến: 28/05/2024</span>
+              <span className="patient-profile-date"></span>
             </div>
           </div>
         </div>
 
-        <div className="patient-profile-treatment-note">
-          <span className="patient-profile-note-icon">📝</span>
-          <div>
-            <h4>Ghi chú điều trị</h4>
-            <p>Đáp ứng tốt với liều pháp kích thích buồng trứng. Tiếp tục theo dõi sự phát triển của nang noãn.</p>
-          </div>
-        </div>
 
-        <div className="patient-profile-current-medications">
-          <div className="patient-profile-section-header">
-            <span className="patient-profile-section-icon">💊</span>
-            <h4>Thuốc hiện tại</h4>
-          </div>
-          <div className="patient-profile-medication-list">
-            <div className="patient-profile-medication-item">
-              <div className="patient-profile-med-info">
-                <h5>Gonal-F</h5>
-                <p>Liều lượng: 150 IU</p>
-                <p>Tần suất: Hàng ngày</p>
-                <span className="patient-profile-med-date">Bắt đầu: 10/05/2024</span>
+
+
+
+
+        <div className="patient-profile-treatment-timeline">
+          <h3>Toàn bộ giai đoạn điều trị</h3>
+          <div className="patient-profile-timeline">
+            {treatmentPhases.map((phase) => (
+              <div key={phase.id} className={`patient-profile-timeline-item patient-profile-${phase.status}`}>
+                <div className="patient-profile-timeline-marker">
+                  {phase.status === 'completed' ? '✓' : phase.status === 'active' ? '⏳' : '📅'}
+                </div>
+                <div className="patient-profile-timeline-content">
+                  <div className="patient-profile-timeline-header">
+                    <h4>{phase.title}</h4>
+                    <span className="patient-profile-timeline-date">{phase.period}</span>
+                  </div>
+                  <div className="patient-profile-timeline-details">
+                    {/* Ghi chú */}
+                    {phase.notes.length > 0 && (
+                      <div className="patient-profile-timeline-section">
+                   
+                        {phase.notes.map((note, index) => (
+                          <div key={index} className="patient-profile-timeline-note">
+                            <p><strong>{note.date}:</strong> {note.content}</p>
+                            <span className="patient-profile-note-doctor">- {note.doctor}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+
+                    {/* Kết quả xét nghiệm */}
+                    {phase.results.length > 0 && (
+                      <div className="patient-profile-timeline-section">
+                        <h5>📋 Kết quả xét nghiệm:</h5>
+                        <ul>
+                          {phase.results.map((result, index) => (
+                            <li key={index}>
+                              <strong>{result.name}:</strong> {result.value} ({result.status}) - {result.date}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+
+                    {/* Thuốc sử dụng */}
+                    {phase.medications.length > 0 && (
+                      <div className="patient-profile-timeline-section">
+                        <h5>💊 Thuốc sử dụng:</h5>
+                        <ul>
+                          {phase.medications.map((med, index) => (
+                            <li key={index}>
+                              <strong>{med.name}:</strong> {med.usage} ({med.period})
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+
+                    {/* Action buttons cho từng giai đoạn */}
+                    <div className="patient-profile-timeline-actions">
+                      {phase.status === 'active' && (
+                        <div className="patient-profile-phase-actions">
+                          <h5>⚡ Cập nhật nhanh:</h5>
+                          <div className="patient-profile-quick-actions">
+                            <button className="patient-profile-btn-outline-small">📝 Ghi chú</button>
+                            <button className="patient-profile-btn-outline-small">📋 Kết quả XN</button>
+                            <button className="patient-profile-btn-outline-small">💊 Thuốc</button>
+                          </div>
+                        </div>
+                      )}
+                      {phase.status === 'upcoming' && (
+                        <div className="patient-profile-phase-actions">
+                         
+                          <div className="patient-profile-quick-actions">
+                            <button className="patient-profile-btn-primary-small">📅 Đặt lịch hẹn</button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="patient-profile-medication-item">
-              <div className="patient-profile-med-info">
-                <h5>Cetrotide</h5>
-                <p>Liều lượng: 0.25mg</p>
-                <p>Tần suất: Hàng ngày</p>
-                <span className="patient-profile-med-date">Bắt đầu: 15/05/2024</span>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
     </div>
   )
+
 
   const renderScheduleTab = () => (
     <div className="patient-profile-tab-content">
@@ -113,24 +264,13 @@ const PatientProfileLayout = () => {
         <button className="patient-profile-btn-primary">📅 Đặt lịch hẹn mới</button>
       </div>
 
+
       <div className="patient-profile-schedule-section">
         <h4>Lịch hẹn sắp tới</h4>
         <div className="patient-profile-appointment-list">
-          <div className="patient-profile-appointment-item patient-profile-upcoming">
-            <div className="patient-profile-appointment-time">
-              <span className="patient-profile-time-icon">🕘</span>
-            </div>
-            <div className="patient-profile-appointment-details">
-              <h5>Tư vấn theo dõi</h5>
-              <p>20/05/2024 | 09:00 - 09:30</p>
-              <p>BS. Nguyễn Lan Anh</p>
-              <div className="patient-profile-appointment-actions">
-                <button className="patient-profile-btn-outline-red">Chi tiết</button>
-                <button className="patient-profile-btn-outline-blue">Dời lịch</button>
-              </div>
-            </div>
-            <button className="patient-profile-reschedule-btn">Đã lên lịch</button>
-          </div>
+
+
+
 
           <div className="patient-profile-appointment-item patient-profile-upcoming">
             <div className="patient-profile-appointment-time">
@@ -141,7 +281,7 @@ const PatientProfileLayout = () => {
               <p>25/05/2024 | 10:15 - 10:45</p>
               <p>BS. Nguyễn Lan Anh</p>
               <div className="patient-profile-appointment-actions">
-                <button className="patient-profile-btn-outline-red">Chi tiết</button>
+                {/* <button className="patient-profile-btn-outline-red">Chi tiết</button> */}
                 <button className="patient-profile-btn-outline-blue">Dời lịch</button>
               </div>
             </div>
@@ -149,6 +289,7 @@ const PatientProfileLayout = () => {
           </div>
         </div>
       </div>
+
 
       <div className="patient-profile-schedule-section">
         <h4>Lịch sử cuộc hẹn</h4>
@@ -161,7 +302,7 @@ const PatientProfileLayout = () => {
               <h5>Tư vấn</h5>
               <p>05/05/2024 | 14:00 - 14:30</p>
               <p>BS. Nguyễn Lan Anh</p>
-              <button className="patient-profile-btn-outline-red">Xem ghi chú</button>
+              {/* <button className="patient-profile-btn-outline-red">Xem ghi chú</button> */}
             </div>
             <span className="patient-profile-status-badge patient-profile-completed">Hoàn thành</span>
           </div>
@@ -169,6 +310,48 @@ const PatientProfileLayout = () => {
       </div>
     </div>
   )
+
+
+  const renderNotesTab = () => (
+    <div className="patient-profile-tab-content">
+      <div className="patient-profile-notes-header">
+        <div>
+          <h3>Ghi chú khám bệnh</h3>
+          <p>Ghi chú và theo dõi quá trình điều trị</p>
+        </div>
+        <button className="patient-profile-btn-primary">📝 Thêm ghi chú mới</button>
+      </div>
+
+
+      <div className="patient-profile-notes-section">
+        <h4>Ghi chú theo giai đoạn điều trị</h4>
+        <div className="patient-profile-notes-list">
+          {treatmentPhases.map((phase) =>
+            phase.notes.map((note, noteIndex) => (
+              <div key={`${phase.id}-${noteIndex}`} className="patient-profile-note-item">
+                <div className="patient-profile-note-header">
+                  <div className="patient-profile-note-date">
+                    <span className="patient-profile-date-icon">📅</span>
+                    <span>{note.date}</span>
+                  </div>
+                  <span className="patient-profile-note-type">{phase.title}</span>
+                </div>
+                <div className="patient-profile-note-content">
+                  <h5>Ghi chú khám:</h5>
+                  <p>{note.content}</p>
+                </div>
+                <div className="patient-profile-note-footer">
+                  <span className="patient-profile-doctor-name">{note.doctor}</span>
+                  <button className="patient-profile-btn-outline-blue">Chỉnh sửa</button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    </div>
+  )
+
 
   const renderResultsTab = () => (
     <div className="patient-profile-tab-content">
@@ -180,35 +363,44 @@ const PatientProfileLayout = () => {
         <button className="patient-profile-btn-primary">➕ Thêm kết quả mới</button>
       </div>
 
-      <div className="patient-profile-results-list">
-        <div className="patient-profile-result-item">
-          <div className="patient-profile-result-icon">
-            <span className="patient-profile-icon-purple">📋</span>
-          </div>
-          <div className="patient-profile-result-details">
-            <h4>Xét nghiệm nội tiết</h4>
-            <p>Ngày: 05/05/2024</p>
-            <p>Kết quả: Nồng độ FSH, LH, E2 trong giới hạn bình thường</p>
-            <button className="patient-profile-btn-outline">Xem chi tiết</button>
-          </div>
-          <span className="patient-profile-status-badge patient-profile-completed">Hoàn thành</span>
-        </div>
 
-        <div className="patient-profile-result-item">
-          <div className="patient-profile-result-icon">
-            <span className="patient-profile-icon-purple">📋</span>
-          </div>
-          <div className="patient-profile-result-details">
-            <h4>Siêu âm buồng trứng</h4>
-            <p>Ngày: 15/04/2024</p>
-            <p>Kết quả: Số lượng nang noãn: 12</p>
-            <button className="patient-profile-btn-outline">Xem chi tiết</button>
-          </div>
-          <span className="patient-profile-status-badge patient-profile-completed">Hoàn thành</span>
-        </div>
+      <div className="patient-profile-results-by-phase">
+        {treatmentPhases.map((phase) => {
+          if (phase.results.length === 0) return null;
+
+
+          return (
+            <div key={phase.id} className="patient-profile-phase-results-container">
+              <div className="patient-profile-phase-results-header">
+                <h4>{phase.title}</h4>
+                <span className="patient-profile-phase-period">{phase.period}</span>
+              </div>
+
+
+              <div className="patient-profile-results-list">
+                {phase.results.map((result, resultIndex) => (
+                  <div key={`${phase.id}-${resultIndex}`} className="patient-profile-result-item">
+                    <div className="patient-profile-result-icon">
+                      <span className="patient-profile-icon-purple">📋</span>
+                    </div>
+                    <div className="patient-profile-result-details">
+                      <h4>{result.name}</h4>
+                      <p>Ngày: {result.date}</p>
+                      <p>Kết quả: {result.value}</p>
+                      <p>Trạng thái: <strong>{result.status}</strong></p>
+                      <button className="patient-profile-btn-outline">Xem chi tiết</button>
+                    </div>
+                    <span className="patient-profile-status-badge patient-profile-completed">Hoàn thành</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   )
+
 
   const renderMedicationsTab = () => (
     <div className="patient-profile-tab-content">
@@ -220,56 +412,60 @@ const PatientProfileLayout = () => {
         <button className="patient-profile-btn-primary">➕ Thêm thuốc mới</button>
       </div>
 
-      <div className="patient-profile-medications-section">
-        <h4>Thuốc hiện tại</h4>
-        <div className="patient-profile-medication-cards">
-          <div className="patient-profile-medication-card patient-profile-active">
-            <div className="patient-profile-med-header">
-              <h5>Gonal-F</h5>
-              <span className="patient-profile-status-badge patient-profile-active">Đang dùng</span>
-            </div>
-            <div className="patient-profile-med-details">
-              <p>
-                <strong>Liều lượng:</strong> 150 IU
-              </p>
-              <p>
-                <strong>Tần suất:</strong> Hàng ngày
-              </p>
-              <p>
-                <strong>Bắt đầu:</strong> 10/05/2024
-              </p>
-            </div>
-            <div className="patient-profile-med-actions">
-              <button className="patient-profile-btn-outline-blue">Chỉnh sửa</button>
-              <button className="patient-profile-btn-outline-red">Ngừng</button>
-            </div>
-          </div>
 
-          <div className="patient-profile-medication-card patient-profile-active">
-            <div className="patient-profile-med-header">
-              <h5>Cetrotide</h5>
-              <span className="patient-profile-status-badge patient-profile-active">Đang dùng</span>
-            </div>
-            <div className="patient-profile-med-details">
-              <p>
-                <strong>Liều lượng:</strong> 0.25mg
-              </p>
-              <p>
-                <strong>Tần suất:</strong> Hàng ngày
-              </p>
-              <p>
-                <strong>Bắt đầu:</strong> 15/05/2024
-              </p>
-            </div>
-            <div className="patient-profile-med-actions">
-              <button className="patient-profile-btn-outline-blue">Chỉnh sửa</button>
-              <button className="patient-profile-btn-outline-red">Ngừng</button>
-            </div>
-          </div>
+      <div className="patient-profile-medications-section">
+        <h4>Thuốc theo giai đoạn điều trị</h4>
+        <div className="patient-profile-medication-cards">
+          {treatmentPhases
+            .flatMap((phase) =>
+              phase.medications.map((med, medIndex) => {
+                const isActive = phase.status === 'active' && med.period.includes('2024') && !med.period.includes('Dự kiến');
+                return {
+                  key: `${phase.id}-${medIndex}`,
+                  isActive,
+                  phase,
+                  med,
+                  medIndex
+                };
+              })
+            )
+            .sort((a, b) => {
+              // Thuốc đang dùng (isActive = true) lên trước
+              if (a.isActive && !b.isActive) return -1;
+              if (!a.isActive && b.isActive) return 1;
+              return 0;
+            })
+            .map(({ key, isActive, phase, med }) => (
+              <div key={key} className={`patient-profile-medication-card ${isActive ? 'patient-profile-active' : 'patient-profile-completed'}`}>
+                <div className="patient-profile-med-header">
+                  <h5>{med.name}</h5>
+                  <span className={`patient-profile-status-badge ${isActive ? 'patient-profile-active' : 'patient-profile-completed'}`}>
+                    {isActive ? 'Đang dùng' : 'Đã hoàn thành'}
+                  </span>
+                </div>
+                <div className="patient-profile-med-details">
+                  <p>
+                    <strong>Cách dùng:</strong> {med.usage}
+                  </p>
+                  <p>
+                    <strong>Thời gian:</strong> {med.period}
+                  </p>
+                  <p>
+                    <strong>Giai đoạn:</strong> {phase.title.replace('Giai đoạn ', '')}
+                  </p>
+                </div>
+                <div className="patient-profile-med-actions">
+                  <button className="patient-profile-btn-outline-blue">Xem chi tiết</button>
+                  {isActive && <button className="patient-profile-btn-outline-red">Ngừng</button>}
+                </div>
+              </div>
+            ))
+          }
         </div>
       </div>
     </div>
   )
+
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -277,6 +473,8 @@ const PatientProfileLayout = () => {
         return renderOverviewTab()
       case "schedule":
         return renderScheduleTab()
+      case "notes":
+        return renderNotesTab()
       case "results":
         return renderResultsTab()
       case "medications":
@@ -286,12 +484,27 @@ const PatientProfileLayout = () => {
     }
   }
 
+
   return (
     <div className="patient-profile">
       <div className="patient-profile-header">
-      <a href="#" onClick={(e) => { e.preventDefault(); window.history.back(); }} className="patient-profile-back-btn">← Quay lại</a>
-        <h1>Hồ sơ bệnh nhân</h1>
+        <div className="patient-profile-header-left">
+          <a href="#" onClick={(e) => { e.preventDefault(); window.history.back(); }} className="patient-profile-back-btn">← Quay lại</a>
+          <div className="patient-profile-header-info">
+            <h1>Cuộc hẹn với {patientData.name}</h1>
+            <div className="patient-profile-appointment-info">
+              <span className="patient-profile-appointment-type">{patientData.currentAppointment.type}</span>
+              <span className="patient-profile-appointment-time">🕘 {patientData.currentAppointment.date} | {patientData.currentAppointment.time}</span>
+              <span className="patient-profile-appointment-status">{patientData.currentAppointment.status}</span>
+            </div>
+            <p className="patient-profile-appointment-details">{patientData.currentAppointment.details}</p>
+          </div>
+        </div>
+        <div className="patient-profile-header-actions">
+          <button className="patient-profile-btn-danger">Kết thúc cuộc hẹn</button>
+        </div>
       </div>
+
 
       <div className="patient-profile-container">
         <div className="patient-profile-sidebar">
@@ -306,6 +519,7 @@ const PatientProfileLayout = () => {
             </div>
           </div>
 
+
           <div className="patient-profile-patient-basic-info">
             <div className="patient-profile-info-row">
               <span className="patient-profile-label">Tuổi:</span>
@@ -319,18 +533,8 @@ const PatientProfileLayout = () => {
               <span className="patient-profile-label">Giới tính:</span>
               <span className="patient-profile-value patient-profile-gender-female">{patientData.gender}</span>
             </div>
-            <div className="patient-profile-info-row">
-              <span className="patient-profile-label">Điện thoại:</span>
-              <span className="patient-profile-value">{patientData.phone}</span>
-            </div>
-            <div className="patient-profile-info-row">
-              <span className="patient-profile-label">Email:</span>
-              <span className="patient-profile-value">{patientData.email}</span>
-            </div>
-            <div className="patient-profile-info-row">
-              <span className="patient-profile-label">Địa chỉ:</span>
-              <span className="patient-profile-value">{patientData.address}</span>
-            </div>
+
+
             <div className="patient-profile-info-row">
               <span className="patient-profile-label">Điều trị:</span>
               <span className="patient-profile-value">{patientData.treatment}</span>
@@ -345,6 +549,7 @@ const PatientProfileLayout = () => {
             </div>
           </div>
 
+
           <div className="patient-profile-collapsible-sections">
             <div className="patient-profile-section">
               <button className="patient-profile-section-header" onClick={() => toggleSection("medicalHistory")}>
@@ -354,13 +559,14 @@ const PatientProfileLayout = () => {
               {expandedSections.medicalHistory && (
                 <div className="patient-profile-section-content">
                   <ul>
-                    <li>Vô sinh nguyên phát</li>
-                    <li>Lạc nội mạc tử cung nhẹ</li>
-                    <li>Đã trải qua 1 chu kỳ IVF không thành công (12/2023)</li>
+                    {patientData.medicalHistory.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
                   </ul>
                 </div>
               )}
             </div>
+
 
             <div className="patient-profile-section">
               <button className="patient-profile-section-header" onClick={() => toggleSection("familyHistory")}>
@@ -370,12 +576,14 @@ const PatientProfileLayout = () => {
               {expandedSections.familyHistory && (
                 <div className="patient-profile-section-content">
                   <ul>
-                    <li>Không có tiền sử gia đình về vô sinh</li>
-                    <li>Mẹ có tiền sử lạc nội mạc tử cung</li>
+                    {patientData.familyHistory.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
                   </ul>
                 </div>
               )}
             </div>
+
 
             <div className="patient-profile-section">
               <button className="patient-profile-section-header" onClick={() => toggleSection("allergies")}>
@@ -385,18 +593,67 @@ const PatientProfileLayout = () => {
               {expandedSections.allergies && (
                 <div className="patient-profile-section-content">
                   <ul>
-                    <li>Không có</li>
+                    {patientData.allergies.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
                   </ul>
+                </div>
+              )}
+            </div>
+
+
+            <div className="patient-profile-section">
+              <button className="patient-profile-section-header" onClick={() => toggleSection("medicalRecords")}>
+                <span>Lịch sử y tế</span>
+                <span>{expandedSections.medicalRecords ? "▲" : "▼"}</span>
+              </button>
+              {expandedSections.medicalRecords && (
+                <div className="patient-profile-section-content">
+                  <div className="patient-profile-medical-record">
+                    <div className="patient-profile-record-date">15/05/2024</div>
+                    <div className="patient-profile-record-content">Siêu âm theo dõi - Phát triển nang trứng tốt</div>
+                  </div>
+                  <div className="patient-profile-medical-record">
+                    <div className="patient-profile-record-date">10/05/2024</div>
+                    <div className="patient-profile-record-content">Xét nghiệm hormone - Kết quả trong giới hạn bình thường</div>
+                  </div>
+                  <div className="patient-profile-medical-record">
+                    <div className="patient-profile-record-date">05/05/2024</div>
+                    <div className="patient-profile-record-content">Tư vấn khởi đầu chu kỳ IVF #2</div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+
+            <div className="patient-profile-section">
+              <button className="patient-profile-section-header" onClick={() => toggleSection("prescribedMeds")}>
+                <span>Thuốc đã kê</span>
+                <span>{expandedSections.prescribedMeds ? "▲" : "▼"}</span>
+              </button>
+              {expandedSections.prescribedMeds && (
+                <div className="patient-profile-section-content">
+                  <div className="patient-profile-prescribed-med">
+                    <div className="patient-profile-med-name">Gonal-F 450 IU</div>
+                    <div className="patient-profile-med-usage">Tiêm dưới da, 1 lần/ngày, buổi tối</div>
+                    <div className="patient-profile-med-period">01/05/2024 - 15/05/2024</div>
+                  </div>
+                  <div className="patient-profile-prescribed-med">
+                    <div className="patient-profile-med-name">Cetrotide 0.25mg</div>
+                    <div className="patient-profile-med-usage">Tiêm dưới da, 1 lần/ngày, buổi sáng</div>
+                    <div className="patient-profile-med-period">10/05/2024 - 18/05/2024</div>
+                  </div>
                 </div>
               )}
             </div>
           </div>
 
+
           <div className="patient-profile-sidebar-actions">
-            <button className="patient-profile-btn-outline">✏️ Liên hệ</button>
-            <button className="patient-profile-btn-primary">📅 Đặt lịch hẹn</button>
+            <button className="patient-profile-btn-outline">💬 Nhắn tin</button>
           </div>
         </div>
+
 
         <div className="patient-profile-main-content">
           <div className="patient-profile-tabs">
@@ -412,6 +669,7 @@ const PatientProfileLayout = () => {
             ))}
           </div>
 
+
           {renderTabContent()}
         </div>
       </div>
@@ -419,4 +677,7 @@ const PatientProfileLayout = () => {
   )
 }
 
+
 export default PatientProfileLayout
+
+
