@@ -25,6 +25,13 @@ import TreatmentService from './Pages/manager/TreatmentService/TreatmentService'
 import SuccessRate from './Pages/manager/TreatmentService/SuccessRate';
 import ProcessEdit from './Pages/manager/TreatmentService/ProcessEdit';
 
+// Admin components
+import AdminAppointment from './Pages/admin/Appointment/Appointment';
+import AdminPatient from './Pages/admin/Patient/Patient';
+import AdminDoctor from './Pages/admin/Doctor/Doctor';
+import AdminTreatmentService from './Pages/admin/TreatmentService/TreatmentService';
+
+
 
 const USER_TYPES = {
   NORMAL_USER: "Customer",
@@ -222,34 +229,34 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to="/admin-dashboard/overview" replace />,
+        element: <Navigate to="/admin-dashboard/appointment" replace />,
       },
       {
-        path: "overview",
-        element: <div>Admin Overview - Coming Soon</div>,
+        path: "appointment",
+        element: <AdminAppointment/>,
       },
       {
-        path: "users",
-        element: <div>User Management - Coming Soon</div>,
+        path: "user",
+        element: <AdminPatient/>,
       },
       {
-        path: "doctors",
-        element: <div>Admin Doctor Management - Coming Soon</div>,
+        path: "doctor",
+        element: <AdminDoctor/>,
       },
       {
-        path: "services",
-        element: <div>Admin Service Management - Coming Soon</div>,
+        path: "service",
+        element: <AdminTreatmentService/>,
       },
       {
-        path: "reports",
+        path: "report",
         element: <div>Reports & Analytics - Coming Soon</div>,
       },
       {
-        path: "messages",
+        path: "message",
         element: <div>Admin Messages - Coming Soon</div>,
       },
       {
-        path: "settings",
+        path: "setting",
         element: <div>System Settings - Coming Soon</div>,
       },
     ],

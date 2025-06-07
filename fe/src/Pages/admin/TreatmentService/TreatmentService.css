@@ -1,0 +1,500 @@
+/* Treatment Service Page Styles */
+.treatment-service-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+/* Header */
+.treatment-service-header {
+  background-color: white;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.notification-bell {
+  position: relative;
+  cursor: pointer;
+  font-size: 20px;
+  color: #64748b;
+}
+
+.notification-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 12px;
+  height: 12px;
+  background-color: #ef4444;
+  border-radius: 50%;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  background-color: #e2e8f0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.user-info {
+  text-align: left;
+}
+
+.user-name {
+  font-weight: 500;
+  color: #1e293b;
+  font-size: 14px;
+  margin: 0;
+}
+
+.user-role {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Content */
+.treatment-service-content {
+  flex: 1;
+  padding: 24px;
+  background-color: white;
+  margin: 24px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 2px solid #3b82f6;
+}
+
+/* Content Header */
+.content-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+/* Search */
+.search-box {
+  position: relative;
+  max-width: 320px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  font-size: 16px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background-color: #f8fafc;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.search-box input:focus {
+  border-color: #3b82f6;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Add Service Button */
+.add-service-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.add-service-btn:hover {
+  background-color: #2563eb;
+}
+
+.add-service-btn span {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Table */
+.table-wrapper {
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  border: 1px solid #f1f5f9;
+  overflow-x: auto; /* Thêm scroll ngang */
+  /* Firefox scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+/* Custom Scrollbar for Webkit browsers */
+.table-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.services-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1200px; /* Đảm bảo width tối thiểu */
+}
+
+.services-table th {
+  background-color: #f8fafc;
+  padding: 16px;
+  text-align: left;
+  font-weight: 600;
+  color: #374151;
+  font-size: 14px;
+  border-bottom: 1px solid #e5e7eb;
+  white-space: nowrap; /* Ngăn text xuống dòng */
+  min-width: fit-content; /* Đảm bảo width tối thiểu */
+}
+
+/* Thiết lập width cụ thể cho từng cột */
+.services-table th:nth-child(1) {
+  /* Số lượng */
+  width: 80px;
+  min-width: 80px;
+}
+
+.services-table th:nth-child(2) {
+  /* Dịch vụ */
+  width: 120px;
+  min-width: 120px;
+}
+
+.services-table th:nth-child(3) {
+  /* Tổng quan */
+  width: 300px;
+  min-width: 250px;
+}
+
+.services-table th:nth-child(4) {
+  /* Tỷ lệ thành công */
+  width: 150px;
+  min-width: 150px;
+}
+
+.services-table th:nth-child(5) {
+  /* Quy trình */
+  width: 120px;
+  min-width: 120px;
+}
+
+.services-table th:nth-child(6) {
+  /* Chi phí */
+  width: 140px;
+  min-width: 140px;
+}
+
+.services-table th:nth-child(7) {
+  /* Hành động */
+  width: 150px;
+  min-width: 150px;
+}
+
+.services-table td {
+  padding: 16px;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 14px;
+  color: #6b7280;
+  vertical-align: middle;
+  white-space: nowrap; /* Ngăn text xuống dòng */
+}
+
+/* Cho phép cột Tổng quan wrap text vì nội dung dài */
+.services-table td:nth-child(3) {
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 300px;
+}
+
+.services-table tr:last-child td {
+  border-bottom: none;
+}
+
+.services-table tr:hover {
+  background-color: #f9fafb;
+}
+
+/* Edit Inputs */
+.edit-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.edit-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.edit-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  resize: vertical;
+  min-height: 60px;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+}
+
+.edit-textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Link Button */
+.link-btn {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 14px;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.link-btn:hover {
+  color: #2563eb;
+}
+
+/* Action Buttons */
+.action-cell {
+  white-space: nowrap;
+}
+
+.edit-actions,
+.view-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-btn,
+.save-btn {
+  padding: 6px 12px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.edit-btn:hover,
+.save-btn:hover {
+  background-color: #2563eb;
+}
+
+.delete-btn,
+.cancel-btn {
+  padding: 6px 12px;
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.delete-btn:hover,
+.cancel-btn:hover {
+  background-color: #dc2626;
+}
+
+.cancel-btn {
+  background-color: #6b7280;
+}
+
+.cancel-btn:hover {
+  background-color: #4b5563;
+}
+
+/* Pagination */
+.pagination-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+
+.pagination-btn {
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  color: #6b7280;
+  transition: color 0.2s ease;
+}
+
+.pagination-btn:hover {
+  color: #3b82f6;
+}
+
+.page-numbers {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.page-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  background-color: transparent;
+  color: #6b7280;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-btn.active {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.page-btn:hover:not(.active) {
+  background-color: #f3f4f6;
+}
+
+.page-btn.next-page {
+  background-color: transparent;
+  color: #3b82f6;
+  width: auto;
+  padding: 0 8px;
+}
+
+.page-btn.next-page:hover {
+  background-color: #f3f4f6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .treatment-service-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .treatment-service-content {
+    margin: 16px;
+    padding: 16px;
+  }
+
+  .content-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .search-box {
+    max-width: none;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+  }
+
+  .services-table {
+    min-width: 900px;
+  }
+
+  .pagination-section {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .treatment-service-content {
+    margin: 8px;
+    padding: 12px;
+  }
+
+  .add-service-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
