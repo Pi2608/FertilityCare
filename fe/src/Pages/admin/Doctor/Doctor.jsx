@@ -2,109 +2,27 @@
 
 import { useState } from "react"
 import "./Doctor.css"
+import CreateDoctor from "./CreateDoctor"
 
 const Doctor = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState("all") // "all", "active", "inactive"
-  const [doctorsData, setDoctorsData] = useState([
-    {
-      id: 1,
-      name: "Dr. Elizabeth Polson",
-      avatar: "/placeholder.svg?height=40&width=40",
-      initials: "EP",
-      gender: "Nữ",
-      birthDate: "05/10/1985",
-      specialty: "IVF",
-      experience: 10,
-      rating: 4.8,
-      isActive: true,
-    },
-    {
-      id: 2,
-      name: "Dr. John David",
-      avatar: "/placeholder.svg?height=40&width=40",
-      initials: "JD",
-      gender: "Nam",
-      birthDate: "15/03/1980",
-      specialty: "IUI",
-      experience: 15,
-      rating: 4.9,
-      isActive: true,
-    },
-    {
-      id: 3,
-      name: "Dr. Krishtav Rajan",
-      avatar: "/placeholder.svg?height=40&width=40",
-      initials: "KR",
-      gender: "Nam",
-      birthDate: "22/07/1982",
-      specialty: "IVF",
-      experience: 12,
-      rating: 4.7,
-      isActive: false,
-    },
-    {
-      id: 4,
-      name: "Dr. Sumanth Tinson",
-      avatar: "/placeholder.svg?height=40&width=40",
-      initials: "ST",
-      gender: "Nữ",
-      birthDate: "08/12/1987",
-      specialty: "IVF",
-      experience: 8,
-      rating: 4.6,
-      isActive: true,
-    },
-    {
-      id: 5,
-      name: "Dr. EG Subramani",
-      avatar: "/placeholder.svg?height=40&width=40",
-      initials: "ES",
-      gender: "Nữ",
-      birthDate: "30/09/1975",
-      specialty: "IVF",
-      experience: 20,
-      rating: 4.9,
-      isActive: true,
-    },
-    {
-      id: 6,
-      name: "Dr. Ranjan Maari",
-      avatar: "/placeholder.svg?height=40&width=40",
-      initials: "RM",
-      gender: "Nam",
-      birthDate: "14/05/1978",
-      specialty: "IUI",
-      experience: 18,
-      rating: 4.8,
-      isActive: false,
-    },
-    {
-      id: 7,
-      name: "Dr. Philipile Gopal",
-      avatar: "/placeholder.svg?height=40&width=40",
-      initials: "PG",
-      gender: "Nam",
-      birthDate: "25/11/1983",
-      specialty: "IUI",
-      experience: 11,
-      rating: 4.5,
-      isActive: true,
-    },
-  ])
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false)
+
+  // Khởi tạo mảng rỗng để sau này điền dữ liệu từ API
+  const [doctorsData, setDoctorsData] = useState([])
 
   const handleToggleStatus = (doctorId) => {
-    setDoctorsData(prev => prev.map(doctor =>
-      doctor.id === doctorId
-        ? { ...doctor, isActive: !doctor.isActive }
-        : doctor
-    ))
+    setDoctorsData((prev) =>
+      prev.map((doctor) => (doctor.id === doctorId ? { ...doctor, isActive: !doctor.isActive } : doctor)),
+    )
   }
 
   const filteredDoctors = doctorsData.filter((doctor) => {
     const matchesSearch =
-      doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      doctor.specialty.toLowerCase().includes(searchTerm.toLowerCase())
+      doctor.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      doctor.specialty?.toLowerCase().includes(searchTerm.toLowerCase())
 
     const matchesStatus =
       statusFilter === "all" ||
@@ -153,15 +71,16 @@ const Doctor = () => {
           </div>
 
           <div className="filter-section">
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="status-filter"
-            >
+            <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="status-filter">
               <option value="all">Tất cả trạng thái</option>
               <option value="active">Đang hoạt động</option>
               <option value="inactive">Không hoạt động</option>
             </select>
+
+            <button className="create-doctor-btn" onClick={() => setIsCreateModalOpen(true)}>
+              <span>+</span>
+              Tạo tài khoản bác sĩ
+            </button>
           </div>
         </div>
 
@@ -180,37 +99,43 @@ const Doctor = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredDoctors.map((doctor) => (
-                <tr key={doctor.id}>
-                  <td className="doctor-name-cell">
-                    <div className="doctor-info">
-                      <div className="doctor-avatar">{doctor.initials}</div>
-                      <span className="doctor-name">{doctor.name}</span>
-                    </div>
-                  </td>
-                  <td>{doctor.gender}</td>
-                  <td>{doctor.birthDate}</td>
-                  <td>
-                    <span className={`specialty-badge ${doctor.specialty.toLowerCase()}`}>
-                      {doctor.specialty}
-                    </span>
-                  </td>
-                  <td>{doctor.experience}</td>
-                  <td>
-                    <div className="rating">
-                      <span className="rating-value">{doctor.rating}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <button
-                      onClick={() => handleToggleStatus(doctor.id)}
-                      className={`status-toggle-btn ${doctor.isActive ? 'active' : 'inactive'}`}
-                    >
-                      {doctor.isActive ? 'Hoạt động' : 'Không hoạt động'}
-                    </button>
+              {filteredDoctors.length > 0 ? (
+                filteredDoctors.map((doctor) => (
+                  <tr key={doctor.id}>
+                    <td className="doctor-name-cell">
+                      <div className="doctor-info">
+                        <div className="doctor-avatar">{doctor.initials}</div>
+                        <span className="doctor-name">{doctor.name}</span>
+                      </div>
+                    </td>
+                    <td>{doctor.gender}</td>
+                    <td>{doctor.birthDate}</td>
+                    <td>
+                      <span className={`specialty-badge ${doctor.specialty?.toLowerCase()}`}>{doctor.specialty}</span>
+                    </td>
+                    <td>{doctor.experience}</td>
+                    <td>
+                      <div className="rating">
+                        <span className="rating-value">{doctor.rating}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <button
+                        onClick={() => handleToggleStatus(doctor.id)}
+                        className={`status-toggle-btn ${doctor.isActive ? "active" : "inactive"}`}
+                      >
+                        {doctor.isActive ? "Hoạt động" : "Không hoạt động"}
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="7" className="empty-state">
+                    <p>Chưa có dữ liệu bác sĩ. Dữ liệu sẽ được tải từ API.</p>
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
@@ -228,6 +153,31 @@ const Doctor = () => {
           </div>
         </div>
       </main>
+
+      {/* Create Doctor Modal */}
+      <CreateDoctor
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSuccess={() => setIsSuccessModalOpen(true)}
+      />
+
+      {/* Success Modal */}
+      {isSuccessModalOpen && (
+        <div className="success-modal-overlay">
+          <div className="success-modal-content">
+            <div className="success-modal-body">
+              <div className="success-icon">✓</div>
+              <h2>Tạo tài khoản thành công!</h2>
+              <p>Tài khoản bác sĩ đã được tạo thành công.</p>
+            </div>
+            <div className="success-modal-footer">
+              <button className="success-close-btn" onClick={() => setIsSuccessModalOpen(false)}>
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
