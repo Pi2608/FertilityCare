@@ -81,7 +81,7 @@ export const router = createBrowserRouter([
     ]
   },
   {
-    path: "/patient-profile",
+    path: "doctor-dashboard/appointments/session",
     element: <PageLayout />,
     children: [
       {

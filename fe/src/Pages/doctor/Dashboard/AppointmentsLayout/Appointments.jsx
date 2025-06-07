@@ -1,6 +1,7 @@
 import React from "react";
 import "./Appointments.css";
 
+
 const scheduleData = [
   {
     id: "PT-2024-0123",
@@ -44,6 +45,7 @@ const scheduleData = [
   },
 ];
 
+
 export default function Appointments() {
   return (
     <div className="schedule-container">
@@ -62,6 +64,7 @@ export default function Appointments() {
           </select>
         </div>
       </div>
+
 
       <table className="schedule-table">
         <thead>
@@ -106,13 +109,13 @@ export default function Appointments() {
                 <div className="actions">
                   {item.status === "ready" ? (
                     <>
-                      <button className="btn btn-start">Bắt đầu</button>
-                      <button className="btn btn-message">Nhắn tin</button>
+                      <a href="/doctor-dashboard/appointments/session" className="btn btn-start no-underline">Bắt đầu</a>
+                      <a href="" className="btn btn-message no-underline">Nhắn tin</a>
                     </>
                   ) : (
                     <>
-                      <button className="btn btn-not-ready">Chưa mở</button>
-                      <button className="btn btn-message">Nhắn tin</button>
+                      <a href="" className="btn btn-not-ready no-underline">Chưa mở</a>
+                      <a href="" className="btn btn-message no-underline">Nhắn tin</a>
                     </>
                   )}
                 </div>
@@ -122,6 +125,7 @@ export default function Appointments() {
         </tbody>
       </table>
 
+
       <div className="pagination">
         <button>Trước</button>
         <span>Trang 1 / 3</span>
@@ -130,3 +134,6 @@ export default function Appointments() {
     </div>
   );
 }
+
+
+
