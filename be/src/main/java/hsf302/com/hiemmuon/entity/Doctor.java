@@ -19,12 +19,12 @@ public class Doctor {
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @MapsId
-    @JoinColumn(name = "doctor_id")
+    @JoinColumn(name = "doctor_id", referencedColumnName = "user_id")
     private User user;
 
     @Nationalized
-    @Column(name = "description", columnDefinition = "NVARCHAR(MAX)")
-    private String description;
+    @Column(name = "specification", columnDefinition = "NVARCHAR(MAX)")
+    private String specification;
 
     @Column(name = "experience")
     private int experience;
@@ -38,9 +38,9 @@ public class Doctor {
     public Doctor() {
     }
 
-    public Doctor(User user, String description, int experience, Float ratingAvg, Boolean isActive) {
+    public Doctor(User user, String specification, int experience, Float ratingAvg, Boolean isActive) {
         this.user = user;
-        this.description = description;
+        this.specification = specification;
         this.experience = experience;
         this.ratingAvg = ratingAvg;
         this.isActive = isActive;
