@@ -149,3 +149,7 @@
 .patients-container .patients-table .btn {
   margin-right: 8px;
 }
+
+.no-underline {
+  text-decoration: none;
+}
