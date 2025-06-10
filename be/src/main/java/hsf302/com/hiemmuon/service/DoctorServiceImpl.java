@@ -8,12 +8,10 @@ import hsf302.com.hiemmuon.repository.DoctorRepository;
 import hsf302.com.hiemmuon.repository.RoleRepository;
 import hsf302.com.hiemmuon.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DoctorServiceImpl implements DoctorService {
@@ -27,15 +25,8 @@ public class DoctorServiceImpl implements DoctorService {
     @Autowired
     private DoctorRepository doctorRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    public Doctor getDoctorByDoctorId(int id) {
-        Doctor doctor = doctorRepository.findByDoctorId(id);
-        if (doctor == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Thís User Id is not Doctor!");
-        }
-        return doctor;
+    public Doctor getDoctorByUserId(int userId) {
+        return doctorRepository.findByUserUserId(userId);
     }
 
     @Override
@@ -56,9 +47,7 @@ public class DoctorServiceImpl implements DoctorService {
 
         User user = new User();
         user.setEmail(request.getEmail());
-
-        String encodedPassword = passwordEncoder.encode(request.getPassword());
-        user.setPassword(encodedPassword);
+        user.setPassword(request.getPassword());
         user.setRole(roleRepository.findByRoleName("doctor"));
 
         User savedUser = userRepository.save(user);
@@ -72,10 +61,13 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public Doctor updateDoctor(int id, UpdateDoctorDTO updateDoctorDTO) {
-        Doctor existingDoctor = getDoctorByDoctorId(id);
+        Doctor existingDoctor = getDoctorByUserId(id);
 
         User existingUser = existingDoctor.getUser();
 
+        if (updateDoctorDTO.getPassword() != null) {
+            existingUser.setPassword(updateDoctorDTO.getPassword());
+        }
         if (updateDoctorDTO.getName() != null) {
             existingUser.setName(updateDoctorDTO.getName());
         }
@@ -89,25 +81,21 @@ public class DoctorServiceImpl implements DoctorService {
             existingUser.setGender(updateDoctorDTO.getGender());
         }
         if (updateDoctorDTO.getDescription() != null) {
-            existingDoctor.setSpecification(updateDoctorDTO.getDescription());
+            existingDoctor.setDescription(updateDoctorDTO.getDescription());
         }
         return saveDoctor(existingDoctor);
     }
 
     @Override
     public Doctor updateDoctorActive(int id, boolean active) {
-        Doctor doctor = getDoctorByDoctorId(id);
+        Doctor doctor = getDoctorByUserId(id);
+        ;
         doctor.setIsActive(active);
         return saveDoctor(doctor);
     }
 
     @Override
-    public List<Doctor> getDoctorBySpecification(String specification) {
-        return doctorRepository.findBySpecification(specification);
-    }
-
-    @Override
-    public List<Doctor> getDoctorByIsActive() {
-        return doctorRepository.findByIsActive(true);
+    public List<Doctor> getDoctorByDescription(String description) {
+        return doctorRepository.findByDescription(description);
     }
 }

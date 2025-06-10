@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 public interface DoctorService {
 
-    Doctor getDoctorByDoctorId(int doctorId);
+    Doctor getDoctorByUserId(int userId);
 
     Doctor createDoctor(CreateDoctorDTO request);
 
@@ -23,8 +23,6 @@ public interface DoctorService {
 
     Doctor updateDoctorActive(int id, boolean active);
 
-    List<Doctor> getDoctorBySpecification(String specification);
-
-    List<Doctor> getDoctorByIsActive();
+    List<Doctor> getDoctorByDescription(String description);
 }
 
