@@ -19,6 +19,7 @@ import Appointment from './Pages/manager/Appointment/Appointment';
 import Patients from './Pages/doctor/Dashboard/PatientsLayout/Patients';
 import Message from './Pages/doctor/Dashboard/MessageLayout/Message';
 import ProfileLayout from './Pages/doctor/Dashboard/ProfileLayout/ProfileLayout';
+import PatientRecord from './Pages/doctor/Dashboard/PatientRecord/PatientRecord';
 
 import PatientProfileLayout from './Pages/doctor/Dashboard/PatientProfileLayout/PatientProfileLayout';
 import PatientAppointment from './Pages/doctor/Dashboard/PatientAppointment/PatientAppointment';
@@ -117,12 +118,22 @@ export const router = createBrowserRouter([
     ]
   },
   {
-    path: "/patient-profile",
+    path: "doctor-dashboard/appointments/session",
     element: <PageLayout />,
     children: [
       {
         index: true, // tương đương path: "/"
         element: <PatientProfileLayout />,
+      },
+    ]
+  },
+  {
+    path: "/doctor-dashboard/patients/patient-record",
+    element: <PageLayout />,
+    children: [
+      {
+        index: true, // tương đương path: "/"
+        element: <PatientRecord />,
       },
     ]
   },

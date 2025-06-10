@@ -98,7 +98,7 @@ export default function Patients() {
               </td>
               <td>
                 <div className="actions">
-                  <button className="btn">Hồ sơ</button>
+                <a href="/doctor-dashboard/patients/patient-record" className="btn btn-start no-underline">Hồ sơ</a>
                   <button className="btn btn-message">Nhắn tin</button>
                 </div>
               </td>

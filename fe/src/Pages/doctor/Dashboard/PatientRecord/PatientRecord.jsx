@@ -1,8 +1,8 @@
 import { useState } from "react"
-import "./PatientProfileLayout.css"
+import "./PatientRecord.css"
 
 
-const PatientProfileLayout = () => {
+const PatientRecord = () => {
   const [activeTab, setActiveTab] = useState("overview")
   const [expandedSections, setExpandedSections] = useState({
     medicalHistory: true,
@@ -45,9 +45,9 @@ const PatientProfileLayout = () => {
     ],
     allergies: ["Không có"],
     currentAppointment: {
-      date: "20/05/2024",
-      time: "09:00 - 09:30",
-      status: "Đang diễn ra",
+      date: "",
+      time: "",
+      status: "",
      
     }
   }
@@ -226,20 +226,12 @@ const PatientProfileLayout = () => {
                     <div className="patient-profile-timeline-actions">
                       {phase.status === 'active' && (
                         <div className="patient-profile-phase-actions">
-                          <h5>⚡ Cập nhật nhanh:</h5>
-                          <div className="patient-profile-quick-actions">
-                            <button className="patient-profile-btn-outline-small">📝 Ghi chú</button>
-                            <button className="patient-profile-btn-outline-small">📋 Kết quả XN</button>
-                            <button className="patient-profile-btn-outline-small">💊 Thuốc</button>
-                          </div>
+                          
+                          
                         </div>
                       )}
                       {phase.status === 'upcoming' && (
                         <div className="patient-profile-phase-actions">
-                         
-                          <div className="patient-profile-quick-actions">
-                            <button className="patient-profile-btn-primary-small">📅 Đặt lịch hẹn</button>
-                          </div>
                         </div>
                       )}
                     </div>
@@ -261,7 +253,7 @@ const PatientProfileLayout = () => {
           <h3>Lịch hẹn</h3>
           <p>Lịch sử và lịch hẹn sắp tới</p>
         </div>
-        <button className="patient-profile-btn-primary">📅 Đặt lịch hẹn mới</button>
+        
       </div>
 
 
@@ -282,7 +274,7 @@ const PatientProfileLayout = () => {
               <p>BS. Nguyễn Lan Anh</p>
               <div className="patient-profile-appointment-actions">
                 {/* <button className="patient-profile-btn-outline-red">Chi tiết</button> */}
-                <button className="patient-profile-btn-outline-blue">Dời lịch</button>
+                
               </div>
             </div>
             <button className="patient-profile-reschedule-btn">Đã lên lịch</button>
@@ -319,7 +311,7 @@ const PatientProfileLayout = () => {
           <h3>Ghi chú khám bệnh</h3>
           <p>Ghi chú và theo dõi quá trình điều trị</p>
         </div>
-        <button className="patient-profile-btn-primary">📝 Thêm ghi chú mới</button>
+        
       </div>
 
 
@@ -342,7 +334,7 @@ const PatientProfileLayout = () => {
                 </div>
                 <div className="patient-profile-note-footer">
                   <span className="patient-profile-doctor-name">{note.doctor}</span>
-                  <button className="patient-profile-btn-outline-blue">Chỉnh sửa</button>
+                  
                 </div>
               </div>
             ))
@@ -360,7 +352,7 @@ const PatientProfileLayout = () => {
           <h3>Kết quả xét nghiệm</h3>
           <p>Lịch sử các xét nghiệm và kết quả</p>
         </div>
-        <button className="patient-profile-btn-primary">➕ Thêm kết quả mới</button>
+        
       </div>
 
 
@@ -409,7 +401,7 @@ const PatientProfileLayout = () => {
           <h3>Thuốc</h3>
           <p>Thuốc hiện tại và lịch sử thuốc</p>
         </div>
-        <button className="patient-profile-btn-primary">➕ Thêm thuốc mới</button>
+      
       </div>
 
 
@@ -456,7 +448,7 @@ const PatientProfileLayout = () => {
                 </div>
                 <div className="patient-profile-med-actions">
                   <button className="patient-profile-btn-outline-blue">Xem chi tiết</button>
-                  {isActive && <button className="patient-profile-btn-outline-red">Ngừng</button>}
+                  
                 </div>
               </div>
             ))
@@ -491,17 +483,17 @@ const PatientProfileLayout = () => {
         <div className="patient-profile-header-left">
           <a href="#" onClick={(e) => { e.preventDefault(); window.history.back(); }} className="patient-profile-back-btn">← Quay lại</a>
           <div className="patient-profile-header-info">
-            <h1>Cuộc hẹn với {patientData.name}</h1>
+            <h1>Hồ sơ bệnh nhân</h1>
             <div className="patient-profile-appointment-info">
               <span className="patient-profile-appointment-type">{patientData.currentAppointment.type}</span>
-              <span className="patient-profile-appointment-time">🕘 {patientData.currentAppointment.date} | {patientData.currentAppointment.time}</span>
-              <span className="patient-profile-appointment-status">{patientData.currentAppointment.status}</span>
+            
+              {/* <span className="patient-profile-appointment-status">{patientData.currentAppointment.status}</span> */}
             </div>
             <p className="patient-profile-appointment-details">{patientData.currentAppointment.details}</p>
           </div>
         </div>
         <div className="patient-profile-header-actions">
-          <button className="patient-profile-btn-danger">Kết thúc cuộc hẹn</button>
+          
         </div>
       </div>
 
@@ -678,6 +670,6 @@ const PatientProfileLayout = () => {
 }
 
 
-export default PatientProfileLayout
+export default PatientRecord
 
 
