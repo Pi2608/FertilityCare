@@ -4,7 +4,8 @@ import hsf302.com.hiemmuon.dto.ApiResponse;
 import hsf302.com.hiemmuon.dto.CreateDoctorDTO;
 import hsf302.com.hiemmuon.dto.UpdateDoctorDTO;
 import hsf302.com.hiemmuon.entity.Doctor;
-import hsf302.com.hiemmuon.service.DoctorServiceImpl;
+import hsf302.com.hiemmuon.service.DoctorService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,17 +18,17 @@ import java.util.List;
 public class DoctorController {
 
     @Autowired
-    private DoctorServiceImpl doctorService;
+    private DoctorService doctorServiceImpl;
 
     @GetMapping("/all")
     public List<Doctor> getAllDoctors() {
-        return doctorService.findAll();
+        return doctorServiceImpl.findAll();
     }
 
     @PostMapping
     public ResponseEntity<ApiResponse<?>> createDoctor(@RequestBody @Valid CreateDoctorDTO request) {
 
-        Doctor doctor = doctorService.createDoctor(request);
+        Doctor doctor = doctorServiceImpl.createDoctor(request);
 
         ApiResponse<Doctor> response = new ApiResponse<>(
                 200,
@@ -38,11 +39,11 @@ public class DoctorController {
     }
 
 
-    @PutMapping("/{doctorId}")
+    @PutMapping("/me")
     public ResponseEntity<ApiResponse<?>> updateDoctor(
-            @PathVariable("doctorId") int id,
+            HttpServletRequest request,
             @RequestBody UpdateDoctorDTO updateDoctorDTO) {
-        Doctor savedDoctor = doctorService.updateDoctor(id, updateDoctorDTO);
+        Doctor savedDoctor = doctorServiceImpl.updateDoctor(request, updateDoctorDTO);
 
         ApiResponse<Doctor> response = new ApiResponse<>(
                 200,
@@ -58,7 +59,7 @@ public class DoctorController {
             @PathVariable("doctorId") int doctorId,
             @RequestParam("active") boolean active) {
 
-        Doctor updatedDoctor = doctorService.updateDoctorActive(doctorId, active);
+        Doctor updatedDoctor = doctorServiceImpl.updateDoctorActive(doctorId, active);
         String statusText = active ? "activated" : "deactivated";
 
         ApiResponse<Doctor> response = new ApiResponse<>(
@@ -73,7 +74,7 @@ public class DoctorController {
     public ResponseEntity<ApiResponse<?>> getDoctorBySpecialization(
             @RequestParam("specification") String specification) {
 
-        List<Doctor> doctors = doctorService.getDoctorBySpecification(specification);
+        List<Doctor> doctors = doctorServiceImpl.getDoctorBySpecification(specification);
 
         ApiResponse<List<Doctor>> response = new ApiResponse<>(
                 200,
@@ -86,7 +87,7 @@ public class DoctorController {
     @GetMapping("/{doctorId}")
     public ResponseEntity<ApiResponse<?>> getDoctorById(
             @PathVariable("doctorId") int doctorId) {
-        Doctor doctor = doctorService.getDoctorByDoctorId(doctorId);
+        Doctor doctor = doctorServiceImpl.getDoctorByDoctorId(doctorId);
 
         ApiResponse<Doctor> response = new ApiResponse<>(
                 200,
@@ -98,7 +99,7 @@ public class DoctorController {
 
     @GetMapping("/active")
     public ResponseEntity<ApiResponse<?>> getDoctorByStatus() {
-        List<Doctor> doctors = doctorService.getDoctorByIsActive();
+        List<Doctor> doctors = doctorServiceImpl.getDoctorByIsActive();
 
         ApiResponse<List<Doctor>> response = new ApiResponse<>(
                 200,

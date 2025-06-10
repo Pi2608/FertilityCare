@@ -3,8 +3,7 @@ package hsf302.com.hiemmuon.controller;
 import hsf302.com.hiemmuon.dto.ApiResponse;
 import hsf302.com.hiemmuon.dto.LoginRequest;
 import hsf302.com.hiemmuon.entity.User;
-import hsf302.com.hiemmuon.repository.UserRepository;
-import hsf302.com.hiemmuon.service.UserServiceImpl;
+import hsf302.com.hiemmuon.service.UserService;
 import hsf302.com.hiemmuon.utils.JwtUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +14,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/login")
 public class LoginController {
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -59,7 +59,9 @@ public class LoginController {
 
         List<String> roles = List.of("ROLE_" + user.getRole().getRoleName().toUpperCase());
 
-        String token = jwtUtil.generateToken(user.getEmail(), roles);
+        Map<String, Object> extraClaims = Map.of("doctorId", user.getDoctor().getDoctorId());
+
+        String token = jwtUtil.generateToken(user.getEmail(), roles, extraClaims);
 
         ApiResponse<String> response = new ApiResponse<>(
                 200,

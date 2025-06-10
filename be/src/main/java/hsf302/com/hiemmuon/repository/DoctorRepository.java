@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface DoctorRepository extends JpaRepository<Doctor, Integer> {
-    Doctor findByDoctorId(int doctorId);
+    Doctor findById(int id);
     List<Doctor> findAll();
     List<Doctor> findBySpecification(String specification);
     List<Doctor> findByIsActive(boolean isActive);
