@@ -5,6 +5,7 @@ import hsf302.com.hiemmuon.dto.CreateDoctorDTO;
 import hsf302.com.hiemmuon.dto.UpdateDoctorDTO;
 import hsf302.com.hiemmuon.entity.Doctor;
 import hsf302.com.hiemmuon.service.DoctorServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +19,13 @@ public class DoctorController {
     @Autowired
     private DoctorServiceImpl doctorService;
 
-    @GetMapping
+    @GetMapping("/all")
     public List<Doctor> getAllDoctors() {
         return doctorService.findAll();
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<?>> createDoctor(@RequestBody CreateDoctorDTO request) {
+    public ResponseEntity<ApiResponse<?>> createDoctor(@RequestBody @Valid CreateDoctorDTO request) {
 
         Doctor doctor = doctorService.createDoctor(request);
 
@@ -68,15 +69,15 @@ public class DoctorController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/description")
+    @GetMapping("/specification")
     public ResponseEntity<ApiResponse<?>> getDoctorBySpecialization(
-            @RequestParam("description") String description) {
+            @RequestParam("specification") String specification) {
 
-        List<Doctor> doctors = doctorService.getDoctorByDescription(description);
+        List<Doctor> doctors = doctorService.getDoctorBySpecification(specification);
 
         ApiResponse<List<Doctor>> response = new ApiResponse<>(
                 200,
-                "Doctors with specialization " + description + " retrieved successfully",
+                "Doctors with specialization " + specification + " retrieved successfully",
                 doctors
         );
         return ResponseEntity.ok(response);
@@ -85,12 +86,24 @@ public class DoctorController {
     @GetMapping("/{doctorId}")
     public ResponseEntity<ApiResponse<?>> getDoctorById(
             @PathVariable("doctorId") int doctorId) {
-        Doctor doctor = doctorService.getDoctorByUserId (doctorId);
+        Doctor doctor = doctorService.getDoctorByDoctorId(doctorId);
 
         ApiResponse<Doctor> response = new ApiResponse<>(
                 200,
                 "Doctor retrieved successfully",
                 doctor
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<ApiResponse<?>> getDoctorByStatus() {
+        List<Doctor> doctors = doctorService.getDoctorByIsActive();
+
+        ApiResponse<List<Doctor>> response = new ApiResponse<>(
+                200,
+                "Doctors retrieved successfully",
+                doctors
         );
         return ResponseEntity.ok(response);
     }
