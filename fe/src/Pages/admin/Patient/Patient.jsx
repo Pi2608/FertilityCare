@@ -38,7 +38,7 @@ const Patient = () => {
             <span className="search-icon">🔍</span>
             <input
               type="text"
-              placeholder="Tìm kiếm"
+              placeholder="Tìm kiếm'"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />

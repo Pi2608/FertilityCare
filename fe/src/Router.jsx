@@ -30,7 +30,7 @@ import AdminAppointment from './Pages/admin/Appointment/Appointment';
 import AdminPatient from './Pages/admin/Patient/Patient';
 import AdminDoctor from './Pages/admin/Doctor/Doctor';
 import AdminTreatmentService from './Pages/admin/TreatmentService/TreatmentService';
-
+import Dashboard from './Pages/admin/Dashboard/Dashboard';
 
 
 const USER_TYPES = {
@@ -249,7 +249,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "report",
-        element: <div>Reports & Analytics - Coming Soon</div>,
+        element: <Dashboard/>,
       },
       {
         path: "message",
