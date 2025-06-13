@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import './DoctorDetail.css'
 import { useParams } from 'react-router-dom'
 import { doctorsData } from '../../../data/doctorData'
+import { Star } from 'lucide-react';
+
 
 const DoctorDetail = () => {
     const [activeTab, setActiveTab] = useState('introduce');
@@ -21,7 +23,7 @@ const DoctorDetail = () => {
                     <p className="doctor-specialty">{doctor.specialty}</p>
 
                     <div className="doctor-rating">
-                    <span className="stars">★★★★★</span>
+                    <span className="stars">{renderStars(doctorData.overallRating)}</span>
                     <span className="rating-value">{doctor.rating}</span>
                     <span className="rating-count">({doctor.totalReviews} đánh giá)</span>
                     </div>
@@ -65,6 +67,26 @@ const DoctorDetail = () => {
             ))}
             </div>
         );
+    };
+
+    const renderRatingBar = (value) => {
+        const percentage = (value / 5) * 100;
+        return (
+            <div className="rating-bar">
+                <div className="rating-bar-fill" style={{ width: `${percentage}%` }}></div>
+            </div>
+        );
+    };
+
+    const renderStars = (rating) => {
+        return Array.from({ length: 5 }, (_, i) => (
+            <Star
+                key={i}
+                size={14}
+                className={i < Math.floor(rating) ? "star-filled" : "star-empty"}
+                fill={i < Math.floor(rating) ? "#ffc107" : "none"}
+            />
+        ));
     };
 
     const navItems = [
@@ -171,8 +193,55 @@ const DoctorDetail = () => {
         </div>
     );
 
-    const renderFeedback = () => (
-        <div className="feedback"></div>
+    const renderReviews = () => (
+        <div className="reviews">
+            <div className="reviews-header">
+                <h1 className="title">Đánh Giá Từ Bệnh Nhân</h1>
+                <p className="subtitle">Dựa trên {doctorData.totalReviews} đánh giá từ bệnh nhân đã điều trị với Bác sĩ Trần Văn Hải</p>
+                
+                <div className="overall-rating">
+                <span className="rating-number">{doctorData.overallRating}</span>
+                <div className="stars-container">
+                    {renderStars(doctorData.overallRating)}
+                </div>
+                <span className="total-reviews">{doctorData.totalReviews} đánh giá</span>
+                </div>
+                {doctorData.ratingBreakdown.map((rating, index) => (
+                <div key={index} className="rating-item">
+                    <span className="rating-label">{rating.label}</span>
+                    {renderRatingBar(rating.value)}
+                    <span className="rating-value">{rating.value}</span>
+                </div>
+                ))}
+            </div>
+
+            <div className="reviews-list">
+                {doctorData.reviews.map((review) => (
+                    <div key={review.id} className="review-item">
+                        <div className="review-header">
+                            <div className="reviewer-avatar">
+
+                            </div>
+                            <div className="reviewer-info">
+                                <h3 className="reviewer-name">{review.patientName}</h3>
+                                <p className="review-date">{review.date}</p>
+                            </div>
+                            <div className="review-rating">
+                                {renderStars(review.rating)}
+                            </div>
+                        </div>
+                        <p className="review-content">"{review.comment}"</p>
+                    </div>
+                ))}
+            </div>
+            
+            <div className="schedule">
+                <h1>Lịch làm việc</h1>
+                <p>Bác sĩ hiện có lịch khám vào các ngày sau. Vui lòng đặt lịch hẹn trực tuyến hoặc liên hệ với phòng khám để biết thêm thông tin.</p>
+                <WorkingHours workingHours={doctorData.workingHours} />
+                <button className="appointment-button">Đặt Lịch Hẹn</button>
+            </div>
+        </div>
     );
 
     const renderContent = () => {
@@ -184,7 +253,7 @@ const DoctorDetail = () => {
         case 'experience':
             return renderExperience();
         case 'feedback':
-            return renderFeedback();
+            return renderReviews();
         default:
             return renderIntroduce();
         }

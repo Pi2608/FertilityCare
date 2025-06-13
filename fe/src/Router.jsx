@@ -12,6 +12,7 @@ import IvfDetail from '@customerpages/IvfDetail/IvfDetail';
 import DoctorList from '@customerpages/DoctorList/DoctorList';
 import CusDashboard from '@customerpages/Dashboard/CusDashboard';
 import Profile from '@customerpages/Profile/Profile';
+import Booking from './Pages/customer/Booking/Booking';
 
 import DocDashboard from '@doctorpages/Dashboard/DocDashboard';
 import Overview from './Pages/doctor/Dashboard/OverviewLayout/Overview';
@@ -108,6 +109,11 @@ export const router = createBrowserRouter([
             element: <DoctorDetail />,
           },
         ]
+      },
+      {
+        index: false, 
+        path: "book-appointment",
+        element: <Booking />,
       },
     ]
   },

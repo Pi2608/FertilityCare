@@ -1,10 +1,12 @@
 import React from 'react';
 import TreatmentCard from '@components/Card/TreatmentCard/TreatmentCard';
+import { useNavigate } from 'react-router-dom';
 import IUI from '@asset/iui.jpg';
 import IVF from '@asset/ivf.jpg';
 import './TreatmentMethod.css';
 
 function TreatmentMethod() {
+    const navigate = useNavigate();
 
     const treatmentData = [
         {
@@ -58,8 +60,8 @@ function TreatmentMethod() {
                 <p>Chúng tôi cung cấp nhiều phương pháp điều trị hiếm muộn tiên tiến, được cá nhân hóa theo nhu cầu cụ thể của bạn. Đội ngũ chuyên gia của chúng tôi sẽ hướng dẫn bạn qua các lựa chọn để tìm ra phương pháp phù hợp nhất cho hành trình của bạn.</p>
             </section>
             <section className="button-section">
-                <button className="primary">Đặt lịch tư vấn</button>
-                <button className="secondary">Đội ngũ bác sĩ</button>
+                <button className="primary" onClick={() => navigate("/")}>Đặt lịch tư vấn</button>
+                <button className="secondary" onClick={() => navigate("/homepage/doctor-list")}>Đội ngũ bác sĩ</button>
             </section>
             <div className="cards">
                 {treatmentData.map((item, index) => (

@@ -99,12 +99,12 @@ const DoctorList = () => {
 
     const renderStars = (rating) => {
         return Array.from({ length: 5 }, (_, i) => (
-        <Star
-            key={i}
-            size={14}
-            className={i < Math.floor(rating) ? "star-filled" : "star-empty"}
-            fill={i < Math.floor(rating) ? "#ffc107" : "none"}
-        />
+            <Star
+                key={i}
+                size={14}
+                className={i < Math.floor(rating) ? "star-filled" : "star-empty"}
+                fill={i < Math.floor(rating) ? "#ffc107" : "none"}
+            />
         ));
     };
 

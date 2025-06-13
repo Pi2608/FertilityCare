@@ -179,36 +179,38 @@ export const doctorsData = [
         // Reviews
         reviews: [
             {
-            id: 1,
-            patientName: "Lê Thị Thanh",
-            date: "Tháng 4, 2023",
-            rating: 5,
-            comment: "Bác sĩ Hải là một chuyên gia tuyệt vời. Sau 3 lần thất bại với IVF ở nơi khác, chúng tôi đã đến gặp bác sĩ Hải và ông đã phân tích rất chi tiết về chất lượng phôi của chúng tôi. Ông đã điều chỉnh phương pháp nuôi cấy phôi và lần này chúng tôi đã thành công. Hiện tại tôi đang mang thai 5 tháng và mọi thứ đều rất tốt. Chúng tôi vô cùng biết ơn bác sĩ Hải!"
+                id: 1,
+                patientName: "Lê Thị Thanh",
+                date: "Tháng 4, 2023",
+                rating: 5,
+                comment: "Bác sĩ Hải là một chuyên gia tuyệt vời. Sau 3 lần thất bại với IVF ở nơi khác, chúng tôi đã đến gặp bác sĩ Hải và ông đã phân tích rất chi tiết về chất lượng phôi của chúng tôi. Ông đã điều chỉnh phương pháp nuôi cấy phôi và lần này chúng tôi đã thành công. Hiện tại tôi đang mang thai 5 tháng và mọi thứ đều rất tốt. Chúng tôi vô cùng biết ơn bác sĩ Hải!"
             },
             {
-            id: 2,
-            patientName: "Nguyễn Văn Tuấn",
-            date: "Tháng 3, 2023",
-            rating: 5,
-            comment: "Bác sĩ Hải đã giải thích rất rõ ràng về quy trình IVF và vai trò của chất lượng phôi trong thành công của điều trị. Ông rất kiên nhẫn với tất cả các câu hỏi của chúng tôi và luôn cập nhật tình hình phát triển của phôi trong suốt quá trình nuôi cấy. Chúng tôi đánh giá cao sự chuyên nghiệp và lòng tận tâm của ông."
+                id: 2,
+                patientName: "Nguyễn Văn Tuấn",
+                date: "Tháng 3, 2023",
+                rating: 5,
+                comment: "Bác sĩ Hải đã giải thích rất rõ ràng về quy trình IVF và vai trò của chất lượng phôi trong thành công của điều trị. Ông rất kiên nhẫn với tất cả các câu hỏi của chúng tôi và luôn cập nhật tình hình phát triển của phôi trong suốt quá trình nuôi cấy. Chúng tôi đánh giá cao sự chuyên nghiệp và lòng tận tâm của ông."
             },
             {
-            id: 3,
-            patientName: "Trần Thị Hoa",
-            date: "Tháng 2, 2023", 
-            rating: 5,
-            comment: "Bác sĩ Hải là một chuyên gia phôi học xuất sắc. Ông đã quyết định nuôi cấy phôi của chúng tôi đến ngày 5 thay vì chuyển sớm vào ngày 3 như kế hoạch ban đầu, và điều này đã giúp chúng tôi có cơ hội phôi nang chất lượng tốt. Tôi đặc biệt ấn tượng với sự giải thích bác sĩ Hải về bất kỳ ai đang tìm kiếm điều trị IVF."
+                id: 3,
+                patientName: "Trần Thị Hoa",
+                date: "Tháng 2, 2023", 
+                rating: 5,
+                comment: "Bác sĩ Hải là một chuyên gia phôi học xuất sắc. Ông đã quyết định nuôi cấy phôi của chúng tôi đến ngày 5 thay vì chuyển sớm vào ngày 3 như kế hoạch ban đầu, và điều này đã giúp chúng tôi có cơ hội phôi nang chất lượng tốt. Tôi đặc biệt ấn tượng với sự giải thích bác sĩ Hải về bất kỳ ai đang tìm kiếm điều trị IVF."
             }
         ],
 
+        // Rating overall
+        overallRating: 4.8,
+
         // Rating breakdown
-        ratingBreakdown: {
-            overall: 4.8,
-            expertise: 4.9,
-            attitude: 4.7,
-            explanation: 4.8,
-            timeManagement: 4.7
-        }
+        ratingBreakdown: [
+            {label: "Chuyên môn", value: 4.9,},
+            {label: "Thái độ", value: 4.7,},
+            {label: "Giải thích", value: 4.8,},
+            {label: "Thời gian chờ", value: 4.7,},
+        ]
     },
     {
         id: 2,
@@ -408,14 +410,16 @@ export const doctorsData = [
             }
         ],
 
+        // Rating overall
+        overallRating: 4.8,
+        
         // Rating breakdown
-        ratingBreakdown: {
-            overall: 4.8,
-            expertise: 4.9,
-            attitude: 4.7,
-            explanation: 4.8,
-            timeManagement: 4.7
-        }
+        ratingBreakdown: [
+            {label: "Chuyên môn", value: 4.9,},
+            {label: "Thái độ", value: 4.7,},
+            {label: "Giải thích", value: 4.8,},
+            {label: "Thời gian chờ", value: 4.7,},
+        ]
     },
     {
         id: 3,
@@ -615,14 +619,16 @@ export const doctorsData = [
             }
         ],
 
+        // Rating overall
+        overallRating: 4.8,
+        
         // Rating breakdown
-        ratingBreakdown: {
-            overall: 4.8,
-            expertise: 4.9,
-            attitude: 4.7,
-            explanation: 4.8,
-            timeManagement: 4.7
-        }
+        ratingBreakdown: [
+            {label: "Chuyên môn", value: 4.9,},
+            {label: "Thái độ", value: 4.7,},
+            {label: "Giải thích", value: 4.8,},
+            {label: "Thời gian chờ", value: 4.7,},
+        ]
     },
     {
         id: 4,
@@ -822,14 +828,16 @@ export const doctorsData = [
             }
         ],
 
+        // Rating overall
+        overallRating: 4.8,
+        
         // Rating breakdown
-        ratingBreakdown: {
-            overall: 4.8,
-            expertise: 4.9,
-            attitude: 4.7,
-            explanation: 4.8,
-            timeManagement: 4.7
-        }
+        ratingBreakdown: [
+            {label: "Chuyên môn", value: 4.9,},
+            {label: "Thái độ", value: 4.7,},
+            {label: "Giải thích", value: 4.8,},
+            {label: "Thời gian chờ", value: 4.7,},
+        ]
     },
     {
         id: 5,
@@ -1029,14 +1037,16 @@ export const doctorsData = [
             }
         ],
 
+        // Rating overall
+        overallRating: 4.8,
+        
         // Rating breakdown
-        ratingBreakdown: {
-            overall: 4.8,
-            expertise: 4.9,
-            attitude: 4.7,
-            explanation: 4.8,
-            timeManagement: 4.7
-        }
+        ratingBreakdown: [
+            {label: "Chuyên môn", value: 4.9,},
+            {label: "Thái độ", value: 4.7,},
+            {label: "Giải thích", value: 4.8,},
+            {label: "Thời gian chờ", value: 4.7,},
+        ]
     },
     {
         id: 6,
@@ -1236,13 +1246,15 @@ export const doctorsData = [
             }
         ],
 
+        // Rating overall
+        overallRating: 4.8,
+        
         // Rating breakdown
-        ratingBreakdown: {
-            overall: 4.8,
-            expertise: 4.9,
-            attitude: 4.7,
-            explanation: 4.8,
-            timeManagement: 4.7
-        }
+        ratingBreakdown: [
+            {label: "Chuyên môn", value: 4.9,},
+            {label: "Thái độ", value: 4.7,},
+            {label: "Giải thích", value: 4.8,},
+            {label: "Thời gian chờ", value: 4.7,},
+        ]
     },
 ];

@@ -1,4 +1,9 @@
 /* Breadcrumb */
+.booking {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
 .booking .breadcrumb {
     margin: 1rem 0;
     color: #666;
@@ -82,7 +87,7 @@
 }
 
 .booking .step.completed .step-number {
-    background: #48bb78;
+    background: #e53e3e;
     color: white;
 }
 
@@ -148,9 +153,17 @@
 }
 
 .booking .appointment-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    background: #ffe4e6;
+    color: #e53e3e;
     font-size: 2rem;
-    min-width: 60px;
+    width: fit-content;
+    height: fit-content;
     text-align: center;
+    border-radius: 50%;
 }
 
 .booking .appointment-info h3 {
@@ -245,6 +258,7 @@
 /* Doctors List */
 .booking .doctors-list {
     display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 1rem;
     margin-bottom: 2rem;
 }
@@ -256,7 +270,8 @@
     cursor: pointer;
     transition: all 0.3s;
     display: flex;
-    align-items: center;
+    justify-content: center;
+    flex-direction: column;
     gap: 1rem;
 }
 
@@ -285,6 +300,15 @@
     border-radius: 50%;
 }
 
+.booking .doctor-card .upper {
+    display: flex;
+    gap: 1rem;
+}
+
+.booking .doctor-info {
+    display: block;
+}
+
 .booking .doctor-info h3 {
     color: #2d3748;
     margin-bottom: 0.5rem;
@@ -295,11 +319,19 @@
     margin-bottom: 0.5rem;
 }
 
-.booking .doctor-meta {
+.booking .lower {
     display: flex;
+    flex-direction: column;
     gap: 1rem;
     font-size: 0.9rem;
     color: #666;
+}
+
+.booking .lower span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
 }
 
 /* Date Time Selection */
@@ -464,6 +496,9 @@
 }
 
 .booking .notes li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     margin-bottom: 0.5rem;
     color: #4a5568;
     font-size: 0.9rem;
@@ -481,19 +516,19 @@
     margin-bottom: 1rem;
 }
 
-.booking .form-group {
+.booking .booking-form {
     display: flex;
     flex-direction: column;
 }
 
-.booking .form-group label {
+.booking .booking-form label {
     font-weight: 600;
     color: #2d3748;
     margin-bottom: 0.5rem;
 }
 
-.booking .form-group input,
-.booking .form-group textarea {
+.booking .booking-form input,
+.booking .booking-form textarea {
     padding: 0.75rem;
     border: 1px solid #e2e8f0;
     border-radius: 6px;
@@ -501,14 +536,14 @@
     transition: border-color 0.3s;
 }
 
-.booking .form-group input:focus,
-.booking .form-group textarea:focus {
+.booking .booking-form input:focus,
+.booking .booking-form textarea:focus {
     outline: none;
     border-color: #e53e3e;
     box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1);
 }
 
-.booking .form-group textarea {
+.booking .booking-form textarea {
     resize: vertical;
     min-height: 80px;
 }

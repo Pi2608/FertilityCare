@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Calendar, Clock, Check, Phone, FileText } from 'lucide-react';
 import './Booking.css';
 
 const Booking = () => {
@@ -55,26 +57,26 @@ const Booking = () => {
       id: 'consultation', 
       title: 'Tư Vấn Ban Đầu',
       description: 'Buổi tư vấn đầu tiên để thảo luận về các lựa chọn điều trị',
-      icon: '📅'
+      icon: Calendar
     },
     { 
       id: 'followup', 
       title: 'Khám Theo Dõi',
       description: 'Buổi khám theo dõi cho bệnh nhân hiện tại',
-      icon: '🕐'
+      icon: Clock
     },
     { 
       id: 'procedure', 
       title: 'Thủ Thuật Điều Trị',
       description: 'Lịch hẹn cho thủ thuật điều trị cụ thể',
-      icon: '✓'
+      icon: Check
     },
-    { 
-      id: 'other', 
-      title: 'Khác',
-      description: 'Loại lịch hẹn khác không được liệt kê ở trên',
-      icon: 'ℹ'
-    }
+    // { 
+    //   id: 'other', 
+    //   title: 'Khác',
+    //   description: 'Loại lịch hẹn khác không được liệt kê ở trên',
+    //   icon: 'ℹ'
+    // }
   ];
 
   const procedureTypes = [
@@ -91,6 +93,7 @@ const Booking = () => {
   const categories = ['Tất Cả', 'Nội Tiết Sinh Sản', 'Phổi Học', 'Siêu Âm'];
 
   // State management
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedAppointmentType, setSelectedAppointmentType] = useState('');
   const [selectedProcedureType, setSelectedProcedureType] = useState('');
@@ -113,6 +116,7 @@ const Booking = () => {
   });
   const [bookingComplete, setBookingComplete] = useState(false);
   const [appointmentDetails, setAppointmentDetails] = useState(null);
+  const today = new Date();
 
   // Filter doctors by category
   const filteredDoctors = selectedCategory === 'Tất Cả' 
@@ -171,6 +175,10 @@ const Booking = () => {
     }));
   };
 
+  const isFormValid = () => {
+    return Object.values(personalInfo).every(value => value.trim() !== '');
+  };
+
   const handleFinalSubmit = () => {
     const details = {
       doctor: selectedDoctor,
@@ -198,7 +206,9 @@ const Booking = () => {
             className={`appointment-type ${selectedAppointmentType === type.id ? 'selected' : ''}`}
             onClick={() => setSelectedAppointmentType(type.id)}
           >
-            <div className="appointment-icon">{type.icon}</div>
+            <div className="appointment-icon">
+              <type.icon size={24} />
+            </div>
             <div className="appointment-info">
               <h3>{type.title}</h3>
               <p>{type.description}</p>
@@ -283,20 +293,24 @@ const Booking = () => {
             className={`doctor-card ${selectedDoctor?.id === doctor.id ? 'selected' : ''}`}
             onClick={() => handleDoctorSelect(doctor)}
           >
-            <div className="doctor-avatar">
-              {doctor.image ? (
-                <img src={doctor.image} alt={doctor.name} />
-              ) : (
-                <div className="avatar-placeholder"></div>
-              )}
-            </div>
-            <div className="doctor-info">
-              <h3>{doctor.name}</h3>
-              <p>{doctor.specialty}</p>
-              <div className="doctor-meta">
-                <span>📅 Có lịch từ {doctor.availableDate}</span>
-                <span>⏱ {doctor.experience}</span>
+            <div className="upper">
+              <div className="doctor-avatar">
+                {doctor.image ? (
+                  <img src={doctor.image} alt={doctor.name} />
+                ) : (
+                  <div className="avatar-placeholder"></div>
+                )}
               </div>
+
+              <div className="doctor-info">
+                <h3>{doctor.name}</h3>
+                <p>{doctor.specialty}</p>
+              </div>
+            </div>
+            
+            <div className="lower">
+              <span><Calendar size={16}/> Có lịch từ {doctor.availableDate}</span>
+              <span><Check size={16}/> {doctor.experience}</span>
             </div>
           </div>
         ))}
@@ -331,7 +345,7 @@ const Booking = () => {
           {showCalendar && (
             <div className="calendar">
               <div className="calendar-header">
-                <h4>June 2025</h4>
+                <h4>{today.getMonth()}-{today.getUTCFullYear()}</h4>
               </div>
               <div className="calendar-weekdays">
                 {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
@@ -342,7 +356,7 @@ const Booking = () => {
                 {generateCalendarDates().map((date, index) => (
                   <div 
                     key={index} 
-                    className={`calendar-date ${date ? 'available' : 'empty'} ${date === 13 ? 'today' : ''}`}
+                    className={`calendar-date ${date ? 'available' : 'empty'} ${date === today.getDate() ? 'today' : ''}`}
                     onClick={() => date && handleDateSelect(date)}
                   >
                     {date}
@@ -382,9 +396,9 @@ const Booking = () => {
       <div className="notes">
         <h4>Lưu ý:</h4>
         <ul>
-          <li>⏰ Vui lòng đến trước 15 phút để hoàn thành thủ tục đăng ký.</li>
-          <li>📞 Nếu bạn cần hủy hoặc đổi lịch hẹn, vui lòng thông báo cho chúng tôi ít nhất 24 giờ trước lịch hẹn.</li>
-          <li>📋 Mang theo hồ sơ y tế liên quan, kết quả xét nghiệm trước đây và danh sách thuốc hiện tại (nếu có).</li>
+          <li><Clock size={16}/> Vui lòng đến trước 15 phút để hoàn thành thủ tục đăng ký.</li>
+          <li><Phone size={16}/> Nếu bạn cần hủy hoặc đổi lịch hẹn, vui lòng thông báo cho chúng tôi ít nhất 24 giờ trước lịch hẹn.</li>
+          <li><FileText size={16}/> Mang theo hồ sơ y tế liên quan, kết quả xét nghiệm trước đây và danh sách thuốc hiện tại (nếu có).</li>
         </ul>
       </div>
 
@@ -409,7 +423,7 @@ const Booking = () => {
 
       <div className="personal-form">
         <div className="form-row">
-          <div className="form-group">
+          <div className="booking-form">
             <label>Họ</label>
             <input
               type="text"
@@ -418,19 +432,9 @@ const Booking = () => {
               onChange={(e) => handlePersonalInfoChange('lastName', e.target.value)}
             />
           </div>
-          <div className="form-group">
+          <div className="booking-form">
             <label>Giới Tính</label>
             <div className="radio-group">
-              <label>
-                <input 
-                  type="radio" 
-                  name="gender" 
-                  value="female"
-                  checked={personalInfo.gender === 'female'}
-                  onChange={(e) => handlePersonalInfoChange('gender', e.target.value)}
-                />
-                Nữ
-              </label>
               <label>
                 <input 
                   type="radio" 
@@ -440,6 +444,16 @@ const Booking = () => {
                   onChange={(e) => handlePersonalInfoChange('gender', e.target.value)}
                 />
                 Nam
+              </label>
+              <label>
+                <input 
+                  type="radio" 
+                  name="gender" 
+                  value="female"
+                  checked={personalInfo.gender === 'female'}
+                  onChange={(e) => handlePersonalInfoChange('gender', e.target.value)}
+                />
+                Nữ
               </label>
               <label>
                 <input 
@@ -456,7 +470,7 @@ const Booking = () => {
         </div>
 
         <div className="form-row">
-          <div className="form-group">
+          <div className="booking-form">
             <label>Tên</label>
             <input
               type="text"
@@ -465,7 +479,7 @@ const Booking = () => {
               onChange={(e) => handlePersonalInfoChange('firstName', e.target.value)}
             />
           </div>
-          <div className="form-group">
+          <div className="booking-form">
             <label>Địa Chỉ</label>
             <input
               type="text"
@@ -477,7 +491,7 @@ const Booking = () => {
         </div>
 
         <div className="form-row">
-          <div className="form-group">
+          <div className="booking-form">
             <label>Email</label>
             <input
               type="email"
@@ -486,7 +500,7 @@ const Booking = () => {
               onChange={(e) => handlePersonalInfoChange('email', e.target.value)}
             />
           </div>
-          <div className="form-group">
+          <div className="booking-form">
             <label>Thành Phố/Tỉnh</label>
             <input
               type="text"
@@ -498,7 +512,7 @@ const Booking = () => {
         </div>
 
         <div className="form-row">
-          <div className="form-group">
+          <div className="booking-form">
             <label>Số Điện Thoại</label>
             <input
               type="tel"
@@ -507,24 +521,24 @@ const Booking = () => {
               onChange={(e) => handlePersonalInfoChange('phone', e.target.value)}
             />
           </div>
-          <div className="form-group">
-            <label>Lý Do Khám</label>
-            <textarea
-              placeholder="Vui lòng mô tả ngắn gọn lý do bạn đặt lịch hẹn này"
-              value={personalInfo.reason}
-              onChange={(e) => handlePersonalInfoChange('reason', e.target.value)}
-              rows="3"
+          <div className="booking-form">
+            <label>Ngày Sinh</label>
+            <input
+              type="text"
+              placeholder="mm/dd/yyyy"
+              value={personalInfo.birthDate}
+              onChange={(e) => handlePersonalInfoChange('birthDate', e.target.value)}
             />
           </div>
         </div>
 
-        <div className="form-group">
-          <label>Ngày Sinh</label>
-          <input
-            type="text"
-            placeholder="mm/dd/yyyy"
-            value={personalInfo.birthDate}
-            onChange={(e) => handlePersonalInfoChange('birthDate', e.target.value)}
+        <div className="booking-form">
+          <label>Lý Do Khám</label>
+          <textarea
+            placeholder="Vui lòng mô tả ngắn gọn lý do bạn đặt lịch hẹn này"
+            value={personalInfo.reason}
+            onChange={(e) => handlePersonalInfoChange('reason', e.target.value)}
+            rows="3"
           />
         </div>
       </div>
@@ -534,6 +548,7 @@ const Booking = () => {
         <button 
           className="complete-btn"
           onClick={handleFinalSubmit}
+          disabled={!isFormValid()}
         >
           Hoàn Tất Đặt Lịch →
         </button>
@@ -544,7 +559,7 @@ const Booking = () => {
   // Booking Complete
   const renderBookingComplete = () => (
     <div className="step-content booking-complete">
-      <div className="success-icon">✓</div>
+      <div className="success-icon"><Check size={64}/></div>
       <h2>Đặt Lịch Hẹn Thành Công!</h2>
       <p>Cảm ơn bạn đã đặt lịch hẹn với chúng tôi. Chúng tôi đã gửi xác nhận đến email của bạn.</p>
 
@@ -573,12 +588,12 @@ const Booking = () => {
       </div>
 
       <div className="important-notes">
-        <p>📞 Vui lòng đến trước 15 phút để hoàn thành thủ tục đăng ký. Mang theo hồ sơ y tế liên quan và thẻ bảo hiểm (nếu có).</p>
-        <p>☎️ Nếu bạn cần hủy hoặc đổi lịch hẹn, vui lòng thông báo cho chúng tôi ít nhất 24 giờ trước lịch hẹn qua số điện thoại (024) 123-4567.</p>
+        <p>Vui lòng đến trước 15 phút để hoàn thành thủ tục đăng ký. Mang theo hồ sơ y tế liên quan và thẻ bảo hiểm (nếu có).</p>
+        <p>Nếu bạn cần hủy hoặc đổi lịch hẹn, vui lòng thông báo cho chúng tôi ít nhất 24 giờ trước lịch hẹn qua số điện thoại (024) 123-4567.</p>
       </div>
 
       <div className="action-buttons">
-        <button className="secondary-btn">Quay Về Trang Chủ</button>
+        <button className="secondary-btn" onClick={() => navigate("/homepage")}>Quay Về Trang Chủ</button>
         <button className="primary-btn">Quản Lý Lịch Hẹn</button>
       </div>
     </div>
@@ -588,7 +603,7 @@ const Booking = () => {
     <div className="booking">
       <div className="container">
         <div className="breadcrumb">
-          <a href="#">Trang Chủ</a> / <span>Đặt Lịch Hẹn</span>
+          <a href="/homepage">Trang Chủ</a> / <span>Đặt Lịch Hẹn</span>
         </div>
 
         <div className="booking-header">

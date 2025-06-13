@@ -1,5 +1,5 @@
 .doctor-list {
-    background: #fef9f9;
+    background-color: #fef9f9;
 }
 
 .doctor-list .container {
@@ -31,7 +31,7 @@
 .doctor-list .search-filter-section {
     display: flex;
     flex-direction: column;
-    background: white;
+    background-color: white;
     padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -78,12 +78,12 @@
 }
 
 .doctor-list .search-input:focus {
-    border-color: #e53e3e;
+    border-color: #e11d48;
 }
 
 .doctor-list .search-bar:has(.search-input:focus) .search-btn {
-    background-color: #e53e3e;
-    border-color: #e53e3e;
+    background-color: #e11d48;
+    border-color: #e11d48;
     color: white;
 }
 
@@ -113,7 +113,7 @@
 .doctor-list .specialty-tab {
     padding: 0.5rem 1rem;
     border: 2px solid #e2e8f0;
-    background: white;
+    background-color: white;
     border-radius: 25px;
     cursor: pointer;
     transition: all 0.3s;
@@ -122,14 +122,14 @@
 }
 
 .doctor-list .specialty-tab:hover {
-    border-color: #e53e3e;
-    color: #e53e3e;
+    border-color: #e11d48;
+    color: #e11d48;
 }
 
 .doctor-list .specialty-tab.active {
-    background: #e53e3e;
+    background-color: #e11d48;
     color: white;
-    border-color: #e53e3e;
+    border-color: #e11d48;
 }
 
 .doctor-list .results-info {
@@ -164,18 +164,18 @@
 }
 
 .doctor-list .clear-filters-btn {
-    background: #e53e3e;
+    background-color: #e11d48;
     color: white;
     border: none;
     padding: 0.75rem 1.5rem;
     border-radius: 6px;
     cursor: pointer;
     font-weight: 500;
-    transition: background 0.3s;
+    transition: background-color 0.3s;
 }
 
 .doctor-list .clear-filters-btn:hover {
-    background: #c53030;
+    background-color: #c53030;
 }
 
 /* Doctors Grid */
@@ -187,7 +187,7 @@
 }
 
 .doctor-list .doctor-card {
-    background: white;
+    background-color: white;
     display: flex;
     flex-direction: column;
     border-radius: 12px;
@@ -210,7 +210,7 @@
 .doctor-list .image-placeholder {
     width: 100%;
     height: 200px;
-    background: #f0f0f0;
+    background-color: #f0f0f0;
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -229,7 +229,7 @@
     position: absolute;
     top: 10px;
     left: 10px;
-    background: #e53e3e;
+    background-color: #e11d48;
     color: white;
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
@@ -307,7 +307,7 @@
 
 .doctor-list .view-profile-btn {
     flex: 1;
-    background: none;
+    background-color: none;
     border: 1px solid #e2e8f0;
     padding: 0.75rem;
     border-radius: 6px;
@@ -317,30 +317,30 @@
 }
 
 .doctor-list .view-profile-btn:hover {
-    border-color: #e53e3e;
-    color: #e53e3e;
+    border-color: #e11d48;
+    color: #e11d48;
 }
 
 .book-appointment-btn {
     flex: 1;
-    background: #2d3748;
+    background-color: #2d3748;
     color: white;
     border: none;
     padding: 0.75rem;
     border-radius: 6px;
     cursor: pointer;
     font-weight: 500;
-    transition: background 0.3s;
+    transition: background-color 0.3s;
 }
 
 .doctor-list .book-appointment-btn:hover {
-    background: #1a202c;
+    background-color: #1a202c;
 }
 
 /* Page Footer Text */
 .doctor-list .page-footer-text {
     text-align: center;
-    margin: 3rem 0;
+    padding: 3rem 0;
 }
 
 .doctor-list .page-footer-text p {
@@ -352,7 +352,7 @@
 }
 
 .doctor-list .consultation-btn {
-    background: #e53e3e;
+    background-color: #e11d48;
     color: white;
     border: none;
     padding: 1rem 2rem;
@@ -360,11 +360,11 @@
     cursor: pointer;
     font-weight: 500;
     font-size: 1rem;
-    transition: background 0.3s;
+    transition: background-color 0.3s;
 }
 
 .doctor-list .consultation-btn:hover {
-    background: #c53030;
+    background-color: #c53030;
 }
 
 /* Responsive Design */

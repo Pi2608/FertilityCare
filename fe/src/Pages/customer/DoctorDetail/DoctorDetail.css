@@ -21,7 +21,7 @@
 
 .doctor-detail .nav-bar {
     width: 100%s;
-    margin: 0 auto 2rem;
+    margin: 0 auto 20px;
     padding: 5px;
     display: flex;
     background-color: #f4f4f4;
@@ -191,6 +191,7 @@
     border-radius: 1rem;
     overflow: hidden;
     background-color: #fff;
+    margin-bottom: 0;
 }
 
 .doctor-detail .img-container {
@@ -267,4 +268,198 @@
 
 .doctor-detail .appointment-button:hover {
     background-color: #222;
+}
+
+.doctor-detail .title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 8px 0;
+}
+
+.doctor-detail .subtitle {
+    color: #666;
+    font-size: 14px;
+    margin: 0 0 20px 0;
+}
+
+.doctor-detail .overall-rating {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.doctor-detail .rating-number {
+    font-size: 28px;
+    font-weight: 600;
+    color: #333;
+}
+
+.doctor-detail .stars-container {
+    display: flex;
+    gap: 2px;
+    color: #ffc107;
+}
+
+.doctor-detail .star {
+    color: #ddd;
+    font-size: 20px;
+}
+
+.doctor-detail .star.filled {
+    color: #ffc107;
+}
+
+.doctor-detail .total-reviews {
+    color: #666;
+    font-size: 14px;
+    margin-left: auto;
+}
+
+.doctor-detail .rating-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    gap: 15px;
+}
+
+.doctor-detail .rating-label {
+    min-width: 100px;
+    font-size: 14px;
+    color: #666;
+}
+
+.doctor-detail .rating-bar {
+    flex: 1;
+    height: 8px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.doctor-detail .rating-bar-fill {
+    height: 100%;
+    background-color: #e91e63;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.doctor-detail .rating-value {
+    min-width: 35px;
+    text-align: right;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.doctor-detail .review-item {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 25px 0;
+}
+
+.doctor-detail .review-item:last-child {
+    border-bottom: none;
+}
+
+.doctor-detail .review-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.doctor-detail .reviewer-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: #e91e63;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.doctor-detail .reviewer-info {
+    flex: 1;
+}
+
+.doctor-detail .reviewer-name {
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 4px 0;
+    font-size: 15px;
+}
+
+.doctor-detail .review-date {
+    color: #666;
+    font-size: 13px;
+    margin: 0;
+}
+
+.doctor-detail .review-rating {
+    display: flex;
+    gap: 2px;
+    margin-left: auto;
+    color: #ffc107;
+}
+
+.doctor-detail .review-rating .star {
+    font-size: 16px;
+}
+
+.doctor-detail .review-content {
+    color: #444;
+    line-height: 1.6;
+    font-size: 14px;
+    margin: 0;
+}
+
+.doctor-detail .view-more {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.doctor-detail .view-more-btn {
+    background: none;
+    border: 1px solid #e0e0e0;
+    padding: 12px 24px;
+    border-radius: 6px;
+    color: #666;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.doctor-detail .view-more-btn:hover {
+    background-color: #f8f9fa;
+    border-color: #d0d0d0;
+}
+
+@media (max-width: 768px) {
+    .doctor-detail .doctor-reviews {
+        padding: 15px;
+    }
+    
+    .doctor-detail .overall-rating {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .total-reviews {
+        margin-left: 0;
+    }
+    
+    .doctor-detail .rating-item {
+        gap: 10px;
+    }
+    
+    .doctor-detail .rating-label {
+        min-width: 80px;
+        font-size: 13px;
+    }
 }
