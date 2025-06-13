@@ -32,6 +32,9 @@ public class TreatmentService {
     @Column(name = "specialfications", length = 255)
     private String specialfications;
 
+    @Column(name = "status", length = 255)
+    private boolean status;
+
     public TreatmentService() {
     }
 
