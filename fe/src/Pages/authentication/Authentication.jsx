@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { loginUser, registerUser, clearError } from '@features/auth/authSlice';
 import './Authentication.css';
 
 const Authentication = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
   
   const [isLogin, setIsLogin] = useState(true);
@@ -161,14 +163,8 @@ const Authentication = () => {
   // Redirect if already authenticated
   if (isAuthenticated) {
     // You might want to redirect to dashboard or home page here
-    return (
-      <div className="auth-container">
-        <div className="auth-card">
-          <h2>Đăng nhập thành công!</h2>
-          <p>Bạn đã được đăng nhập vào hệ thống.</p>
-        </div>
-      </div>
-    );
+    navigate('/homepage');
+    return null; // Prevent rendering the form if already authenticated
   }
 
   return (

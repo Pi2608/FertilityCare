@@ -51,3 +51,86 @@
   border-radius: 6px;
   cursor: pointer;
 }
+
+#header .appointment-btn:hover {
+  background-color: #c41a3b;
+}
+
+#header .login-btn:hover {
+  background-color: #f0f0f0;
+  border-color: #ccc;
+}
+
+#header .user-menu {
+  display: flex;
+  gap: 0.5rem;
+  position: relative;
+}
+
+#header .user-btn {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  gap: 0.5rem;
+}
+
+#header .user-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem); /* xuất hiện ngay dưới button */
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-width: 180px;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+/* Mỗi mục trong dropdown */
+#header .dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  color: #2e2e2e;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+#header .dropdown-item:hover {
+  background-color: #f5f5f5;
+}
+
+/* Icon bên trong item */
+#header .dropdown-icon {
+  margin-right: 0.5rem;
+  font-size: 1rem;
+}
+
+/* Divider giữa các group mục */
+#header .dropdown-divider {
+  height: 1px;
+  background-color: #eee;
+}
+
+/* Màu cho logout */
+#header .dropdown-item.logout {
+  color: #e11d48;
+}
+
+#header .dropdown-item.logout:hover {
+  background-color: #fdecea;
+}
+
+/* Xoay mũi tên khi mở */
+#header .dropdown-arrow {
+  transition: transform 0.2s;
+}
+#header .dropdown-arrow.open {
+  transform: rotateX(180deg);
+}

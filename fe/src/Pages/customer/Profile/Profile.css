@@ -1,19 +1,19 @@
-.patient-profile {
-    min-height: 100vh;
-    background-color: #f8fafc;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  }
+.patient-cus-profile {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
   
-  .patient-profile-header {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 16px 24px;
-    background: white;
-    border-bottom: 1px solid #e2e8f0;
-  }
+.patient-cus-profile .patient-profile-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+}
   
-  .patient-profile-back-btn {
+.patient-cus-profile .patient-profile-back-btn {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -27,18 +27,18 @@
     text-decoration: none;
   }
   
-  .patient-profile-back-btn:hover {
+.patient-cus-profile .patient-profile-back-btn:hover {
     background-color: #f1f5f9;
   }
   
-  .patient-profile-header h1 {
+.patient-cus-profile .patient-profile-header h1 {
     margin: 0;
     font-size: 24px;
     font-weight: 600;
     color: #1e293b;
   }
   
-  .patient-profile-container {
+.patient-cus-profile .patient-profile-container {
     display: grid;
     grid-template-columns: 400px 1fr;
     gap: 24px;
@@ -48,7 +48,7 @@
   }
   
   /* Sidebar Styles */
-  .patient-profile-sidebar {
+.patient-cus-profile .patient-profile-sidebar {
     background: white;
     border-radius: 12px;
     padding: 24px;
@@ -56,7 +56,7 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
   
-  .patient-profile-patient-info {
+.patient-cus-profile .patient-profile-patient-info {
     display: flex;
     gap: 16px;
     margin-bottom: 24px;
@@ -64,27 +64,27 @@
     border-bottom: 1px solid #e2e8f0;
   }
   
-  .patient-profile-patient-avatar img {
+.patient-cus-profile .patient-profile-patient-avatar img {
     width: 80px;
     height: 80px;
     border-radius: 50%;
     object-fit: cover;
   }
   
-  .patient-profile-patient-details h2 {
+.patient-cus-profile .patient-profile-patient-details h2 {
     margin: 0 0 4px 0;
     font-size: 20px;
     font-weight: 600;
     color: #1e293b;
   }
   
-  .patient-profile-patient-id {
+.patient-cus-profile .patient-profile-patient-id {
     margin: 0 0 8px 0;
     color: #64748b;
     font-size: 14px;
   }
   
-  .patient-profile-status-badge {
+.patient-cus-profile .patient-profile-status-badge {
     display: inline-block;
     padding: 4px 12px;
     border-radius: 20px;
@@ -92,21 +92,21 @@
     font-weight: 500;
   }
   
-  .patient-profile-status-badge.patient-profile-active {
+.patient-cus-profile .patient-profile-status-badge.patient-profile-active {
     background-color: #dcfce7;
     color: #166534;
   }
   
-  .patient-profile-status-badge.patient-profile-completed {
+.patient-cus-profile .patient-profile-status-badge.patient-profile-completed {
     background-color: #dcfce7;
     color: #166534;
   }
   
-  .patient-profile-patient-basic-info {
+.patient-cus-profile .patient-profile-patient-basic-info {
     margin-bottom: 24px;
   }
   
-  .patient-profile-info-row {
+.patient-cus-profile .patient-profile-info-row {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -114,41 +114,41 @@
     border-bottom: 1px solid #f1f5f9;
   }
   
-  .patient-profile-info-row:last-child {
+.patient-cus-profile .patient-profile-info-row:last-child {
     border-bottom: none;
   }
   
-  .patient-profile-label {
+.patient-cus-profile .patient-profile-label {
     color: #64748b;
     font-size: 14px;
     flex-shrink: 0;
     width: 120px;
   }
   
-  .patient-profile-value {
+.patient-cus-profile .patient-profile-value {
     color: #1e293b;
     font-size: 14px;
     text-align: right;
     flex: 1;
   }
   
-  .patient-profile-gender-female {
+.patient-cus-profile .patient-profile-gender-female {
     color: #dc2626;
     font-weight: 500;
   }
   
   /* Collapsible Sections */
-  .patient-profile-collapsible-sections {
+.patient-cus-profile .patient-profile-collapsible-sections {
     margin-bottom: 24px;
   }
   
-  .patient-profile-section {
+.patient-cus-profile .patient-profile-section {
     border: 1px solid #e2e8f0;
     border-radius: 8px;
     margin-bottom: 8px;
   }
   
-  .patient-profile-section-header {
+.patient-cus-profile .patient-profile-section-header {
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -163,33 +163,33 @@
     text-align: left;
   }
   
-  .patient-profile-section-header:hover {
+.patient-cus-profile .patient-profile-section-header:hover {
     background-color: #f8fafc;
   }
   
-  .patient-profile-section-content {
+.patient-cus-profile .patient-profile-section-content {
     padding: 0 16px 16px 16px;
     border-top: 1px solid #f1f5f9;
   }
   
-  .patient-profile-section-content ul {
+.patient-cus-profile .patient-profile-section-content ul {
     margin: 8px 0 0 0;
     padding-left: 16px;
     list-style-type: disc;
   }
   
-  .patient-profile-section-content li {
+.patient-cus-profile .patient-profile-section-content li {
     color: #64748b;
     font-size: 14px;
     margin-bottom: 4px;
   }
   
-  .patient-profile-sidebar-actions {
+.patient-cus-profile .patient-profile-sidebar-actions {
     display: flex;
     gap: 12px;
   }
   
-  .patient-profile-btn-outline {
+.patient-cus-profile .patient-profile-btn-outline {
     flex: 1;
     display: flex;
     align-items: center;
@@ -205,12 +205,12 @@
     transition: all 0.2s;
   }
   
-  .patient-profile-btn-outline:hover {
+.patient-cus-profile .patient-profile-btn-outline:hover {
     border-color: #cbd5e1;
     background-color: #f8fafc;
   }
   
-  .patient-profile-btn-primary {
+.patient-cus-profile .patient-profile-btn-primary {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -225,11 +225,11 @@
     transition: background-color 0.2s;
   }
   
-  .patient-profile-btn-primary:hover {
+.patient-cus-profile .patient-profile-btn-primary:hover {
     background: #334155;
   }
   
-  .patient-profile-btn-small {
+.patient-cus-profile .patient-profile-btn-small {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -246,24 +246,24 @@
     flex-shrink: 0;
   }
   
-  .patient-profile-btn-small:hover {
+.patient-cus-profile .patient-profile-btn-small:hover {
     background: #334155;
   }
   
   /* Main Content Styles */
-  .patient-profile-main-content {
+.patient-cus-profile .patient-profile-main-content {
     background: white;
     border-radius: 12px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     overflow: hidden;
   }
   
-  .patient-profile-tabs {
+.patient-cus-profile .patient-profile-tabs {
     display: flex;
     border-bottom: 1px solid #e2e8f0;
   }
   
-  .patient-profile-tab {
+.patient-cus-profile .patient-profile-tab {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -277,43 +277,43 @@
     transition: all 0.2s;
   }
   
-  .patient-profile-tab:hover {
+.patient-cus-profile .patient-profile-tab:hover {
     background-color: #f8fafc;
     color: #1e293b;
   }
   
-  .patient-profile-tab.patient-profile-active {
+.patient-cus-profile .patient-profile-tab.patient-profile-active {
     color: #1e293b;
     border-bottom-color: #1e293b;
     background-color: #f8fafc;
   }
   
-  .patient-profile-tab-content {
+.patient-cus-profile .patient-profile-tab-content {
     padding: 24px;
   }
   
   /* Treatment Plan Styles */
-  .patient-profile-treatment-plan h3 {
+.patient-cus-profile .patient-profile-treatment-plan h3 {
     margin: 0 0 8px 0;
     font-size: 20px;
     font-weight: 600;
     color: #1e293b;
   }
   
-  .patient-profile-treatment-subtitle {
+.patient-cus-profile .patient-profile-treatment-subtitle {
     margin: 0 0 24px 0;
     color: #64748b;
     font-size: 14px;
   }
   
-  .patient-profile-treatment-cards {
+.patient-cus-profile .patient-profile-treatment-cards {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
     margin-bottom: 24px;
   }
   
-  .patient-profile-treatment-card {
+.patient-cus-profile .patient-profile-treatment-card {
     display: flex;
     gap: 12px;
     padding: 16px;
@@ -322,37 +322,37 @@
     background: white;
   }
   
-  .patient-profile-card-icon {
+.patient-cus-profile .patient-profile-card-icon {
     flex-shrink: 0;
   }
   
-  .patient-profile-icon-red {
+.patient-cus-profile .patient-profile-icon-red {
     color: #dc2626;
   }
   
-  .patient-profile-icon-blue {
+.patient-cus-profile .patient-profile-icon-blue {
     color: #2563eb;
   }
   
-  .patient-profile-card-content h4 {
+.patient-cus-profile .patient-profile-card-content h4 {
     margin: 0 0 4px 0;
     font-size: 14px;
     font-weight: 600;
     color: #1e293b;
   }
   
-  .patient-profile-card-content p {
+.patient-cus-profile .patient-profile-card-content p {
     margin: 0 0 4px 0;
     color: #64748b;
     font-size: 14px;
   }
   
-  .patient-profile-date {
+.patient-cus-profile .patient-profile-date {
     font-size: 12px;
     color: #64748b;
   }
   
-  .patient-profile-treatment-note {
+.patient-cus-profile .patient-profile-treatment-note {
     display: flex;
     gap: 12px;
     padding: 16px;
@@ -361,84 +361,84 @@
     margin-bottom: 24px;
   }
   
-  .patient-profile-note-icon {
+.patient-cus-profile .patient-profile-note-icon {
     color: #6366f1;
     flex-shrink: 0;
   }
   
-  .patient-profile-treatment-note h4 {
+.patient-cus-profile .patient-profile-treatment-note h4 {
     margin: 0 0 4px 0;
     font-size: 14px;
     font-weight: 600;
     color: #1e293b;
   }
   
-  .patient-profile-treatment-note p {
+.patient-cus-profile .patient-profile-treatment-note p {
     margin: 0;
     color: #64748b;
     font-size: 14px;
     line-height: 1.5;
   }
   
-  .patient-profile-current-medications {
+.patient-cus-profile .patient-profile-current-medications {
     border: 1px solid #e2e8f0;
     border-radius: 8px;
     padding: 16px;
   }
   
-  .patient-profile-section-header {
+.patient-cus-profile .patient-profile-section-header {
     display: flex;
     align-items: center;
     gap: 8px;
     margin-bottom: 16px;
   }
   
-  .patient-profile-section-icon {
+.patient-cus-profile .patient-profile-section-icon {
     color: #10b981;
   }
   
-  .patient-profile-section-header h4 {
+.patient-cus-profile .patient-profile-section-header h4 {
     margin: 0;
     font-size: 16px;
     font-weight: 600;
     color: #1e293b;
   }
   
-  .patient-profile-medication-list {
+.patient-cus-profile .patient-profile-medication-list {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
   }
   
-  .patient-profile-medication-item {
+.patient-cus-profile .patient-profile-medication-item {
     padding: 12px;
     border: 1px solid #e2e8f0;
     border-radius: 6px;
     background: #fafafa;
   }
   
-  .patient-profile-med-info h5 {
+.patient-cus-profile .patient-profile-med-info h5 {
     margin: 0 0 8px 0;
     font-size: 14px;
     font-weight: 600;
     color: #1e293b;
   }
   
-  .patient-profile-med-info p {
+.patient-cus-profile .patient-profile-med-info p {
     margin: 0 0 4px 0;
     font-size: 12px;
     color: #64748b;
   }
   
-  .patient-profile-med-date {
+.patient-cus-profile .patient-profile-med-date {
     font-size: 12px;
     color: #64748b;
   }
   
   /* Schedule Styles */
-  .patient-profile-schedule-header,
-  .patient-profile-results-header,
-  .patient-profile-medications-header {
+.patient-cus-profile .patient-profile-schedule-header,
+.patient-cus-profile .patient-profile-results-header,
+.patient-cus-profile .patient-profile-medications-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -446,41 +446,41 @@
     gap: 16px;
   }
   
-  .patient-profile-schedule-header h3,
-  .patient-profile-results-header h3,
-  .patient-profile-medications-header h3 {
+.patient-cus-profile .patient-profile-schedule-header h3,
+.patient-cus-profile .patient-profile-results-header h3,
+.patient-cus-profile .patient-profile-medications-header h3 {
     margin: 0 0 4px 0;
     font-size: 20px;
     font-weight: 600;
     color: #1e293b;
   }
   
-  .patient-profile-schedule-header p,
-  .patient-profile-results-header p,
-  .patient-profile-medications-header p {
+.patient-cus-profile .patient-profile-schedule-header p,
+.patient-cus-profile .patient-profile-results-header p,
+.patient-cus-profile .patient-profile-medications-header p {
     margin: 0;
     color: #64748b;
     font-size: 14px;
   }
   
-  .patient-profile-schedule-section {
+.patient-cus-profile .patient-profile-schedule-section {
     margin-bottom: 32px;
   }
   
-  .patient-profile-schedule-section h4 {
+.patient-cus-profile .patient-profile-schedule-section h4 {
     margin: 0 0 16px 0;
     font-size: 16px;
     font-weight: 600;
     color: #1e293b;
   }
   
-  .patient-profile-appointment-list {
+.patient-cus-profile .patient-profile-appointment-list {
     display: flex;
     flex-direction: column;
     gap: 12px;
   }
   
-  .patient-profile-appointment-item {
+.patient-cus-profile .patient-profile-appointment-item {
     display: flex;
     gap: 16px;
     padding: 16px;
@@ -490,42 +490,42 @@
     align-items: flex-start;
   }
   
-  .patient-profile-appointment-time {
+.patient-cus-profile .patient-profile-appointment-time {
     flex-shrink: 0;
   }
   
-  .patient-profile-time-icon {
+.patient-cus-profile .patient-profile-time-icon {
     color: #64748b;
   }
   
-  .patient-profile-time-icon.patient-profile-completed {
+.patient-cus-profile .patient-profile-time-icon.patient-profile-completed {
     color: #10b981;
   }
   
-  .patient-profile-appointment-details {
+.patient-cus-profile .patient-profile-appointment-details {
     flex: 1;
   }
   
-  .patient-profile-appointment-details h5 {
+.patient-cus-profile .patient-profile-appointment-details h5 {
     margin: 0 0 4px 0;
     font-size: 14px;
     font-weight: 600;
     color: #1e293b;
   }
   
-  .patient-profile-appointment-details p {
+.patient-cus-profile .patient-profile-appointment-details p {
     margin: 0 0 4px 0;
     font-size: 14px;
     color: #64748b;
   }
   
-  .patient-profile-appointment-actions {
+.patient-cus-profile .patient-profile-appointment-actions {
     display: flex;
     gap: 8px;
     margin-top: 8px;
   }
   
-  .patient-profile-btn-outline-red {
+.patient-cus-profile .patient-profile-btn-outline-red {
     padding: 4px 12px;
     border: 1px solid #fecaca;
     background: white;
@@ -535,7 +535,7 @@
     font-size: 12px;
   }
   
-  .patient-profile-btn-outline-blue {
+.patient-cus-profile .patient-profile-btn-outline-blue {
     padding: 4px 12px;
     border: 1px solid #bfdbfe;
     background: white;
@@ -545,7 +545,7 @@
     font-size: 12px;
   }
   
-  .patient-profile-reschedule-btn {
+.patient-cus-profile .patient-profile-reschedule-btn {
     padding: 6px 12px;
     background: #f1f5f9;
     color: #64748b;
@@ -556,33 +556,33 @@
   }
   
   /* Results Styles */
-  .patient-profile-results-header {
+.patient-cus-profile .patient-profile-results-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 24px;
   }
   
-  .patient-profile-results-header h3 {
+.patient-cus-profile .patient-profile-results-header h3 {
     margin: 0 0 4px 0;
     font-size: 20px;
     font-weight: 600;
     color: #1e293b;
   }
   
-  .patient-profile-results-header p {
+.patient-cus-profile .patient-profile-results-header p {
     margin: 0;
     color: #64748b;
     font-size: 14px;
   }
   
-  .patient-profile-results-list {
+.patient-cus-profile .patient-profile-results-list {
     display: flex;
     flex-direction: column;
     gap: 12px;
   }
   
-  .patient-profile-result-item {
+.patient-cus-profile .patient-profile-result-item {
     display: flex;
     gap: 16px;
     padding: 16px;
@@ -592,175 +592,246 @@
     align-items: flex-start;
   }
   
-  .patient-profile-result-icon {
+.patient-cus-profile .patient-profile-result-icon {
     flex-shrink: 0;
   }
   
-  .patient-profile-icon-purple {
+.patient-cus-profile .patient-profile-icon-purple {
     color: #8b5cf6;
   }
   
-  .patient-profile-result-details {
+.patient-cus-profile .patient-profile-result-details {
     flex: 1;
   }
   
-  .patient-profile-result-details h4 {
+.patient-cus-profile .patient-profile-result-details h4 {
     margin: 0 0 4px 0;
     font-size: 14px;
     font-weight: 600;
     color: #1e293b;
   }
   
-  .patient-profile-result-details p {
+.patient-cus-profile .patient-profile-result-details p {
     margin: 0 0 8px 0;
     font-size: 14px;
     color: #64748b;
   }
   
   /* Medications Styles */
-  .patient-profile-medications-header {
+.patient-cus-profile .patient-profile-medications-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 24px;
   }
   
-  .patient-profile-medications-header h3 {
+.patient-cus-profile .patient-profile-medications-header h3 {
     margin: 0 0 4px 0;
     font-size: 20px;
     font-weight: 600;
     color: #1e293b;
   }
   
-  .patient-profile-medications-header p {
+.patient-cus-profile .patient-profile-medications-header p {
     margin: 0;
     color: #64748b;
     font-size: 14px;
   }
   
-  .patient-profile-medications-section {
+.patient-cus-profile .patient-profile-medications-section {
     margin-bottom: 32px;
   }
   
-  .patient-profile-medications-section h4 {
+.patient-cus-profile .patient-profile-medications-section h4 {
     margin: 0 0 16px 0;
     font-size: 16px;
     font-weight: 600;
     color: #1e293b;
   }
   
-  .patient-profile-medication-cards {
+.patient-cus-profile .patient-profile-medication-cards {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
   }
   
-  .patient-profile-medication-card {
+.patient-cus-profile .patient-profile-medication-card {
     padding: 16px;
     border: 1px solid #e2e8f0;
     border-radius: 8px;
     background: white;
   }
   
-  .patient-profile-med-header {
+.patient-cus-profile .patient-profile-med-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 12px;
   }
   
-  .patient-profile-med-header h5 {
+.patient-cus-profile .patient-profile-med-header h5 {
     margin: 0;
     font-size: 16px;
     font-weight: 600;
     color: #1e293b;
   }
   
-  .patient-profile-med-details p {
+.patient-cus-profile .patient-profile-med-details p {
     margin: 0 0 4px 0;
     font-size: 14px;
     color: #64748b;
   }
   
-  .patient-profile-med-actions {
+.patient-cus-profile .patient-profile-med-actions {
     display: flex;
     gap: 8px;
     margin-top: 12px;
   }
   
   /* Emoji Icon Styles */
-  .patient-profile-icon-red {
+.patient-cus-profile .patient-profile-icon-red {
     font-size: 18px;
   }
   
-  .patient-profile-icon-blue {
+.patient-cus-profile .patient-profile-icon-blue {
     font-size: 18px;
   }
   
-  .patient-profile-icon-purple {
+.patient-cus-profile .patient-profile-icon-purple {
     font-size: 18px;
   }
   
-  .patient-profile-note-icon {
+.patient-cus-profile .patient-profile-note-icon {
     font-size: 18px;
     color: #6366f1;
   }
   
-  .patient-profile-section-icon {
+.patient-cus-profile .patient-profile-section-icon {
     font-size: 16px;
   }
   
-  .patient-profile-time-icon {
+.patient-cus-profile .patient-profile-time-icon {
     font-size: 18px;
   }
   
-  .patient-profile-time-icon.patient-profile-completed {
+.patient-cus-profile .patient-profile-time-icon.patient-profile-completed {
     font-size: 18px;
   }
   
   /* Tab icons */
-  .patient-profile-tab span:first-child {
+.patient-cus-profile .patient-profile-tab span:first-child {
     font-size: 16px;
   }
   
   /* Button icons */
-  .patient-profile-back-btn {
+.patient-cus-profile .patient-profile-back-btn {
     font-size: 16px;
   }
+
+/* Container nút chỉnh sửa và lưu/hủy */
+.patient-cus-profile .edit-basic-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+/* Input trong khi chỉnh sửa */
+.patient-cus-profile .patient-profile-input-edit {
+  width: 100%;
+  padding: 6px 10px;
+  font-size: 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  color: #1e293b;
+  background-color: white;
+  transition: border-color 0.2s;
+}
+
+.patient-cus-profile .patient-profile-input-edit:focus {
+  border-color: #2563eb;
+  outline: none;
+  box-shadow: 0 0 0 1px #2563eb33;
+}
+
+/* Select trong form chỉnh sửa */
+.patient-cus-profile .patient-profile-input-edit select {
+  padding: 6px 10px;
+  font-size: 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background-color: white;
+  color: #1e293b;
+}
+
+/* Nút lưu */
+.patient-cus-profile .patient-profile-btn-outline-blue {
+  background-color: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.patient-cus-profile .patient-profile-btn-outline-blue:hover {
+  background-color: #dbeafe;
+  border-color: #93c5fd;
+}
+
+/* Nút hủy */
+.patient-cus-profile .patient-profile-btn-outline-red {
+  background-color: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.patient-cus-profile .patient-profile-btn-outline-red:hover {
+  background-color: #fee2e2;
+  border-color: #fca5a5;
+}
+
   
   /* Responsive Design */
   @media (max-width: 1024px) {
-    .patient-profile-container {
+  .patient-cus-profile .patient-profile-container {
       grid-template-columns: 1fr;
       gap: 16px;
     }
   
-    .patient-profile-treatment-cards,
-    .patient-profile-medication-list,
-    .patient-profile-medication-cards {
+  .patient-cus-profile .patient-profile-treatment-cards,
+  .patient-cus-profile .patient-profile-medication-list,
+  .patient-cus-profile .patient-profile-medication-cards {
       grid-template-columns: 1fr;
     }
   }
   
   @media (max-width: 768px) {
-    .patient-profile-tabs {
+  .patient-cus-profile .patient-profile-tabs {
       overflow-x: auto;
     }
   
-    .patient-profile-tab {
+  .patient-cus-profile .patient-profile-tab {
       white-space: nowrap;
       flex-shrink: 0;
     }
   
-    .patient-profile-schedule-header,
-    .patient-profile-results-header,
-    .patient-profile-medications-header {
+  .patient-cus-profile .patient-profile-schedule-header,
+  .patient-cus-profile .patient-profile-results-header,
+  .patient-cus-profile .patient-profile-medications-header {
       flex-direction: column;
       gap: 12px;
     }
   
-    .patient-profile-appointment-item,
-    .patient-profile-result-item {
+  .patient-cus-profile .patient-profile-appointment-item,
+  .patient-cus-profile .patient-profile-result-item {
       flex-direction: column;
       gap: 12px;
     }

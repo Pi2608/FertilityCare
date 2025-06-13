@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { CircleUserRound, ChevronDown } from 'lucide-react'
 import { logout } from '@features/auth/authSlice';
 import './Header.css';
 
@@ -77,48 +78,45 @@ const Header = () => {
           <>
             {/* User Menu Dropdown */}
             <div className="user-menu" ref={userMenuRef}>
+              <button className="appointment-btn" onClick={handleBookAppointment}>
+                Đặt Lịch Hẹn
+              </button>
+
               <button 
                 className="user-btn"
                 onClick={() => setShowUserMenu(!showUserMenu)}
               >
-                <span className="user-icon">👤</span>
+                <span className="user-icon"><CircleUserRound size={20}/></span>
                 <span className="user-text">Tài khoản</span>
-                <span className={`dropdown-arrow ${showUserMenu ? 'open' : ''}`}>▼</span>
+                <span className={`dropdown-arrow ${showUserMenu ? 'open' : ''}`}><ChevronDown size={20}/></span>
               </button>
               
               {showUserMenu && (
                 <div className="user-dropdown">
                   <div className="dropdown-item" onClick={handleProfile}>
-                    <span className="dropdown-icon">👤</span>
                     Thông tin cá nhân
                   </div>
                   <div className="dropdown-item" onClick={handleMyAppointments}>
-                    <span className="dropdown-icon">📅</span>
                     Lịch hẹn của tôi
                   </div>
                   <div className="dropdown-divider"></div>
                   <div className="dropdown-item logout" onClick={handleLogout}>
-                    <span className="dropdown-icon">🚪</span>
                     Đăng xuất
                   </div>
                 </div>
               )}
             </div>
-            
-            <button className="appointment-btn" onClick={handleBookAppointment}>
-              Đặt Lịch Hẹn
-            </button>
           </>
         ) : (
           <>
+            <button className="appointment-btn" onClick={handleBookAppointment}>
+              Đặt Lịch Hẹn
+            </button>
             <button 
               className="login-btn" 
               onClick={() => navigate('/authentication')}
             >
               Đăng Nhập/Đăng ký
-            </button>
-            <button className="appointment-btn" onClick={handleBookAppointment}>
-              Đặt Lịch Hẹn
             </button>
           </>
         )}

@@ -1,48 +1,76 @@
 import axios from "axios";
+import mockUsers from "../../data/mockUsers";
 
 class ApiGateway {
     static API_BASE = "http://localhost:5276/";
-
     static axiosInstance = axios.create({
         baseURL: ApiGateway.API_BASE,
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
     });
-
     static formDataAxiosInstance = axios.create({
         baseURL: ApiGateway.API_BASE,
-        headers: {
-            "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
     });
-    
-
     static setAuthToken(token) {
         ApiGateway.axiosInstance.defaults.headers["Authorization"] = `Bearer ${token}`;
     }
 
-    //User APIs
+    static USE_MOCK_LOGIN = true;
 
-    static async register(newUser) {
+    static async login(emailOrPhone, password) {
+        if (ApiGateway.USE_MOCK_LOGIN) {
+            // Giả lập delay
+            await new Promise((resolve) => setTimeout(resolve, 500));
+            // Tìm user trong mockUsers
+            const user = mockUsers.find(u =>
+                (u.email === emailOrPhone || u.phone === emailOrPhone) && u.password === password
+            );
+            if (user) {
+                // Tạo token giả (có thể đơn giản hoặc random)
+                const token = `mock-token-${user.userId}`;
+                return {
+                    data: {
+                        userId: user.userId,
+                        token,
+                        // Có thể trả thêm thông tin user nếu cần: user: { id: ..., fullName: ... }
+                    }
+                };
+            } else {
+                const error = new Error("Sai tài khoản hoặc mật khẩu");
+                error.response = { data: { message: "Sai tài khoản hoặc mật khẩu" } };
+                throw error;
+            }
+        }
+        // Khi không mock, gọi API thật
         try {
-            console.log(newUser);
-            const response = await ApiGateway.axiosInstance.post("User/Register", newUser);
-            console.log(response.data);
-            return response.data;
+            const response = await ApiGateway.axiosInstance.get(
+                `User/Login?email=${encodeURIComponent(emailOrPhone)}&password=${encodeURIComponent(password)}`
+            );
+            return response.data ? { data: response.data } : null;
         } catch (error) {
-            console.error("Registration error:", error);
-            return null;
+            console.error("Login error:", error);
+            throw error;
         }
     }
 
-    static async login(email, password) {
+  // Phương thức register vẫn như cũ hoặc mock tương tự nếu muốn
+    static async register(newUser) {
+        if (ApiGateway.USE_MOCK_LOGIN) {
+            await new Promise((resolve) => setTimeout(resolve, 500));
+            // Trong mock, có thể giả lập thêm user mới:
+            const userId = `user-mock-${Date.now()}`;
+            const token = `mock-token-${userId}`;
+            // Không thêm vào mockUsers vì không persistent; nếu muốn persistent tạm, có thể push vào array nhưng khi reload sẽ mất
+            return {
+                data: { userId, token }
+            };
+        }
         try {
-            const response = await ApiGateway.axiosInstance.get(`User/Login?email=${email}&password=${password}`);
-            return response.data;
+            const response = await ApiGateway.axiosInstance.post("User/Register", newUser);
+            return response.data ? { data: response.data } : null;
         } catch (error) {
-            console.error("Login error:", error);
-            return null;
+            console.error("Registration error:", error);
+            throw error;
         }
     }
 
