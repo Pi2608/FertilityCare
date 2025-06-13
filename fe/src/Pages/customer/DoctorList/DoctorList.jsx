@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Star, MapPin, Calendar, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import MaleDoc from "@asset/male-fertility-specialist.png";
 import FemaleDoc from "@asset/asian-female-doctor.png";
+import axios from 'axios';
 import './DoctorList.css';
 
 const doctorsData = [
@@ -80,12 +81,13 @@ const DoctorList = () => {
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSpecialty, setSelectedSpecialty] = useState('Tất cả');
+    const [doctors, setDoctors] = useState(doctorsData);
     
     // Get unique specialties from doctor data
     const specialties = ['Tất cả', ...new Set(doctorsData.map(doctor => doctor.specialty))];
     
     // Filter doctors based on search and specialty
-    const filteredDoctors = doctorsData.filter(doctor => {
+    const filteredDoctors = doctors.filter(doctor => {
         const matchesSearch = doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                             doctor.specialty.toLowerCase().includes(searchTerm.toLowerCase()) ||
                             doctor.description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -104,6 +106,38 @@ const DoctorList = () => {
             fill={i < Math.floor(rating) ? "#ffc107" : "none"}
         />
         ));
+    };
+
+    useEffect(() => {
+        fetchAllDoctors();
+    },[])
+
+    const fetchAllDoctors = async () => {
+        try {
+            const response = await axios.get('http://10.87.23.84:8080/api/doctors/all', {
+                // headers: {
+                //     Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYW5hZ2VyQGdtYWlsLmNvbSIsInJvbGVzIjpbIlJPTEVfTUFOQUdFUiJdLCJpYXQiOjE3NDkyNjg5ODksImV4cCI6MTc0OTI3MjU4OX0.fJw300NEpzyemrrz9axJSLvW2R5B5ZAb_BRbsgQ_f9oBearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYW5hZ2VyQGdtYWlsLmNvbSIsInJvbGVzIjpbIlJPTEVfTUFOQUdFUiJdLCJpYXQiOjE3NDkyNzExMDYsImV4cCI6MTc0OTI3NDcwNn0.CKQ_AACaWbSP280WXSac4Egc_DHY5Ir42942-OuPeQ8'
+                // }
+            });
+            console.log('Fetched doctors:', response.data);
+            if (response.data && Array.isArray(response.data)) {
+                const fetchedDoctors = response.data.map(doctor => ({
+                    id: doctor.doctorId,
+                    name: doctor.user.name,
+                    specialty: doctor.description ? doctor.specialty : "Chưa cập nhật" ,
+                    rating: 5,
+                    reviews: "yo",
+                    description: doctor.description ? doctor.description : "Chưa cập nhật mô tả",
+                    location: "Ho Chi Minh, Vietnam",
+                    lastUpdate: "22/05/2023",
+                    image: doctor.user.gender == "male" ? MaleDoc : FemaleDoc, 
+                }));
+                setDoctors(fetchedDoctors);
+            }
+
+        } catch (error) {
+            console.error('Lỗi khi fetch danh sách bác sĩ:', error);
+        }
     };
 
     return (
