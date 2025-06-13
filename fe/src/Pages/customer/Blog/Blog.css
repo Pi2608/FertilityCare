@@ -1,0 +1,77 @@
+.blog-page {
+    padding: 2rem;
+      max-width: 1200px;
+    margin: 0 auto;
+}
+
+.blog-page .title-section {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.blog-page .search-bar {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 1rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.blog-page .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.blog-page .tabs button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 20px;
+    background-color: #eee;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.blog-page .tabs button.active {
+    background-color: #d6004c;
+    color: #fff;
+}
+
+.blog-page .articles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.blog-page .article-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.blog-page .article-image-placeholder {
+    background: #ccc;
+    height: 150px;
+}
+
+.blog-page .article-info {
+    padding: 1rem;
+}
+
+.blog-page .article-date {
+    font-size: 0.875rem;
+    color: gray;
+}
+
+.blog-page .read-more {
+    margin-top: 1rem;
+    background-color: transparent;
+    color: #d6004c;
+    border: none;
+    cursor: pointer;
+}
