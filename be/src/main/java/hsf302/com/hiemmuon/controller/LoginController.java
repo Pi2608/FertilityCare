@@ -13,6 +13,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +39,14 @@ public class LoginController {
 
         List<String> roles = List.of("ROLE_" + user.getRole().getRoleName().toUpperCase());
 
-        String token = jwtUtil.generateToken(user.getEmail(), roles);
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("roles", roles);
+
+        if (user.getRole().getRoleId() == 3) {
+            extraClaims.put("managerId", user.getUserId());
+        }
+
+        String token = jwtUtil.generateToken(user.getEmail(), roles, extraClaims);
 
         ApiResponse<String> response = new ApiResponse<>(
                 200,
@@ -80,9 +88,11 @@ public class LoginController {
             throw new BadCredentialsException("Email hoặc mật khẩu không đúng");
         }
 
+        Map<String, Object> extraClaims = Map.of("customerId", user.getCustomer().getCustomerId());
+
         List<String> roles = List.of("ROLE_" + user.getRole().getRoleName().toUpperCase());
 
-        String token = jwtUtil.generateToken(user.getEmail(), roles);
+        String token = jwtUtil.generateToken(user.getEmail(), roles, extraClaims);
 
         ApiResponse<String> response = new ApiResponse<>(
                 200,

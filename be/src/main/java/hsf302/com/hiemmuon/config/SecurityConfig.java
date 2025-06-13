@@ -42,16 +42,23 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/login/**").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/api/doctors/active").permitAll()
+                        .requestMatchers("/api/login/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/doctors/active",
+                                "/api/treatment-services/all").permitAll()
+
                         .requestMatchers(HttpMethod.GET, "/api/doctors/all").hasRole("MANAGER")
                         .requestMatchers(HttpMethod.PATCH, "/api/doctors/status/**").hasRole("MANAGER")
                         .requestMatchers(HttpMethod.POST, "/api/doctors").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.POST, "/api/treatment-services").hasRole("MANAGER")
+
                         .requestMatchers(HttpMethod.PUT, "/api/doctors/me").hasRole("DOCTOR")
+
                         .requestMatchers(HttpMethod.GET,
                                 "/api/doctors/**",
                                 "/api/doctors/specification").hasAnyRole("MANAGER", "CUSTOMER")
+
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",

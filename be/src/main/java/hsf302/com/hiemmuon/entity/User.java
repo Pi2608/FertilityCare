@@ -26,6 +26,10 @@ public class User {
     @JsonIgnore
     private Doctor doctor;
 
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Customer customer;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
