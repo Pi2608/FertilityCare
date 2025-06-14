@@ -24,10 +24,23 @@ public class TreatmentServiceController {
         return treatmentServiceServicee.findAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<ApiResponse<?>> getServiceById(
             @PathVariable("id") int id) {
         TreatmentService doctor = treatmentServiceServicee.getServiceById(id);
+
+        ApiResponse<TreatmentService> response = new ApiResponse<>(
+                200,
+                "Service retrieved successfully",
+                doctor
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/name/{name}")
+    public ResponseEntity<ApiResponse<?>> getServiceByName(
+            @PathVariable("name") String name) {
+        TreatmentService doctor = treatmentServiceServicee.getServiceByName(name);
 
         ApiResponse<TreatmentService> response = new ApiResponse<>(
                 200,

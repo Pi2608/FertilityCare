@@ -71,8 +71,9 @@ public class TreatmentServiceService {
     public TreatmentService getServiceById(int id) {
         return treatmentServiceRepository.findById(id);
     }
-
-
+    public TreatmentService getServiceByName(String name) {
+        return treatmentServiceRepository.findByName(name);
+    }
     public List<TreatmentService> getServiceByStatus() {
         return treatmentServiceRepository.findByStatus(true);
     }
