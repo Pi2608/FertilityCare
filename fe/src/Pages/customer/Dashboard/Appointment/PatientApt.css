@@ -1,0 +1,140 @@
+.appointment-page {
+  padding: 1.5rem;
+  background: #f9f9f9;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+.appointment-page .welcome-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.appointment-page .welcome-text h2 {
+    margin: 0;
+}
+.appointment-page .actions button {
+    margin-left: 0.5rem;
+}
+
+.appointment-page .page-title-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.appointment-page .page-title-actions h3 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.appointment-page .btn-primary {
+  background-color: #d6004c;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.appointment-page .btn-primary:hover {
+  opacity: 0.9;
+}
+
+.appointment-page .subtitle p {
+  margin: 0 0 1.5rem;
+  color: #666;
+}
+
+.appointment-page .apt-container {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.appointment-page .patient-apt-section {
+  margin-bottom: 2rem;
+}
+
+.appointment-page .patient-apt-section h4 {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  color: #333;
+}
+
+.appointment-page .appointments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.appointment-page .appointment-card {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+.appointment-page .appointment-icon {
+  margin-right: 0.75rem;
+  color: #d6004c;
+}
+
+.appointment-page .completed-icon {
+  color: #4caf50;
+}
+
+.appointment-page .appointment-info {
+  flex: 1;
+}
+
+.appointment-page .appointment-info h5 {
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.appointment-page .appointment-info p {
+  margin: 0.25rem 0;
+  font-size: 0.875rem;
+  color: #555;
+}
+
+.appointment-page .doctor-name {
+  font-style: italic;
+}
+
+.appointment-page .location-text {
+  color: #777;
+  font-size: 0.85rem;
+}
+
+.appointment-page .appointment-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.appointment-page .appointment-actions button {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.appointment-page .appointment-card.upcoming {
+  border-left: 4px solid #d6004c;
+}
+
+.appointment-page .appointment-card.completed {
+  border-left: 4px solid #4caf50;
+}

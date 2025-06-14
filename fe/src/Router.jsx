@@ -1,14 +1,22 @@
 import React from 'react'
 import { createBrowserRouter, Navigate } from "react-router-dom";
+import Authentication from '@/Pages/Authentication/Authentication';
 import PageLayout from '@components/Layout/PageLayout/PageLayout';
 import CusLayout from '@components/Layout/CusLayout/CusLayout';
 import DocLayout from '@components/Layout/DocLayout/DocLayout';
 import ManagerLayout from '@components/Layout/ManagerLayout/ManagerLayout.jsx';
+
 import AdminLayout from '@components/Layout/AdminLayout/AdminLayout.jsx';
 import Homepage from "@customerpages/Homepage/Homepage";
 import TreatmentMethod from '@customerpages/TreatmentMethod/TreatmentMethod';
 import IvfDetail from '@customerpages/IvfDetail/IvfDetail';
-import CusDashboard from '@customerpages/Dashboard/CusDashboard';
+import DoctorList from '@customerpages/DoctorList/DoctorList';
+import Profile from '@customerpages/Profile/Profile';
+import Booking from '@customerpages/Booking/Booking';
+import Blog from '@customerpages/Blog/Blog';
+import Overall from '@customerpages/Dashboard/Overall/Overall';
+import PatientApt from '@customerpages/Dashboard/Appointment/PatientApt';
+
 import DocDashboard from '@doctorpages/Dashboard/DocDashboard';
 import Overview from './Pages/doctor/Dashboard/OverviewLayout/Overview';
 import Appointments from './Pages/doctor/Dashboard/AppointmentsLayout/Appointments';
@@ -31,6 +39,7 @@ import AdminAppointment from './Pages/admin/Appointment/Appointment';
 import AdminPatient from './Pages/admin/Patient/Patient';
 import AdminDoctor from './Pages/admin/Doctor/Doctor';
 import AdminTreatmentService from './Pages/admin/TreatmentService/TreatmentService';
+import DoctorDetail from './Pages/customer/DoctorDetail/DoctorDetail';
 import Dashboard from './Pages/admin/Dashboard/Dashboard';
 
 
@@ -64,6 +73,16 @@ export const router = createBrowserRouter([
     element: <Navigate to="/homepage" replace />,
   },
   {
+    path: "/authentication",
+    element: <PageLayout />,
+    children: [
+      {
+        index: true,
+        element: <Authentication />
+      },
+    ]
+  },
+  {
     path: "/homepage",
     element: <PageLayout />,
     children: [
@@ -71,21 +90,56 @@ export const router = createBrowserRouter([
         index: true, // tương đương path: "/"
         element: <Homepage />,
       },
+      {
+        index: false,
+        path: "treatment-method",
+        children: [
+          {
+            index: true,
+            element: <TreatmentMethod />,
+          },
+          {
+            index: false, 
+            path: "ivf",
+            element: <IvfDetail />,
+          }
+        ]
+      },
+      {
+        index: false, // không phải là trang chính
+        path: "doctor-list",
+        children: [
+          {
+            index: true, // tương đương path: "/doctor-list"
+            element: <DoctorList />,
+          },
+          {
+            index: false,
+            path: "doctor-detail/:doctorId",
+            element: <DoctorDetail />,
+          },
+        ]
+      },
+      {
+        index: false, 
+        path: "book-appointment",
+        element: <Booking />,
+      },
+      {
+        index: false,
+        path: "blog",
+        element: <Blog />,
+      },
     ]
   },
   {
-    path: "/treatment-method",
+    path: "/profile",
     element: <PageLayout />,
     children: [
       {
         index: true, // tương đương path: "/"
-        element: <TreatmentMethod />,
+        element: <Profile />,
       },
-      {
-        index: false, 
-        path: "ivf",
-        element: <IvfDetail />,
-      }
     ]
   },
   {
@@ -124,42 +178,42 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true, // tương đương path: "/customer-dashboard"
-        element: <CusDashboard />,
+        element: <Overall />,
       },
       {
         index: false, // không phải là trang chính
         path: "appointments",
-        element: <CusDashboard />,
+        element: <PatientApt />,
       },
       {
         index: false,
         path: "medical-records",
-        element: <CusDashboard />,
+        element: <Overall />,
       },
       {
         index: false,
         path: "pills",
-        element: <CusDashboard />,
+        element: <Overall />,
       },
       {
         index: false, // không phải là trang chính
         path: "messages",
-        element: <CusDashboard />,
+        element: <Overall />,
       },
       {
         index: false, // không phải là trang chính
         path: "documents",
-        element: <CusDashboard />,
+        element: <Overall />,
       },
       {
         index: false, // không phải là trang chính
         path: "notifications",
-        element: <CusDashboard />,
+        element: <Overall />,
       },
       {
         index: false, // không phải là trang chính
         path: "settings",
-        element: <CusDashboard />,
+        element: <Overall />,
       }
     ]
   },

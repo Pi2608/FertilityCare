@@ -1,0 +1,342 @@
+.patient-dashboard-main {
+    flex: 1;
+    padding: 1.5rem;
+    background: #f9f9f9;
+    min-height: 100vh;
+}
+
+.patient-dashboard-main .welcome-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.patient-dashboard-main .welcome-text h2 {
+    margin: 0;
+}
+.patient-dashboard-main .actions button {
+    margin-left: 0.5rem;
+}
+
+.patient-dashboard-main .tab-content .overview-container {
+    display: grid;
+    grid-template:
+    "sec1 sec1 sec1 sec1 sec1 sec1 sec1 sec1 sec1 sec1"
+    "sec2 sec2 sec2 sec2 sec2 sec3 sec3 sec3 sec3 sec3"
+    "sec4 sec4 sec4 sec4 sec4 sec4 sec4 sec5 sec5 sec5";
+    gap: 1.25rem;
+}
+
+.patient-dashboard-main .tab-content .overview-container > .progress-card {
+    grid-area: sec1;
+}
+
+.patient-dashboard-main .tab-content .overview-container > .appointments-card {
+    grid-area: sec2;
+}
+
+.patient-dashboard-main .tab-content .overview-container > .meds-card {
+    grid-area: sec3;
+}
+
+.patient-dashboard-main .tab-content .overview-container > .messages-card {
+    grid-area: sec4;
+}
+
+.patient-dashboard-main .tab-content .overview-container > .docs-card {
+    grid-area: sec5;
+}
+
+/* Progress Card */
+.patient-dashboard-main .progress-card .ivf-progress {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.patient-dashboard-main .ivf-progress .progress-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.patient-dashboard-main .progress-bar-wrapper {
+    position: relative;
+}
+
+.patient-dashboard-main .progress-bar-bg {
+    background: #e0e0e0;
+    height: 8px;
+    border-radius: 4px;
+    position: relative;
+}
+
+.patient-dashboard-main .progress-bar-fill {
+    background: #d6004c;
+    height: 8px;
+    border-radius: 4px 0 0 4px;
+}
+
+.patient-dashboard-main .progress-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+}
+
+.patient-dashboard-main .step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    text-align: center;
+}
+
+.patient-dashboard-main .step-icon {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-bottom: 4px;
+    background: #ccc;
+}
+
+.patient-dashboard-main .step-item.completed .step-icon {
+    background: #4caf50;
+}
+.patient-dashboard-main .step-item.in-progress .step-icon {
+    background: #ff9800;
+}
+.patient-dashboard-main .step-item.pending .step-icon {
+    background: #e0e0e0;
+}
+.patient-dashboard-main .step-label {
+    font-size: 0.75rem;
+    color: #333;
+}
+.patient-dashboard-main .btn-detail {
+    width: 100%;
+    font-size: 1rem;
+    margin-top: 0.75rem;
+    padding: 8px;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid #e0e0e0;
+    cursor: pointer;
+}
+
+.patient-dashboard-main .btn-detail:hover {
+    background: #f4f4f4;
+}
+
+/* Appointments Card */
+.patient-dashboard-main .appointments-card, .meds-card, .messages-card, .docs-card {
+    background: #fff;
+    padding: 1.25rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.patient-dashboard-main .progress-card h3,
+.patient-dashboard-main .appointments-card h3,
+.patient-dashboard-main .meds-card h3,
+.patient-dashboard-main .messages-card h3,
+.patient-dashboard-main .docs-card h3 {
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+}
+
+.patient-dashboard-main .appointments-card,
+.patient-dashboard-main .meds-card,
+.patient-dashboard-main .messages-card,
+.patient-dashboard-main .docs-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.patient-dashboard-main .appointment-item {
+    position: relative;
+    padding: 1rem;
+    background-color: #f9fafb;
+    border-radius: 8px;
+}
+.patient-dashboard-main .appointment-item:last-child {
+    border-bottom: none;
+}
+.patient-dashboard-main .appointment-info h4 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.patient-dashboard-main .appointment-info p {
+    margin: 0.25rem 0;
+    font-size: 0.875rem;
+    color: #555;
+}
+.patient-dashboard-main .appointment-actions {
+    margin-top: 0.5rem;
+}
+.patient-dashboard-main .btn-sm {
+    padding: 0.5rem 0.75rem;
+    font-size: .9rem;
+    border: none;
+    background: #fff;
+    border: #e0e0e0 1px solid;
+    border-radius: 4px;
+    margin-right: 0.5rem;
+    cursor: pointer;
+}
+.patient-dashboard-main .status-label {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    font-size: 0.75rem;
+    padding: 6px 8px;
+    border-radius: 12px;
+    text-transform: capitalize;
+}
+.patient-dashboard-main .status-sắptới, .status-saptopoi { /* nếu có ký tự đặc biệt bỏ dấu */ 
+    background: #fff1f2;
+    color: #e11d63;
+}
+.patient-dashboard-main .status-đãlênlịch, .status-dalenlich {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+/* Medication Card */
+.patient-dashboard-main .med-item {
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #f9fafb;
+    border-radius: 8px;
+}
+.patient-dashboard-main .med-item:last-child {
+    border-bottom: none;
+}
+.patient-dashboard-main .med-item h4 {
+    margin: 0;
+    font-size: 1rem;
+}
+.patient-dashboard-main .med-item p {
+    margin: 0.25rem 0;
+    font-size: 0.875rem;
+    color: #555;
+}
+.patient-dashboard-main .med-time {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: #f3e8ff;
+    color: #9333ea;
+    font-size: 0.75rem;
+    padding: 6px 8px;
+    border-radius: 12px;
+}
+
+/* Messages Card */
+.patient-dashboard-main .message-item {
+    display: flex;
+    padding: 1rem;
+    background-color: #f9fafb;
+    border-radius: 8px;
+}
+.patient-dashboard-main .message-item:last-child {
+    border-bottom: none;
+}
+.patient-dashboard-main .message-avatar img, .avatar-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ccc;
+}
+.patient-dashboard-main .message-avatar {
+    margin-right: 0.75rem;
+}
+.patient-dashboard-main .message-content .sender-name {
+    margin: 0;
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+.patient-dashboard-main .message-content .message-text {
+    margin: 0.25rem 0;
+    font-size: 0.875rem;
+    color: #555;
+}
+.patient-dashboard-main .message-content .message-time {
+    font-size: 0.75rem;
+    color: #999;
+    margin-bottom: 5px;
+}
+.patient-dashboard-main .message-content button {
+    padding: 0.5rem 0.75rem;
+    font-size: .9rem;
+    border: none;
+    background: #fff;
+    border: #e0e0e0 1px solid;
+    border-radius: 4px;
+    margin-right: 0.5rem;
+    cursor: pointer;
+}
+
+/* Documents Card */
+.patient-dashboard-main .doc-item {
+    padding: 1rem;
+    background-color: #f9fafb;
+    border-radius: 8px;
+}
+.patient-dashboard-main .doc-item:last-child {
+    border-bottom: none;
+}
+.patient-dashboard-main .doc-item h4 {
+    margin: 0;
+    font-size: 1rem;
+}
+.patient-dashboard-main .doc-item p {
+    margin: 0.25rem 0;
+    font-size: 0.75rem;
+    color: #555;
+}
+
+.patient-dashboard-main .doc-item > div {
+    width: 100%;
+    text-align: center;
+    font-size: .9rem;
+}
+
+.patient-dashboard-main .doc-item > div > a {
+    text-decoration: none;
+    color: #d6004c;
+}
+
+.patient-dashboard-main .btn-link {
+    width: 100%;
+    font-size: 1rem;
+    margin-top: 0.75rem;
+    padding: 8px;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid #e0e0e0;
+    cursor: pointer;
+}
+
+.patient-dashboard-main .btn-link:hover {
+    background: #f0f0f0;
+}
+
+/* Placeholder khi tab khác */
+.patient-dashboard-main .placeholder-content {
+    padding: 2rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    text-align: center;
+    color: #555;
+}

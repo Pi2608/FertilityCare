@@ -16,8 +16,8 @@ const Homepage = () => {
           để giúp bạn xây dựng gia đình mà bạn luôn mơ ước.
         </p>
         <div className="hero-buttons">
-          <button className="consult-btn">Đặt Lịch Tư Vấn</button>
-          <button className="method-btn">Khám Phá Phương Pháp Điều Trị</button>
+          <button className="consult-btn" onClick={() => navigate("book-appointment")}>Đặt Lịch Tư Vấn</button>
+          <button className="method-btn" onClick={() => navigate("treatment-method")}>Khám Phá Phương Pháp Điều Trị</button>
         </div>
       </section>
 
@@ -119,7 +119,7 @@ const Homepage = () => {
         </ul>
         <div className="care-buttons">
           <button className="care-btn primary">Về Phòng Khám Của Chúng Tôi</button>
-          <button className="care-btn outline">Gặp Gỡ Đội Ngũ Bác Sĩ</button>
+          <button className="care-btn outline" onClick={() => navigate("doctor-list")}>Gặp Gỡ Đội Ngũ Bác Sĩ</button>
         </div>
       </section>
 
