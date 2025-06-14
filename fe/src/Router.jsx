@@ -10,10 +10,11 @@ import Homepage from "@customerpages/Homepage/Homepage";
 import TreatmentMethod from '@customerpages/TreatmentMethod/TreatmentMethod';
 import IvfDetail from '@customerpages/IvfDetail/IvfDetail';
 import DoctorList from '@customerpages/DoctorList/DoctorList';
-import CusDashboard from '@customerpages/Dashboard/CusDashboard';
 import Profile from '@customerpages/Profile/Profile';
-import Booking from './Pages/customer/Booking/Booking';
-import Blog from './Pages/customer/Blog/Blog';
+import Booking from '@customerpages/Booking/Booking';
+import Blog from '@customerpages/Blog/Blog';
+import Overall from '@customerpages/Dashboard/Overall/Overall';
+import PatientApt from '@customerpages/Dashboard/Appointment/PatientApt';
 
 import DocDashboard from '@doctorpages/Dashboard/DocDashboard';
 import Overview from './Pages/doctor/Dashboard/OverviewLayout/Overview';
@@ -159,42 +160,42 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true, // tương đương path: "/customer-dashboard"
-        element: <CusDashboard />,
+        element: <Overall />,
       },
       {
         index: false, // không phải là trang chính
         path: "appointments",
-        element: <CusDashboard />,
+        element: <PatientApt />,
       },
       {
         index: false,
         path: "medical-records",
-        element: <CusDashboard />,
+        element: <Overall />,
       },
       {
         index: false,
         path: "pills",
-        element: <CusDashboard />,
+        element: <Overall />,
       },
       {
         index: false, // không phải là trang chính
         path: "messages",
-        element: <CusDashboard />,
+        element: <Overall />,
       },
       {
         index: false, // không phải là trang chính
         path: "documents",
-        element: <CusDashboard />,
+        element: <Overall />,
       },
       {
         index: false, // không phải là trang chính
         path: "notifications",
-        element: <CusDashboard />,
+        element: <Overall />,
       },
       {
         index: false, // không phải là trang chính
         path: "settings",
-        element: <CusDashboard />,
+        element: <Overall />,
       }
     ]
   },
