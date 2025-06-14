@@ -42,16 +42,43 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+
                         .requestMatchers("/api/login/**").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/api/doctors/active").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/doctors/all").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.PATCH, "/api/doctors/status/**").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.POST, "/api/doctors").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.PUT, "/api/doctors/me").hasRole("DOCTOR")
                         .requestMatchers(HttpMethod.GET,
-                                "/api/doctors/**",
+                                "/api/doctors/active",
+                                "/api/treatment-services/active",
+                                "/api/register/customer").permitAll()
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/doctors/all",
+                                "/api/treatment-services/all").hasRole("MANAGER")
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/doctors/id/**",
                                 "/api/doctors/specification").hasAnyRole("MANAGER", "CUSTOMER")
+
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/doctors",
+                                "/api/treatment-services").hasRole("MANAGER")
+
+                        .requestMatchers(HttpMethod.PUT,
+                                "/api/doctors/me").hasRole("DOCTOR")
+
+                        .requestMatchers(HttpMethod.PUT,
+                                "/api/treatment-services/**").hasRole("MANAGER")
+
+                        .requestMatchers(HttpMethod.PATCH,
+                                "/api/doctors/status/**",
+                                "/api/treatment-services/status/**").hasRole("MANAGER")
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/treatment-services/**").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/api/admin/customers").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/customer/info").hasAnyRole("CUSTOMER", "DOCTOR")
+                        .requestMatchers(HttpMethod.PUT, "/api/customer/update").hasRole("CUSTOMER")
+
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",

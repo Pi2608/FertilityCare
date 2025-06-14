@@ -14,11 +14,6 @@ public class UserService{
         return userRepository.findByEmail(email);
     }
 
-    public boolean isValidUser(String email, String password) {
-        User user = getUserByEmail(email);
-        return user != null && user.getPassword().equals(password);
-    }
-
     public User createUser(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("Email already exists");

@@ -13,6 +13,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,8 +29,8 @@ public class LoginController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @PostMapping("/manager")
-    public ResponseEntity<ApiResponse<String>> login(@RequestBody @Valid LoginRequest request) {
+    @PostMapping("/admin")
+    public ResponseEntity<ApiResponse<String>> loginAdmin(@RequestBody @Valid LoginRequest request) {
         User user = userService.getUserByEmail(request.getEmail());
 
         if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
@@ -38,7 +39,42 @@ public class LoginController {
 
         List<String> roles = List.of("ROLE_" + user.getRole().getRoleName().toUpperCase());
 
-        String token = jwtUtil.generateToken(user.getEmail(), roles);
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("roles", roles);
+
+        if (user.getRole().getRoleId() == 1) {
+            extraClaims.put("adminId", user.getUserId());
+        }
+
+        String token = jwtUtil.generateToken(user.getEmail(), roles, extraClaims);
+
+        ApiResponse<String> response = new ApiResponse<>(
+                200,
+                "Đăng nhập tài khoản admin thành công",
+                token
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/manager")
+    public ResponseEntity<ApiResponse<String>> loginManager(@RequestBody @Valid LoginRequest request) {
+        User user = userService.getUserByEmail(request.getEmail());
+
+        if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new BadCredentialsException("Email hoặc mật khẩu không đúng");
+        }
+
+        List<String> roles = List.of("ROLE_" + user.getRole().getRoleName().toUpperCase());
+
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("roles", roles);
+
+        if (user.getRole().getRoleId() == 2) {
+            extraClaims.put("managerId", user.getUserId());
+        }
+
+        String token = jwtUtil.generateToken(user.getEmail(), roles, extraClaims);
 
         ApiResponse<String> response = new ApiResponse<>(
                 200,
@@ -80,9 +116,11 @@ public class LoginController {
             throw new BadCredentialsException("Email hoặc mật khẩu không đúng");
         }
 
+        Map<String, Object> extraClaims = Map.of("customerId", user.getCustomer().getCustomerId());
+
         List<String> roles = List.of("ROLE_" + user.getRole().getRoleName().toUpperCase());
 
-        String token = jwtUtil.generateToken(user.getEmail(), roles);
+        String token = jwtUtil.generateToken(user.getEmail(), roles, extraClaims);
 
         ApiResponse<String> response = new ApiResponse<>(
                 200,

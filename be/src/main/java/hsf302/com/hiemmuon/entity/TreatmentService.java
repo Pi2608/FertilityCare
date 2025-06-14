@@ -17,7 +17,10 @@ public class TreatmentService {
     @Column(name = "service_id")
     private int serviceId;
 
-    @Column(name = "description", columnDefinition = "TEXT")
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "description", columnDefinition = "NVARCHAR(MAX)")
     private String description;
 
     @Column(name = "success_rate")
@@ -26,13 +29,18 @@ public class TreatmentService {
     @Column(name = "price", precision = 10, scale = 2)
     private BigDecimal price;
 
-    @Column(name = "specialfications", length = 255)
+    @Column(name = "specialfications", length = 255, columnDefinition = "NVARCHAR(MAX)")
     private String specialfications;
+
+    @Column(name = "status", length = 255)
+    private boolean status;
 
     public TreatmentService() {
     }
 
-    public TreatmentService(String description, Float successRate, BigDecimal price, String specialfications) {
+    public TreatmentService(int serviceId, String name, String description, Float successRate, BigDecimal price, String specialfications) {
+        this.serviceId = serviceId;
+        this.name = name;
         this.description = description;
         this.successRate = successRate;
         this.price = price;

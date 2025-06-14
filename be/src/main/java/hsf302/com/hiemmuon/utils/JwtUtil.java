@@ -1,6 +1,5 @@
 package hsf302.com.hiemmuon.utils;
 
-import hsf302.com.hiemmuon.entity.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -24,28 +23,6 @@ public class JwtUtil {
 
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
-    }
-
-    // 👉 Dùng cho người dùng thông thường
-    public String generateToken(String email, List<String> roles) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("roles", roles);
-        return createToken(claims, email);
-    }
-
-    // 👉 Dùng cho bác sĩ để thêm doctorId
-    public String generateToken(User user) {
-        Map<String, Object> claims = new HashMap<>();
-
-        // Nhúng role vào token
-        claims.put("roles", List.of("ROLE_" + user.getRole().getRoleName().toUpperCase()));
-
-        // Nếu là bác sĩ, nhúng doctorId
-        if (user.getDoctor() != null) {
-            claims.put("doctorId", user.getDoctor().getDoctorId());
-        }
-
-        return createToken(claims, user.getEmail());
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
