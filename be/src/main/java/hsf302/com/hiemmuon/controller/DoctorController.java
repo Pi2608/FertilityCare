@@ -1,15 +1,16 @@
 package hsf302.com.hiemmuon.controller;
 
 import hsf302.com.hiemmuon.dto.ApiResponse;
-import hsf302.com.hiemmuon.dto.CreateDoctorDTO;
-import hsf302.com.hiemmuon.dto.UpdateDoctorDTO;
+import hsf302.com.hiemmuon.dto.createDto.CreateDoctorDTO;
+import hsf302.com.hiemmuon.dto.entityDto.DoctorDTOForCustomer;
+import hsf302.com.hiemmuon.dto.entityDto.DoctorDTOForManager;
+import hsf302.com.hiemmuon.dto.updateDto.UpdateDoctorDTO;
 import hsf302.com.hiemmuon.entity.Doctor;
 import hsf302.com.hiemmuon.service.DoctorService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,16 +23,30 @@ public class DoctorController {
     private DoctorService doctorService;
 
     @GetMapping("/all")
-    public List<Doctor> getAllDoctors() {
-        return doctorService.findAll();
+    public List<DoctorDTOForManager> getAllDoctors() {
+        return doctorService.getAllDoctor();
     }
 
-    @GetMapping("/{doctorId}")
+    @GetMapping("/id/{doctorId}")
     public ResponseEntity<ApiResponse<?>> getDoctorById(
             @PathVariable("doctorId") int doctorId) {
-        Doctor doctor = doctorService.getDoctorByDoctorId(doctorId);
+        DoctorDTOForCustomer doctor = doctorService.getDoctorByDoctorId(doctorId);
 
-        ApiResponse<Doctor> response = new ApiResponse<>(
+        ApiResponse<DoctorDTOForCustomer> response = new ApiResponse<>(
+                200,
+                "Doctor retrieved successfully",
+                doctor
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/name/{name}")
+    public ResponseEntity<ApiResponse<?>> getDoctorByName(
+            @PathVariable("name") String name) {
+        DoctorDTOForCustomer doctor = doctorService.getDoctorByName(
+                name);
+
+        ApiResponse<DoctorDTOForCustomer> response = new ApiResponse<>(
                 200,
                 "Doctor retrieved successfully",
                 doctor
@@ -41,11 +56,25 @@ public class DoctorController {
 
     @GetMapping("/active")
     public ResponseEntity<ApiResponse<?>> getDoctorByStatus() {
-        List<Doctor> doctors = doctorService.getDoctorByIsActive();
+        List<DoctorDTOForCustomer> doctors = doctorService.getDoctorByIsActive();
 
-        ApiResponse<List<Doctor>> response = new ApiResponse<>(
+        ApiResponse<List<DoctorDTOForCustomer>> response = new ApiResponse<>(
                 200,
                 "Doctors retrieved successfully",
+                doctors
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/specification")
+    public ResponseEntity<ApiResponse<?>> getDoctorBySpecialization(
+            @RequestParam("specification") String specification) {
+
+        List<DoctorDTOForCustomer> doctors = doctorService.getDoctorBySpecification(specification);
+
+        ApiResponse<List<DoctorDTOForCustomer>> response = new ApiResponse<>(
+                200,
+                "Doctors with specialization " + specification + " retrieved successfully",
                 doctors
         );
         return ResponseEntity.ok(response);
@@ -91,20 +120,6 @@ public class DoctorController {
                 200,
                 "Doctor " + updatedDoctor.getUser().getName() + " has been " + statusText,
                 updatedDoctor
-        );
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/specification")
-    public ResponseEntity<ApiResponse<?>> getDoctorBySpecialization(
-            @RequestParam("specification") String specification) {
-
-        List<Doctor> doctors = doctorService.getDoctorBySpecification(specification);
-
-        ApiResponse<List<Doctor>> response = new ApiResponse<>(
-                200,
-                "Doctors with specialization " + specification + " retrieved successfully",
-                doctors
         );
         return ResponseEntity.ok(response);
     }

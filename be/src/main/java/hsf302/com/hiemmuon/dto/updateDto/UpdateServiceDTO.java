@@ -1,4 +1,4 @@
-package hsf302.com.hiemmuon.dto;
+package hsf302.com.hiemmuon.dto.updateDto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.*;

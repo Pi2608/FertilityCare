@@ -1,11 +1,9 @@
 package hsf302.com.hiemmuon.service;
 
-import hsf302.com.hiemmuon.dto.CreateTreatmentServiceDTO;
-import hsf302.com.hiemmuon.dto.UpdateServiceDTO;
-import hsf302.com.hiemmuon.entity.Doctor;
+import hsf302.com.hiemmuon.dto.createDto.CreateTreatmentServiceDTO;
+import hsf302.com.hiemmuon.dto.updateDto.UpdateServiceDTO;
 import hsf302.com.hiemmuon.entity.TreatmentService;
 import hsf302.com.hiemmuon.repository.TreatmentServiceRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +33,7 @@ public class TreatmentServiceService {
         treatmentService.setDescription(treatmentServiceDTO.getDescription());
         treatmentService.setSuccessRate(treatmentServiceDTO.getSuccessRate());
         treatmentService.setSpecialfications(treatmentServiceDTO.getSpecialfications());
+        treatmentService.setStatus(true);
 
         return treatmentServiceRepository.save(treatmentService);
     }

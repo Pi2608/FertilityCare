@@ -29,7 +29,7 @@ public class TreatmentService {
     @Column(name = "price", precision = 10, scale = 2)
     private BigDecimal price;
 
-    @Column(name = "specialfications", length = 255)
+    @Column(name = "specialfications", length = 255, columnDefinition = "NVARCHAR(MAX)")
     private String specialfications;
 
     @Column(name = "status", length = 255)

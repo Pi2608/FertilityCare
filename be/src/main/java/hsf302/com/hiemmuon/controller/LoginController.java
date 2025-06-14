@@ -29,8 +29,8 @@ public class LoginController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @PostMapping("/manager")
-    public ResponseEntity<ApiResponse<String>> login(@RequestBody @Valid LoginRequest request) {
+    @PostMapping("/admin")
+    public ResponseEntity<ApiResponse<String>> loginAdmin(@RequestBody @Valid LoginRequest request) {
         User user = userService.getUserByEmail(request.getEmail());
 
         if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
@@ -42,7 +42,35 @@ public class LoginController {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("roles", roles);
 
-        if (user.getRole().getRoleId() == 3) {
+        if (user.getRole().getRoleId() == 1) {
+            extraClaims.put("adminId", user.getUserId());
+        }
+
+        String token = jwtUtil.generateToken(user.getEmail(), roles, extraClaims);
+
+        ApiResponse<String> response = new ApiResponse<>(
+                200,
+                "Đăng nhập tài khoản admin thành công",
+                token
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/manager")
+    public ResponseEntity<ApiResponse<String>> loginManager(@RequestBody @Valid LoginRequest request) {
+        User user = userService.getUserByEmail(request.getEmail());
+
+        if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new BadCredentialsException("Email hoặc mật khẩu không đúng");
+        }
+
+        List<String> roles = List.of("ROLE_" + user.getRole().getRoleName().toUpperCase());
+
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("roles", roles);
+
+        if (user.getRole().getRoleId() == 2) {
             extraClaims.put("managerId", user.getUserId());
         }
 

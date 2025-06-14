@@ -8,7 +8,7 @@ import org.hibernate.annotations.Nationalized;
 @Getter
 @Setter
 @Entity
-@Table(name = "Customer")
+@Table(name = "customer")
 public class Customer {
 
     @Id

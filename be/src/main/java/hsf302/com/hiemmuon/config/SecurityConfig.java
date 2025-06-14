@@ -47,14 +47,15 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.GET,
                                 "/api/doctors/active",
-                                "/api/treatment-services/active").permitAll()
+                                "/api/treatment-services/active",
+                                "/api/register/customer").permitAll()
 
                         .requestMatchers(HttpMethod.GET,
                                 "/api/doctors/all",
                                 "/api/treatment-services/all").hasRole("MANAGER")
 
                         .requestMatchers(HttpMethod.GET,
-                                "/api/doctors/**",
+                                "/api/doctors/id/**",
                                 "/api/doctors/specification").hasAnyRole("MANAGER", "CUSTOMER")
 
                         .requestMatchers(HttpMethod.POST,
@@ -73,6 +74,10 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.GET,
                                 "/api/treatment-services/**").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/api/admin/customers").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/customer/info").hasAnyRole("CUSTOMER", "DOCTOR")
+                        .requestMatchers(HttpMethod.PUT, "/api/customer/update").hasRole("CUSTOMER")
 
                         .requestMatchers(
                                 "/swagger-ui/**",

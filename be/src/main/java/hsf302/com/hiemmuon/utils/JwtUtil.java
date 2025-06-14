@@ -1,6 +1,5 @@
 package hsf302.com.hiemmuon.utils;
 
-import hsf302.com.hiemmuon.entity.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
