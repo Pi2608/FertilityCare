@@ -4,6 +4,7 @@ import PageLayout from '@components/Layout/PageLayout/PageLayout';
 import CusLayout from '@components/Layout/CusLayout/CusLayout';
 import DocLayout from '@components/Layout/DocLayout/DocLayout';
 import ManagerLayout from '@components/Layout/ManagerLayout/ManagerLayout.jsx';
+import AdminLayout from '@components/Layout/AdminLayout/AdminLayout.jsx';
 import Homepage from "@customerpages/Homepage/Homepage";
 import TreatmentMethod from '@customerpages/TreatmentMethod/TreatmentMethod';
 import IvfDetail from '@customerpages/IvfDetail/IvfDetail';
@@ -24,6 +25,13 @@ import Doctor from './Pages/manager/Doctor/Doctor';
 import TreatmentService from './Pages/manager/TreatmentService/TreatmentService';
 import SuccessRate from './Pages/manager/TreatmentService/SuccessRate';
 import ProcessEdit from './Pages/manager/TreatmentService/ProcessEdit';
+
+// Admin components
+import AdminAppointment from './Pages/admin/Appointment/Appointment';
+import AdminPatient from './Pages/admin/Patient/Patient';
+import AdminDoctor from './Pages/admin/Doctor/Doctor';
+import AdminTreatmentService from './Pages/admin/TreatmentService/TreatmentService';
+import Dashboard from './Pages/admin/Dashboard/Dashboard';
 
 
 const USER_TYPES = {
@@ -223,6 +231,44 @@ export const router = createBrowserRouter([
       {
         path: "treatment-service/process/:serviceId",
         element: <ProcessEdit/>,
+      },
+    ],
+  },
+  {
+    path: "/admin-dashboard",
+    element: <AdminLayout />,
+    children: [
+      {
+        index: true,
+        element: <Navigate to="/admin-dashboard/appointment" replace />,
+      },
+      {
+        path: "appointment",
+        element: <AdminAppointment/>,
+      },
+      {
+        path: "user",
+        element: <AdminPatient/>,
+      },
+      {
+        path: "doctor",
+        element: <AdminDoctor/>,
+      },
+      {
+        path: "service",
+        element: <AdminTreatmentService/>,
+      },
+      {
+        path: "report",
+        element: <Dashboard/>,
+      },
+      {
+        path: "message",
+        element: <div>Admin Messages - Coming Soon</div>,
+      },
+      {
+        path: "setting",
+        element: <div>System Settings - Coming Soon</div>,
       },
     ],
   },
