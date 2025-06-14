@@ -5,8 +5,7 @@ import "./Doctor.css"
 
 const Doctor = () => {
   const [searchTerm, setSearchTerm] = useState("")
-  const [editingId, setEditingId] = useState(null)
-  const [editData, setEditData] = useState({})
+  const [statusFilter, setStatusFilter] = useState("all") // "all", "active", "inactive"
   const [doctorsData, setDoctorsData] = useState([
     {
       id: 1,
@@ -18,6 +17,7 @@ const Doctor = () => {
       specialty: "IVF",
       experience: 10,
       rating: 4.8,
+      isActive: true,
     },
     {
       id: 2,
@@ -29,6 +29,7 @@ const Doctor = () => {
       specialty: "IUI",
       experience: 15,
       rating: 4.9,
+      isActive: true,
     },
     {
       id: 3,
@@ -40,6 +41,7 @@ const Doctor = () => {
       specialty: "IVF",
       experience: 12,
       rating: 4.7,
+      isActive: false,
     },
     {
       id: 4,
@@ -51,6 +53,7 @@ const Doctor = () => {
       specialty: "IVF",
       experience: 8,
       rating: 4.6,
+      isActive: true,
     },
     {
       id: 5,
@@ -62,6 +65,7 @@ const Doctor = () => {
       specialty: "IVF",
       experience: 20,
       rating: 4.9,
+      isActive: true,
     },
     {
       id: 6,
@@ -73,6 +77,7 @@ const Doctor = () => {
       specialty: "IUI",
       experience: 18,
       rating: 4.8,
+      isActive: false,
     },
     {
       id: 7,
@@ -84,47 +89,30 @@ const Doctor = () => {
       specialty: "IUI",
       experience: 11,
       rating: 4.5,
+      isActive: true,
     },
   ])
 
-  const handleEdit = (doctor) => {
-    setEditingId(doctor.id)
-    setEditData({
-      gender: doctor.gender,
-      birthDate: doctor.birthDate,
-      specialty: doctor.specialty,
-      experience: doctor.experience,
-      rating: doctor.rating
-    })
-  }
-
-  const handleSave = (doctorId) => {
+  const handleToggleStatus = (doctorId) => {
     setDoctorsData(prev => prev.map(doctor =>
       doctor.id === doctorId
-        ? { ...doctor, ...editData }
+        ? { ...doctor, isActive: !doctor.isActive }
         : doctor
     ))
-    setEditingId(null)
-    setEditData({})
   }
 
-  const handleCancel = () => {
-    setEditingId(null)
-    setEditData({})
-  }
-
-  const handleInputChange = (field, value) => {
-    setEditData(prev => ({
-      ...prev,
-      [field]: value
-    }))
-  }
-
-  const filteredDoctors = doctorsData.filter(
-    (doctor) =>
+  const filteredDoctors = doctorsData.filter((doctor) => {
+    const matchesSearch =
       doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      doctor.specialty.toLowerCase().includes(searchTerm.toLowerCase()),
-  )
+      doctor.specialty.toLowerCase().includes(searchTerm.toLowerCase())
+
+    const matchesStatus =
+      statusFilter === "all" ||
+      (statusFilter === "active" && doctor.isActive) ||
+      (statusFilter === "inactive" && !doctor.isActive)
+
+    return matchesSearch && matchesStatus
+  })
 
   return (
     <div className="doctor-page">
@@ -152,7 +140,7 @@ const Doctor = () => {
 
       {/* Content */}
       <main className="doctor-content">
-        {/* Search */}
+        {/* Search and Filter */}
         <div className="search-section">
           <div className="search-box">
             <span className="search-icon">🔍</span>
@@ -162,6 +150,18 @@ const Doctor = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
+          </div>
+
+          <div className="filter-section">
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="status-filter"
+            >
+              <option value="all">Tất cả trạng thái</option>
+              <option value="active">Đang hoạt động</option>
+              <option value="inactive">Không hoạt động</option>
+            </select>
           </div>
         </div>
 
@@ -176,123 +176,41 @@ const Doctor = () => {
                 <th>Chuyên môn</th>
                 <th>Kinh nghiệm</th>
                 <th>Đánh giá</th>
-                <th>Hành động</th>
+                <th>Trạng thái</th>
               </tr>
             </thead>
             <tbody>
-              {filteredDoctors.map((doctor) => {
-                const isEditing = editingId === doctor.id
-                return (
-                  <tr key={doctor.id}>
-                    <td className="doctor-name-cell">
-                      <div className="doctor-info">
-                        <div className="doctor-avatar">{doctor.initials}</div>
-                        <span className="doctor-name">{doctor.name}</span>
-                      </div>
-                    </td>
-                    <td>
-                      {isEditing ? (
-                        <select
-                          value={editData.gender || doctor.gender}
-                          onChange={(e) => handleInputChange('gender', e.target.value)}
-                          className="edit-input"
-                        >
-                          <option value="Nam">Nam</option>
-                          <option value="Nữ">Nữ</option>
-                        </select>
-                      ) : (
-                        doctor.gender
-                      )}
-                    </td>
-                    <td>
-                      {isEditing ? (
-                        <input
-                          type="date"
-                          value={editData.birthDate ? editData.birthDate.split('/').reverse().join('-') : doctor.birthDate.split('/').reverse().join('-')}
-                          onChange={(e) => {
-                            const date = new Date(e.target.value)
-                            const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`
-                            handleInputChange('birthDate', formattedDate)
-                          }}
-                          className="edit-input"
-                        />
-                      ) : (
-                        doctor.birthDate
-                      )}
-                    </td>
-                    <td>
-                      {isEditing ? (
-                        <select
-                          value={editData.specialty || doctor.specialty}
-                          onChange={(e) => handleInputChange('specialty', e.target.value)}
-                          className="edit-input"
-                        >
-                          <option value="IVF">IVF</option>
-                          <option value="IUI">IUI</option>
-                        </select>
-                      ) : (
-                        <span className={`specialty-badge ${doctor.specialty.toLowerCase()}`}>{doctor.specialty}</span>
-                      )}
-                    </td>
-                    <td>
-                      {isEditing ? (
-                        <input
-                          type="number"
-                          value={editData.experience || doctor.experience}
-                          onChange={(e) => handleInputChange('experience', parseInt(e.target.value))}
-                          className="edit-input"
-                          min="0"
-                          max="50"
-                        />
-                      ) : (
-                        doctor.experience
-                      )}
-                    </td>
-                    <td>
-                      {isEditing ? (
-                        <input
-                          type="number"
-                          step="0.1"
-                          value={editData.rating || doctor.rating}
-                          onChange={(e) => handleInputChange('rating', parseFloat(e.target.value))}
-                          className="edit-input"
-                          min="0"
-                          max="5"
-                        />
-                      ) : (
-                        <div className="rating">
-                          <span className="rating-value">{doctor.rating}</span>
-                        </div>
-                      )}
-                    </td>
-                    <td>
-                      {isEditing ? (
-                        <div className="action-buttons">
-                          <button
-                            onClick={() => handleSave(doctor.id)}
-                            className="save-btn"
-                          >
-                            Lưu
-                          </button>
-                          <button
-                            onClick={handleCancel}
-                            className="cancel-btn"
-                          >
-                            Hủy
-                          </button>
-                        </div>
-                      ) : (
-                        <button
-                          onClick={() => handleEdit(doctor)}
-                          className="edit-btn"
-                        >
-                          Chỉnh sửa
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                )
-              })}
+              {filteredDoctors.map((doctor) => (
+                <tr key={doctor.id}>
+                  <td className="doctor-name-cell">
+                    <div className="doctor-info">
+                      <div className="doctor-avatar">{doctor.initials}</div>
+                      <span className="doctor-name">{doctor.name}</span>
+                    </div>
+                  </td>
+                  <td>{doctor.gender}</td>
+                  <td>{doctor.birthDate}</td>
+                  <td>
+                    <span className={`specialty-badge ${doctor.specialty.toLowerCase()}`}>
+                      {doctor.specialty}
+                    </span>
+                  </td>
+                  <td>{doctor.experience}</td>
+                  <td>
+                    <div className="rating">
+                      <span className="rating-value">{doctor.rating}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <button
+                      onClick={() => handleToggleStatus(doctor.id)}
+                      className={`status-toggle-btn ${doctor.isActive ? 'active' : 'inactive'}`}
+                    >
+                      {doctor.isActive ? 'Hoạt động' : 'Không hoạt động'}
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
