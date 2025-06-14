@@ -29,7 +29,7 @@ public class LoginController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @PostMapping("/admin")
+    @PostMapping()
     public ResponseEntity<ApiResponse<String>> loginAdmin(@RequestBody @Valid LoginRequest request) {
         User user = userService.getUserByEmail(request.getEmail());
 
@@ -41,90 +41,13 @@ public class LoginController {
 
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("roles", roles);
-
-        if (user.getRole().getRoleId() == 1) {
-            extraClaims.put("adminId", user.getUserId());
-        }
+        extraClaims.put("adminId", user.getUserId());
 
         String token = jwtUtil.generateToken(user.getEmail(), roles, extraClaims);
 
         ApiResponse<String> response = new ApiResponse<>(
                 200,
                 "Đăng nhập tài khoản admin thành công",
-                token
-        );
-
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/manager")
-    public ResponseEntity<ApiResponse<String>> loginManager(@RequestBody @Valid LoginRequest request) {
-        User user = userService.getUserByEmail(request.getEmail());
-
-        if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new BadCredentialsException("Email hoặc mật khẩu không đúng");
-        }
-
-        List<String> roles = List.of("ROLE_" + user.getRole().getRoleName().toUpperCase());
-
-        Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("roles", roles);
-
-        if (user.getRole().getRoleId() == 2) {
-            extraClaims.put("managerId", user.getUserId());
-        }
-
-        String token = jwtUtil.generateToken(user.getEmail(), roles, extraClaims);
-
-        ApiResponse<String> response = new ApiResponse<>(
-                200,
-                "Đăng nhập tài khoản quản lý thành công",
-                token
-        );
-
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/doctor")
-    public ResponseEntity<ApiResponse<String>> loginDoctor(@RequestBody @Valid LoginRequest request) {
-        User user = userService.getUserByEmail(request.getEmail());
-
-        if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new BadCredentialsException("Email hoặc mật khẩu không đúng");
-        }
-
-        List<String> roles = List.of("ROLE_" + user.getRole().getRoleName().toUpperCase());
-
-        Map<String, Object> extraClaims = Map.of("doctorId", user.getDoctor().getDoctorId());
-
-        String token = jwtUtil.generateToken(user.getEmail(), roles, extraClaims);
-
-        ApiResponse<String> response = new ApiResponse<>(
-                200,
-                "Đăng nhập tài khoản bác sĩ thành công",
-                token
-        );
-
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/customer")
-    public ResponseEntity<ApiResponse<String>> loginCustomer(@RequestBody @Valid LoginRequest request) {
-        User user = userService.getUserByEmail(request.getEmail());
-
-        if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new BadCredentialsException("Email hoặc mật khẩu không đúng");
-        }
-
-        Map<String, Object> extraClaims = Map.of("customerId", user.getCustomer().getCustomerId());
-
-        List<String> roles = List.of("ROLE_" + user.getRole().getRoleName().toUpperCase());
-
-        String token = jwtUtil.generateToken(user.getEmail(), roles, extraClaims);
-
-        ApiResponse<String> response = new ApiResponse<>(
-                200,
-                "Đăng nhập tài khoản khách hàng thành công",
                 token
         );
 
