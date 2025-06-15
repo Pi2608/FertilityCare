@@ -1,83 +1,100 @@
 package hsf302.com.hiemmuon.config;
 
 import hsf302.com.hiemmuon.entity.User;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
+import hsf302.com.hiemmuon.repository.UserRepository;
+import hsf302.com.hiemmuon.utils.JwtUtil;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    @Value("${jwt.secret}")
-    private String secretKey;
+
+    User user;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
             throws ServletException, IOException {
 
-        String path = request.getRequestURI();
+        final String header = request.getHeader("Authorization");
 
-        String authHeader = request.getHeader("Authorization");
+        String token = null;
+        String email = null;
 
-        if (path.startsWith("/swagger-ui") ||
-                path.startsWith("/v3/api-docs") ||
-                path.startsWith("/swagger-resources") ||
-                path.startsWith("/webjars")) {
-            filterChain.doFilter(request, response);
-            return;
+        if (header != null && header.startsWith("Bearer ")) {
+            token = header.substring(7);
+
+            try {
+                email = jwtUtil.extractEmail(token);
+                if (email == null) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    return;
+                }
+            } catch (ExpiredJwtException e) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
         }
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            System.out.println("🚫 Không có JWT hoặc không đúng định dạng.");
-            filterChain.doFilter(request, response);
-            return;
+        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            var user = userRepository.findByEmail(email);
+            if (user != null) {
+                // Trích xuất danh sách role từ token
+                List<String> roles = jwtUtil.extractRoles(token);
+
+                List<SimpleGrantedAuthority> authorities = roles.stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
+
+
+
+// ✅ CHỈ LẤY email chứ không truyền cả User
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(email, null, authorities);
+
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+
+
+                // In log để debug
+                System.out.println("ROLE(s) từ token: " + roles);
+
+                UsernamePasswordAuthenticationToken authToken1 =
+                        new UsernamePasswordAuthenticationToken(user, null, authorities);
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
         }
 
-        try {
-            String token = authHeader.substring(7);
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8))
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-
-            String username = claims.getSubject();
-            List<String> roles = claims.get("roles", List.class);
-            if (roles == null) roles = List.of();
-
-            List<GrantedAuthority> authorities = roles.stream()
-                    .map(SimpleGrantedAuthority::new)
-                    .collect(Collectors.toList());
-
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(username, null, authorities);
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            System.out.println("✅ Jwt Filter Authorities: " + authorities);
-        } catch (JwtException e) {
-            logger.warn("⚠️ Invalid JWT: " + e.getMessage());
-        }
         filterChain.doFilter(request, response);
     }
+
+
+
+
 }
-    

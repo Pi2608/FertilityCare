@@ -2,6 +2,7 @@ package hsf302.com.hiemmuon.controller;
 
 import hsf302.com.hiemmuon.dto.ApiResponse;
 import hsf302.com.hiemmuon.dto.LoginRequest;
+import hsf302.com.hiemmuon.dto.RegisterCustomerDTO;
 import hsf302.com.hiemmuon.entity.User;
 import hsf302.com.hiemmuon.service.UserService;
 import hsf302.com.hiemmuon.utils.JwtUtil;
@@ -92,4 +93,7 @@ public class LoginController {
 
         return ResponseEntity.ok(response);
     }
+
+
+
 }

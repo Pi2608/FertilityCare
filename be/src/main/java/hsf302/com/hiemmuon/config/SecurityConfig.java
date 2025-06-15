@@ -23,8 +23,6 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -37,38 +35,41 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/login/**").permitAll()
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+            // Most specific patterns first
+            .requestMatchers("/api/login/**").permitAll()
+            .requestMatchers(
+                "/swagger-ui/**",
+                "/v3/api-docs/**",
+                "/swagger-resources/**",
+                "/swagger-ui.html",
+                "/webjars/**",
+                "/v3/api-docs.yaml",
+                    "/api/register/customer"
+            ).permitAll()
+            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/doctors/active").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/doctors/all").hasRole("MANAGER")
+            .requestMatchers(HttpMethod.PATCH, "/api/doctors/status/**").hasRole("MANAGER")
+            .requestMatchers(HttpMethod.POST, "/api/doctors").hasRole("MANAGER")
+            .requestMatchers(HttpMethod.PUT, "/api/doctors/me").hasRole("DOCTOR")
+            .requestMatchers(HttpMethod.GET, "/api/doctors/specification").hasAnyRole("MANAGER", "CUSTOMER")
+            .requestMatchers(HttpMethod.GET, "/api/doctors/**").hasAnyRole("MANAGER", "CUSTOMER")
+                    .requestMatchers(HttpMethod.GET, "/api/admin/customers").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.GET, "/api/customer/info").hasRole("CUSTOMER")
+                    .requestMatchers(HttpMethod.PUT, "/api/customer/update").hasRole("CUSTOMER")
 
-                        .requestMatchers(HttpMethod.GET, "/api/doctors/active").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/doctors/all").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.PATCH, "/api/doctors/status/**").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.POST, "/api/doctors").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.PUT, "/api/doctors/me").hasRole("DOCTOR")
-                        .requestMatchers(HttpMethod.GET,
-                                "/api/doctors/**",
-                                "/api/doctors/specification").hasAnyRole("MANAGER", "CUSTOMER")
-                        .requestMatchers(
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**",
-                                "/swagger-resources/**",
-                                "/swagger-ui.html",
-                                "/webjars/**",
-                                "/v3/api-docs.yaml"
-                        ).permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .anyRequest().authenticated()
+                    .anyRequest().authenticated()
+        )
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-                )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
-    }
+    return http.build();
+}
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

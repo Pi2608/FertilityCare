@@ -8,7 +8,7 @@ import org.hibernate.annotations.Nationalized;
 @Getter
 @Setter
 @Entity
-@Table(name = "Customer")
+@Table(name = "Customers")
 public class Customer {
 
     @Id
@@ -21,7 +21,7 @@ public class Customer {
     private User user;
 
     @Nationalized
-    @Column(name = "medical_history", columnDefinition = "NVARCHAR(MAX)")
+    @Column(name = "medical_history", length = 100)
     private String medicalHistory;
 
     @Column(name = "is_active")

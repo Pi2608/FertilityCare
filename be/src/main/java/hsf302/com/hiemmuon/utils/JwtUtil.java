@@ -1,6 +1,7 @@
 package hsf302.com.hiemmuon.utils;
 
 import hsf302.com.hiemmuon.entity.User;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -14,33 +15,34 @@ import java.util.*;
 @Component
 public class JwtUtil {
 
-    private final String SECRET;
+    private final String secret;
 
-    public JwtUtil(@Value("${jwt.secret}") String SECRET) {
-        this.SECRET = SECRET;
+    private static final long EXPIRATION_TIME = 2 * 60 * 60 * 1000; // 2 giờ
+
+    public JwtUtil(@Value("${jwt.secret}") String secret) {
+        this.secret = secret;
     }
-
-    private final long EXPIRATION_TIME = 2 * 60 * 60 * 1000;
 
     private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
+        return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    // 👉 Dùng cho người dùng thông thường
+    /**
+     * Tạo token cho người dùng thông thường
+     */
     public String generateToken(String email, List<String> roles) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("roles", roles);
         return createToken(claims, email);
     }
 
-    // 👉 Dùng cho bác sĩ để thêm doctorId
+    /**
+     * Tạo token cho bác sĩ (có thêm doctorId nếu tồn tại)
+     */
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
-
-        // Nhúng role vào token
         claims.put("roles", List.of("ROLE_" + user.getRole().getRoleName().toUpperCase()));
 
-        // Nếu là bác sĩ, nhúng doctorId
         if (user.getDoctor() != null) {
             claims.put("doctorId", user.getDoctor().getDoctorId());
         }
@@ -48,6 +50,18 @@ public class JwtUtil {
         return createToken(claims, user.getEmail());
     }
 
+    /**
+     * Tạo token với extraClaims tùy chỉnh
+     */
+    public String generateToken(String email, List<String> roles, Map<String, Object> extraClaims) {
+        Map<String, Object> claims = new HashMap<>(extraClaims);
+        claims.put("roles", roles);
+        return createToken(claims, email);
+    }
+
+    /**
+     * Hàm tạo token chung
+     */
     private String createToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
                 .setClaims(claims)
@@ -58,9 +72,31 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String generateToken(String email, List<String> roles, Map<String, Object> extraClaims) {
-        Map<String, Object> claims = new HashMap<>(extraClaims);
-        claims.put("roles", roles);
-        return createToken(claims, email);
+    /**
+     * Trích xuất email (subject) từ token
+     */
+    public String extractEmail(String token) {
+        return extractAllClaims(token).getSubject();
     }
+
+    /**
+     * Trích xuất danh sách role từ token
+     */
+    public List<String> extractRoles(String token) {
+        Claims claims = extractAllClaims(token);
+        return claims.get("roles", List.class);
+    }
+
+    /**
+     * Trích xuất tất cả claims từ token
+     */
+    private Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+
 }
