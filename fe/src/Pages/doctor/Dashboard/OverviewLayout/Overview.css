@@ -199,12 +199,12 @@
 
 /* HEADER DOCTOR */
 
-.dashboard-wrapper .doctor-header {
+/* .dashboard-wrapper .doctor-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   flex-wrap: wrap;
-}
+} */
 
 .dashboard-wrapper .header-left h1 {
   font-size: 24px;
