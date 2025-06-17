@@ -1,0 +1,503 @@
+.notification-page {
+  padding: 1.5rem;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+
+.notification-page .welcome-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+
+.notification-page .welcome-text h2 {
+  margin: 0;
+  color: #333;
+  font-size: 1.75rem;
+}
+
+
+.notification-page .welcome-text p {
+  margin: 0.25rem 0 0 0;
+  color: #666;
+  font-size: 1rem;
+}
+
+
+.notification-page .actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+
+.notification-page .actions button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+
+.notification-page .primary-btn {
+  background-color: #d6004c;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+
+.notification-page .primary-btn:hover {
+  opacity: 0.9;
+}
+
+
+.notification-page .secondary-btn {
+  background-color: #fff;
+  color: #d6004c;
+  border: 1px solid #d6004c;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+
+.notification-page .secondary-btn:hover {
+  background-color: #d6004c;
+  color: #fff;
+}
+
+
+.notification-page .notification-container {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.notification-page .page-title-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+
+.notification-page .page-title-actions h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+
+.notification-page .unread-badge {
+  background-color: #d6004c;
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+
+.notification-page .filter-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+
+.notification-page .filter-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  background: #fff;
+  color: #666;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+
+.notification-page .filter-btn:hover {
+  border-color: #d6004c;
+  color: #d6004c;
+}
+
+
+.notification-page .filter-btn.active {
+  background-color: #d6004c;
+  color: #fff;
+  border-color: #d6004c;
+}
+
+
+.notification-page .subtitle p {
+  margin: 0 0 1.5rem;
+  color: #666;
+  font-size: 0.875rem;
+}
+
+
+.notification-page .notification-section {
+  margin-bottom: 2rem;
+}
+
+
+.notification-page .notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+
+.notification-page .notification-card {
+  display: flex;
+  align-items: flex-start;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-left: 4px solid #ddd;
+}
+
+
+.notification-page .notification-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+
+.notification-page .notification-card.unread {
+  background: #fefefe;
+  border-left-color: #d6004c;
+}
+
+
+.notification-page .notification-card.read {
+  background: #fafafa;
+  opacity: 0.8;
+}
+
+
+.notification-page .notification-card.high-priority {
+  border-left-color: #dc3545;
+}
+
+
+.notification-page .notification-card.medium-priority {
+  border-left-color: #ffc107;
+}
+
+
+.notification-page .notification-card.low-priority {
+  border-left-color: #28a745;
+}
+
+
+.notification-page .notification-icon {
+  margin-right: 1rem;
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+
+.notification-page .appointment-icon {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+
+.notification-page .medication-icon {
+  background: #f3e5f5;
+  color: #7b1fa2;
+}
+
+
+.notification-page .message-icon {
+  background: #e8f5e8;
+  color: #388e3c;
+}
+
+
+.notification-page .result-icon {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+
+.notification-page .system-icon {
+  background: #fce4ec;
+  color: #c2185b;
+}
+
+
+.notification-page .notification-info {
+  flex: 1;
+  min-width: 0;
+}
+
+
+.notification-page .notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+
+.notification-page .notification-header h5 {
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+  font-weight: 600;
+}
+
+
+.notification-page .notification-time {
+  font-size: 0.75rem;
+  color: #999;
+  white-space: nowrap;
+  margin-left: 1rem;
+}
+
+
+.notification-page .notification-message {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.875rem;
+  color: #555;
+  line-height: 1.4;
+}
+
+
+.notification-page .notification-meta {
+  margin: 0.25rem 0;
+  font-size: 0.75rem;
+  color: #777;
+}
+
+
+.notification-page .doctor-name {
+  font-style: italic;
+  color: #d6004c;
+}
+
+
+.notification-page .medication-name {
+  font-weight: 500;
+  color: #7b1fa2;
+}
+
+
+.notification-page .test-type {
+  color: #f57c00;
+}
+
+
+.notification-page .cycle-info {
+  color: #1976d2;
+}
+
+
+.notification-page .appointment-date {
+  color: #388e3c;
+}
+
+
+.notification-page .notification-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-left: 1rem;
+  flex-shrink: 0;
+}
+
+
+.notification-page .action-btn {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+
+.notification-page .action-btn.primary {
+  background-color: #d6004c;
+  color: #fff;
+}
+
+
+.notification-page .action-btn.primary:hover {
+  background-color: #b8003f;
+}
+
+
+.notification-page .action-btn.secondary {
+  background-color: #fff;
+  color: #d6004c;
+  border: 1px solid #d6004c;
+}
+
+
+.notification-page .action-btn.secondary:hover {
+  background-color: #d6004c;
+  color: #fff;
+}
+
+
+.notification-page .unread-indicator {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 8px;
+  height: 8px;
+  background-color: #d6004c;
+  border-radius: 50%;
+}
+
+
+.notification-page .empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #999;
+}
+
+
+.notification-page .empty-state svg {
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+
+.notification-page .empty-state h4 {
+  margin: 0 0 0.5rem 0;
+  color: #666;
+}
+
+
+.notification-page .empty-state p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .notification-page {
+    padding: 1rem;
+  }
+
+
+  .notification-page .welcome-section {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+
+  .notification-page .actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+
+  .notification-page .page-title-actions {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+
+  .notification-page .filter-buttons {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+
+
+  .notification-page .filter-btn {
+    flex-shrink: 0;
+  }
+
+
+  .notification-page .notification-card {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+
+  .notification-page .notification-icon {
+    margin-right: 0;
+    align-self: flex-start;
+  }
+
+
+  .notification-page .notification-actions {
+    flex-direction: row;
+    margin-left: 0;
+    width: 100%;
+  }
+
+
+  .notification-page .action-btn {
+    flex: 1;
+  }
+
+
+  .notification-page .notification-header {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+
+  .notification-page .notification-time {
+    margin-left: 0;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .notification-page .notification-container {
+    padding: 1rem;
+  }
+
+
+  .notification-page .welcome-text h2 {
+    font-size: 1.5rem;
+  }
+
+
+  .notification-page .actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+
+  .notification-page .actions button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+
+
+

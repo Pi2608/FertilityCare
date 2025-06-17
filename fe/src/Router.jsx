@@ -7,6 +7,8 @@ import DocLayout from '@components/Layout/DocLayout/DocLayout';
 import ManagerLayout from '@components/Layout/ManagerLayout/ManagerLayout.jsx';
 
 
+
+
 import AdminLayout from '@components/Layout/AdminLayout/AdminLayout.jsx';
 import Homepage from "@customerpages/Homepage/Homepage";
 import TreatmentMethod from '@customerpages/TreatmentMethod/TreatmentMethod';
@@ -20,6 +22,9 @@ import PatientApt from '@customerpages/Dashboard/Appointment/PatientApt';
 import CusProfile from '@customerpages/Dashboard/CusProfile/CusProfile';
 import MessageCus from '@customerpages/Message/MessageCus';
 import TreatmentProcess from '@customerpages/TreatmentProcess/TreatmentProcess';
+import Notification from '@customerpages/Notification/Notification';
+
+
 
 
 import DocDashboard from '@doctorpages/Dashboard/DocDashboard';
@@ -32,14 +37,20 @@ import ProfileLayout from './Pages/doctor/Dashboard/ProfileLayout/ProfileLayout'
 import PatientRecord from './Pages/doctor/Dashboard/PatientRecord/PatientRecord';
 
 
+
+
 import PatientProfileLayout from './Pages/doctor/Dashboard/PatientProfileLayout/PatientProfileLayout';
 import PatientAppointment from './Pages/doctor/Dashboard/PatientAppointment/PatientAppointment';
+
+
 
 
 import Doctor from './Pages/manager/Doctor/Doctor';
 import TreatmentService from './Pages/manager/TreatmentService/TreatmentService';
 import SuccessRate from './Pages/manager/TreatmentService/SuccessRate';
 import ProcessEdit from './Pages/manager/TreatmentService/ProcessEdit';
+
+
 
 
 // Admin components
@@ -53,6 +64,10 @@ import Dashboard from './Pages/admin/Dashboard/Dashboard';
 
 
 
+
+
+
+
 const USER_TYPES = {
   NORMAL_USER: "Customer",
   ADMIN_USER: "Admin",
@@ -60,7 +75,11 @@ const USER_TYPES = {
 };
 
 
+
+
 // const CURRENT_USER_TYPE = USER_TYPES.NORMAL_USER;
+
+
 
 
 const AdminElement = ({ children }) => {
@@ -72,6 +91,8 @@ const AdminElement = ({ children }) => {
 };
 
 
+
+
 const DoctorElement = ({ children }) => {
   if (CURRENT_USER_TYPE === USER_TYPES.DOCTOR_USER) {
     return <>{children}</>;
@@ -79,6 +100,8 @@ const DoctorElement = ({ children }) => {
     return <Navigate to={"/"} />;
   }
 }
+
+
 
 
 export const router = createBrowserRouter([
@@ -232,7 +255,7 @@ export const router = createBrowserRouter([
       {
         index: false, // không phải là trang chính
         path: "notifications",
-        element: <Overall />,
+        element: <Notification />,
       },
      
       {
@@ -260,6 +283,8 @@ export const router = createBrowserRouter([
         path: "patients",
         element: <Patients />,
       },
+
+
 
 
       {

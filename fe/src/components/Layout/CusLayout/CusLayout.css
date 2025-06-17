@@ -2,6 +2,8 @@
     display: flex;
 }
 
+
 .cus_layout .content > div:last-child {
+    flex: 1;
     padding: 20px;
 }
