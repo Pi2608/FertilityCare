@@ -1,0 +1,219 @@
+.treatment-history-page {
+  padding: 1.5rem;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+.treatment-history-page .welcome-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.treatment-history-page .welcome-text h2 {
+  margin: 0;
+}
+
+.treatment-history-page .welcome-text p {
+  margin: 0.25rem 0 0 0;
+  color: #666;
+}
+
+.treatment-history-page .actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.treatment-history-page .primary-btn {
+  background-color: #d6004c;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.treatment-history-page .primary-btn:hover {
+  opacity: 0.9;
+}
+
+.treatment-history-page .secondary-btn {
+  background-color: #fff;
+  color: #d6004c;
+  border: 1px solid #d6004c;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.treatment-history-page .secondary-btn:hover {
+  background-color: #d6004c;
+  color: #fff;
+}
+
+.treatment-history-page .page-title-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.treatment-history-page .page-title-actions h3 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.treatment-history-page .btn-primary {
+  background-color: #d6004c;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.treatment-history-page .btn-primary:hover {
+  opacity: 0.9;
+}
+
+.treatment-history-page .subtitle p {
+  margin: 0 0 1.5rem;
+  color: #666;
+}
+
+.treatment-history-page .treatment-container {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+.treatment-history-page .treatment-section {
+  margin-bottom: 2rem;
+}
+
+.treatment-history-page .treatment-section h4 {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  color: #333;
+}
+
+.treatment-history-page .treatments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.treatment-history-page .treatment-card {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.treatment-history-page .treatment-icon {
+  margin-right: 0.75rem;
+  color: #d6004c;
+}
+
+.treatment-history-page .completed-icon {
+  color: #4caf50;
+}
+
+.treatment-history-page .treatment-info {
+  flex: 1;
+}
+
+.treatment-history-page .treatment-info h5 {
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.treatment-history-page .treatment-info p {
+  margin: 0.25rem 0;
+  font-size: 0.875rem;
+  color: #555;
+}
+
+.treatment-history-page .doctor-name {
+  font-style: italic;
+}
+
+.treatment-history-page .treatment-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.treatment-history-page .treatment-actions button {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.treatment-history-page .treatment-card.ongoing {
+  border-left: 4px solid #d6004c;
+}
+
+.treatment-history-page .treatment-card.completed {
+  border-left: 4px solid #4caf50;
+}
+
+.treatment-history-page .btn-outline {
+  background-color: #fff;
+  color: #666;
+  border: 1px solid #ddd;
+}
+
+.treatment-history-page .btn-outline:hover {
+  background-color: #f8f9fa;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .treatment-history-page {
+    padding: 1rem;
+  }
+
+  .treatment-history-page .welcome-section {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .treatment-history-page .actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .treatment-history-page .page-title-actions {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .treatment-history-page .treatment-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .treatment-history-page .treatment-icon {
+    margin-right: 0;
+  }
+
+  .treatment-history-page .treatment-actions {
+    width: 100%;
+  }
+
+  .treatment-history-page .treatment-actions button {
+    flex: 1;
+  }
+}

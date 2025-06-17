@@ -23,6 +23,7 @@ import CusProfile from '@customerpages/Dashboard/CusProfile/CusProfile';
 import MessageCus from '@customerpages/Message/MessageCus';
 import TreatmentProcess from '@customerpages/TreatmentProcess/TreatmentProcess';
 import Notification from '@customerpages/Notification/Notification';
+import TreatmentHistory from '@customerpages/TreatmentHistory/TreatmentHistory';
 
 
 
@@ -235,7 +236,7 @@ export const router = createBrowserRouter([
       {
         index: false,
         path: "medical-records",
-        element: <Overall />,
+        element: <TreatmentHistory />,
       },
       {
         index: false,
