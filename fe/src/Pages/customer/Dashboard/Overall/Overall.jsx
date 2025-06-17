@@ -196,21 +196,7 @@ const Overall = ({ userName = 'Nguyễn Thị Hoa' }) => {
                         ))}
                         <button className="btn-link">Xem tất cả tin nhắn</button>
                     </section>
-                    <section className="overview-item docs-card">
-                        <h3>Tài liệu hữu ích</h3>
-                        {usefulDocs.map((doc) => (
-                        <div key={doc.id} className="doc-item">
-                            <h4>{doc.title}</h4>
-                            <p>{doc.type === 'PDF' ? `Tài liệu PDF - ${doc.pages} trang` : `Video - ${doc.duration}`}</p>
-                            {doc.type === 'PDF' ? (
-                                <div><a href={doc.link} className="action-link">Tải xuống</a></div>
-                                ) : (
-                                <div><a href={doc.link} className="action-link">Xem video</a></div>
-                            )}
-                        </div>
-                        ))}
-                        <button className="btn-link">Xem thêm tài liệu</button>
-                    </section>
+                    
                 </div>
             </div>
         </div>
