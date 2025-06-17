@@ -16,6 +16,7 @@ import Booking from '@customerpages/Booking/Booking';
 import Blog from '@customerpages/Blog/Blog';
 import Overall from '@customerpages/Dashboard/Overall/Overall';
 import PatientApt from '@customerpages/Dashboard/Appointment/PatientApt';
+import CusProfile from '@customerpages/Dashboard/CusProfile/CusProfile';
 
 import DocDashboard from '@doctorpages/Dashboard/DocDashboard';
 import Overview from './Pages/doctor/Dashboard/OverviewLayout/Overview';
@@ -210,10 +211,11 @@ export const router = createBrowserRouter([
         path: "notifications",
         element: <Overall />,
       },
+      
       {
         index: false, // không phải là trang chính
-        path: "settings",
-        element: <Overall />,
+        path: "profile",
+        element: <CusProfile />,
       }
     ]
   },
