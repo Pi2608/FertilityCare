@@ -110,9 +110,8 @@ const Authentication = () => {
 
     try {
       if (isLogin) {
-        const emailOrPhone = formData.email || formData.phone;
         const resultAction = await dispatch(loginUser({ 
-          emailOrPhone, 
+          email: formData.email, 
           password: formData.password 
         }));
         
@@ -165,12 +164,12 @@ const Authentication = () => {
     resetForm();
   };
 
-  // Redirect if already authenticated
-  if (isAuthenticated) {
-    // You might want to redirect to dashboard or home page here
-    navigate('/homepage');
-    return null; // Prevent rendering the form if already authenticated
-  }
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/homepage');
+    }
+  }, [isAuthenticated, navigate]);
+
 
   return (
     <div className="auth-container">

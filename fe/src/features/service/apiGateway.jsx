@@ -2,7 +2,7 @@ import axios from "axios";
 import mockUsers from "../../data/mockUsers";
 
 class ApiGateway {
-    static API_BASE = "http://localhost:5276/";
+    static API_BASE = "http://localhost:8080/api/";
     static axiosInstance = axios.create({
         baseURL: ApiGateway.API_BASE,
         headers: { "Content-Type": "application/json" },
@@ -15,15 +15,15 @@ class ApiGateway {
         ApiGateway.axiosInstance.defaults.headers["Authorization"] = `Bearer ${token}`;
     }
 
-    static USE_MOCK_LOGIN = true;
+    static USE_MOCK_LOGIN = false;
 
-    static async login(emailOrPhone, password) {
+    static async login(email, password) {
         if (ApiGateway.USE_MOCK_LOGIN) {
             // Giả lập delay
             await new Promise((resolve) => setTimeout(resolve, 500));
             // Tìm user trong mockUsers
             const user = mockUsers.find(u =>
-                (u.email === emailOrPhone || u.phone === emailOrPhone) && u.password === password
+                (u.email === email || u.phone === email) && u.password === password
             );
             if (user) {
                 // Tạo token giả (có thể đơn giản hoặc random)
@@ -43,9 +43,11 @@ class ApiGateway {
         }
         // Khi không mock, gọi API thật
         try {
-            const response = await ApiGateway.axiosInstance.get(
-                `User/Login?email=${encodeURIComponent(emailOrPhone)}&password=${encodeURIComponent(password)}`
-            );
+            const account = {
+                email: email,
+                password: password,
+            }
+            const response = await ApiGateway.axiosInstance.post(`login`, account);
             return response.data ? { data: response.data } : null;
         } catch (error) {
             console.error("Login error:", error);
