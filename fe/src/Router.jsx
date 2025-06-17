@@ -17,6 +17,7 @@ import Blog from '@customerpages/Blog/Blog';
 import Overall from '@customerpages/Dashboard/Overall/Overall';
 import PatientApt from '@customerpages/Dashboard/Appointment/PatientApt';
 import CusProfile from '@customerpages/Dashboard/CusProfile/CusProfile';
+import MessageCus from '@customerpages/Message/MessageCus';
 
 import DocDashboard from '@doctorpages/Dashboard/DocDashboard';
 import Overview from './Pages/doctor/Dashboard/OverviewLayout/Overview';
@@ -199,7 +200,7 @@ export const router = createBrowserRouter([
       {
         index: false, // không phải là trang chính
         path: "messages",
-        element: <Overall />,
+        element: <MessageCus />,
       },
       {
         index: false, // không phải là trang chính
