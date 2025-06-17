@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import './Overall.css';
+import { useNavigate } from 'react-router-dom';
+
+
+
 
 const Overall = ({ userName = 'Nguyễn Thị Hoa' }) => {
   const tabs = ['Tổng quan', 'Lịch hẹn', 'Điều trị', 'Hồ sơ'];
+  const navigate = useNavigate();
+
 
   // Mock data for Tổng quan
   const ivfProgress = {
@@ -15,6 +21,7 @@ const Overall = ({ userName = 'Nguyễn Thị Hoa' }) => {
     ],
     dateInfo: 'Chu kỳ điều trị hiện tại: #2 - Ngày 6/13',
   };
+
 
   const upcomingAppointments = [
     {
@@ -35,6 +42,7 @@ const Overall = ({ userName = 'Nguyễn Thị Hoa' }) => {
     },
   ];
 
+
   const todaysMedications = [
     {
       id: 1,
@@ -51,6 +59,7 @@ const Overall = ({ userName = 'Nguyễn Thị Hoa' }) => {
       time: '8:00 PM',
     },
   ];
+
 
   const recentMessages = [
     {
@@ -69,6 +78,7 @@ const Overall = ({ userName = 'Nguyễn Thị Hoa' }) => {
     },
   ];
 
+
   const usefulDocs = [
     {
       id: 1,
@@ -86,6 +96,7 @@ const Overall = ({ userName = 'Nguyễn Thị Hoa' }) => {
     },
   ];
 
+
   const renderProgressBar = () => {
     const total = ivfProgress.steps.length;
     const percent = ((ivfProgress.currentStep - 1) / (total - 1)) * 100;
@@ -97,10 +108,12 @@ const Overall = ({ userName = 'Nguyễn Thị Hoa' }) => {
                 <span>{Math.round(percent)}%</span>
             </div>
 
+
             <div className="progress-bar-wrapper">
                 <div className="progress-bar-bg">
                     <div className="progress-bar-fill" style={{ width: `${percent}%` }} />
                 </div>
+
 
                 <div className="progress-steps">
                     {ivfProgress.steps.map((step, idx) => {
@@ -118,10 +131,16 @@ const Overall = ({ userName = 'Nguyễn Thị Hoa' }) => {
                 </div>
             </div>
 
-            <button className="btn-detail">Xem chi tiết điều trị</button>
+
+            <button className="btn-detail" onClick={() => navigate('/patient-dashboard/treatment-process')}>
+  Xem chi tiết điều trị
+</button>
+
+
         </div>
         );
     };
+
 
     return (
         <div className="patient-dashboard-main">
@@ -131,11 +150,13 @@ const Overall = ({ userName = 'Nguyễn Thị Hoa' }) => {
                     <p>Chào mừng quay trở lại với cổng thông tin bệnh nhân</p>
                 </div>
 
+
                 <div className="actions">
                     <button className="primary-btn">Đặt lịch hẹn</button>
                     <button className="secondary-btn">Liên hệ bác sĩ</button>
                 </div>
             </div>
+
 
             <div className="tab-content">
                 <div className="overview-container">
@@ -196,11 +217,12 @@ const Overall = ({ userName = 'Nguyễn Thị Hoa' }) => {
                         ))}
                         <button className="btn-link">Xem tất cả tin nhắn</button>
                     </section>
-                    
+                   
                 </div>
             </div>
         </div>
   );
 };
+
 
 export default Overall;
