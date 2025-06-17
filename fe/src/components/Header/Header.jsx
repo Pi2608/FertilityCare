@@ -54,12 +54,13 @@ const Header = () => {
 
   const handleBookAppointment = () => {
     if (isAuthenticated) {
-      navigate('/book-appointment');
+      navigate('/homepage/book-appointment');
     } else {
       // Redirect to login with return URL
-      navigate('/authentication?redirect=book-appointment');
+      navigate('/authentication?redirect=/homepage/book-appointment');
     }
   };
+  
 
   return (
     <header id="header">

@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { loginUser, registerUser, clearError } from '@features/auth/authSlice';
+import { useLocation } from 'react-router-dom';
 import './Authentication.css';
 
 const Authentication = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
   
   const [isLogin, setIsLogin] = useState(true);
@@ -117,8 +119,11 @@ const Authentication = () => {
         if (loginUser.fulfilled.match(resultAction)) {
           console.log('Login successful');
           resetForm();
-          // Redirect or handle successful login
+        
+          const redirectPath = new URLSearchParams(location.search).get('redirect') || '/homepage';
+          navigate(redirectPath);
         }
+        
       } else {
         const userData = {
           email: formData.email,
