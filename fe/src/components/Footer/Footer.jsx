@@ -28,7 +28,7 @@ const Footer = () => {
                 <ul>
                     <li>Phương Pháp Điều Trị</li>
                     <li>Đội Ngũ Bác Sĩ</li>
-                    <li>Về Chúng Tôi</li>
+                    {/* <li>Về Chúng Tôi</li> */}
                     <li>Blog</li>
                     <li>Liên Hệ</li>
                 </ul>

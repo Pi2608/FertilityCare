@@ -118,7 +118,7 @@ const Homepage = () => {
           <li>Minh bạch về chi phí và các lựa chọn tài chính</li>
         </ul>
         <div className="care-buttons">
-          <button className="care-btn primary">Về Phòng Khám Của Chúng Tôi</button>
+          
           <button className="care-btn outline" onClick={() => navigate("doctor-list")}>Gặp Gỡ Đội Ngũ Bác Sĩ</button>
         </div>
       </section>

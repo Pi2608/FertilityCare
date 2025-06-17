@@ -17,7 +17,7 @@ const Header = () => {
   const pages =[
     {name: 'Phương Pháp Điều Trị', path: '/homepage/treatment-method'},
     {name: 'Đội Ngũ Bác Sĩ', path: '/homepage/doctor-list'},
-    {name: 'Về Chúng Tôi', path: '#'},
+    // {name: 'Về Chúng Tôi', path: '#'},
     {name: 'Blog', path: '/homepage/blog'},
     {name: 'Liên Hệ', path: '#'}
   ]
