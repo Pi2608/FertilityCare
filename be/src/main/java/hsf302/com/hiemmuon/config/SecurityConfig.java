@@ -79,13 +79,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/customer/info").hasAnyRole("CUSTOMER", "DOCTOR")
                         .requestMatchers(HttpMethod.PUT, "/api/customer/update").hasRole("CUSTOMER")
 
-                        .requestMatchers(HttpMethod.GET, "api/appointment-services/doctors/{doctorId}/available-schedules").hasRole("CUSTOMER")
-                        .requestMatchers(HttpMethod.POST, "api/appointment-services/register/appointments").hasRole("CUSTOMER")
-                        .requestMatchers(HttpMethod.POST, "api/appointment-services/appointments/reexam").hasRole("DOCTOR")
-                        .requestMatchers(HttpMethod.GET, "api/appointment-services/appointments/reexam").hasRole("CUSTOMER")
-                        .requestMatchers(HttpMethod.PATCH, "api/appointment-services/appointments/cancel/{appointmentId}").hasRole("CUSTOMER")
-                        .requestMatchers(HttpMethod.GET, "api/appointment-services/appointments/history").hasRole("DOCTOR")
-                        .requestMatchers(HttpMethod.GET, "api/appointment-services/appointments/overview").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.POST,   "api/appointment-services/register/appointments").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.POST,   "api/appointment-services/appointments/reexam").hasRole("DOCTOR")
+                        .requestMatchers(HttpMethod.PATCH,  "api/appointment-services/appointments/cancel/{appointmentId}").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.GET,    "api/appointment-services/doctors/{doctorId}/available-schedules").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.GET,    "api/appointment-services/appointments/reexam").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.GET,    "api/appointment-services/appointments/history").hasRole("DOCTOR")
+                        .requestMatchers(HttpMethod.GET,    "api/appointment-services/appointments/overview").hasRole("MANAGER")
 
 
 
