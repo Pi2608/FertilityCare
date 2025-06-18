@@ -66,3 +66,10 @@ coverage/
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+# --- Custom ignores ---
+.idea/FertilityCare.iml
+.idea/misc.xml
+.idea/vcs.xml
+.idea/workspace.xml
+be/src/main/resources/application.properties
