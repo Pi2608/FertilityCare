@@ -79,13 +79,14 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/customer/info").hasAnyRole("CUSTOMER", "DOCTOR")
                         .requestMatchers(HttpMethod.PUT, "/api/customer/update").hasRole("CUSTOMER")
 
-                        .requestMatchers(HttpMethod.POST,   "api/appointment-services/register/appointments").hasRole("CUSTOMER")
-                        .requestMatchers(HttpMethod.POST,   "api/appointment-services/appointments/reexam").hasRole("DOCTOR")
-                        .requestMatchers(HttpMethod.PATCH,  "api/appointment-services/appointments/cancel/{appointmentId}").hasRole("CUSTOMER")
-                        .requestMatchers(HttpMethod.GET,    "api/appointment-services/doctors/{doctorId}/available-schedules").hasRole("CUSTOMER")
-                        .requestMatchers(HttpMethod.GET,    "api/appointment-services/appointments/reexam").hasRole("CUSTOMER")
-                        .requestMatchers(HttpMethod.GET,    "api/appointment-services/appointments/history").hasRole("DOCTOR")
-                        .requestMatchers(HttpMethod.GET,    "api/appointment-services/appointments/overview").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.GET, "api/appointment-services/doctors/{doctorId}/available-schedules").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.POST, "api/appointment-services/register/appointments").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.POST, "api/appointment-services/appointments/reexam").hasRole("DOCTOR")
+                        .requestMatchers(HttpMethod.GET, "api/appointment-services/appointments/reexam").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.PATCH, "api/appointment-services/appointments/cancel/{appointmentId}").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.GET, "api/appointment-services/appointments/history").hasRole("DOCTOR")
+                        .requestMatchers(HttpMethod.GET, "api/appointment-services/appointments/overview").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.GET, "api/login/roles").hasAnyRole("CUSTOMER","DOCTOR","ADMIN","MANAGER")
 
 
 
@@ -110,7 +111,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:3000", "http://localhost:5173"));
+        config.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:3000"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
