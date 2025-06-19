@@ -97,7 +97,7 @@ public class DoctorController {
     public ResponseEntity<ApiResponse<?>> updateDoctor(
             HttpServletRequest request,
             @RequestBody UpdateDoctorDTO updateDoctorDTO) {
-        Doctor savedDoctor = doctorService.updateDoctor(request, updateDoctorDTO);
+        Doctor savedDoctor = doctorService.updateDoctorMe(request, updateDoctorDTO);
 
         ApiResponse<Doctor> response = new ApiResponse<>(
                 200,
@@ -120,6 +120,18 @@ public class DoctorController {
                 200,
                 "Doctor " + updatedDoctor.getUser().getName() + " has been " + statusText,
                 updatedDoctor
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<?>> getDoctorByToken(HttpServletRequest request) {
+        DoctorDTOForCustomer doctor = doctorService.getDoctorMe(request);
+
+        ApiResponse<DoctorDTOForCustomer> response = new ApiResponse<>(
+                200,
+                "Doctor retrieved successfully",
+                doctor
         );
         return ResponseEntity.ok(response);
     }

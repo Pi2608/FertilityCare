@@ -16,8 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 

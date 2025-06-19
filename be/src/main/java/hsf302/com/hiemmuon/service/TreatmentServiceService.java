@@ -32,8 +32,8 @@ public class TreatmentServiceService {
         treatmentService.setPrice(treatmentServiceDTO.getPrice());
         treatmentService.setDescription(treatmentServiceDTO.getDescription());
         treatmentService.setSuccessRate(treatmentServiceDTO.getSuccessRate());
-        treatmentService.setSpecialfications(treatmentServiceDTO.getSpecialfications());
-        treatmentService.setStatus(true);
+        treatmentService.setSpecifications(treatmentServiceDTO.getSpecialfications());
+        treatmentService.setActive(true);
 
         return treatmentServiceRepository.save(treatmentService);
     }
@@ -54,7 +54,7 @@ public class TreatmentServiceService {
             service.setSuccessRate(updateServiceDTO.getSuccessRate());
         }
         if (updateServiceDTO.getSpecialfications() != null && !updateServiceDTO.getSpecialfications().trim().isEmpty()) {
-            service.setSpecialfications(updateServiceDTO.getSpecialfications());
+            service.setSpecifications(updateServiceDTO.getSpecialfications());
         }
         return treatmentServiceRepository.save(service);
     }
@@ -64,7 +64,7 @@ public class TreatmentServiceService {
             boolean active) {
 
         TreatmentService service = treatmentServiceRepository.findById(id);
-        service.setStatus(active);
+        service.setActive(active);
         return treatmentServiceRepository.save(service);
     }
 
@@ -75,6 +75,6 @@ public class TreatmentServiceService {
         return treatmentServiceRepository.findByName(name);
     }
     public List<TreatmentService> getServiceByStatus() {
-        return treatmentServiceRepository.findByStatus(true);
+        return treatmentServiceRepository.findByIsActive(true);
     }
 }

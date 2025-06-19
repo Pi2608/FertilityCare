@@ -43,7 +43,7 @@ public class DoctorService {
         final String token = authHeader.substring(7);
         Claims claims = jwtService.extractAllClaims(token);
 
-        Object doctorIdObj = claims.get("doctorId");
+        Object doctorIdObj = claims.get("userId");
         Integer doctorId = Integer.parseInt(doctorIdObj.toString());
         return doctorRepository.findById(doctorId).get();
     }
@@ -108,7 +108,7 @@ public class DoctorService {
         return doctorRepository.save(doctor);
     }
 
-    public Doctor updateDoctor(HttpServletRequest request, UpdateDoctorDTO updateDoctorDTO) {
+    public Doctor updateDoctorMe(HttpServletRequest request, UpdateDoctorDTO updateDoctorDTO) {
 
         Doctor existingDoctor = getDoctorByJwt(request);
         User existingUser = existingDoctor.getUser();
@@ -164,4 +164,21 @@ public class DoctorService {
         return dto;
     }
 
+    public DoctorDTOForCustomer getDoctorMe(HttpServletRequest request) {
+        Doctor existingDoctor = getDoctorByJwt(request);
+        User existingUser = existingDoctor.getUser();
+
+        DoctorDTOForCustomer dto = new DoctorDTOForCustomer();
+
+        dto.setName(existingUser.getName());
+        dto.setGender(existingUser.getGender());
+        dto.setDob(existingUser.getDob());
+        dto.setEmail(existingUser.getEmail());
+        dto.setPhone(existingUser.getPhone());
+        dto.setSpecification(existingDoctor.getSpecification());
+        dto.setExperience(existingDoctor.getExperience());
+        dto.setRatingAvg(existingDoctor.getRatingAvg());
+
+        return dto;
+    }
 }

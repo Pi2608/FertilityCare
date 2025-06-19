@@ -3,12 +3,18 @@ package hsf302.com.hiemmuon.dto.entityDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import hsf302.com.hiemmuon.enums.Genders;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDate;
 
 @JsonIgnoreProperties(ignoreUnknown = false)
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class DoctorDTOForCustomer {
 
     @NotBlank(message = "Tên không được để trống")
@@ -17,6 +23,9 @@ public class DoctorDTOForCustomer {
 
     @NotNull(message = "Giới tính không được để trống")
     private Genders gender;
+
+    @NotNull(message = "Ngày sinh không được để trống")
+    private LocalDate dob;
 
     @NotBlank(message = "Email không được để trống")
     @Email(message = "Email không hợp lệ")

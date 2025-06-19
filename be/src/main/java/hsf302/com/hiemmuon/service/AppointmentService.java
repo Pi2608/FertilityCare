@@ -1,20 +1,20 @@
 package hsf302.com.hiemmuon.service;
 
-import hsf302.com.hiemmuon.dto.appointment.*;
 import hsf302.com.hiemmuon.dto.createDto.CreateAppointmentDTO;
+import hsf302.com.hiemmuon.dto.createDto.ReExamAppointmentDTO;
+import hsf302.com.hiemmuon.dto.entityDto.AppointmentHistoryDTO;
+import hsf302.com.hiemmuon.dto.entityDto.AppointmentOverviewDTO;
+import hsf302.com.hiemmuon.dto.entityDto.AvailableScheduleDTO;
+import hsf302.com.hiemmuon.dto.entityDto.ReExamAppointmentResponseDTO;
 import hsf302.com.hiemmuon.entity.*;
 import hsf302.com.hiemmuon.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

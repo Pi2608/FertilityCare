@@ -41,13 +41,14 @@ public class LoginController {
 
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("roles", roles);
-        extraClaims.put("adminId", user.getUserId());
+
+        extraClaims.put("userId", user.getUserId());
 
         String token = jwtUtil.generateToken(user.getEmail(), roles, extraClaims);
 
         ApiResponse<String> response = new ApiResponse<>(
                 200,
-                "Đăng nhập tài khoản admin thành công",
+                "Đăng nhập tài khoản thành công",
                 token
         );
 

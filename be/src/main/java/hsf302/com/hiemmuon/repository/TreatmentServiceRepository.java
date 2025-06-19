@@ -1,6 +1,5 @@
 package hsf302.com.hiemmuon.repository;
 
-import hsf302.com.hiemmuon.entity.Doctor;
 import hsf302.com.hiemmuon.entity.TreatmentService;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -12,5 +11,5 @@ public interface TreatmentServiceRepository extends JpaRepository<TreatmentServi
     List<TreatmentService> findAll();
     TreatmentService findByName(String name);
     TreatmentService findById(int id);
-    List<TreatmentService> findByStatus(boolean status);
+    List<TreatmentService> findByIsActive(boolean status);
 }

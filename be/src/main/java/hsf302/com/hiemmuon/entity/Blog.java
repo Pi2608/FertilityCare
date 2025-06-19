@@ -24,7 +24,7 @@ public class Blog {
     @Column(name = "title", length = 255, nullable = false)
     private String title;
 
-    @Column(name = "content", columnDefinition = "TEXT", nullable = false)
+    @Column(name = "content", columnDefinition = "NVARCHAR(MAX)", nullable = false)
     private String content;
 
     @Column(name = "tags", length = 255)

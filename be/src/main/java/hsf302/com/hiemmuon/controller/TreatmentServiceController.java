@@ -2,9 +2,12 @@ package hsf302.com.hiemmuon.controller;
 
 import hsf302.com.hiemmuon.dto.ApiResponse;
 import hsf302.com.hiemmuon.dto.createDto.CreateTreatmentServiceDTO;
+import hsf302.com.hiemmuon.dto.entityDto.TreatmentStepDTO;
 import hsf302.com.hiemmuon.dto.updateDto.UpdateServiceDTO;
 import hsf302.com.hiemmuon.entity.TreatmentService;
+import hsf302.com.hiemmuon.entity.TreatmentStep;
 import hsf302.com.hiemmuon.service.TreatmentServiceService;
+import hsf302.com.hiemmuon.service.TreatmentStepService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +21,9 @@ public class TreatmentServiceController {
 
     @Autowired
     private TreatmentServiceService treatmentServiceServicee;
+
+    @Autowired
+    private TreatmentStepService treatmentStepService;
 
     @GetMapping("/all")
     public List<TreatmentService> getTreatmentServices() {
@@ -100,6 +106,35 @@ public class TreatmentServiceController {
                 200,
                 "Service " + service.getName() + " has been " + statusText,
                 service
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{serviceId}/step-order/{stepOrder}")
+    public ResponseEntity<ApiResponse<?>> getStepByServiceAndStepOrder(
+            @PathVariable int serviceId,
+            @PathVariable int stepOrder) {
+
+        TreatmentStep step = treatmentStepService.getStepByServiceAndStepOrder(serviceId, stepOrder);
+
+        ApiResponse<TreatmentStep> response = new ApiResponse<>(
+                200,
+                "Service step retrieved successfully",
+                step
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{serviceId}/steps/all")
+    public ResponseEntity<ApiResponse<?>> getAllStep(
+            @PathVariable int serviceId) {
+
+        List<TreatmentStepDTO> steps = treatmentStepService.findAllStepsByServiceId(serviceId);
+
+        ApiResponse<List<TreatmentStepDTO>> response = new ApiResponse<>(
+                200,
+                "Service steps retrieved successfully",
+                steps
         );
         return ResponseEntity.ok(response);
     }
