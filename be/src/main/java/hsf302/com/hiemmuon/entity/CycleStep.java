@@ -1,5 +1,6 @@
 package hsf302.com.hiemmuon.entity;
 
+import hsf302.com.hiemmuon.enums.StatusCycle;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,19 +28,15 @@ public class CycleStep {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "treatment_step_id", nullable = false)
-    private TreatmentStep treatmentStep; // 🔄 Thay vì service
+    private TreatmentStep treatmentStep;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
-    private Status statusCycleStep;
+    private StatusCycle statusCycleStep;
 
     @Column(name = "description", columnDefinition = "NVARCHAR(MAX)")
     private String description;
 
     @Column(name = "eventdate", nullable = false)
     private LocalDate eventdate;
-
-    public enum Status {
-        ongoing, finished, stopped
-    }
 }

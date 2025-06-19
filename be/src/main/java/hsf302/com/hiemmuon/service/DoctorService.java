@@ -35,18 +35,7 @@ public class DoctorService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private JwtService jwtService;
-
-
-    public Doctor getDoctorByJwt(HttpServletRequest request) {
-        final String authHeader = request.getHeader("Authorization");
-        final String token = authHeader.substring(7);
-        Claims claims = jwtService.extractAllClaims(token);
-
-        Object doctorIdObj = claims.get("userId");
-        Integer doctorId = Integer.parseInt(doctorIdObj.toString());
-        return doctorRepository.findById(doctorId).get();
-    }
+    private UserService userService;
 
     public Doctor getDoctorById(int id) {
         return doctorRepository.findById(id);
@@ -68,12 +57,6 @@ public class DoctorService {
         return dto;
     }
 
-    public List<DoctorDTOForManager> getAllDoctor() {
-        return doctorRepository.findAll().stream()
-                .map(this::convertToManagerDTO)
-                .collect(Collectors.toList());
-    }
-
     public List<DoctorDTOForCustomer> getDoctorBySpecification(String specification) {
         return doctorRepository.findBySpecification(specification).stream()
                 .map(this::convertToCustomerDTO)
@@ -84,6 +67,18 @@ public class DoctorService {
         return doctorRepository.findByIsActive(true).stream()
                 .map(this::convertToCustomerDTO)
                 .collect(Collectors.toList());
+    }
+
+    public List<DoctorDTOForManager> getAllDoctor() {
+        return doctorRepository.findAll().stream()
+                .map(this::convertToManagerDTO)
+                .collect(Collectors.toList());
+    }
+
+    public DoctorDTOForCustomer getDoctorMe(HttpServletRequest request) {
+        User existingDoctor = userService.getUserByJwt(request);
+        DoctorDTOForCustomer dto = convertToCustomerDTO(existingDoctor.getDoctor());
+        return dto;
     }
 
     public Doctor createDoctor(CreateDoctorDTO request) {
@@ -110,25 +105,24 @@ public class DoctorService {
 
     public Doctor updateDoctorMe(HttpServletRequest request, UpdateDoctorDTO updateDoctorDTO) {
 
-        Doctor existingDoctor = getDoctorByJwt(request);
-        User existingUser = existingDoctor.getUser();
+        User existingDoctor = userService.getUserByJwt(request);
 
         if (updateDoctorDTO.getName() != null) {
-            existingUser.setName(updateDoctorDTO.getName());
+            existingDoctor.setName(updateDoctorDTO.getName());
         }
         if (updateDoctorDTO.getPhone() != null) {
-            existingUser.setPhone(updateDoctorDTO.getPhone());
+            existingDoctor.setPhone(updateDoctorDTO.getPhone());
         }
         if (updateDoctorDTO.getDob() != null) {
-            existingUser.setDob(updateDoctorDTO.getDob());
+            existingDoctor.setDob(updateDoctorDTO.getDob());
         }
         if (updateDoctorDTO.getGender() != null) {
-            existingUser.setGender(updateDoctorDTO.getGender());
+            existingDoctor.setGender(updateDoctorDTO.getGender());
         }
         if (updateDoctorDTO.getDescription() != null) {
-            existingDoctor.setSpecification(updateDoctorDTO.getDescription());
+            existingDoctor.getDoctor().setSpecification(updateDoctorDTO.getDescription());
         }
-        return saveDoctor(existingDoctor);
+        return saveDoctor(existingDoctor.getDoctor());
     }
 
     public Doctor updateDoctorActive(int id, boolean active) {
@@ -161,24 +155,6 @@ public class DoctorService {
         dto.setExperience(doctor.getExperience());
         dto.setRatingAvg(doctor.getRatingAvg());
         dto.setIsActive(doctor.getIsActive());
-        return dto;
-    }
-
-    public DoctorDTOForCustomer getDoctorMe(HttpServletRequest request) {
-        Doctor existingDoctor = getDoctorByJwt(request);
-        User existingUser = existingDoctor.getUser();
-
-        DoctorDTOForCustomer dto = new DoctorDTOForCustomer();
-
-        dto.setName(existingUser.getName());
-        dto.setGender(existingUser.getGender());
-        dto.setDob(existingUser.getDob());
-        dto.setEmail(existingUser.getEmail());
-        dto.setPhone(existingUser.getPhone());
-        dto.setSpecification(existingDoctor.getSpecification());
-        dto.setExperience(existingDoctor.getExperience());
-        dto.setRatingAvg(existingDoctor.getRatingAvg());
-
         return dto;
     }
 }

@@ -51,8 +51,10 @@ public class SecurityConfig {
                                 "/api/doctors/active",
                                 "/api/doctors/specification",
 
-                                "/api/register/customer",
                                 "/api/customer/info").permitAll()
+
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/register/customer").permitAll()
 
                         .requestMatchers(HttpMethod.GET,
                                 "/api/doctors/all",
@@ -81,19 +83,29 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT,
                                 "/api/customer/update").hasRole("CUSTOMER")
 
+                        .requestMatchers(HttpMethod.PATCH,
+                                "/api/cycles/cycleId/*/note",
+                                "/api/cycles/cycleId/*/stepId/*/status").hasRole("DOCTOR")
+
                         .requestMatchers(HttpMethod.GET,
                                 "/api/treatment-services/**").permitAll()
 
-                        .requestMatchers(HttpMethod.POST,   "api/appointment-services/register/appointments").hasRole("CUSTOMER")
-                        .requestMatchers(HttpMethod.POST,   "api/appointment-services/appointments/reexam").hasRole("DOCTOR")
-                        .requestMatchers(HttpMethod.PATCH,  "api/appointment-services/appointments/cancel/{appointmentId}").hasRole("CUSTOMER")
-                        .requestMatchers(HttpMethod.GET,    "api/appointment-services/doctors/{doctorId}/available-schedules").hasRole("CUSTOMER")
-                        .requestMatchers(HttpMethod.GET,    "api/appointment-services/appointments/reexam").hasRole("CUSTOMER")
-                        .requestMatchers(HttpMethod.GET,    "api/appointment-services/appointments/history").hasRole("DOCTOR")
-                        .requestMatchers(HttpMethod.GET,    "api/appointment-services/appointments/overview").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.POST, "api/appointment-services/register/appointments").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.POST, "api/appointment-services/appointments/reexam").hasRole("DOCTOR")
+                        .requestMatchers(HttpMethod.PATCH, "api/appointment-services/appointments/cancel/{appointmentId}").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.GET, "api/appointment-services/doctors/{doctorId}/available-schedules").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.GET, "api/appointment-services/appointments/reexam").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.GET, "api/appointment-services/appointments/history").hasRole("DOCTOR")
+                        .requestMatchers(HttpMethod.GET, "api/appointment-services/appointments/overview").hasRole("MANAGER")
 
                         .requestMatchers(HttpMethod.GET,
-                                "api/cycles/me").hasRole("CUSTOMER")
+                                "/api/cycles/meC").hasRole("CUSTOMER")
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/cycles/meD").hasRole("DOCTOR")
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/cycles/cycleId/**").hasAnyRole("CUSTOMER", "DOCTOR")
 
                         .requestMatchers(
                                 "/swagger-ui/**",

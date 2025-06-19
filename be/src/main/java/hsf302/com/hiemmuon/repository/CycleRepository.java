@@ -8,5 +8,10 @@ import java.util.List;
 
 @Repository
 public interface CycleRepository extends JpaRepository<Cycle, Integer> {
-    Cycle findByCustomer_CustomerIdAndCycleId(int userId, int cycleId);
+
+    List<Cycle> findByDoctor_DoctorId(int doctorId);
+
+    List<Cycle> findByCustomer_CustomerId(int customerId);
+
+    Cycle findById(int cycleId);
 }

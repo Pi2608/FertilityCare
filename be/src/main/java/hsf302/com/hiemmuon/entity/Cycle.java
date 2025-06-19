@@ -1,5 +1,6 @@
 package hsf302.com.hiemmuon.entity;
 
+import hsf302.com.hiemmuon.enums.StatusCycle;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,12 +42,8 @@ public class Cycle {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
-    private Status status;
+    private StatusCycle status;
 
     @Column(name = "note", columnDefinition = "NVARCHAR(MAX)")
     private String note;
-
-    public enum Status {
-        ongoing, finished, stopped
-    }
 }
