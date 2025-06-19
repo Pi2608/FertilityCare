@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class CustomerService{
+public class CustomerService {
 
     @Autowired
     private RoleRepository roleRepository;
@@ -119,5 +119,10 @@ public class CustomerService{
         customer.setActive(true);
         customer.setMedicalHistory(dto.getMedicalHistory());
         customerRepository.save(customer);
+    }
+
+    public Customer getCustomerById(int id){
+        Customer customer = customerRepository.findById(id).get();
+        return customer;
     }
 }
