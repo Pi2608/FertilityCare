@@ -1,13 +1,11 @@
 import React from 'react'
 import { createBrowserRouter, Navigate } from "react-router-dom";
+import { useSelector } from 'react-redux';
 import Authentication from '@/Pages/Authentication/Authentication';
 import PageLayout from '@components/Layout/PageLayout/PageLayout';
 import CusLayout from '@components/Layout/CusLayout/CusLayout';
 import DocLayout from '@components/Layout/DocLayout/DocLayout';
 import ManagerLayout from '@components/Layout/ManagerLayout/ManagerLayout.jsx';
-
-
-
 
 import AdminLayout from '@components/Layout/AdminLayout/AdminLayout.jsx';
 import Homepage from "@customerpages/Homepage/Homepage";
@@ -25,9 +23,6 @@ import TreatmentProcess from '@customerpages/TreatmentProcess/TreatmentProcess';
 import Notification from '@customerpages/Notification/Notification';
 import TreatmentHistory from '@customerpages/TreatmentHistory/TreatmentHistory';
 
-
-
-
 import DocDashboard from '@doctorpages/Dashboard/DocDashboard';
 import Overview from './Pages/doctor/Dashboard/OverviewLayout/Overview';
 import Appointments from './Pages/doctor/Dashboard/AppointmentsLayout/Appointments';
@@ -37,22 +32,13 @@ import Message from './Pages/doctor/Dashboard/MessageLayout/Message';
 import ProfileLayout from './Pages/doctor/Dashboard/ProfileLayout/ProfileLayout';
 import PatientRecord from './Pages/doctor/Dashboard/PatientRecord/PatientRecord';
 
-
-
-
 import PatientProfileLayout from './Pages/doctor/Dashboard/PatientProfileLayout/PatientProfileLayout';
 import PatientAppointment from './Pages/doctor/Dashboard/PatientAppointment/PatientAppointment';
-
-
-
 
 import Doctor from './Pages/manager/Doctor/Doctor';
 import TreatmentService from './Pages/manager/TreatmentService/TreatmentService';
 import SuccessRate from './Pages/manager/TreatmentService/SuccessRate';
 import ProcessEdit from './Pages/manager/TreatmentService/ProcessEdit';
-
-
-
 
 // Admin components
 import AdminAppointment from './Pages/admin/Appointment/Appointment';
@@ -62,48 +48,99 @@ import AdminTreatmentService from './Pages/admin/TreatmentService/TreatmentServi
 import DoctorDetail from './Pages/customer/DoctorDetail/DoctorDetail';
 import Dashboard from './Pages/admin/Dashboard/Dashboard';
 
-
-
-
-
-
-
-
-const USER_TYPES = {
-  NORMAL_USER: "Customer",
-  ADMIN_USER: "Admin",
-  DOCTOR_USER: "Doctor",
+const USER_ROLES = {
+  CUSTOMER: "customer",
+  ADMIN: "admin", 
+  DOCTOR: "doctor",
+  MANAGER: "manager"
 };
 
-
-
-
-// const CURRENT_USER_TYPE = USER_TYPES.NORMAL_USER;
-
-
-
-
-const AdminElement = ({ children }) => {
-  if (CURRENT_USER_TYPE === USER_TYPES.ADMIN_USER) {
-    return <>{children}</>;
-  } else {
-    return <Navigate to={"/"} />;
+// Protected Route Components
+const ProtectedRoute = ({ children, allowedRoles = [], requireAuth = true }) => {
+  const { isAuthenticated, role, loading } = useSelector((state) => state.auth);
+  
+  
+  // Redirect to login if authentication is required but user is not authenticated
+  if (requireAuth && !isAuthenticated) {
+    return <Navigate to="/authentication" replace />;
   }
+  
+  if (allowedRoles.length === 0) {
+    return <>{children}</>;
+  }
+  
+  if (!allowedRoles.includes(role)) {
+    switch (role) {
+      case USER_ROLES.ADMIN:
+        return <Navigate to="/admin-dashboard" replace />;
+      case USER_ROLES.DOCTOR:
+        return <Navigate to="/doctor-dashboard" replace />;
+      case USER_ROLES.MANAGER:
+        return <Navigate to="/manager-dashboard" replace />;
+      case USER_ROLES.CUSTOMER:
+        return <Navigate to="/patient-dashboard" replace />;
+      default:
+        return <Navigate to="/homepage" replace />;
+    }
+  }
+  
+  return <>{children}</>;
 };
 
+// Specific role-based route components for cleaner code
+const AdminRoute = ({ children }) => (
+  <ProtectedRoute allowedRoles={[USER_ROLES.ADMIN]}>
+    {children}
+  </ProtectedRoute>
+);
 
+const DoctorRoute = ({ children }) => (
+  <ProtectedRoute allowedRoles={[USER_ROLES.DOCTOR]}>
+    {children}
+  </ProtectedRoute>
+);
 
+const ManagerRoute = ({ children }) => (
+  <ProtectedRoute allowedRoles={[USER_ROLES.MANAGER]}>
+    {children}
+  </ProtectedRoute>
+);
 
-const DoctorElement = ({ children }) => {
-  if (CURRENT_USER_TYPE === USER_TYPES.DOCTOR_USER) {
-    return <>{children}</>;
-  } else {
-    return <Navigate to={"/"} />;
+const CustomerRoute = ({ children }) => (
+  <ProtectedRoute allowedRoles={[USER_ROLES.CUSTOMER]}>
+    {children}
+  </ProtectedRoute>
+);
+
+// Public routes (no authentication required)
+const PublicRoute = ({ children }) => (
+  <ProtectedRoute requireAuth={false}>
+    {children}
+  </ProtectedRoute>
+);
+
+// Guest routes (only for non-authenticated users)
+const GuestRoute = ({ children }) => {
+  const { isAuthenticated, role } = useSelector((state) => state.auth);
+  
+  if (isAuthenticated) {
+    // Redirect authenticated users to their appropriate dashboard
+    switch (role) {
+      case USER_ROLES.ADMIN:
+        return <Navigate to="/admin-dashboard" replace />;
+      case USER_ROLES.DOCTOR:
+        return <Navigate to="/doctor-dashboard" replace />;
+      case USER_ROLES.MANAGER:
+        return <Navigate to="/manager-dashboard" replace />;
+      case USER_ROLES.CUSTOMER:
+        return <Navigate to="/patient-dashboard" replace />;
+      default:
+        return <Navigate to="/homepage" replace />;
+    }
   }
-}
-
-
-
+  
+  return <>{children}</>;
+};
 
 export const router = createBrowserRouter([
   {
@@ -112,7 +149,11 @@ export const router = createBrowserRouter([
   },
   {
     path: "/authentication",
-    element: <PageLayout />,
+    element: (
+      <GuestRoute>
+        <PageLayout />
+      </GuestRoute>
+    ),
     children: [
       {
         index: true,
@@ -122,10 +163,14 @@ export const router = createBrowserRouter([
   },
   {
     path: "/homepage",
-    element: <PageLayout />,
+    element: (
+      <PublicRoute>
+        <PageLayout />
+      </PublicRoute>
+    ),
     children: [
       {
-        index: true, // tương đương path: "/"
+        index: true,
         element: <Homepage />,
       },
       {
@@ -144,11 +189,11 @@ export const router = createBrowserRouter([
         ]
       },
       {
-        index: false, // không phải là trang chính
+        index: false,
         path: "doctor-list",
         children: [
           {
-            index: true, // tương đương path: "/doctor-list"
+            index: true,
             element: <DoctorList />,
           },
           {
@@ -161,7 +206,11 @@ export const router = createBrowserRouter([
       {
         index: false,
         path: "book-appointment",
-        element: <Booking />,
+        element: (
+          <ProtectedRoute>
+            <Booking />
+          </ProtectedRoute>
+        ),
       },
       {
         index: false,
@@ -172,64 +221,88 @@ export const router = createBrowserRouter([
   },
   {
     path: "/profile",
-    element: <PageLayout />,
+    element: (
+      <ProtectedRoute>
+        <PageLayout />
+      </ProtectedRoute>
+    ),
     children: [
       {
-        index: true, // tương đương path: "/"
+        index: true,
         element: <Profile />,
       },
     ]
   },
   {
     path: "doctor-dashboard/appointments/session",
-    element: <PageLayout />,
+    element: (
+      <DoctorRoute>
+        <PageLayout />
+      </DoctorRoute>
+    ),
     children: [
       {
-        index: true, // tương đương path: "/"
+        index: true,
         element: <PatientProfileLayout />,
       },
     ]
   },
   {
     path: "/doctor-dashboard/patients/patient-record",
-    element: <PageLayout />,
+    element: (
+      <DoctorRoute>
+        <PageLayout />
+      </DoctorRoute>
+    ),
     children: [
       {
-        index: true, // tương đương path: "/"
+        index: true,
         element: <PatientRecord />,
       },
     ]
   },
   {
     path: "/patient-dashboard/treatment-process",
-    element: <PageLayout />,
+    element: (
+      <CustomerRoute>
+        <PageLayout />
+      </CustomerRoute>
+    ),
     children: [
       {
-        index: true, // tương đương path: "/"
+        index: true,
         element: <TreatmentProcess />,
       },
     ]
   },
   {
     path: "/patient-appointment",
-    element: <PageLayout />,
+    element: (
+      <CustomerRoute>
+        <PageLayout />
+      </CustomerRoute>
+    ),
     children: [
       {
-        index: true, // tương đương path: "/"
+        index: true,
         element: <PatientAppointment />,
       },
     ]
   },
   {
     path: "/patient-dashboard",
-    element: <CusLayout />,
+    element: (
+      <CustomerRoute>
+        <CusLayout />
+      </CustomerRoute>
+    ),
     children: [
       {
-        index: true, // tương đương path: "/customer-dashboard"
+        index: true,
         element: <Overall />,
       },
       {
-        index: false, // không phải là trang chính
+        index: false,
         path: "appointments",
         element: <PatientApt />,
       },
@@ -244,23 +317,22 @@ export const router = createBrowserRouter([
         element: <Overall />,
       },
       {
-        index: false, // không phải là trang chính
+        index: false,
         path: "messages",
         element: <MessageCus />,
       },
       {
-        index: false, // không phải là trang chính
+        index: false,
         path: "documents",
         element: <Overall />,
       },
       {
-        index: false, // không phải là trang chính
+        index: false,
         path: "notifications",
         element: <Notification />,
       },
-     
       {
-        index: false, // không phải là trang chính
+        index: false,
         path: "profile",
         element: <CusProfile />,
       }
@@ -268,14 +340,18 @@ export const router = createBrowserRouter([
   },
   {
     path: "/doctor-dashboard",
-    element: <DocLayout />,
+    element: (
+      <DoctorRoute>
+        <DocLayout />
+      </DoctorRoute>
+    ),
     children: [
       {
-        index: true, // tương đương path: "/doctor-dashboard"
+        index: true,
         element: <Overview />,
       },
       {
-        index: false, // không phải là trang chính
+        index: false,
         path: "appointments",
         element: <Appointments />,
       },
@@ -284,27 +360,23 @@ export const router = createBrowserRouter([
         path: "patients",
         element: <Patients />,
       },
-
-
-
-
       {
-        index: false, // không phải là trang chính
+        index: false,
         path: "messages",
         element: <Message />,
       },
       {
-        index: false, // không phải là trang chính
+        index: false,
         path: "reports",
         element: <DocDashboard />,
       },
       {
-        index: false, // không phải là trang chính
+        index: false,
         path: "notifications",
         element: <DocDashboard />,
       },
       {
-        index: false, // không phải là trang chính
+        index: false,
         path: "profile",
         element: <ProfileLayout />,
       }
@@ -312,7 +384,11 @@ export const router = createBrowserRouter([
   },
   {
     path: "/manager-dashboard",
-    element: <ManagerLayout />,
+    element: (
+      <ManagerRoute>
+        <ManagerLayout />
+      </ManagerRoute>
+    ),
     children: [
       {
         index: true,
@@ -342,7 +418,11 @@ export const router = createBrowserRouter([
   },
   {
     path: "/admin-dashboard",
-    element: <AdminLayout />,
+    element: (
+      <AdminRoute>
+        <AdminLayout />
+      </AdminRoute>
+    ),
     children: [
       {
         index: true,
@@ -379,3 +459,5 @@ export const router = createBrowserRouter([
     ],
   },
 ]);
+
+export { USER_ROLES };

@@ -1,27 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { loginUser, registerUser, clearError } from '@features/auth/authSlice';
+import { loginUser, registerUser, clearError, checkAuthStatus } from '@features/auth/authSlice';
 import { useLocation } from 'react-router-dom';
+import { USER_ROLES } from '../../Router';
 import './Authentication.css';
 
 const Authentication = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
+  const { loading, error, isAuthenticated, role  } = useSelector((state) => state.auth);
   
   const [isLogin, setIsLogin] = useState(true);
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
+    name: '',
     email: '',
-    phone: '',
-    fullName: '',
-    gender: '',
-    dayOfBirth: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    phone: '',
+    gender: '',
+    dob: '',
   });
+
+  const getRedirectPath = (userRole) => {
+  switch (userRole) {
+    case USER_ROLES.ADMIN:
+      return '/admin-dashboard';
+    case USER_ROLES.DOCTOR:
+      return '/doctor-dashboard';
+    case USER_ROLES.MANAGER:
+      return '/manager-dashboard';
+    case USER_ROLES.CUSTOMER:
+      return '/homepage';
+    default:
+      return '/homepage';
+    }
+  };
 
   // Clear Redux error when component unmounts or mode changes
   useEffect(() => {
@@ -32,7 +48,19 @@ const Authentication = () => {
   useEffect(() => {
     setErrors({});
     dispatch(clearError());
-  }, [isLogin, dispatch]);
+
+    if (isAuthenticated && role) {
+      const from = location.state?.from?.pathname;
+
+      if (from && from !== '/authentication') {
+        navigate(from, { replace: true });
+      } else {
+        const redirectPath = getRedirectPath(role);
+        navigate(redirectPath, { replace: true });
+      }
+    }
+  }, [isAuthenticated, role, navigate, location.state, dispatch]);
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -74,16 +102,16 @@ const Authentication = () => {
         newErrors.phone = 'Số điện thoại không hợp lệ';
       }
 
-      if (!formData.fullName) {
-        newErrors.fullName = 'Vui lòng nhập họ và tên';
+      if (!formData.name) {
+        newErrors.name = 'Vui lòng nhập họ và tên';
       }
 
       if (!formData.gender) {
         newErrors.gender = 'Vui lòng chọn giới tính';
       }
 
-      if (!formData.dayOfBirth) {
-        newErrors.dayOfBirth = 'Vui lòng chọn ngày sinh';
+      if (!formData.dob) {
+        newErrors.dob = 'Vui lòng chọn ngày sinh';
       }
 
       if (!formData.password) {
@@ -117,20 +145,33 @@ const Authentication = () => {
         
         if (loginUser.fulfilled.match(resultAction)) {
           console.log('Login successful');
-          resetForm();
-        
-          const redirectPath = new URLSearchParams(location.search).get('redirect') || '/homepage';
-          navigate(redirectPath);
+
+          try {
+            const authResult = await dispatch(checkAuthStatus()).unwrap(); 
+            console.log('Checked role:', authResult);
+
+            const from = location.state?.from?.pathname;
+            const redirectPath = from && from !== '/authentication'
+              ? from
+              : getRedirectPath(authResult.role);
+
+            navigate(redirectPath, { replace: true });
+
+            resetForm();
+
+          } catch (error) {
+            console.error('Lỗi khi lấy thông tin xác thực:', error);
+          }
         }
         
       } else {
         const userData = {
+          name: formData.name,
           email: formData.email,
+          password: formData.password,
           phone: formData.phone,
-          fullName: formData.fullName,
           gender: formData.gender,
-          dayOfBirth: formData.dayOfBirth,
-          password: formData.password
+          dob: formData.dob,
         };
         
         const resultAction = await dispatch(registerUser(userData));
@@ -138,7 +179,6 @@ const Authentication = () => {
         if (registerUser.fulfilled.match(resultAction)) {
           console.log('Registration successful');
           resetForm();
-          // Redirect or handle successful registration
         }
       }
     } catch (err) {
@@ -150,9 +190,9 @@ const Authentication = () => {
     setFormData({
       email: '',
       phone: '',
-      fullName: '',
+      name: '',
       gender: '',
-      dayOfBirth: '',
+      dob: '',
       password: '',
       confirmPassword: ''
     });
@@ -163,13 +203,6 @@ const Authentication = () => {
     setIsLogin(loginMode);
     resetForm();
   };
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/homepage');
-    }
-  }, [isAuthenticated, navigate]);
-
 
   return (
     <div className="auth-container">
@@ -269,17 +302,17 @@ const Authentication = () => {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="fullName">Họ và tên</label>
+                    <label htmlFor="name">Họ và tên</label>
                     <input
                         type="text"
-                        id="fullName"
-                        name="fullName"
-                        value={formData.fullName}
+                        id="name"
+                        name="name"
+                        value={formData.name}
                         onChange={handleInputChange}
                         placeholder="Họ và tên"
                         disabled={loading}
                     />
-                    {errors.fullName && <p className="error-text">{errors.fullName}</p>}
+                    {errors.name && <p className="error-text">{errors.name}</p>}
                 </div>
 
                 <div className="form-row">
@@ -300,16 +333,16 @@ const Authentication = () => {
                     </div>
 
                     <div className="form-group">
-                    <label htmlFor="dayOfBirth">Ngày sinh</label>
+                    <label htmlFor="dob">Ngày sinh</label>
                     <input
                         type="date"
-                        id="dayOfBirth"
-                        name="dayOfBirth"
-                        value={formData.dayOfBirth}
+                        id="dob"
+                        name="dob"
+                        value={formData.dob}
                         onChange={handleInputChange}
                         disabled={loading}
                     />
-                    {errors.dayOfBirth && <p className="error-text">{errors.dayOfBirth}</p>}
+                    {errors.dob && <p className="error-text">{errors.dob}</p>}
                     </div>
                 </div>
 

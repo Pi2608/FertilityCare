@@ -55,23 +55,12 @@ class ApiGateway {
         }
     }
 
-  // Phương thức register vẫn như cũ hoặc mock tương tự nếu muốn
-    static async register(newUser) {
-        if (ApiGateway.USE_MOCK_LOGIN) {
-            await new Promise((resolve) => setTimeout(resolve, 500));
-            // Trong mock, có thể giả lập thêm user mới:
-            const userId = `user-mock-${Date.now()}`;
-            const token = `mock-token-${userId}`;
-            // Không thêm vào mockUsers vì không persistent; nếu muốn persistent tạm, có thể push vào array nhưng khi reload sẽ mất
-            return {
-                data: { userId, token }
-            };
-        }
+    static async getUserRole() {
         try {
-            const response = await ApiGateway.axiosInstance.post("User/Register", newUser);
-            return response.data ? { data: response.data } : null;
+            const response = await ApiGateway.axiosInstance.get("login/roles");
+            return response.data;
         } catch (error) {
-            console.error("Registration error:", error);
+            console.error("Get User Role error:", error);
             throw error;
         }
     }
@@ -125,16 +114,6 @@ class ApiGateway {
             return response.data;
         } catch (error) {
             console.error("Change Password error:", error);
-            throw error;
-        }
-    }
-
-    static async updateUser(userInfo) {
-        try {
-            const response = await ApiGateway.axiosInstance.put(`/User/UpdateProfile`, userInfo);
-            return response.data;
-        } catch (error) {
-            console.error("Update Profile error:", error);
             throw error;
         }
     }

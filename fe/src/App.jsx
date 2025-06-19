@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { HashLoader } from 'react-spinners';
 import { RouterProvider } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { router } from './Router';
@@ -10,18 +11,18 @@ export default function App() {
   const { loading } = useSelector(state => state.auth);
 
   useEffect(() => {
-    // Kiểm tra trạng thái đăng nhập khi app khởi động
     dispatch(checkAuthStatus());
   }, [dispatch]);
 
-  // Hiển thị loading khi đang kiểm tra trạng thái
   if (loading) {
-    return (
-      <div className="loading-container">
-        <div>Đang tải...</div>
-        {/* Hoặc component loading spinner của bạn */}
-      </div>
-    );
+    return 
+      <HashLoader 
+        className="loader"
+        loading={loading}
+        size={150}
+        color={"#36d7b7"}
+        cssOverride={{ display: 'block', margin: '0 auto', borderColor: 'red' }}
+      />; 
   }
 
   return (

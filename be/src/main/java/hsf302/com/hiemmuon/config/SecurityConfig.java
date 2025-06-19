@@ -45,10 +45,12 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/login/**").permitAll()
 
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/register/customer").permitAll()
+
                         .requestMatchers(HttpMethod.GET,
                                 "/api/doctors/active",
-                                "/api/treatment-services/active",
-                                "/api/register/customer").permitAll()
+                                "/api/treatment-services/active").permitAll()
 
                         .requestMatchers(HttpMethod.GET,
                                 "/api/doctors/all",
@@ -111,7 +113,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:3000"));
+        config.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:3000", "http://localhost:5173"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
