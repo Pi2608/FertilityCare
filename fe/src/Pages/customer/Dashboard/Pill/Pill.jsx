@@ -1,32 +1,82 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import "./pill.css"
+import { useState } from "react";
+import "./pill.css";
+import { Bell, PillIcon, Clock, ArrowRightFromLine } from "lucide-react";
 
 const Pill = () => {
-  const [selectedDate, setSelectedDate] = useState(19)
-  const [currentWeek, setCurrentWeek] = useState(0)
+  const [selectedDate, setSelectedDate] = useState(19);
+  const [currentWeek, setCurrentWeek] = useState(0);
 
   // Dữ liệu mẫu cho thuốc theo ngày
   const medicationData = {
     18: {
       title: "Tổng quan tuần thứ",
       medications: [
-        { id: 1, name: "Progesterone", dosage: "1 viên", time: "08:00", status: "taken", icon: "💊" },
-        { id: 2, name: "Pikachu", dosage: "1 viên", time: "08:00", status: "missed", icon: "💊" },
-        { id: 3, name: "Progesterone", dosage: "1 viên", time: "17:00", status: "taken", icon: "💊" },
+        {
+          id: 1,
+          name: "Progesterone",
+          dosage: "1 viên",
+          time: "08:00",
+          status: "taken",
+          icon: "💊",
+        },
+        {
+          id: 2,
+          name: "Pikachu",
+          dosage: "1 viên",
+          time: "08:00",
+          status: "missed",
+          icon: "💊",
+        },
+        {
+          id: 3,
+          name: "Progesterone",
+          dosage: "1 viên",
+          time: "17:00",
+          status: "taken",
+          icon: "💊",
+        },
       ],
     },
     19: {
       title: "Tỷ lệ uống thuốc",
       medications: [
-        { id: 1, name: "Progesterone", dosage: "200mg - Uống", time: "08:00", status: "pending", icon: "💊" },
-        { id: 2, name: "Acid Folic", dosage: "5mg - Uống", time: "08:00", status: "pending", icon: "💊" },
-        { id: 3, name: "Progesterone", dosage: "200mg - Uống", time: "20:00", status: "pending", icon: "💊" },
-        { id: 4, name: "Estradiol", dosage: "2mg - Uống", time: "20:00", status: "pending", icon: "💊" },
+        {
+          id: 1,
+          name: "Progesterone",
+          dosage: "200mg - Uống",
+          time: "08:00",
+          status: "pending",
+          icon: "💊",
+        },
+        {
+          id: 2,
+          name: "Acid Folic",
+          dosage: "5mg - Uống",
+          time: "08:00",
+          status: "pending",
+          icon: "💊",
+        },
+        {
+          id: 3,
+          name: "Progesterone",
+          dosage: "200mg - Uống",
+          time: "20:00",
+          status: "pending",
+          icon: "💊",
+        },
+        {
+          id: 4,
+          name: "Estradiol",
+          dosage: "2mg - Uống",
+          time: "20:00",
+          status: "pending",
+          icon: "💊",
+        },
       ],
     },
-  }
+  };
 
   const weekDays = [
     { day: "Thứ 2", date: 16 },
@@ -36,43 +86,43 @@ const Pill = () => {
     { day: "Thứ 6", date: 20 },
     { day: "Thứ 7", date: 21 },
     { day: "CN", date: 22 },
-  ]
+  ];
 
-  const currentData = medicationData[selectedDate] || medicationData[19]
+  const currentData = medicationData[selectedDate] || medicationData[19];
 
   const handleDateSelect = (date) => {
-    setSelectedDate(date)
-  }
+    setSelectedDate(date);
+  };
 
   const handleMedicationAction = (medicationId, action) => {
-    console.log(`${action} medication with id: ${medicationId}`)
-  }
+    console.log(`${action} medication with id: ${medicationId}`);
+  };
 
   const getStatusText = (status) => {
     switch (status) {
       case "taken":
-        return "Đã uống"
+        return "Đã uống";
       case "missed":
-        return "Bỏ lỡ"
+        return "Bỏ lỡ";
       case "pending":
-        return "Đánh dấu đã uống"
+        return "Đánh dấu đã uống";
       default:
-        return "Đánh dấu đã uống"
+        return "Đánh dấu đã uống";
     }
-  }
+  };
 
   const getStatusClass = (status) => {
     switch (status) {
       case "taken":
-        return "status-taken"
+        return "status-taken";
       case "missed":
-        return "status-missed"
+        return "status-missed";
       case "pending":
-        return "status-pending"
+        return "status-pending";
       default:
-        return "status-pending"
+        return "status-pending";
     }
-  }
+  };
 
   return (
     <div className="pill-container">
@@ -80,12 +130,18 @@ const Pill = () => {
       <div className="pill-header">
         <div className="header-content">
           <h1>Quản lý thuốc</h1>
-          <br/>
           <p>Theo dõi và quản lý lịch uống thuốc của bạn</p>
         </div>
         <div className="header-actions">
-          <button className="btn-secondary">📄 Xuất báo cáo</button>
-          <button className="btn-primary">🔔 Cài đặt nhắc nhở</button>
+          <button className="btn-secondary">
+            <ArrowRightFromLine size={18} style={{ marginRight: 6 }} />
+            Xuất báo cáo
+          </button>
+
+          <button className="btn-primary">
+            <Bell size={16} />
+            Cài đặt nhắc nhở
+          </button>
         </div>
       </div>
 
@@ -96,7 +152,10 @@ const Pill = () => {
 
         <div className="progress-container">
           <div className="progress-bar">
-            <div className="progress-fill" style={{ width: selectedDate === 18 ? "95%" : "95%" }}></div>
+            <div
+              className="progress-fill"
+              style={{ width: selectedDate === 18 ? "95%" : "95%" }}
+            ></div>
           </div>
           <div className="progress-labels">
             <span className="progress-percentage">95%</span>
@@ -116,7 +175,9 @@ const Pill = () => {
             <div className="stat-icon">⚠</div>
             <div className="stat-content">
               <div className="stat-title">Bỏ lỡ</div>
-              <div className="stat-value">{selectedDate === 18 ? "1%" : "5%"} liều thuốc</div>
+              <div className="stat-value">
+                {selectedDate === 18 ? "1%" : "5%"} liều thuốc
+              </div>
             </div>
           </div>
         </div>
@@ -136,7 +197,9 @@ const Pill = () => {
             {weekDays.map((day) => (
               <div
                 key={day.date}
-                className={`day-item ${selectedDate === day.date ? "active" : ""}`}
+                className={`day-item ${
+                  selectedDate === day.date ? "active" : ""
+                }`}
                 onClick={() => handleDateSelect(day.date)}
               >
                 <div className="day-name">{day.day}</div>
@@ -151,16 +214,23 @@ const Pill = () => {
         <div className="medication-list">
           {currentData.medications.map((medication) => (
             <div key={medication.id} className="medication-item">
-              <div className="medication-icon">{medication.icon}</div>
+              <div className="medication-icon">
+                <PillIcon size={20} />
+              </div>
               <div className="medication-info">
                 <div className="medication-name">{medication.name}</div>
                 <div className="medication-dosage">{medication.dosage}</div>
-                <div className="medication-time">🕐 {medication.time}</div>
+                <div className="medication-time">
+                  <Clock size={14} />
+                  {medication.time}
+                </div>
               </div>
               <div className="medication-action">
                 <button
                   className={`action-btn ${getStatusClass(medication.status)}`}
-                  onClick={() => handleMedicationAction(medication.id, medication.status)}
+                  onClick={() =>
+                    handleMedicationAction(medication.id, medication.status)
+                  }
                   disabled={medication.status === "taken"}
                 >
                   {medication.status === "taken" && "✓ "}
@@ -172,7 +242,7 @@ const Pill = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Pill
+export default Pill;

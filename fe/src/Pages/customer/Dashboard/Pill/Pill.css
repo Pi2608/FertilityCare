@@ -52,6 +52,11 @@
 .btn-primary {
   background-color: #dc3545;
   color: white;
+  background-color: #dc3545;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .btn-primary:hover {
@@ -62,6 +67,8 @@
   background-color: #f8f9fa;
   color: #495057;
   border: 1px solid #dee2e6;
+  display: flex;
+  align-items: center;       /* Canh giữa theo chiều dọc */  
 }
 
 .btn-secondary:hover {
@@ -161,7 +168,7 @@
 }
 
 .stat-success .stat-icon {
-  background-color: #28a745;
+  background-color: #16A34A;
   color: white;
 }
 
@@ -300,6 +307,7 @@
   background-color: white;
   border-radius: 8px;
   border: 1px solid #dee2e6;
+  color: #dc3545;
 }
 
 .medication-info {
@@ -339,6 +347,8 @@
   cursor: pointer;
   font-size: 14px;
   transition: all 0.2s ease;
+  min-width: 120px;        /* Thêm dòng này */
+  text-align: center;      /* Thêm dòng này để căn giữa text */
 }
 
 .status-pending {
@@ -351,14 +361,14 @@
 }
 
 .status-taken {
-  background-color: #28a745;
-  color: white;
+  background-color: #d4edda;  /* Xanh nhạt */
+  color: #28a745;             /* Chữ xanh đậm */
   cursor: default;
 }
 
 .status-missed {
-  background-color: #ffc107;
-  color: #1a1a1a;
+  background-color: #f8d7da;  /* Hồng nhạt */
+  color: #dc3545;             /* Chữ đỏ */
 }
 
 .action-btn:disabled {
