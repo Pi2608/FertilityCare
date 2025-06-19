@@ -1,6 +1,5 @@
 package hsf302.com.hiemmuon.service;
 
-import hsf302.com.hiemmuon.entity.Doctor;
 import hsf302.com.hiemmuon.entity.User;
 import hsf302.com.hiemmuon.repository.UserRepository;
 import io.jsonwebtoken.Claims;

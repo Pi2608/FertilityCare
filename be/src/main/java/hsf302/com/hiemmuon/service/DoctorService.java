@@ -1,15 +1,13 @@
 package hsf302.com.hiemmuon.service;
 
 import hsf302.com.hiemmuon.dto.createDto.CreateDoctorDTO;
-import hsf302.com.hiemmuon.dto.entityDto.DoctorDTOForCustomer;
-import hsf302.com.hiemmuon.dto.entityDto.DoctorDTOForManager;
+import hsf302.com.hiemmuon.dto.entityDto.DoctorDTO;
 import hsf302.com.hiemmuon.dto.updateDto.UpdateDoctorDTO;
 import hsf302.com.hiemmuon.entity.Doctor;
 import hsf302.com.hiemmuon.entity.User;
 import hsf302.com.hiemmuon.repository.DoctorRepository;
 import hsf302.com.hiemmuon.repository.RoleRepository;
 import hsf302.com.hiemmuon.repository.UserRepository;
-import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,39 +43,39 @@ public class DoctorService {
         return doctorRepository.save(doctor);
     }
 
-    public DoctorDTOForCustomer getDoctorByDoctorId(int id) {
+    public DoctorDTO getDoctorByDoctorId(int id) {
         Doctor doctor = doctorRepository.findById(id);
-        DoctorDTOForCustomer dto = convertToCustomerDTO(doctor);
+        DoctorDTO dto = convertToDoctorDTO(doctor);
         return dto;
     }
 
-    public DoctorDTOForCustomer getDoctorByName(String name) {
+    public DoctorDTO getDoctorByName(String name) {
         Doctor doctor = doctorRepository.findByUser_Name(name);
-        DoctorDTOForCustomer dto = convertToCustomerDTO(doctor);
+        DoctorDTO dto = convertToDoctorDTO(doctor);
         return dto;
     }
 
-    public List<DoctorDTOForCustomer> getDoctorBySpecification(String specification) {
+    public List<DoctorDTO> getDoctorBySpecification(String specification) {
         return doctorRepository.findBySpecification(specification).stream()
-                .map(this::convertToCustomerDTO)
+                .map(this::convertToDoctorDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<DoctorDTOForCustomer> getDoctorByIsActive() {
+    public List<DoctorDTO> getDoctorByIsActive() {
         return doctorRepository.findByIsActive(true).stream()
-                .map(this::convertToCustomerDTO)
+                .map(this::convertToDoctorDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<DoctorDTOForManager> getAllDoctor() {
+    public List<DoctorDTO> getAllDoctor() {
         return doctorRepository.findAll().stream()
-                .map(this::convertToManagerDTO)
+                .map(this::convertToDoctorDTO)
                 .collect(Collectors.toList());
     }
 
-    public DoctorDTOForCustomer getDoctorMe(HttpServletRequest request) {
+    public DoctorDTO getDoctorMe(HttpServletRequest request) {
         User existingDoctor = userService.getUserByJwt(request);
-        DoctorDTOForCustomer dto = convertToCustomerDTO(existingDoctor.getDoctor());
+        DoctorDTO dto = convertToDoctorDTO(existingDoctor.getDoctor());
         return dto;
     }
 
@@ -131,20 +129,8 @@ public class DoctorService {
         return saveDoctor(doctor);
     }
 
-    private DoctorDTOForCustomer convertToCustomerDTO(Doctor doctor) {
-        DoctorDTOForCustomer dto = new DoctorDTOForCustomer();
-        dto.setName(doctor.getUser().getName());
-        dto.setGender(doctor.getUser().getGender());
-        dto.setEmail(doctor.getUser().getEmail());
-        dto.setPhone(doctor.getUser().getPhone());
-        dto.setSpecification(doctor.getSpecification());
-        dto.setRatingAvg(doctor.getRatingAvg());
-        dto.setExperience(doctor.getExperience());
-        return dto;
-    }
-
-    private DoctorDTOForManager convertToManagerDTO(Doctor doctor) {
-        DoctorDTOForManager dto = new DoctorDTOForManager();
+    private DoctorDTO convertToDoctorDTO(Doctor doctor) {
+        DoctorDTO dto = new DoctorDTO();
         dto.setUserId(doctor.getUser().getUserId());
         dto.setName(doctor.getUser().getName());
         dto.setGender(doctor.getUser().getGender());
