@@ -1,14 +1,18 @@
 package hsf302.com.hiemmuon.controller;
 
-import hsf302.com.hiemmuon.dto.appointment.*;
 import hsf302.com.hiemmuon.dto.createDto.CreateAppointmentDTO;
-import hsf302.com.hiemmuon.entity.*;
-import hsf302.com.hiemmuon.repository.CustomerRepository;
-import hsf302.com.hiemmuon.repository.DoctorRepository;
-import hsf302.com.hiemmuon.repository.UserRepository;
+import hsf302.com.hiemmuon.dto.createDto.ReExamAppointmentDTO;
+import hsf302.com.hiemmuon.dto.entityDto.AppointmentHistoryDTO;
+import hsf302.com.hiemmuon.dto.entityDto.AppointmentOverviewDTO;
+import hsf302.com.hiemmuon.dto.entityDto.AvailableScheduleDTO;
+import hsf302.com.hiemmuon.dto.entityDto.ReExamAppointmentResponseDTO;
+import hsf302.com.hiemmuon.entity.Customer;
+import hsf302.com.hiemmuon.entity.Doctor;
+import hsf302.com.hiemmuon.entity.User;
 import hsf302.com.hiemmuon.service.AppointmentService;
+import hsf302.com.hiemmuon.service.CustomerService;
 import hsf302.com.hiemmuon.service.DoctorService;
-import jakarta.websocket.server.PathParam;
+import hsf302.com.hiemmuon.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -20,26 +24,37 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/appointment-services")
-public class AppointmentServiceController {
+public class AppointmentController {
+
+    @Autowired
+    UserService userService;
 
     @Autowired
     AppointmentService appointmentService;
 
     @Autowired
-    UserRepository userRepository;
-
+    DoctorService doctorService;
     @Autowired
-    CustomerRepository customerRepository;
-
-    @Autowired
-    DoctorRepository doctorRepository;
+    private CustomerService customerService;
 
 
     @GetMapping("/doctors/{doctorId}/available-schedules")
-    public List<AvailableScheduleDTO> getDoctorSchedules(
+    public ResponseEntity<?> getDoctorSchedules(
             @PathVariable int doctorId,
-            @RequestParam@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        return appointmentService.getAvailableSchedules(doctorId, date);
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+
+        List<AvailableScheduleDTO> schedules = appointmentService.getAvailableSchedules(doctorId, date);
+
+        // Lọc các lịch có status == 1
+        List<AvailableScheduleDTO> available = schedules.stream()
+                .filter(s -> s.isStatus() == true)
+                .toList();
+
+        if (available.isEmpty()) {
+            return ResponseEntity.ok("Bác sĩ bận vào ngày hôm nay");
+        }
+
+        return ResponseEntity.ok(available);
     }
 
     @PostMapping("/register/appointments")
@@ -57,9 +72,8 @@ public class AppointmentServiceController {
     @GetMapping("/appointments/reexam")
     public ResponseEntity<List<ReExamAppointmentResponseDTO>> getOwnReExamAppointments() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email);
-        Customer customer = customerRepository.findByUser(user);
-
+        User user = userService.getUserByEmail(email);
+        Customer customer = customerService.getCustomerById(user.getUserId());
         List<ReExamAppointmentResponseDTO> result = appointmentService.getReExamAppointmentsForCustomer(customer.getCustomerId());
         return ResponseEntity.ok(result);
     }
@@ -67,8 +81,8 @@ public class AppointmentServiceController {
     @PatchMapping("/appointments/cancel/{appointmentId}")
     public ResponseEntity<String> cancelAppointment(@PathVariable int appointmentId) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email);
-        Customer customer = customerRepository.findByUser(user);
+        User user = userService.getUserByEmail(email);
+        Customer customer = customerService.getCustomerById(user.getUserId());
 
         appointmentService.cancelAppointment(appointmentId, customer.getCustomerId());
 
@@ -78,11 +92,11 @@ public class AppointmentServiceController {
     @GetMapping("/appointments/history")
     public ResponseEntity<List<AppointmentHistoryDTO>> getDoctorHistory() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email);
+        User user = userService.getUserByEmail(email);
         if (user == null) {
             throw new RuntimeException("Không tìm thấy user với email " + email);
         }
-        Doctor doctor = doctorRepository.findByUser(user);
+        Doctor doctor = doctorService.getDoctorByUserId(user.getUserId());
         if (doctor == null) {
             throw new RuntimeException("Không tìm thấy bác sĩ tương ứng với user " + user.getName());
         }

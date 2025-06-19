@@ -1,20 +1,20 @@
 package hsf302.com.hiemmuon.service;
 
-import hsf302.com.hiemmuon.dto.appointment.*;
 import hsf302.com.hiemmuon.dto.createDto.CreateAppointmentDTO;
+import hsf302.com.hiemmuon.dto.createDto.ReExamAppointmentDTO;
+import hsf302.com.hiemmuon.dto.entityDto.AppointmentHistoryDTO;
+import hsf302.com.hiemmuon.dto.entityDto.AppointmentOverviewDTO;
+import hsf302.com.hiemmuon.dto.entityDto.AvailableScheduleDTO;
+import hsf302.com.hiemmuon.dto.entityDto.ReExamAppointmentResponseDTO;
 import hsf302.com.hiemmuon.entity.*;
 import hsf302.com.hiemmuon.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,7 +23,7 @@ public class AppointmentService {
 
 
     @Autowired
-    private AppointmentServiceRepository doctorScheduleRepository;
+    private DoctorScheduleRepository doctorScheduleRepository;
 
     @Autowired
     private DoctorRepository doctorRepository;
@@ -34,8 +34,6 @@ public class AppointmentService {
     @Autowired
     private CustomerRepository  customerRepository;
 
-    @Autowired
-    private AppointmentServiceRepository appointmentServiceRepository;
 
     @Autowired
     private AppointmentRepository appointmentRepository;
@@ -53,9 +51,9 @@ public class AppointmentService {
             dto.setDate(schedule.getDate());
             dto.setStartTime(schedule.getStartTime());
             dto.setEndTime(schedule.getEndTime());
+            dto.setStatus(schedule.getStatus() == true);
             return dto;
         }).collect(Collectors.toList());
-
     }
 
     public void registerAppointment(CreateAppointmentDTO dto) {
@@ -224,6 +222,8 @@ public class AppointmentService {
             return dto;
         }).toList();
     }
+
+
 
 
 

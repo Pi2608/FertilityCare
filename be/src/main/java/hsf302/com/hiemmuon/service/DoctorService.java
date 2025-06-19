@@ -43,7 +43,7 @@ public class DoctorService {
         final String token = authHeader.substring(7);
         Claims claims = jwtService.extractAllClaims(token);
 
-        Object doctorIdObj = claims.get("doctorId");
+        Object doctorIdObj = claims.get("userId");
         Integer doctorId = Integer.parseInt(doctorIdObj.toString());
         return doctorRepository.findById(doctorId).get();
     }
@@ -162,6 +162,10 @@ public class DoctorService {
         dto.setRatingAvg(doctor.getRatingAvg());
         dto.setIsActive(doctor.getIsActive());
         return dto;
+    }
+
+    public Doctor getDoctorByUserId(int userId) {
+        return doctorRepository.findByUser_UserId(userId);
     }
 
 }
