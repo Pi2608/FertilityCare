@@ -4,7 +4,7 @@ import './Blog.css';
 const Blog = () => {
   const [activeTab, setActiveTab] = useState('Tất Cả');
 
-  const tabs = ['Tất Cả', 'Hiếm Muộn', 'Điều Trị', 'Lối Sống', 'Câu Chuyện Thành Công'];
+  const tabs = [];
 
   const articles = [
     {
@@ -14,7 +14,7 @@ const Blog = () => {
     },
     {
       date: '28 Tháng 3, 2023',
-      title: 'Tiến Bộ Mới Trong Công Nghệ IVF',
+      title: 'Tiến Bộ Đổi Mới Trong Công Nghệ điều trị hiếm muộn IVF',
       category: 'Điều Trị',
     },
     {
@@ -49,7 +49,7 @@ const Blog = () => {
       <div className="title-section">
         <h2>Blog & Tài Nguyên</h2>
         <p>Khám phá các bài viết, tin tức và tài nguyên mới nhất về hiếm muộn và điều trị sinh sản.</p>
-        <input type="text" placeholder="Tìm kiếm bài viết..." className="search-bar" />
+        
       </div>
 
       <div className="tabs">
