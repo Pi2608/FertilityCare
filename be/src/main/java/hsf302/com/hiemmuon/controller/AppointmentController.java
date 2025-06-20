@@ -13,9 +13,11 @@ import hsf302.com.hiemmuon.service.AppointmentService;
 import hsf302.com.hiemmuon.service.CustomerService;
 import hsf302.com.hiemmuon.service.DoctorService;
 import hsf302.com.hiemmuon.service.UserService;
+import io.jsonwebtoken.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -89,21 +91,24 @@ public class AppointmentController {
         return ResponseEntity.ok("Cuộc hẹn đã được hủy thành công và khung giờ được mở lại.");
     }
 
-    @GetMapping("/appointments/history")
-    public ResponseEntity<List<AppointmentHistoryDTO>> getDoctorHistory() {
+    @GetMapping("/appointments/history/{customerId}")
+    public ResponseEntity<List<AppointmentHistoryDTO>> getDoctorHistory(@PathVariable int customerId) {
+        // Lấy email của người dùng hiện tại (bác sĩ đang đăng nhập)
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        // Lấy thông tin user & doctor tương ứng
         User user = userService.getUserByEmail(email);
-        if (user == null) {
-            throw new RuntimeException("Không tìm thấy user với email " + email);
-        }
         Doctor doctor = doctorService.getDoctorByUserId(user.getUserId());
-        if (doctor == null) {
-            throw new RuntimeException("Không tìm thấy bác sĩ tương ứng với user " + user.getName());
-        }
-        int doctorId = doctor.getDoctorId();
-        List<AppointmentHistoryDTO> history = appointmentService.getAppointmentHistoryForDoctor(doctor.getDoctorId());
+
+
+
+        // Lấy danh sách lịch sử cuộc hẹn giữa bác sĩ này và bệnh nhân được truyền vào
+        List<AppointmentHistoryDTO> history = appointmentService
+                .getAppointmentsForDoctorAndCustomer(doctor.getDoctorId(), customerId);
+
         return ResponseEntity.ok(history);
     }
+
 
     @GetMapping("/appointments/overview")
     public ResponseEntity<List<AppointmentOverviewDTO>> getAllAppointmentsForManager() {

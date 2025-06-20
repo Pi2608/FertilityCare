@@ -40,7 +40,7 @@ public class Appointment {
     private String note;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "service_id", nullable = false)
+    @JoinColumn(name = "service_id")
     private TreatmentService service;
 
     public enum Type {
