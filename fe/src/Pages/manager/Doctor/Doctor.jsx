@@ -21,8 +21,14 @@ const Doctor = () => {
           name: doc.name,
           avatar: "/placeholder.svg?height=40&width=40",
           initials: getInitials(doc.name),
-          gender: doc.gender === "male" ? "Nam" : "Nữ",
+          gender:
+            doc.gender === "male"
+              ? "Nam"
+              : doc.gender === "female"
+              ? "Nữ"
+              : "",
           birthDate: formatDate(doc.dob),
+          email: doc.email,
           specialty: doc.specification,
           experience: doc.experience,
           rating: doc.ratingAvg ?? "Chưa có",
@@ -49,7 +55,11 @@ const Doctor = () => {
   };
 
   const formatDate = (dateString) => {
+    if (!dateString) return "";
+
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "";
+
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
@@ -67,9 +77,12 @@ const Doctor = () => {
   };
 
   const filteredDoctors = doctorsData.filter((doctor) => {
+    const name = doctor.name?.toLowerCase() || "";
+    const specialty = doctor.specialty?.toLowerCase() || "";
+
     const matchesSearch =
-      doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      doctor.specialty.toLowerCase().includes(searchTerm.toLowerCase());
+      name.includes(searchTerm.toLowerCase()) ||
+      specialty.includes(searchTerm.toLowerCase());
 
     const matchesStatus =
       statusFilter === "all" ||
@@ -141,6 +154,7 @@ const Doctor = () => {
           <table className="doctors-table">
             <thead>
               <tr>
+                <th>Email</th>
                 <th>Họ và tên</th>
                 <th>Giới tính</th>
                 <th>Ngày sinh</th>
@@ -153,6 +167,7 @@ const Doctor = () => {
             <tbody>
               {filteredDoctors.map((doctor) => (
                 <tr key={doctor.id}>
+                  <td>{doctor.email}</td>
                   <td className="doctor-name-cell">
                     <div className="doctor-info">
                       <span className="doctor-name">{doctor.name}</span>
