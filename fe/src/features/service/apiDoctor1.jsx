@@ -30,6 +30,17 @@ const DoctorAPI = {
     }
   },
 
+  createDoctor: async (newDoctorData) => {
+  try {
+    const response = await axiosInstance.post("doctors", newDoctorData);
+    return response.data;
+  } catch (error) {
+    console.error(" Lỗi khi tạo tài khoản bác sĩ:", error);
+    throw error;
+  }
+},
+
+
   // Có thể thêm các hàm khác như getDoctorById, createDoctor, updateDoctor ở đây nếu cần
 };
 
