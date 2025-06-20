@@ -33,7 +33,7 @@ const Authentication = () => {
     case USER_ROLES.MANAGER:
       return '/manager-dashboard';
     case USER_ROLES.CUSTOMER:
-      return '/homepage';
+      return '/patient-dashboard';
     default:
       return '/homepage';
     }
