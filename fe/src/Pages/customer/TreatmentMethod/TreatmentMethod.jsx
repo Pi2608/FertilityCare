@@ -1,53 +1,54 @@
-import React from 'react';
 import TreatmentCard from '@components/Card/TreatmentCard/TreatmentCard';
 import { useNavigate } from 'react-router-dom';
 import IUI from '@asset/iui.jpg';
 import IVF from '@asset/ivf.jpg';
 import './TreatmentMethod.css';
+import TreatmentAPI from '../../../features/service/apiTreatment';
+import React, { useEffect, useState } from 'react';
+
 
 function TreatmentMethod() {
     const navigate = useNavigate();
 
-    const treatmentData = [
-        {
-            title: "Thụ Tinh Trong Ống Nghiệm (IVF)",
-            content: "Phương pháp thụ tinh trong ống nghiệm IVF giúp thụ tinh và trứng thụ tinh bên ngoài cơ thể và chuyển phôi vào tử cung người phụ nữ.",
-            image: IVF,
-            info: [
-                "Tỷ lệ thành công cao",
-                "Phù hợp với nhiều nguyên nhân vô sinh",
-                "Bao gồm kích thích buồng trứng và lấy trứng"
-            ],
-            miniTitle: "IVF - Giải Pháp Hiệu Quả Cho Vô Sinh"
-        },
-        {
-            title: "Bơm Tinh Trùng Vào Buồng Tử Cung (IUI)",
-            content: "Là phương pháp tiêm tinh trùng vào tử cung đúng thời điểm rụng trứng tăng cơ hội thụ thai.",
-            image: IUI,
-            info: [
-                "Lý tưởng cho vô sinh nam",
-                "Tỷ lệ thụ tinh cao hơn trong một số trường hợp",
-                "Có thể sử dụng với số lượng tinh trùng rất thấp"
-            ],
-            miniTitle: "IUI - Phương pháp điều trị ít xâm lấn"
-        },
-        // {
-        //     title: "Tiêm Tinh Trùng Vào Bào Tương Trứng (ICSI)",
-        //     content: "ICSI là phương pháp tiêm trực tiếp tinh trùng vào trứng giúc khắc phụ những vấn đề vô sinh nam nghiêm trọng."
-        // },
-        // {
-        //     title: "Kích Thích Rụng Trứng",
-        //     content: "Kích thích rụng trứng là đối với các trường hợp rối loạn rụng trứng, PCOS hay chu kỳ kinh bêt."
-        // },
-        // {
-        //     title: "Trữ Đông Trứng",
-        //     content: "Bảo toàn khả năng sinh sản bằng cách đông trứng, thích hợp cho phụ nữ chưa muốn sinh con."
-        // },
-        // {
-        //     title: "Sàng Lọc Di Truyền Tiền Làm Tổ (PGT)",
-        //     content: "Giúm giảm nguy cơ thai lệch bẩm hoặc di truyền trước khi chuyển phôi vào tử cung."
-        // }
-    ];
+
+    const [treatmentData, setTreatmentData] = useState([]);
+
+
+    useEffect(() => {
+        fetchTreatmentData();
+    }, []);
+   
+    const fetchTreatmentData = async () => {
+        try {
+            const response = await TreatmentAPI.getActiveTreatments();
+            const data = response.data;
+   
+            const imageMap = {
+                'IVF': IVF,
+                'IUI': IUI
+            };
+   
+            const formatted = data.map(service => ({
+                title: `Phương pháp điều trị ${service.name}`,
+                content: service.description,
+                info: [
+                    // `Giá: ${service.price.toLocaleString()} VNĐ`,
+                    // `Tỷ lệ thành công: ${service.successRate}%`,
+                    service.specialfications
+                ],
+                miniTitle: `${service.name} - Giải pháp điều trị`,
+                image: imageMap[service.name] || IVF // fallback nếu không khớp
+            }));
+   
+            setTreatmentData(formatted);
+        } catch (error) {
+            console.error("Lỗi khi lấy danh sách phương pháp điều trị:", error);
+        }
+    };
+   
+
+
+
 
     return (
         <div className="treatment-method">
@@ -65,10 +66,10 @@ function TreatmentMethod() {
             </section>
             <div className="cards">
                 {treatmentData.map((item, index) => (
-                    <TreatmentCard 
-                        key={index} 
-                        title={item.title} 
-                        content={item.content} 
+                    <TreatmentCard
+                        key={index}
+                        title={item.title}
+                        content={item.content}
                         image={item.image}
                         info={item.info}
                         miniTitle={item.miniTitle}
@@ -79,4 +80,8 @@ function TreatmentMethod() {
     );
 }
 
+
 export default TreatmentMethod;
+
+
+
