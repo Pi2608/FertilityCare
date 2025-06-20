@@ -3,11 +3,14 @@
 import { useEffect, useState } from "react";
 import "./Doctor.css";
 import DoctorAPI from "../../../features/service/apiDoctor1";
+import CreateDoctor from "./CreateDoctor";
 
 const Doctor = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [doctorsData, setDoctorsData] = useState([]);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchDoctors = async () => {
@@ -124,56 +127,60 @@ const Doctor = () => {
               <option value="active">Đang hoạt động</option>
               <option value="inactive">Không hoạt động</option>
             </select>
+            <button
+              className="create-doctor-btn"
+              onClick={() => setIsCreateModalOpen(true)}
+            >
+              <span>+</span> Tạo tài khoản bác sĩ
+            </button>
           </div>
         </div>
 
         {/* Doctors Table */}
         <div className="table-wrapper">
           <table className="doctors-table">
-  <thead>
-    <tr>
-      <th>Họ và tên</th>
-      <th>Giới tính</th>
-      <th>Ngày sinh</th>
-      <th>Chuyên môn</th>
-      <th>Kinh nghiệm</th>
-      <th>Đánh giá</th>
-      <th>Trạng thái</th>
-    </tr>
-  </thead>
-  <tbody>
-    {filteredDoctors.map((doctor) => (
-      <tr key={doctor.id}>
-        <td className="doctor-name-cell">
-          <div className="doctor-info">
-            
-            <span className="doctor-name">{doctor.name}</span>
-          </div>
-        </td>
-        <td>{doctor.gender}</td>
-        <td>{doctor.birthDate}</td>
-        <td>{doctor.specialty}</td>
-        <td>{doctor.experience}</td>
-        <td>
-          <div className="rating">
-            <span className="rating-value">{doctor.rating}</span>
-          </div>
-        </td>
-        <td>
-          <button
-            onClick={() => handleToggleStatus(doctor.id)}
-            className={`status-toggle-btn ${
-              doctor.isActive ? "active" : "inactive"
-            }`}
-          >
-            {doctor.isActive ? "Hoạt động" : "Không hoạt động"}
-          </button>
-        </td>
-      </tr>
-    ))}
-  </tbody>
-</table>
-
+            <thead>
+              <tr>
+                <th>Họ và tên</th>
+                <th>Giới tính</th>
+                <th>Ngày sinh</th>
+                <th>Chuyên môn</th>
+                <th>Kinh nghiệm</th>
+                <th>Đánh giá</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredDoctors.map((doctor) => (
+                <tr key={doctor.id}>
+                  <td className="doctor-name-cell">
+                    <div className="doctor-info">
+                      <span className="doctor-name">{doctor.name}</span>
+                    </div>
+                  </td>
+                  <td>{doctor.gender}</td>
+                  <td>{doctor.birthDate}</td>
+                  <td>{doctor.specialty}</td>
+                  <td>{doctor.experience}</td>
+                  <td>
+                    <div className="rating">
+                      <span className="rating-value">{doctor.rating}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <button
+                      onClick={() => handleToggleStatus(doctor.id)}
+                      className={`status-toggle-btn ${
+                        doctor.isActive ? "active" : "inactive"
+                      }`}
+                    >
+                      {doctor.isActive ? "Hoạt động" : "Không hoạt động"}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
 
         {/* Pagination */}
@@ -188,6 +195,37 @@ const Doctor = () => {
           </div>
         </div>
       </main>
+
+      {/* Create Doctor Modal */}
+      <CreateDoctor
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSuccess={() => {
+          setIsCreateModalOpen(false);
+          setIsSuccessModalOpen(true);
+        }}
+      />
+
+      {/* Success Modal */}
+      {isSuccessModalOpen && (
+        <div className="success-modal-overlay">
+          <div className="success-modal-content">
+            <div className="success-modal-body">
+              <div className="success-icon">✓</div>
+              <h2>Tạo tài khoản thành công!</h2>
+              <p>Tài khoản bác sĩ đã được tạo thành công.</p>
+            </div>
+            <div className="success-modal-footer">
+              <button
+                className="success-close-btn"
+                onClick={() => setIsSuccessModalOpen(false)}
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
