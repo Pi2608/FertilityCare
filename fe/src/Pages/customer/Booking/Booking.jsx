@@ -4,6 +4,42 @@ import { Calendar, Clock, Check, Phone, FileText } from 'lucide-react';
 import './Booking.css';
 
 const Booking = () => {
+
+  const mockData = [
+    {
+      "schedule_id": 1,
+      "date": "2025-06-30",
+      "start_time": "08:00:00",
+      "end_time": "09:30:00",
+      "status": 0,
+      "doctor_id": 3
+    },
+    {
+      "schedule_id": 2,
+      "date": "2025-06-30",
+      "start_time": "09:30:00",
+      "end_time": "11:00:00",
+      "status": 0,
+      "doctor_id": 3
+    },
+    {
+      "schedule_id": 3,
+      "date": "2025-06-30",
+      "start_time": "13:00:00",
+      "end_time": "14:30:00",
+      "status": 0,
+      "doctor_id": 3
+    },
+    {
+      "schedule_id": 4,
+      "date": "2025-06-30",
+      "start_time": "14:30:00",
+      "end_time": "16:00:00",
+      "status": 0,
+      "doctor_id": 3
+    }
+  ];
+  
   // Data variables
   const doctors = [
     {
@@ -125,6 +161,40 @@ const Booking = () => {
 
   // Generate calendar dates for June 2025
   const generateCalendarDates = () => {
+    const mockData = [
+      {
+        "schedule_id": 1,
+        "date": "2025-06-30",
+        "start_time": "08:00:00",
+        "end_time": "09:30:00",
+        "status": 0,
+        "doctor_id": 3
+      },
+      {
+        "schedule_id": 2,
+        "date": "2025-06-30",
+        "start_time": "09:30:00",
+        "end_time": "11:00:00",
+        "status": 0,
+        "doctor_id": 3
+      },
+      {
+        "schedule_id": 3,
+        "date": "2025-06-30",
+        "start_time": "13:30:00",
+        "end_time": "14:30:00",
+        "status": 0,
+        "doctor_id": 3
+      },
+      {
+        "schedule_id": 4,
+        "date": "2025-06-30",
+        "start_time": "14:30:00",
+        "end_time": "16:00:00",
+        "status": 0,
+        "doctor_id": 3
+      }
+    ]
     const dates = [];
     const currentDate = new Date(2025, 5, 1); // June 2025
     const daysInMonth = new Date(2025, 5 + 1, 0).getDate();
@@ -380,15 +450,29 @@ const Booking = () => {
           </div>
           
           <div className="time-slots">
-            {selectedDoctor?.workingHours.map(time => (
-              <button
-                key={time}
-                className={`time-slot ${selectedTime === time ? 'selected' : ''}`}
-                onClick={() => handleTimeSelect(time)}
-              >
-                {time}
-              </button>
-            ))}
+          {selectedDoctor?.workingHours.map(time => {
+  const matchedSchedule = mockData.find(
+    s =>
+      s.doctor_id === selectedDoctor.id &&
+      s.date === "2025-06-30" &&
+      s.start_time.slice(0, 5) === time &&
+      s.status === 0
+  );
+
+  const isDisabled = !!matchedSchedule;
+
+  return (
+    <button
+      key={time}
+      className={`time-slot ${selectedTime === time ? 'selected' : ''}`}
+      onClick={() => !isDisabled && handleTimeSelect(time)}
+      disabled={isDisabled}
+    >
+      {time}
+    </button>
+  );
+})}
+
           </div>
         </div>
       </div>
