@@ -23,145 +23,176 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
+        @Autowired
+        private JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
+        @Bean
+        public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+                return config.getAuthenticationManager();
+        }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+                http
+                                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                                .csrf(csrf -> csrf.disable())
+                                .authorizeHttpRequests(auth -> auth
 
-                        .requestMatchers("/api/login/**").permitAll()
+                                                .requestMatchers("/api/login/**").permitAll()
 
+                                                .requestMatchers(HttpMethod.GET,
+                                                                "/api/doctors/id/**",
+                                                                "/api/doctors/name/**",
+                                                                "/api/doctors/active",
+                                                                "/api/doctors/specification",
 
-                        .requestMatchers(HttpMethod.GET,
-                                "/api/doctors/id/**",
-                                "/api/doctors/name/**",
-                                "/api/doctors/active",
-                                "/api/doctors/specification",
+                                                                "/api/customer/info")
+                                                .permitAll()
 
-                                "/api/customer/info")
-                        .permitAll()
+                                                .requestMatchers(HttpMethod.GET,
+                                                                "api/appointment-services/doctors/{doctorId}/available-schedules",
+                                                                "api/appointment-services/appointments/reexam",
+                                                                "/api/cycles/meC")
+                                                .hasRole("CUSTOMER")
 
-                        .requestMatchers(HttpMethod.GET,
-                                "api/appointment-services/doctors/{doctorId}/available-schedules",
-                                "api/appointment-services/appointments/reexam",
-                                "/api/cycles/meC").hasRole("CUSTOMER")
+                                                .requestMatchers(HttpMethod.GET,
+                                                                "/api/doctors/me",
+                                                                "api/appointment-services/appointments/history",
+                                                                "/api/cycles/meD")
+                                                .hasRole("DOCTOR")
 
-                        .requestMatchers(HttpMethod.GET,
-                                "/api/doctors/me",
-                                "api/appointment-services/appointments/history",
-                                "/api/cycles/meD").hasRole("DOCTOR")
+                                                .requestMatchers(HttpMethod.GET,
+                                                                "/api/doctors/all",
+                                                                "/api/treatment-services/all",
+                                                                "api/appointment-services/appointments/overview")
+                                                .hasRole("MANAGER")
 
-                        .requestMatchers(HttpMethod.GET,
-                                "/api/doctors/all",
-                                "/api/treatment-services/all",
-                                "api/appointment-services/appointments/overview").hasRole("MANAGER")
+                                                .requestMatchers(HttpMethod.GET,
+                                                                "/api/admin/customers")
+                                                .hasRole("ADMIN")
 
-                        .requestMatchers(HttpMethod.GET,
-                                "/api/admin/customers").hasRole("ADMIN")
+                                                .requestMatchers(HttpMethod.GET,
+                                                                "/api/cycles/cycleId/**")
+                                                .hasAnyRole("CUSTOMER", "DOCTOR")
 
-                        .requestMatchers(HttpMethod.GET,
-                                "/api/cycles/cycleId/**").hasAnyRole("CUSTOMER", "DOCTOR")
+                                                .requestMatchers(HttpMethod.GET,
+                                                                "/api/treatment-services/**")
+                                                .permitAll()
 
-                        .requestMatchers(HttpMethod.GET,
-                                "/api/treatment-services/**").permitAll()
+                                                .requestMatchers(HttpMethod.POST,
+                                                                "/api/appointment-services/register/appointments")
+                                                .hasRole("CUSTOMER")
 
+                                                .requestMatchers(HttpMethod.POST,
+                                                                "/api/appointment-services/appointments/reexam",
+                                                                "/api/cycles/create")
+                                                .hasRole("DOCTOR")
 
-                        .requestMatchers(HttpMethod.POST,
-                                "/api/appointment-services/register/appointments").hasRole("CUSTOMER")
+                                                .requestMatchers(HttpMethod.POST,
+                                                                "/api/doctors",
+                                                                "/api/treatment-services")
+                                                .hasRole("MANAGER")
 
-                        .requestMatchers(HttpMethod.POST,
-                                "/api/appointment-services/appointments/reexam",
-                                "/api/cycles/create").hasRole("DOCTOR")
+                                                .requestMatchers(HttpMethod.POST,
+                                                                "/api/register/customer")
+                                                .permitAll()
 
-                        .requestMatchers(HttpMethod.POST,
-                                "/api/doctors",
-                                "/api/treatment-services").hasRole("MANAGER")
+                                                .requestMatchers(HttpMethod.PUT,
+                                                                "/api/customer/update")
+                                                .hasRole("CUSTOMER")
 
-                        .requestMatchers(HttpMethod.POST,
-                                "/api/register/customer").permitAll()
+                                                .requestMatchers(HttpMethod.PUT,
+                                                                "/api/doctors/me")
+                                                .hasRole("DOCTOR")
 
+                                                .requestMatchers(HttpMethod.PUT,
+                                                                "/api/treatment-services/**")
+                                                .hasRole("MANAGER")
 
-                        .requestMatchers(HttpMethod.PUT,
-                                "/api/customer/update").hasRole("CUSTOMER")
+                                                .requestMatchers(HttpMethod.PATCH,
+                                                                "api/appointment-services/appointments/cancel/{appointmentId}")
+                                                .hasRole("CUSTOMER")
 
-                        .requestMatchers(HttpMethod.PUT,
-                                "/api/doctors/me").hasRole("DOCTOR")
+                                                .requestMatchers(HttpMethod.PATCH,
+                                                                "/api/cycles/cycleId/*/note",
+                                                                "/api/cycles/cycleId/*/stepId/*/status")
+                                                .hasRole("DOCTOR")
 
-                        .requestMatchers(HttpMethod.PUT,
-                                "/api/treatment-services/**").hasRole("MANAGER")
+                                                .requestMatchers(HttpMethod.PATCH,
+                                                                "/api/doctors/status/**",
+                                                                "/api/treatment-services/status/**")
+                                                .hasRole("MANAGER")
 
+                                                .requestMatchers(HttpMethod.GET,
+                                                                "/api/treatment-services/**")
+                                                .permitAll()
 
-                        .requestMatchers(HttpMethod.PATCH,
-                                "api/appointment-services/appointments/cancel/{appointmentId}").hasRole("CUSTOMER")
+                                                .requestMatchers(HttpMethod.GET, "/api/admin/customers")
+                                                .hasRole("ADMIN")
+                                                .requestMatchers(HttpMethod.GET, "/api/customer/info")
+                                                .hasAnyRole("CUSTOMER", "DOCTOR")
+                                                .requestMatchers(HttpMethod.PUT, "/api/customer/update")
+                                                .hasRole("CUSTOMER")
 
-                        .requestMatchers(HttpMethod.PATCH,
-                                "/api/cycles/cycleId/*/note",
-                                "/api/cycles/cycleId/*/stepId/*/status").hasRole("DOCTOR")
+                                                .requestMatchers(HttpMethod.GET,
+                                                                "api/appointment-services/doctors/{doctorId}/available-schedules")
+                                                .hasRole("CUSTOMER")
+                                                .requestMatchers(HttpMethod.POST,
+                                                                "api/appointment-services/register/appointments")
+                                                .hasRole("CUSTOMER")
+                                                .requestMatchers(HttpMethod.POST,
+                                                                "api/appointment-services/appointments/reexam")
+                                                .hasRole("DOCTOR")
+                                                .requestMatchers(HttpMethod.GET,
+                                                                "api/appointment-services/appointments/reexam")
+                                                .hasRole("CUSTOMER")
+                                                .requestMatchers(HttpMethod.PATCH,
+                                                                "api/appointment-services/appointments/cancel/{appointmentId}")
+                                                .hasRole("CUSTOMER")
+                                                .requestMatchers(HttpMethod.GET,
+                                                                "api/appointment-services/appointments/history")
+                                                .hasRole("DOCTOR")
+                                                .requestMatchers(HttpMethod.GET,
+                                                                "api/appointment-services/appointments/overview")
+                                                .hasRole("MANAGER")
+                                                .requestMatchers(HttpMethod.GET, "api/login/roles")
+                                                .hasAnyRole("CUSTOMER", "DOCTOR", "ADMIN", "MANAGER")
 
-                        .requestMatchers(HttpMethod.PATCH,
-                                "/api/doctors/status/**",
-                                "/api/treatment-services/status/**").hasRole("MANAGER")
+                                                .requestMatchers(
+                                                                "/swagger-ui/**",
+                                                                "/v3/api-docs/**",
+                                                                "/swagger-resources/**",
+                                                                "/swagger-ui.html",
+                                                                "/webjars/**",
+                                                                "/v3/api-docs.yaml")
+                                                .permitAll()
+                                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                                                .anyRequest().authenticated()
 
-                        .requestMatchers(HttpMethod.GET,
-                                "/api/treatment-services/**").permitAll()
+                                )
+                                .sessionManagement(session -> session
+                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-                        .requestMatchers(HttpMethod.GET, "/api/admin/customers").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/customer/info").hasAnyRole("CUSTOMER", "DOCTOR")
-                        .requestMatchers(HttpMethod.PUT, "/api/customer/update").hasRole("CUSTOMER")
+                return http.build();
+        }
 
-                        .requestMatchers(HttpMethod.GET, "api/appointment-services/doctors/{doctorId}/available-schedules").hasRole("CUSTOMER")
-                        .requestMatchers(HttpMethod.POST, "api/appointment-services/register/appointments").hasRole("CUSTOMER")
-                        .requestMatchers(HttpMethod.POST, "api/appointment-services/appointments/reexam").hasRole("DOCTOR")
-                        .requestMatchers(HttpMethod.GET, "api/appointment-services/appointments/reexam").hasRole("CUSTOMER")
-                        .requestMatchers(HttpMethod.PATCH, "api/appointment-services/appointments/cancel/{appointmentId}").hasRole("CUSTOMER")
-                        .requestMatchers(HttpMethod.GET, "api/appointment-services/appointments/history").hasRole("DOCTOR")
-                        .requestMatchers(HttpMethod.GET, "api/appointment-services/appointments/overview").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.GET, "api/login/roles").hasAnyRole("CUSTOMER","DOCTOR","ADMIN","MANAGER")
+        @Bean
+        public CorsConfigurationSource corsConfigurationSource() {
+                CorsConfiguration config = new CorsConfiguration();
+                config.setAllowedOrigins(
+                                List.of("http://localhost:8080", "http://localhost:3000", "http://localhost:5173"));
+                config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+                config.setAllowedHeaders(List.of("*"));
+                config.setAllowCredentials(true);
 
-
-
-                        .requestMatchers(
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**",
-                                "/swagger-resources/**",
-                                "/swagger-ui.html",
-                                "/webjars/**",
-                                "/v3/api-docs.yaml"
-                        ).permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .anyRequest().authenticated()
-
-                )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
-    }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:3000", "http://localhost:5173"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
+                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                source.registerCorsConfiguration("/**", config);
+                return source;
+        }
 }

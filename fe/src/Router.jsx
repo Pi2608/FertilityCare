@@ -22,6 +22,7 @@ import MessageCus from '@customerpages/Message/MessageCus';
 import TreatmentProcess from '@customerpages/TreatmentProcess/TreatmentProcess';
 import Notification from '@customerpages/Notification/Notification';
 import TreatmentHistory from '@customerpages/TreatmentHistory/TreatmentHistory';
+import Pill from '@customerpages/Dashboard/Pill/Pill';
 
 import DocDashboard from '@doctorpages/Dashboard/DocDashboard';
 import Overview from './Pages/doctor/Dashboard/OverviewLayout/Overview';
@@ -314,7 +315,7 @@ export const router = createBrowserRouter([
       {
         index: false,
         path: "pills",
-        element: <Overall />,
+        element: <Pill />,
       },
       {
         index: false,

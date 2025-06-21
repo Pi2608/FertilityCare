@@ -1,118 +1,100 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import "./Doctor.css"
+import { useEffect, useState } from "react";
+import "./Doctor.css";
+import DoctorAPI from "../../../features/service/apiDoctor1";
+import CreateDoctor from "./CreateDoctor";
 
 const Doctor = () => {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [statusFilter, setStatusFilter] = useState("all") // "all", "active", "inactive"
-  const [doctorsData, setDoctorsData] = useState([
-    {
-      id: 1,
-      name: "Dr. Elizabeth Polson",
-      avatar: "/placeholder.svg?height=40&width=40",
-      initials: "EP",
-      gender: "Nữ",
-      birthDate: "05/10/1985",
-      specialty: "IVF",
-      experience: 10,
-      rating: 4.8,
-      isActive: true,
-    },
-    {
-      id: 2,
-      name: "Dr. John David",
-      avatar: "/placeholder.svg?height=40&width=40",
-      initials: "JD",
-      gender: "Nam",
-      birthDate: "15/03/1980",
-      specialty: "IUI",
-      experience: 15,
-      rating: 4.9,
-      isActive: true,
-    },
-    {
-      id: 3,
-      name: "Dr. Krishtav Rajan",
-      avatar: "/placeholder.svg?height=40&width=40",
-      initials: "KR",
-      gender: "Nam",
-      birthDate: "22/07/1982",
-      specialty: "IVF",
-      experience: 12,
-      rating: 4.7,
-      isActive: false,
-    },
-    {
-      id: 4,
-      name: "Dr. Sumanth Tinson",
-      avatar: "/placeholder.svg?height=40&width=40",
-      initials: "ST",
-      gender: "Nữ",
-      birthDate: "08/12/1987",
-      specialty: "IVF",
-      experience: 8,
-      rating: 4.6,
-      isActive: true,
-    },
-    {
-      id: 5,
-      name: "Dr. EG Subramani",
-      avatar: "/placeholder.svg?height=40&width=40",
-      initials: "ES",
-      gender: "Nữ",
-      birthDate: "30/09/1975",
-      specialty: "IVF",
-      experience: 20,
-      rating: 4.9,
-      isActive: true,
-    },
-    {
-      id: 6,
-      name: "Dr. Ranjan Maari",
-      avatar: "/placeholder.svg?height=40&width=40",
-      initials: "RM",
-      gender: "Nam",
-      birthDate: "14/05/1978",
-      specialty: "IUI",
-      experience: 18,
-      rating: 4.8,
-      isActive: false,
-    },
-    {
-      id: 7,
-      name: "Dr. Philipile Gopal",
-      avatar: "/placeholder.svg?height=40&width=40",
-      initials: "PG",
-      gender: "Nam",
-      birthDate: "25/11/1983",
-      specialty: "IUI",
-      experience: 11,
-      rating: 4.5,
-      isActive: true,
-    },
-  ])
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [doctorsData, setDoctorsData] = useState([]);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
-  const handleToggleStatus = (doctorId) => {
-    setDoctorsData(prev => prev.map(doctor =>
-      doctor.id === doctorId
-        ? { ...doctor, isActive: !doctor.isActive }
-        : doctor
-    ))
-  }
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const data = await DoctorAPI.getAllDoctors();
+        const mappedDoctors = data.map((doc, index) => ({
+          id: doc.userId || index,
+          name: doc.name,
+          avatar: "/placeholder.svg?height=40&width=40",
+          initials: getInitials(doc.name),
+          gender:
+            doc.gender === "male" ? "Nam" : doc.gender === "female" ? "Nữ" : "",
+          birthDate: formatDate(doc.dob),
+          email: doc.email,
+          specialty: doc.specification,
+          experience: doc.experience,
+          rating: doc.ratingAvg ?? "Chưa có",
+          isActive: doc.isActive,
+        }));
+
+        setDoctorsData(mappedDoctors);
+      } catch (error) {
+        console.error("Lỗi gọi API bác sĩ:", error);
+      }
+    };
+
+    fetchDoctors();
+  }, []);
+
+  const getInitials = (name) => {
+    if (!name) return "";
+    return name
+      .split(" ")
+      .map((word) => word[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "";
+
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  const handleToggleStatus = async (doctorId) => {
+    const doctor = doctorsData.find((d) => d.id === doctorId);
+    if (!doctor) return;
+
+    const newStatus = !doctor.isActive;
+
+    try {
+      await DoctorAPI.toggleDoctorStatus(doctorId, newStatus);
+      setDoctorsData((prev) =>
+        prev.map((doc) =>
+          doc.id === doctorId ? { ...doc, isActive: newStatus } : doc
+        )
+      );
+    } catch (error) {
+      alert("Không thể cập nhật trạng thái. Vui lòng thử lại.");
+    }
+  };
 
   const filteredDoctors = doctorsData.filter((doctor) => {
+    const name = doctor.name?.toLowerCase() || "";
+    const specialty = doctor.specialty?.toLowerCase() || "";
+
     const matchesSearch =
-      doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      doctor.specialty.toLowerCase().includes(searchTerm.toLowerCase())
+      name.includes(searchTerm.toLowerCase()) ||
+      specialty.includes(searchTerm.toLowerCase());
 
     const matchesStatus =
       statusFilter === "all" ||
       (statusFilter === "active" && doctor.isActive) ||
-      (statusFilter === "inactive" && !doctor.isActive)
+      (statusFilter === "inactive" && !doctor.isActive);
 
-    return matchesSearch && matchesStatus
-  })
+    return matchesSearch && matchesStatus;
+  });
 
   return (
     <div className="doctor-page">
@@ -162,6 +144,12 @@ const Doctor = () => {
               <option value="active">Đang hoạt động</option>
               <option value="inactive">Không hoạt động</option>
             </select>
+            <button
+              className="create-doctor-btn"
+              onClick={() => setIsCreateModalOpen(true)}
+            >
+              <span>+</span> Tạo tài khoản bác sĩ
+            </button>
           </div>
         </div>
 
@@ -170,6 +158,7 @@ const Doctor = () => {
           <table className="doctors-table">
             <thead>
               <tr>
+                <th>Email</th>
                 <th>Họ và tên</th>
                 <th>Giới tính</th>
                 <th>Ngày sinh</th>
@@ -182,19 +171,15 @@ const Doctor = () => {
             <tbody>
               {filteredDoctors.map((doctor) => (
                 <tr key={doctor.id}>
+                  <td>{doctor.email}</td>
                   <td className="doctor-name-cell">
                     <div className="doctor-info">
-                      <div className="doctor-avatar">{doctor.initials}</div>
                       <span className="doctor-name">{doctor.name}</span>
                     </div>
                   </td>
                   <td>{doctor.gender}</td>
                   <td>{doctor.birthDate}</td>
-                  <td>
-                    <span className={`specialty-badge ${doctor.specialty.toLowerCase()}`}>
-                      {doctor.specialty}
-                    </span>
-                  </td>
+                  <td>{doctor.specialty}</td>
                   <td>{doctor.experience}</td>
                   <td>
                     <div className="rating">
@@ -204,9 +189,11 @@ const Doctor = () => {
                   <td>
                     <button
                       onClick={() => handleToggleStatus(doctor.id)}
-                      className={`status-toggle-btn ${doctor.isActive ? 'active' : 'inactive'}`}
+                      className={`status-toggle-btn ${
+                        doctor.isActive ? "active" : "inactive"
+                      }`}
                     >
-                      {doctor.isActive ? 'Hoạt động' : 'Không hoạt động'}
+                      {doctor.isActive ? "Hoạt động" : "Không hoạt động"}
                     </button>
                   </td>
                 </tr>
@@ -218,7 +205,6 @@ const Doctor = () => {
         {/* Pagination */}
         <div className="pagination-section">
           <button className="pagination-btn prev">Trước đó</button>
-
           <div className="page-numbers">
             <button className="page-btn active">1</button>
             <button className="page-btn">2</button>
@@ -228,8 +214,39 @@ const Doctor = () => {
           </div>
         </div>
       </main>
-    </div>
-  )
-}
 
-export default Doctor
+      {/* Create Doctor Modal */}
+      <CreateDoctor
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSuccess={() => {
+          setIsCreateModalOpen(false);
+          setIsSuccessModalOpen(true);
+        }}
+      />
+
+      {/* Success Modal */}
+      {isSuccessModalOpen && (
+        <div className="success-modal-overlay">
+          <div className="success-modal-content">
+            <div className="success-modal-body">
+              <div className="success-icon">✓</div>
+              <h2>Tạo tài khoản thành công!</h2>
+              <p>Tài khoản bác sĩ đã được tạo thành công.</p>
+            </div>
+            <div className="success-modal-footer">
+              <button
+                className="success-close-btn"
+                onClick={() => setIsSuccessModalOpen(false)}
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Doctor;

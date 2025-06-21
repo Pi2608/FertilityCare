@@ -14,7 +14,7 @@
   padding: 20px 24px;
 }
 
-.header-content {
+.admin-header-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -519,7 +519,7 @@
     padding: 20px;
   }
 
-  .header-content {
+  .admin-header-content {
     flex-direction: column;
     gap: 16px;
     align-items: flex-start;

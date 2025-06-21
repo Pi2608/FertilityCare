@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { loginUser, registerUser, clearError, checkAuthStatus } from '@features/auth/authSlice';
-import { useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { loginUser, registerUser, clearError, checkAuthStatus } from "@features/auth/authSlice";
+import { useLocation } from "react-router-dom";
 import { USER_ROLES } from '../../Router';
-import './Authentication.css';
+import "./Authentication.css";
+import { Eye, EyeOff } from "lucide-react"; // icon đóng hiện mật khẩu
 
 const Authentication = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const { loading, error, isAuthenticated, role  } = useSelector((state) => state.auth);
-  
+  const [showPassword, setShowPassword] = useState(false); // Thêm state này
+
   const [isLogin, setIsLogin] = useState(true);
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
@@ -64,16 +66,16 @@ const Authentication = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
-    
+
     // Clear field-specific error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: "",
       }));
     }
   };
@@ -83,23 +85,23 @@ const Authentication = () => {
 
     if (isLogin) {
       if (!formData.email && !formData.phone) {
-        newErrors.email = 'Vui lòng nhập email hoặc số điện thoại';
+        newErrors.email = "Vui lòng nhập email hoặc số điện thoại";
       }
 
       if (!formData.password) {
-        newErrors.password = 'Vui lòng nhập mật khẩu';
+        newErrors.password = "Vui lòng nhập mật khẩu";
       }
     } else {
       if (!formData.email) {
-        newErrors.email = 'Vui lòng nhập email';
+        newErrors.email = "Vui lòng nhập email";
       } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-        newErrors.email = 'Email không hợp lệ';
+        newErrors.email = "Email không hợp lệ";
       }
 
       if (!formData.phone) {
-        newErrors.phone = 'Vui lòng nhập số điện thoại';
-      } else if (!/^[0-9]{10}$/.test(formData.phone.replace(/\D/g, ''))) {
-        newErrors.phone = 'Số điện thoại không hợp lệ';
+        newErrors.phone = "Vui lòng nhập số điện thoại";
+      } else if (!/^[0-9]{10}$/.test(formData.phone.replace(/\D/g, ""))) {
+        newErrors.phone = "Số điện thoại không hợp lệ";
       }
 
       if (!formData.name) {
@@ -107,7 +109,7 @@ const Authentication = () => {
       }
 
       if (!formData.gender) {
-        newErrors.gender = 'Vui lòng chọn giới tính';
+        newErrors.gender = "Vui lòng chọn giới tính";
       }
 
       if (!formData.dob) {
@@ -115,15 +117,15 @@ const Authentication = () => {
       }
 
       if (!formData.password) {
-        newErrors.password = 'Vui lòng nhập mật khẩu';
+        newErrors.password = "Vui lòng nhập mật khẩu";
       } else if (formData.password.length < 6) {
-        newErrors.password = 'Mật khẩu phải có ít nhất 6 ký tự';
+        newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự";
       }
 
       if (!formData.confirmPassword) {
-        newErrors.confirmPassword = 'Vui lòng xác nhận mật khẩu';
+        newErrors.confirmPassword = "Vui lòng xác nhận mật khẩu";
       } else if (formData.confirmPassword !== formData.password) {
-        newErrors.confirmPassword = 'Mật khẩu xác nhận không khớp';
+        newErrors.confirmPassword = "Mật khẩu xác nhận không khớp";
       }
     }
 
@@ -133,16 +135,18 @@ const Authentication = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     try {
       if (isLogin) {
-        const resultAction = await dispatch(loginUser({ 
-          email: formData.email, 
-          password: formData.password 
-        }));
-        
+        const resultAction = await dispatch(
+          loginUser({
+            email: formData.email,
+            password: formData.password,
+          })
+        );
+
         if (loginUser.fulfilled.match(resultAction)) {
           console.log('Login successful');
 
@@ -163,7 +167,6 @@ const Authentication = () => {
             console.error('Lỗi khi lấy thông tin xác thực:', error);
           }
         }
-        
       } else {
         const userData = {
           name: formData.name,
@@ -173,16 +176,16 @@ const Authentication = () => {
           gender: formData.gender,
           dob: formData.dob,
         };
-        
+
         const resultAction = await dispatch(registerUser(userData));
-        
+
         if (registerUser.fulfilled.match(resultAction)) {
-          console.log('Registration successful');
+          console.log("Registration successful");
           resetForm();
         }
       }
     } catch (err) {
-      console.error('Authentication error:', err);
+      console.error("Authentication error:", err);
     }
   };
 
@@ -210,14 +213,14 @@ const Authentication = () => {
         <div className="auth-header">
           <div className="toggle-buttons">
             <button
-              className={`toggle-btn ${isLogin ? 'active' : ''}`}
+              className={`toggle-btn ${isLogin ? "active" : ""}`}
               onClick={() => handleToggle(true)}
               disabled={loading}
             >
               Đăng nhập
             </button>
             <button
-              className={`toggle-btn ${!isLogin ? 'active' : ''}`}
+              className={`toggle-btn ${!isLogin ? "active" : ""}`}
               onClick={() => handleToggle(false)}
               disabled={loading}
             >
@@ -233,73 +236,96 @@ const Authentication = () => {
           </div>
         )}
 
-        <form className={`auth-form ${isLogin ? 'login-form' : 'register-form'}`} onSubmit={handleSubmit}>
+        <form
+          className={`auth-form ${isLogin ? "login-form" : "register-form"}`}
+          onSubmit={handleSubmit}
+        >
           {isLogin ? (
             <div>
-                <div className="form-group">
-                    <label htmlFor="emailOrPhone">Email hoặc Số điện thoại</label>
-                    <input
-                        type="text"
-                        id="emailOrPhone"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        placeholder="Email hoặc số điện thoại"
-                        disabled={loading}
-                    />
-                    {errors.email && <p className="error-text">{errors.email}</p>}
-                </div>
+              <div className="form-group">
+                <label htmlFor="emailOrPhone">Email hoặc Số điện thoại</label>
+                <input
+                  type="text"
+                  id="emailOrPhone"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="Email hoặc số điện thoại"
+                  disabled={loading}
+                />
+                {errors.email && <p className="error-text">{errors.email}</p>}
+              </div>
 
-                <div className="form-group">
-                    <label htmlFor="password">Mật khẩu</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleInputChange}
-                        placeholder="Nhập mật khẩu"
-                        disabled={loading}
-                    />
-                    {errors.password && <p className="error-text">{errors.password}</p>}
+              <div className="form-group">
+                <label htmlFor="password">Mật khẩu</label>
+                <div style={{ position: "relative" }}>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    placeholder="Nhập mật khẩu"
+                    disabled={loading}
+                    style={{ paddingRight: "36px" }}
+                  />
+                  <span
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    style={{
+                      position: "absolute",
+                      right: "10px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      cursor: "pointer",
+                      color: "#888",
+                    }}
+                    tabIndex={0}
+                    aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                  >
+                    {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+                  </span>
                 </div>
+                {errors.password && (
+                  <p className="error-text">{errors.password}</p>
+                )}
+              </div>
 
-                <button type="submit" className="submit-btn" disabled={loading}>
-                    {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
-                </button>
+              <button type="submit" className="submit-btn" disabled={loading}>
+                {loading ? "Đang đăng nhập..." : "Đăng nhập"}
+              </button>
             </div>
           ) : (
             <div>
-                <div className="form-row">
-                    <div className="form-group">
-                        <label htmlFor="email">Email</label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            placeholder="Email"
-                            disabled={loading}
-                        />
-                        {errors.email && <p className="error-text">{errors.email}</p>}
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="phone">Số điện thoại</label>
-                        <input
-                            type="tel"
-                            id="phone"
-                            name="phone"
-                            value={formData.phone}
-                            onChange={handleInputChange}
-                            placeholder="Số điện thoại"
-                            maxLength={10}
-                            disabled={loading}
-                        />
-                        {errors.phone && <p className="error-text">{errors.phone}</p>}
-                    </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="email">Email</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="Email"
+                    disabled={loading}
+                  />
+                  {errors.email && <p className="error-text">{errors.email}</p>}
                 </div>
+
+                <div className="form-group">
+                  <label htmlFor="phone">Số điện thoại</label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    placeholder="Số điện thoại"
+                    maxLength={10}
+                    disabled={loading}
+                  />
+                  {errors.phone && <p className="error-text">{errors.phone}</p>}
+                </div>
+              </div>
 
                 <div className="form-group">
                     <label htmlFor="name">Họ và tên</label>
@@ -315,22 +341,24 @@ const Authentication = () => {
                     {errors.name && <p className="error-text">{errors.name}</p>}
                 </div>
 
-                <div className="form-row">
-                    <div className="form-group">
-                    <label htmlFor="gender">Giới tính</label>
-                    <select
-                        id="gender"
-                        name="gender"
-                        value={formData.gender}
-                        onChange={handleInputChange}
-                        disabled={loading}
-                    >
-                        <option value="">Chọn giới tính</option>
-                        <option value="male">Nam</option>
-                        <option value="female">Nữ</option>
-                    </select>
-                    {errors.gender && <p className="error-text">{errors.gender}</p>}
-                    </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="gender">Giới tính</label>
+                  <select
+                    id="gender"
+                    name="gender"
+                    value={formData.gender}
+                    onChange={handleInputChange}
+                    disabled={loading}
+                  >
+                    <option value="">Chọn giới tính</option>
+                    <option value="male">Nam</option>
+                    <option value="female">Nữ</option>
+                  </select>
+                  {errors.gender && (
+                    <p className="error-text">{errors.gender}</p>
+                  )}
+                </div>
 
                     <div className="form-group">
                     <label htmlFor="dob">Ngày sinh</label>
@@ -346,37 +374,41 @@ const Authentication = () => {
                     </div>
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="registerPassword">Mật khẩu</label>
-                    <input
-                        type="password"
-                        id="registerPassword"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleInputChange}
-                        placeholder="Nhập mật khẩu"
-                        disabled={loading}
-                    />
-                    {errors.password && <p className="error-text">{errors.password}</p>}
-                </div>
+              <div className="form-group">
+                <label htmlFor="registerPassword">Mật khẩu</label>
+                <input
+                  type="password"
+                  id="registerPassword"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  placeholder="Nhập mật khẩu"
+                  disabled={loading}
+                />
+                {errors.password && (
+                  <p className="error-text">{errors.password}</p>
+                )}
+              </div>
 
-                <div className="form-group">
-                    <label htmlFor="confirmPassword">Xác nhận mật khẩu</label>
-                    <input
-                        type="password"
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        value={formData.confirmPassword}
-                        onChange={handleInputChange}
-                        placeholder="Nhập lại mật khẩu"
-                        disabled={loading}
-                    />
-                    {errors.confirmPassword && <p className="error-text">{errors.confirmPassword}</p>}
-                </div>
+              <div className="form-group">
+                <label htmlFor="confirmPassword">Xác nhận mật khẩu</label>
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  placeholder="Nhập lại mật khẩu"
+                  disabled={loading}
+                />
+                {errors.confirmPassword && (
+                  <p className="error-text">{errors.confirmPassword}</p>
+                )}
+              </div>
 
-                <button type="submit" className="submit-btn" disabled={loading}>
-                    {loading ? 'Đang đăng ký...' : 'Đăng ký'}
-                </button>
+              <button type="submit" className="submit-btn" disabled={loading}>
+                {loading ? "Đang đăng ký..." : "Đăng ký"}
+              </button>
             </div>
           )}
         </form>
