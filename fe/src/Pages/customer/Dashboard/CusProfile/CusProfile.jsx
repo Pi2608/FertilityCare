@@ -1,14 +1,33 @@
-"use client"
-
-import { useState } from "react"
-import "./CusProfile.css"
+import "./CusProfile.css";
+import { useEffect, useState } from "react";
+import CustomerAPI from "../../../../features/service/apiCustomer";
 
 const ProfileLayout = () => {
   const [doctorInfo, setDoctorInfo] = useState({
     fullName: "Lê Văn Lương",
     gender: "male",
     birthDate: "1985-03-15",
-  })
+  });
+
+  useEffect(() => {
+    const fetchCustomerInfo = async () => {
+      try {
+        const res = await CustomerAPI.getCustomerInfo();
+        const customer = res.data;
+        setDoctorInfo({
+          fullName: customer.name || "",
+          gender: customer.gender || "",
+          birthDate: customer.dob || "",
+          phone: customer.phone || "",
+          email: customer.email || "",
+        });
+      } catch (error) {
+        console.error("Không lấy được thông tin customer:", error);
+      }
+    };
+
+    fetchCustomerInfo();
+  }, []);
 
   const reviews = [
     {
@@ -38,34 +57,54 @@ const ProfileLayout = () => {
         "Bác sĩ khám rất kỹ và chu đáo. Tuy nhiên thời gian chờ hơi lâu một chút. Nhưng nhìn chung tôi rất tin tưởng vào chuyên môn của bác sĩ.",
       avatar: "/placeholder.svg?height=40&width=40",
     },
-  ]
+  ];
 
   const handleInputChange = (field, value) => {
     setDoctorInfo((prev) => ({
       ...prev,
       [field]: value,
-    }))
-  }
+    }));
+  };
 
-  const handleSave = () => {
-    console.log("Đã lưu thông tin bác sĩ:", doctorInfo)
-    alert("Đã lưu thông tin thành công!")
-  }
+  const handleSave = async () => {
+    try {
+      // Format ngày sinh về dạng yyyy-MM-dd
+      const formattedDob = new Date(doctorInfo.birthDate).toISOString().split("T")[0];
+  
+      const updatedData = {
+        name: doctorInfo.fullName || "",
+        gender: doctorInfo.gender || "",
+        dob: formattedDob,
+        phones: doctorInfo.phone || "",
+        medicalHistory: "", // Optional, vẫn để rỗng
+      };
+  
+      const response = await CustomerAPI.updateCustomerInfo(updatedData);
+      console.log("✅ Cập nhật thành công:", response);
+      alert("✅ Đã lưu thông tin thành công!");
+    } catch (error) {
+      console.error("❌ Lỗi khi lưu thông tin:", error);
+      alert("❌ Lưu thông tin thất bại. Vui lòng thử lại.");
+    }
+  };
+  
+  
 
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, index) => (
       <span key={index} className={`star ${index < rating ? "filled" : ""}`}>
         ⭐
       </span>
-    ))
-  }
+    ));
+  };
 
-  const averageRating = reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
+  const averageRating =
+    reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
 
   const formatDate = (dateString) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString("vi-VN")
-  }
+    const date = new Date(dateString);
+    return date.toLocaleDateString("vi-VN");
+  };
 
   return (
     <div className="profile-container">
@@ -88,14 +127,40 @@ const ProfileLayout = () => {
             </div> */}
             <div className="doctor-details">
               <div className="info-grid">
+                
+
+              <div className="info-item">
+  <label>Email</label>
+  <input
+    type="email"
+    className="edit-input"
+    value={doctorInfo.email || ""}
+    disabled
+  />
+</div>
+
+
                 <div className="info-item">
                   <label>Họ và Tên</label>
                   <input
                     type="text"
                     className="edit-input"
                     value={doctorInfo.fullName}
-                    onChange={(e) => handleInputChange("fullName", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("fullName", e.target.value)
+                    }
                     placeholder="Nhập họ và tên"
+                  />
+                </div>
+
+                <div className="info-item">
+                  <label>Số điện thoại</label>
+                  <input
+                    type="text"
+                    className="edit-input"
+                    value={doctorInfo.phone || ""}
+                    onChange={(e) => handleInputChange("phone", e.target.value)}
+                    placeholder="Nhập số điện thoại"
                   />
                 </div>
 
@@ -104,11 +169,12 @@ const ProfileLayout = () => {
                   <select
                     className="edit-select"
                     value={doctorInfo.gender}
-                    onChange={(e) => handleInputChange("gender", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("gender", e.target.value)
+                    }
                   >
                     <option value="male">Nam</option>
                     <option value="female">Nữ</option>
-    
                   </select>
                 </div>
 
@@ -118,10 +184,11 @@ const ProfileLayout = () => {
                     type="date"
                     className="edit-input"
                     value={doctorInfo.birthDate}
-                    onChange={(e) => handleInputChange("birthDate", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("birthDate", e.target.value)
+                    }
                   />
                 </div>
-
               </div>
 
               <button className="btn-save" onClick={handleSave}>
@@ -130,11 +197,9 @@ const ProfileLayout = () => {
             </div>
           </div>
         </div>
-
-        
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default ProfileLayout;
