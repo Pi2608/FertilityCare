@@ -40,7 +40,7 @@ public class MedicineSchedule {
     @Column(name = "enddate")
     private LocalDate enddate;
 
-    @Column(name = "note", columnDefinition = "TEXT")
+    @Column(name = "note", columnDefinition = "NVARCHAR(MAX)")
     private String note;
 
     public MedicineSchedule() {

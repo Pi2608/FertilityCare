@@ -45,30 +45,72 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/login/**").permitAll()
 
-                        .requestMatchers(HttpMethod.POST,
-                                "/api/register/customer").permitAll()
-
-                        .requestMatchers(HttpMethod.GET,
-                                "/api/doctors/active",
-                                "/api/treatment-services/active").permitAll()
-
-                        .requestMatchers(HttpMethod.GET,
-                                "/api/doctors/all",
-                                "/api/treatment-services/all").hasRole("MANAGER")
 
                         .requestMatchers(HttpMethod.GET,
                                 "/api/doctors/id/**",
-                                "/api/doctors/specification").hasAnyRole("MANAGER", "CUSTOMER")
+                                "/api/doctors/name/**",
+                                "/api/doctors/active",
+                                "/api/doctors/specification",
+
+                                "/api/customer/info")
+                        .permitAll()
+
+                        .requestMatchers(HttpMethod.GET,
+                                "api/appointment-services/doctors/{doctorId}/available-schedules",
+                                "api/appointment-services/appointments/reexam",
+                                "/api/cycles/meC").hasRole("CUSTOMER")
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/doctors/me",
+                                "api/appointment-services/appointments/history",
+                                "/api/cycles/meD").hasRole("DOCTOR")
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/doctors/all",
+                                "/api/treatment-services/all",
+                                "api/appointment-services/appointments/overview").hasRole("MANAGER")
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/admin/customers").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/cycles/cycleId/**").hasAnyRole("CUSTOMER", "DOCTOR")
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/treatment-services/**").permitAll()
+
+
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/appointment-services/register/appointments").hasRole("CUSTOMER")
+
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/appointment-services/appointments/reexam",
+                                "/api/cycles/create").hasRole("DOCTOR")
 
                         .requestMatchers(HttpMethod.POST,
                                 "/api/doctors",
                                 "/api/treatment-services").hasRole("MANAGER")
+
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/register/customer").permitAll()
+
+
+                        .requestMatchers(HttpMethod.PUT,
+                                "/api/customer/update").hasRole("CUSTOMER")
 
                         .requestMatchers(HttpMethod.PUT,
                                 "/api/doctors/me").hasRole("DOCTOR")
 
                         .requestMatchers(HttpMethod.PUT,
                                 "/api/treatment-services/**").hasRole("MANAGER")
+
+
+                        .requestMatchers(HttpMethod.PATCH,
+                                "api/appointment-services/appointments/cancel/{appointmentId}").hasRole("CUSTOMER")
+
+                        .requestMatchers(HttpMethod.PATCH,
+                                "/api/cycles/cycleId/*/note",
+                                "/api/cycles/cycleId/*/stepId/*/status").hasRole("DOCTOR")
 
                         .requestMatchers(HttpMethod.PATCH,
                                 "/api/doctors/status/**",

@@ -1,15 +1,13 @@
 package hsf302.com.hiemmuon.service;
 
 import hsf302.com.hiemmuon.dto.createDto.CreateDoctorDTO;
-import hsf302.com.hiemmuon.dto.entityDto.DoctorDTOForCustomer;
-import hsf302.com.hiemmuon.dto.entityDto.DoctorDTOForManager;
+import hsf302.com.hiemmuon.dto.entityDto.DoctorDTO;
 import hsf302.com.hiemmuon.dto.updateDto.UpdateDoctorDTO;
 import hsf302.com.hiemmuon.entity.Doctor;
 import hsf302.com.hiemmuon.entity.User;
 import hsf302.com.hiemmuon.repository.DoctorRepository;
 import hsf302.com.hiemmuon.repository.RoleRepository;
 import hsf302.com.hiemmuon.repository.UserRepository;
-import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,18 +33,7 @@ public class DoctorService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private JwtService jwtService;
-
-
-    public Doctor getDoctorByJwt(HttpServletRequest request) {
-        final String authHeader = request.getHeader("Authorization");
-        final String token = authHeader.substring(7);
-        Claims claims = jwtService.extractAllClaims(token);
-
-        Object doctorIdObj = claims.get("userId");
-        Integer doctorId = Integer.parseInt(doctorIdObj.toString());
-        return doctorRepository.findById(doctorId).get();
-    }
+    private UserService userService;
 
     public Doctor getDoctorById(int id) {
         return doctorRepository.findById(id);
@@ -56,34 +43,40 @@ public class DoctorService {
         return doctorRepository.save(doctor);
     }
 
-    public DoctorDTOForCustomer getDoctorByDoctorId(int id) {
+    public DoctorDTO getDoctorByDoctorId(int id) {
         Doctor doctor = doctorRepository.findById(id);
-        DoctorDTOForCustomer dto = convertToCustomerDTO(doctor);
+        DoctorDTO dto = convertToDoctorDTO(doctor);
         return dto;
     }
 
-    public DoctorDTOForCustomer getDoctorByName(String name) {
+    public DoctorDTO getDoctorByName(String name) {
         Doctor doctor = doctorRepository.findByUser_Name(name);
-        DoctorDTOForCustomer dto = convertToCustomerDTO(doctor);
+        DoctorDTO dto = convertToDoctorDTO(doctor);
         return dto;
     }
 
-    public List<DoctorDTOForManager> getAllDoctor() {
-        return doctorRepository.findAll().stream()
-                .map(this::convertToManagerDTO)
-                .collect(Collectors.toList());
-    }
-
-    public List<DoctorDTOForCustomer> getDoctorBySpecification(String specification) {
+    public List<DoctorDTO> getDoctorBySpecification(String specification) {
         return doctorRepository.findBySpecification(specification).stream()
-                .map(this::convertToCustomerDTO)
+                .map(this::convertToDoctorDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<DoctorDTOForCustomer> getDoctorByIsActive() {
+    public List<DoctorDTO> getDoctorByIsActive() {
         return doctorRepository.findByIsActive(true).stream()
-                .map(this::convertToCustomerDTO)
+                .map(this::convertToDoctorDTO)
                 .collect(Collectors.toList());
+    }
+
+    public List<DoctorDTO> getAllDoctor() {
+        return doctorRepository.findAll().stream()
+                .map(this::convertToDoctorDTO)
+                .collect(Collectors.toList());
+    }
+
+    public DoctorDTO getDoctorMe(HttpServletRequest request) {
+        User existingDoctor = userService.getUserByJwt(request);
+        DoctorDTO dto = convertToDoctorDTO(existingDoctor.getDoctor());
+        return dto;
     }
 
     public Doctor createDoctor(CreateDoctorDTO request) {
@@ -108,27 +101,26 @@ public class DoctorService {
         return doctorRepository.save(doctor);
     }
 
-    public Doctor updateDoctor(HttpServletRequest request, UpdateDoctorDTO updateDoctorDTO) {
+    public Doctor updateDoctorMe(HttpServletRequest request, UpdateDoctorDTO updateDoctorDTO) {
 
-        Doctor existingDoctor = getDoctorByJwt(request);
-        User existingUser = existingDoctor.getUser();
+        User existingDoctor = userService.getUserByJwt(request);
 
         if (updateDoctorDTO.getName() != null) {
-            existingUser.setName(updateDoctorDTO.getName());
+            existingDoctor.setName(updateDoctorDTO.getName());
         }
         if (updateDoctorDTO.getPhone() != null) {
-            existingUser.setPhone(updateDoctorDTO.getPhone());
+            existingDoctor.setPhone(updateDoctorDTO.getPhone());
         }
         if (updateDoctorDTO.getDob() != null) {
-            existingUser.setDob(updateDoctorDTO.getDob());
+            existingDoctor.setDob(updateDoctorDTO.getDob());
         }
         if (updateDoctorDTO.getGender() != null) {
-            existingUser.setGender(updateDoctorDTO.getGender());
+            existingDoctor.setGender(updateDoctorDTO.getGender());
         }
         if (updateDoctorDTO.getDescription() != null) {
-            existingDoctor.setSpecification(updateDoctorDTO.getDescription());
+            existingDoctor.getDoctor().setSpecification(updateDoctorDTO.getDescription());
         }
-        return saveDoctor(existingDoctor);
+        return saveDoctor(existingDoctor.getDoctor());
     }
 
     public Doctor updateDoctorActive(int id, boolean active) {
@@ -137,20 +129,8 @@ public class DoctorService {
         return saveDoctor(doctor);
     }
 
-    private DoctorDTOForCustomer convertToCustomerDTO(Doctor doctor) {
-        DoctorDTOForCustomer dto = new DoctorDTOForCustomer();
-        dto.setName(doctor.getUser().getName());
-        dto.setGender(doctor.getUser().getGender());
-        dto.setEmail(doctor.getUser().getEmail());
-        dto.setPhone(doctor.getUser().getPhone());
-        dto.setSpecification(doctor.getSpecification());
-        dto.setRatingAvg(doctor.getRatingAvg());
-        dto.setExperience(doctor.getExperience());
-        return dto;
-    }
-
-    private DoctorDTOForManager convertToManagerDTO(Doctor doctor) {
-        DoctorDTOForManager dto = new DoctorDTOForManager();
+    private DoctorDTO convertToDoctorDTO(Doctor doctor) {
+        DoctorDTO dto = new DoctorDTO();
         dto.setUserId(doctor.getUser().getUserId());
         dto.setName(doctor.getUser().getName());
         dto.setGender(doctor.getUser().getGender());
@@ -163,9 +143,4 @@ public class DoctorService {
         dto.setIsActive(doctor.getIsActive());
         return dto;
     }
-
-    public Doctor getDoctorByUserId(int userId) {
-        return doctorRepository.findByUser_UserId(userId);
-    }
-
 }

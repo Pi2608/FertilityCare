@@ -1,6 +1,5 @@
 package hsf302.com.hiemmuon.config;
 
-import hsf302.com.hiemmuon.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -16,8 +15,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -48,7 +45,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            System.out.println("🚫 Không có JWT hoặc không đúng định dạng.");
             filterChain.doFilter(request, response);
             return;
         }
@@ -74,6 +70,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
             System.out.println("✅ Jwt Filter Authorities: " + authorities);
+            System.out.println("👤 JWT Roles: " + roles);
+
         } catch (JwtException e) {
             logger.warn("⚠️ Invalid JWT: " + e.getMessage());
         }

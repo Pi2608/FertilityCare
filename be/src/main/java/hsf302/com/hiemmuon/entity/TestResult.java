@@ -36,7 +36,7 @@ public class TestResult {
     @Column(name = "test_date", nullable = false)
     private LocalDate testDate;
 
-    @Column(name = "note", columnDefinition = "TEXT")
+    @Column(name = "note", columnDefinition = "NVARCHAR(MAX)")
     private String note;
 
     public TestResult() {

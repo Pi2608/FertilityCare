@@ -18,7 +18,7 @@ public class Medicine {
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
-    @Column(name = "discription", columnDefinition = "TEXT")
+    @Column(name = "discription", columnDefinition = "NVARCHAR(MAX)")
     private String discription;
 
     @Column(name = "number")

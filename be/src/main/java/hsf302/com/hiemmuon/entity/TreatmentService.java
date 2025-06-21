@@ -29,21 +29,22 @@ public class TreatmentService {
     @Column(name = "price", precision = 10, scale = 2)
     private BigDecimal price;
 
-    @Column(name = "specialfications", length = 255, columnDefinition = "NVARCHAR(MAX)")
-    private String specialfications;
+    @Column(name = "specifications", length = 255, columnDefinition = "NVARCHAR(MAX)")
+    private String specifications;
 
-    @Column(name = "status", length = 255)
-    private boolean status;
+    @Column(name = "isActive", length = 255)
+    private boolean isActive;
 
     public TreatmentService() {
     }
 
-    public TreatmentService(int serviceId, String name, String description, Float successRate, BigDecimal price, String specialfications) {
+    public TreatmentService(int serviceId, String name, String description, Float successRate, BigDecimal price, String specifications, boolean isActive) {
         this.serviceId = serviceId;
         this.name = name;
         this.description = description;
         this.successRate = successRate;
         this.price = price;
-        this.specialfications = specialfications;
+        this.specifications = specifications;
+        this.isActive = isActive;
     }
 }

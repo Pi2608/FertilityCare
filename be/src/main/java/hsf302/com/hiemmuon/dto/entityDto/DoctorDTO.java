@@ -3,9 +3,7 @@ package hsf302.com.hiemmuon.dto.entityDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import hsf302.com.hiemmuon.enums.Genders;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -13,9 +11,9 @@ import java.time.LocalDate;
 @JsonIgnoreProperties(ignoreUnknown = false)
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class DoctorDTOForCustomer {
+public class DoctorDTO{
+    @Positive(message = "ID người dùng phải lớn hơn 0")
+    private int userId;
 
     @NotBlank(message = "Tên không được để trống")
     @Size(max = 100, message = "Tên không được vượt quá 100 ký tự")
@@ -25,6 +23,7 @@ public class DoctorDTOForCustomer {
     private Genders gender;
 
     @NotNull(message = "Ngày sinh không được để trống")
+    @Past(message = "Ngày sinh phải là một ngày trong quá khứ")
     private LocalDate dob;
 
     @NotBlank(message = "Email không được để trống")
@@ -42,11 +41,14 @@ public class DoctorDTOForCustomer {
     @Size(max = 255, message = "Chuyên môn không được vượt quá 255 ký tự")
     private String specification;
 
+    @Min(value = 0, message = "Kinh nghiệm không được nhỏ hơn 0 năm")
+    @Max(value = 60, message = "Kinh nghiệm không được vượt quá 60 năm")
+    private int experience;
+
     @DecimalMin(value = "0.0", inclusive = true, message = "Đánh giá trung bình phải từ 0")
     @DecimalMax(value = "5.0", inclusive = true, message = "Đánh giá trung bình tối đa là 5")
     private Float ratingAvg;
 
-    @Min(value = 0, message = "Kinh nghiệm không được nhỏ hơn 0 năm")
-    @Max(value = 60, message = "Kinh nghiệm không được vượt quá 60 năm")
-    private int experience;
+    @NotNull(message = "Trạng thái hoạt động không được để trống")
+    private Boolean isActive;
 }

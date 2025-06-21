@@ -31,7 +31,7 @@ public class Reminder {
     @Column(name = "title", length = 255, nullable = false)
     private String title;
 
-    @Column(name = "description", columnDefinition = "TEXT")
+    @Column(name = "description", columnDefinition = "NVARCHAR(MAX)")
     private String description;
 
     @Column(name = "remind_at", nullable = false)
@@ -40,7 +40,7 @@ public class Reminder {
     @Column(name = "is_sent", nullable = false)
     private Boolean isSent;
 
-    @Column(name = "status", columnDefinition = "NVARCHAR")
+    @Column(name = "status", columnDefinition = "NVARCHAR(MAX)")
     private String status;
 
     @Column(name = "create_at", nullable = false)

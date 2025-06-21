@@ -96,7 +96,7 @@ public class AppointmentController {
         if (user == null) {
             throw new RuntimeException("Không tìm thấy user với email " + email);
         }
-        Doctor doctor = doctorService.getDoctorByUserId(user.getUserId());
+        Doctor doctor = doctorService.getDoctorById(user.getUserId());
         if (doctor == null) {
             throw new RuntimeException("Không tìm thấy bác sĩ tương ứng với user " + user.getName());
         }

@@ -51,7 +51,7 @@ public class AppointmentService {
             dto.setDate(schedule.getDate());
             dto.setStartTime(schedule.getStartTime());
             dto.setEndTime(schedule.getEndTime());
-            dto.setStatus(schedule.getStatus() == true);
+//            dto.setStatus(schedule.getStatus() == true);
             return dto;
         }).collect(Collectors.toList());
     }

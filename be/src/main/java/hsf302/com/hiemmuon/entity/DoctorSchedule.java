@@ -1,6 +1,7 @@
 package hsf302.com.hiemmuon.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,12 +33,12 @@ public class DoctorSchedule {
     private LocalTime endTime;
 
     @Column(name = "status", nullable = false)
-    private Boolean status;
+    private boolean status;
 
     public DoctorSchedule() {
     }
 
-    public DoctorSchedule(Doctor doctor, LocalDate date, LocalTime startTime, LocalTime endTime, Boolean status) {
+    public DoctorSchedule(Doctor doctor, LocalDate date, LocalTime startTime, LocalTime endTime, boolean status) {
         this.doctor = doctor;
         this.date = date;
         this.startTime = startTime;
