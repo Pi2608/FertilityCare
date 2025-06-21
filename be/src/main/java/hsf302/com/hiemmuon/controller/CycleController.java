@@ -1,10 +1,12 @@
 package hsf302.com.hiemmuon.controller;
 
 import hsf302.com.hiemmuon.dto.ApiResponse;
+import hsf302.com.hiemmuon.dto.createDto.CreateCycleDTO;
 import hsf302.com.hiemmuon.dto.entityDto.CycleNoteDTO;
 import hsf302.com.hiemmuon.dto.entityDto.CycleOfCustomerDTO;
 import hsf302.com.hiemmuon.dto.entityDto.CycleOfDoctorDTO;
 import hsf302.com.hiemmuon.dto.entityDto.CycleStepDTO;
+import hsf302.com.hiemmuon.entity.Cycle;
 import hsf302.com.hiemmuon.enums.StatusCycle;
 import hsf302.com.hiemmuon.service.CycleService;
 import hsf302.com.hiemmuon.service.CycleStepService;
@@ -43,7 +45,7 @@ public class CycleController {
     //doctor lấy list cycle của mình
     @GetMapping("/meD/cycle/all")
     public ResponseEntity<ApiResponse<?>> getCustomerCycleStep(
-            HttpServletRequest request){
+            HttpServletRequest request) {
         List<CycleOfDoctorDTO> steps = cycleService.getCycleOfDoctor(request);
 
         ApiResponse<List<CycleOfDoctorDTO>> response = new ApiResponse<>(
@@ -111,5 +113,20 @@ public class CycleController {
                 updatedCycleNote);
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<ApiResponse<?>> createCycle(
+            @RequestBody CreateCycleDTO dto,
+            HttpServletRequest request) {
+
+        Cycle cycle = cycleService.createCycle(dto, request);
+
+        ApiResponse<Cycle> response = new ApiResponse<>(
+                201,
+                "Cycle created successfully",
+                cycle);
+        return ResponseEntity.ok(response);
+
     }
 }

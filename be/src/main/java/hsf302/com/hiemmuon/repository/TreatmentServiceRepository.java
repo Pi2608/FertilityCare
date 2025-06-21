@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface TreatmentServiceRepository extends JpaRepository<TreatmentService, Integer> {
     List<TreatmentService> findAll();
-    TreatmentService findByName(String name);
     TreatmentService findById(int id);
+    TreatmentService findByName(String name);
     List<TreatmentService> findByIsActive(boolean status);
 }

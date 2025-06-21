@@ -30,6 +30,9 @@ public class CycleStep {
     @JoinColumn(name = "treatment_step_id", nullable = false)
     private TreatmentStep treatmentStep;
 
+    @Column(name = "step_order", nullable = false)
+    private int stepOrder;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
     private StatusCycle statusCycleStep;
