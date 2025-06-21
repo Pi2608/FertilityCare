@@ -22,11 +22,7 @@ const Doctor = () => {
           avatar: "/placeholder.svg?height=40&width=40",
           initials: getInitials(doc.name),
           gender:
-            doc.gender === "male"
-              ? "Nam"
-              : doc.gender === "female"
-              ? "Nữ"
-              : "",
+            doc.gender === "male" ? "Nam" : doc.gender === "female" ? "Nữ" : "",
           birthDate: formatDate(doc.dob),
           email: doc.email,
           specialty: doc.specification,
@@ -66,14 +62,22 @@ const Doctor = () => {
     return `${day}/${month}/${year}`;
   };
 
-  const handleToggleStatus = (doctorId) => {
-    setDoctorsData((prev) =>
-      prev.map((doctor) =>
-        doctor.id === doctorId
-          ? { ...doctor, isActive: !doctor.isActive }
-          : doctor
-      )
-    );
+  const handleToggleStatus = async (doctorId) => {
+    const doctor = doctorsData.find((d) => d.id === doctorId);
+    if (!doctor) return;
+
+    const newStatus = !doctor.isActive;
+
+    try {
+      await DoctorAPI.toggleDoctorStatus(doctorId, newStatus);
+      setDoctorsData((prev) =>
+        prev.map((doc) =>
+          doc.id === doctorId ? { ...doc, isActive: newStatus } : doc
+        )
+      );
+    } catch (error) {
+      alert("Không thể cập nhật trạng thái. Vui lòng thử lại.");
+    }
   };
 
   const filteredDoctors = doctorsData.filter((doctor) => {
