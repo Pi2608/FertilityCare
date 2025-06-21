@@ -11,6 +11,5 @@ public class AvailableScheduleDTO {
     private String specialization;
     private LocalDate date;
     private LocalTime startTime;
-    private LocalTime endTime;
     private boolean status;
 }

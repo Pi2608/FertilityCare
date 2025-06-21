@@ -16,5 +16,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
     List<Appointment> findAll(); // lấy tất cả lịch hẹn
 
 
+    List<Appointment> findByDoctor_DoctorIdAndCustomer_CustomerIdOrderByDateDesc(Integer doctorId, Integer customerId);
 
 }

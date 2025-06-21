@@ -39,6 +39,7 @@ public class AppointmentService {
     private AppointmentRepository appointmentRepository;
 
 
+
     public List<AvailableScheduleDTO> getAvailableSchedules(int doctorId, LocalDate date) {
         List<DoctorSchedule> schedules = doctorScheduleRepository
                 .findByDoctor_DoctorIdAndDateAndStatus(doctorId, date, true);
@@ -50,8 +51,7 @@ public class AppointmentService {
             dto.setSpecialization(schedule.getDoctor().getSpecification());
             dto.setDate(schedule.getDate());
             dto.setStartTime(schedule.getStartTime());
-            dto.setEndTime(schedule.getEndTime());
-//            dto.setStatus(schedule.getStatus() == true);
+            dto.setStatus(schedule.isStatus());
             return dto;
         }).collect(Collectors.toList());
     }
@@ -67,11 +67,6 @@ public class AppointmentService {
         Customer customer = customerRepository.findById(dto.getCustomerId())
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng"));
 
-        // Tìm dịch vụ
-        TreatmentService service = treatmentServiceRepository.findById(dto.getServiceId());
-        if (service == null) {
-            throw new RuntimeException("Không tìm thấy dịch vụ");
-        }
 
         // Tìm khung giờ bác sĩ khả dụng đúng ngày & giờ
         List<DoctorSchedule> schedules = doctorScheduleRepository
@@ -98,10 +93,11 @@ public class AppointmentService {
         appointment.setDoctor(doctor);
         appointment.setCustomer(customer);
         appointment.setDate(dto.getDate());
-        appointment.setType(Appointment.Type.valueOf(dto.getType()));
+        appointment.setType(Appointment.Type.tu_van);
         appointment.setStatus(Appointment.Status.confirmed);
         appointment.setNote(dto.getNote());
-        appointment.setService(service);
+        TreatmentService treatmentService = treatmentServiceRepository.findById(3);
+        appointment.setService(treatmentService);
         appointmentRepository.save(appointment);
 
         // Cập nhật lịch: đánh dấu đã được đặt
@@ -190,21 +186,23 @@ public class AppointmentService {
         doctorScheduleRepository.save(schedule);
     }
 
-    public List<AppointmentHistoryDTO> getAppointmentHistoryForDoctor(int doctorId) {
-        LocalDateTime now = LocalDateTime.now();
-        List<Appointment> list = appointmentRepository.findByDoctor_DoctorIdAndDateBefore(doctorId, now);
+    public List<AppointmentHistoryDTO> getAppointmentsForDoctorAndCustomer(int doctorId, int customerId) {
+        List<Appointment> appointments = appointmentRepository
+                .findByDoctor_DoctorIdAndCustomer_CustomerIdOrderByDateDesc(doctorId, customerId);
 
-        return list.stream().map(app -> {
-            AppointmentHistoryDTO dto = new AppointmentHistoryDTO();
-            dto.setAppointmentId(app.getAppointmentId());
-            dto.setDate(app.getDate());
-            dto.setCustomerName(app.getCustomer().getUser().getName());
-            dto.setType(app.getType().name());
-            dto.setStatus(app.getStatus().name());
-            dto.setNote(app.getNote());
-            return dto;
-        }).toList();
+        return appointments.stream()
+                .map(app -> new AppointmentHistoryDTO(
+                        app.getAppointmentId(),
+                        app.getDate(),
+                        app.getType() != null ? app.getType().toString() : null,
+                        app.getStatus() != null ? app.getStatus().toString() : null,
+                        app.getNote(),
+                        app.getService() != null ? app.getService().getName() : null
+                ))
+                .collect(Collectors.toList());
+
     }
+
 
     public List<AppointmentOverviewDTO> getAllAppointmentsForManager() {
         List<Appointment> appointments = appointmentRepository.findAll();
