@@ -1,6 +1,5 @@
 package hsf302.com.hiemmuon.service;
 
-import hsf302.com.hiemmuon.entity.Doctor;
 import hsf302.com.hiemmuon.entity.Role;
 import hsf302.com.hiemmuon.entity.User;
 import hsf302.com.hiemmuon.repository.UserRepository;
@@ -14,8 +13,6 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.List;
 
 @Service
 public class JwtService {

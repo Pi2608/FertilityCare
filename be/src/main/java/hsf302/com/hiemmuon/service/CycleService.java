@@ -36,6 +36,12 @@ public class CycleService {
     @Autowired
     private CycleStepRepository cycleStepRepository;
 
+    @Autowired
+    private MedicineRepository medicineRepository;
+
+    @Autowired
+    private MedicineScheduleRepository medicineScheduleRepository;
+
     public List<CycleOfCustomerDTO> getAllCycleOfCustomer(HttpServletRequest request) {
         User user = userService.getUserByJwt(request);
         List<Cycle> cycles = cycleRepository.findByCustomer_CustomerId(user.getCustomer().getCustomerId());
@@ -51,6 +57,7 @@ public class CycleService {
     public CycleNoteDTO updateCycleNote(int cycleId, String note) {
         Cycle cycle = cycleRepository.findById(cycleId);
         cycle.setNote(note);
+        cycleRepository.save(cycle);
         return new CycleNoteDTO(cycle.getNote());
     }
 
@@ -89,24 +96,26 @@ public class CycleService {
 
         TreatmentService service = treatmentServiceRepository.findById(dto.getServiceId());
 
-        //tạo Cycle
+        // Tạo Cycle
         Cycle cycle = new Cycle();
         cycle.setCustomer(customer);
         cycle.setDoctor(doctor);
         cycle.setService(service);
         cycle.setStartdate(dto.getStartDate());
-        cycle.setEndDate(dto.getEndDate());
+        cycle.setEndDate(dto.getStartDate().plusMonths(10));
         cycle.setNote(dto.getNote());
         cycle.setStatus(StatusCycle.ongoing);
 
         Cycle savedCycle = cycleRepository.save(cycle);
 
-        //lấy CycleStep từ TreatmentStep
-        List<TreatmentStep> treatmentSteps = treatmentStepRepository.findByService_ServiceIdOrderByStepOrderAsc(service.getServiceId());
+        // Lấy các bước điều trị theo service
+        List<TreatmentStep> treatmentSteps = treatmentStepRepository
+                .findByService_ServiceIdOrderByStepOrderAsc(service.getServiceId());
 
-        LocalDate eventDate = dto.getStartDate();
+        LocalDate eventDate = dto.getStartDate().plusMonths(2);
 
         for (TreatmentStep step : treatmentSteps) {
+            // Tạo CycleStep từ TreatmentStep
             CycleStep cycleStep = new CycleStep();
             cycleStep.setCycle(savedCycle);
             cycleStep.setTreatmentStep(step);
@@ -115,11 +124,24 @@ public class CycleService {
             cycleStep.setDescription(null);
             cycleStep.setEventdate(eventDate);
 
-            cycleStepRepository.save(cycleStep);
+            CycleStep savedCycleStep = cycleStepRepository.save(cycleStep);
 
-            eventDate = eventDate.plusMonths(1);
+            // Lấy danh sách thuốc theo treatmentStepId
+            List<Medicine> medicines = medicineRepository.findByTreatmentStep_Id(step.getId());
+
+            for (Medicine medicine : medicines) {
+                MedicineSchedule cycleMedicine = new MedicineSchedule();
+                cycleMedicine.setCycleStep(savedCycleStep);
+                cycleMedicine.setMedicine(medicine);
+                cycleMedicine.setStartdate(eventDate);
+                cycleMedicine.setEnddate(eventDate.plusDays(5));
+                cycleMedicine.setNote(null);
+                medicineScheduleRepository.save(cycleMedicine);
+            }
+
+            // Cập nhật ngày cho step tiếp theo
+            eventDate = eventDate.plusMonths(2);
         }
-
         return savedCycle;
     }
 }

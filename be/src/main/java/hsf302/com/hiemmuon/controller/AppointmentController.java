@@ -13,11 +13,9 @@ import hsf302.com.hiemmuon.service.AppointmentService;
 import hsf302.com.hiemmuon.service.CustomerService;
 import hsf302.com.hiemmuon.service.DoctorService;
 import hsf302.com.hiemmuon.service.UserService;
-import io.jsonwebtoken.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 

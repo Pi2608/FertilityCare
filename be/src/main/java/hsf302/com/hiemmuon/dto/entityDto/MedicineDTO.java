@@ -1,6 +1,5 @@
 package hsf302.com.hiemmuon.dto.entityDto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CycleNoteDTO {
-
-    private String note;
+public class MedicineDTO {
+    private String name;
+    private String discription;
+    private String dose;
+    private String frequency;
 }

@@ -2,7 +2,6 @@ package hsf302.com.hiemmuon.controller;
 
 import hsf302.com.hiemmuon.dto.ApiResponse;
 import hsf302.com.hiemmuon.dto.LoginRequest;
-import hsf302.com.hiemmuon.entity.Doctor;
 import hsf302.com.hiemmuon.entity.Role;
 import hsf302.com.hiemmuon.entity.User;
 import hsf302.com.hiemmuon.service.JwtService;
@@ -11,7 +10,6 @@ import hsf302.com.hiemmuon.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 
@@ -33,6 +31,7 @@ public class LoginController {
 
     @Autowired
     private JwtUtil jwtUtil;
+
     @Autowired
     private JwtService jwtService;
 
@@ -64,12 +63,12 @@ public class LoginController {
 
     @GetMapping("/roles")
     public ResponseEntity<?> getRolesFromToken(HttpServletRequest request) {
-             Role role = jwtService.getRoleByJwt(request);
+        Role role = jwtService.getRoleByJwt(request);
         ApiResponse<Role> response = new ApiResponse<>(
                 200,
                 "Get role successfully",
                 role
         );
         return ResponseEntity.ok(response);
-
-}}
+    }
+}

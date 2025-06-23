@@ -9,7 +9,10 @@ import java.util.List;
 @Repository
 
 public interface CycleStepRepository extends JpaRepository<CycleStep, Integer> {
+
     List<CycleStep> findByCycle_CycleId(int cycleId);
 
-    CycleStep findByCycle_CycleIdAndStepId(int cycleId, int stepId);
+    CycleStep findByCycle_CycleIdAndStepOrder(int cycleId, int stepOrder);
+
+    List<CycleStep> findByCycle_CycleIdAndStepOrderGreaterThan(int cycleId, int stepOrder);
 }

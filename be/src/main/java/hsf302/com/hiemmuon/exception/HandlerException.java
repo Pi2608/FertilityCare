@@ -13,23 +13,21 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class HandlerException {
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<?>> handleGeneralException(Exception e) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ApiResponse<?>> handleNotFoundException(NotFoundException ex) {
         ApiResponse<?> response = new ApiResponse<>(
-                400,
-                "Error: " + e.getMessage(),
-                null
-        );
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+                404,
+                ex.getMessage(),
+                null);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ApiResponse<?>> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
         ApiResponse<?> response = new ApiResponse<>(
                 400,
-                "Error type input: " + ex.getMessage(),
-                null
-        );
+                "Sai kiểu dữ liệu truyền vào: " + ex.getMessage(),
+                null);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
@@ -44,9 +42,16 @@ public class HandlerException {
         ApiResponse<?> response = new ApiResponse<>(
                 400,
                 errorMessages,
-                null
-        );
-
+                null);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponse<?>> handleGenericException(Exception ex) {
+        ApiResponse<?> response = new ApiResponse<>(
+                500,
+                "Lỗi hệ thống: " + ex.getMessage(),
+                null);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 }

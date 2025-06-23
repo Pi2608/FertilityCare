@@ -17,7 +17,7 @@ public class TreatmentService {
     @Column(name = "service_id")
     private int serviceId;
 
-    @Column(name = "name")
+    @Column(name = "name", columnDefinition = "NVARCHAR(MAX)")
     private String name;
 
     @Column(name = "description", columnDefinition = "NVARCHAR(MAX)")

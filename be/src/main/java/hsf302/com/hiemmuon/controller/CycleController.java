@@ -60,7 +60,7 @@ public class CycleController {
     @GetMapping("/cycleId/{cycleId}/step/all")
     public ResponseEntity<ApiResponse<?>> getMyAllCycleStep(
             @PathVariable("cycleId") int cycleId) {
-        List<CycleStepDTO> steps = cycleStepService.getAllCycleStepByMe(cycleId);
+        List<CycleStepDTO> steps = cycleStepService.getAllCycleStep(cycleId);
 
         ApiResponse<List<CycleStepDTO>> response = new ApiResponse<>(
                 200,
@@ -70,11 +70,11 @@ public class CycleController {
     }
 
     //customer, doctor get step theo cycleId và stepId
-    @GetMapping("/cycleId/{cycleId}/stepId/{stepId}")
+    @GetMapping("/cycleId/{cycleId}/stepOrder/{stepOrder}")
     public ResponseEntity<ApiResponse<?>> getMyCycleStep(
             @PathVariable("cycleId") int cycleId,
-            @PathVariable("stepId") int stepId) {
-        CycleStepDTO step = cycleStepService.getCycleStepByMe(cycleId, stepId);
+            @PathVariable("stepOrder") int stepOrder) {
+        CycleStepDTO step = cycleStepService.getCycleStep(cycleId, stepOrder);
 
         ApiResponse<CycleStepDTO> response = new ApiResponse<>(
                 200,

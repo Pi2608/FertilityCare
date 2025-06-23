@@ -3,6 +3,7 @@
     import jakarta.persistence.*;
     import lombok.Getter;
     import lombok.Setter;
+    import org.hibernate.annotations.Nationalized;
 
     @Entity
     @Getter
@@ -22,9 +23,11 @@
         @Column(name = "step_order", nullable = false)
         private int stepOrder;
 
+        @Nationalized
         @Column(name = "title", columnDefinition = "NVARCHAR(MAX)", nullable = false, length = 255)
         private String title;
 
+        @Nationalized
         @Column(name = "description", columnDefinition = "NVARCHAR(MAX)", nullable = false)
         private String description;
 
