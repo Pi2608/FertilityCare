@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @Setter
 public class CreateAppointmentDTO {
     private int doctorId;
-    private int customerId;
     private LocalDateTime date;
     private String note;
 }
