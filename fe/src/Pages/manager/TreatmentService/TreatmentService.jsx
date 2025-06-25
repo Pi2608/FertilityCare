@@ -24,6 +24,7 @@ const TreatmentService = () => {
             successRate: "Xem chi tiết",
             process: "Xem quy trình",
             price: item.price?.toString() || "0",
+            isActive: item.active,
             isEditing: false,
           })
         );
@@ -103,6 +104,25 @@ const TreatmentService = () => {
     navigate(`/manager-dashboard/treatment-service/process/${serviceId}`);
   };
 
+  const handleToggleStatus = async (serviceId) => {
+    const service = services.find((s) => s.id === serviceId);
+    if (!service) return;
+
+    const newStatus = !service.isActive;
+
+    try {
+      await TreatmentServiceAPI.updateStatus(serviceId, newStatus);
+      setServices((prev) =>
+        prev.map((s) =>
+          s.id === serviceId ? { ...s, isActive: newStatus } : s
+        )
+      );
+    } catch (error) {
+      console.error("Lỗi khi gọi API updateStatus:", error);
+      alert("Không thể cập nhật trạng thái. Vui lòng thử lại.");
+    }
+  };
+
   const filteredServices = services.filter(
     (service) =>
       service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -164,6 +184,7 @@ const TreatmentService = () => {
                 <th>Tỷ lệ thành công</th>
                 <th>Quy trình</th>
                 <th>Chi phí (VND)</th>
+                <th>Trạng thái</th>
                 <th>Hành động</th>
               </tr>
             </thead>
@@ -232,6 +253,17 @@ const TreatmentService = () => {
                     ) : (
                       Number(service.price).toLocaleString()
                     )}
+                  </td>
+                  <td>
+                    <button
+                      onClick={() => handleToggleStatus(service.id)}
+                      
+                      className={`status-toggle-btn ${
+                        service.isActive ? "active" : "inactive"
+                      }`}
+                    >
+                      {service.isActive ? "Hoạt động" : "Không hoạt động"}
+                    </button>
                   </td>
                   <td className="action-cell">
                     {service.isEditing ? (
