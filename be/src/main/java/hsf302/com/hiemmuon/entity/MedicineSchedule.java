@@ -1,10 +1,12 @@
 package hsf302.com.hiemmuon.entity;
 
+import hsf302.com.hiemmuon.enums.StatusMedicineSchedule;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -31,17 +33,24 @@ public class MedicineSchedule {
     @Column(name = "enddate")
     private LocalDate enddate;
 
+    @Column(name = "event_date")
+    private LocalDateTime eventDate;
+
     @Column(name = "note", columnDefinition = "NVARCHAR(MAX)")
     private String note;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private StatusMedicineSchedule status;
 
     public MedicineSchedule() {
     }
 
-    public MedicineSchedule(Medicine medicine, CycleStep cycleStep, LocalDate startdate, LocalDate enddate, String note) {
+    public MedicineSchedule(Medicine medicine, CycleStep cycleStep, LocalDate startdate, LocalDate enddate) {
         this.medicine = medicine;
         this.cycleStep = cycleStep;
         this.startdate = startdate;
         this.enddate = enddate;
-        this.note = note;
+        this.status = StatusMedicineSchedule.ongoing;
     }
 }

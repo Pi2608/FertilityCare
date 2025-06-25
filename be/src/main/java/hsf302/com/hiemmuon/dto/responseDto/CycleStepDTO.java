@@ -1,7 +1,6 @@
-package hsf302.com.hiemmuon.dto.entityDto;
+package hsf302.com.hiemmuon.dto.responseDto;
 
 import hsf302.com.hiemmuon.enums.StatusCycle;
-import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,10 +15,11 @@ import java.util.List;
 @AllArgsConstructor
 public class CycleStepDTO {
 
-    private int cycleId;
+    private int stepOrder;
     private String serive;
     private String description;
     private LocalDate eventdate;
     private StatusCycle statusCycleStep;
     private List<MedicineScheduleDTO> medicineScheduleDTO;
+    private String note;
 }

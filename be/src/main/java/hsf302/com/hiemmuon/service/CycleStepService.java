@@ -1,8 +1,9 @@
 package hsf302.com.hiemmuon.service;
 
-import hsf302.com.hiemmuon.dto.entityDto.CycleStepDTO;
-import hsf302.com.hiemmuon.dto.entityDto.MedicineDTO;
-import hsf302.com.hiemmuon.dto.entityDto.MedicineScheduleDTO;
+import hsf302.com.hiemmuon.dto.createDto.NoteMedicineScheduleDTO;
+import hsf302.com.hiemmuon.dto.responseDto.CycleStepDTO;
+import hsf302.com.hiemmuon.dto.responseDto.MedicineDTO;
+import hsf302.com.hiemmuon.dto.responseDto.MedicineScheduleDTO;
 import hsf302.com.hiemmuon.entity.Cycle;
 import hsf302.com.hiemmuon.entity.CycleStep;
 import hsf302.com.hiemmuon.entity.MedicineSchedule;
@@ -87,22 +88,32 @@ public class CycleStepService {
 
             return new MedicineScheduleDTO(
                     schedule.getMedicationId(),
-                    medicineDTOList,
-                    schedule.getStartdate(),
-                    schedule.getEnddate(),
-                    schedule.getNote()
+                    schedule.getMedicine().getName(),
+                    schedule.getMedicine().getDose(),
+                    schedule.getMedicine().getFrequency(),
+                    schedule.getEventDate(),
+                    schedule.getStatus()
             );
         }).collect(Collectors.toList());
 
         return new CycleStepDTO(
-                cycleStep.getCycle().getCycleId(),
+                cycleStep.getStepOrder(),
                 cycleStep.getCycle().getService().getName(),
                 cycleStep.getDescription(),
                 cycleStep.getEventdate(),
                 cycleStep.getStatusCycleStep(),
-                medicineScheduleDTOs
+                medicineScheduleDTOs,
+                cycleStep.getNote()
         );
     }
 
+    public NoteMedicineScheduleDTO updateNote(int cycleId, int stepId, String note) {
+        CycleStep cycleStep = cycleStepRepository.findByCycle_CycleIdAndStepOrder(cycleId, stepId);
+
+        cycleStep.setNote(note);
+        cycleStepRepository.save(cycleStep);
+
+        return new NoteMedicineScheduleDTO(note);
+    }
 
 }

@@ -2,17 +2,14 @@ package hsf302.com.hiemmuon.controller;
 
 import hsf302.com.hiemmuon.dto.ApiResponse;
 import hsf302.com.hiemmuon.dto.createDto.CreateCycleDTO;
-import hsf302.com.hiemmuon.dto.entityDto.CycleNoteDTO;
-import hsf302.com.hiemmuon.dto.entityDto.CycleOfCustomerDTO;
-import hsf302.com.hiemmuon.dto.entityDto.CycleOfDoctorDTO;
-import hsf302.com.hiemmuon.dto.entityDto.CycleStepDTO;
+import hsf302.com.hiemmuon.dto.responseDto.CycleNoteDTO;
+import hsf302.com.hiemmuon.dto.responseDto.CycleOfCustomerDTO;
+import hsf302.com.hiemmuon.dto.responseDto.CycleOfDoctorDTO;
+import hsf302.com.hiemmuon.dto.responseDto.CycleStepDTO;
 import hsf302.com.hiemmuon.entity.Cycle;
-import hsf302.com.hiemmuon.enums.StatusCycle;
 import hsf302.com.hiemmuon.service.CycleService;
 import hsf302.com.hiemmuon.service.CycleStepService;
-import hsf302.com.hiemmuon.service.DoctorService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -52,50 +49,6 @@ public class CycleController {
                 200,
                 "Get all cycle of doctor successfully",
                 steps);
-
-        return ResponseEntity.ok(response);
-    }
-
-    //customer, doctor get list step theo cycleId
-    @GetMapping("/cycleId/{cycleId}/step/all")
-    public ResponseEntity<ApiResponse<?>> getMyAllCycleStep(
-            @PathVariable("cycleId") int cycleId) {
-        List<CycleStepDTO> steps = cycleStepService.getAllCycleStep(cycleId);
-
-        ApiResponse<List<CycleStepDTO>> response = new ApiResponse<>(
-                200,
-                "Get all cycle steps successfully",
-                steps);
-        return ResponseEntity.ok(response);
-    }
-
-    //customer, doctor get step theo cycleId và stepId
-    @GetMapping("/cycleId/{cycleId}/stepOrder/{stepOrder}")
-    public ResponseEntity<ApiResponse<?>> getMyCycleStep(
-            @PathVariable("cycleId") int cycleId,
-            @PathVariable("stepOrder") int stepOrder) {
-        CycleStepDTO step = cycleStepService.getCycleStep(cycleId, stepOrder);
-
-        ApiResponse<CycleStepDTO> response = new ApiResponse<>(
-                200,
-                "Get cycle step successfully",
-                step);
-
-        return ResponseEntity.ok(response);
-    }
-
-    //doctor update status step
-    @PatchMapping("/cycleId/{cycleId}/stepId/{stepId}/status")
-    public ResponseEntity<ApiResponse<?>> updateCycleStepStatus(
-            @PathVariable("cycleId") int cycleId,
-            @PathVariable("stepId") int stepId,
-            @RequestParam("status") StatusCycle status) {
-        CycleStepDTO updatedStep = cycleStepService.updateCycleStepStatus(cycleId, stepId, status);
-
-        ApiResponse<CycleStepDTO> response = new ApiResponse<>(
-                200,
-                "Update cycle step status successfully",
-                updatedStep);
 
         return ResponseEntity.ok(response);
     }

@@ -1,11 +1,12 @@
 package hsf302.com.hiemmuon.service;
 
 import hsf302.com.hiemmuon.dto.createDto.CreateCycleDTO;
-import hsf302.com.hiemmuon.dto.entityDto.CycleNoteDTO;
-import hsf302.com.hiemmuon.dto.entityDto.CycleOfCustomerDTO;
-import hsf302.com.hiemmuon.dto.entityDto.CycleOfDoctorDTO;
+import hsf302.com.hiemmuon.dto.responseDto.CycleNoteDTO;
+import hsf302.com.hiemmuon.dto.responseDto.CycleOfCustomerDTO;
+import hsf302.com.hiemmuon.dto.responseDto.CycleOfDoctorDTO;
 import hsf302.com.hiemmuon.entity.*;
 import hsf302.com.hiemmuon.enums.StatusCycle;
+import hsf302.com.hiemmuon.enums.StatusMedicineSchedule;
 import hsf302.com.hiemmuon.repository.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -123,6 +124,7 @@ public class CycleService {
             cycleStep.setStatusCycleStep(StatusCycle.ongoing);
             cycleStep.setDescription(null);
             cycleStep.setEventdate(eventDate);
+            System.out.println("STEP ORDER: " + step.getStepOrder());
 
             CycleStep savedCycleStep = cycleStepRepository.save(cycleStep);
 
@@ -136,6 +138,7 @@ public class CycleService {
                 cycleMedicine.setStartdate(eventDate);
                 cycleMedicine.setEnddate(eventDate.plusDays(5));
                 cycleMedicine.setNote(null);
+                cycleMedicine.setStatus(StatusMedicineSchedule.ongoing);
                 medicineScheduleRepository.save(cycleMedicine);
             }
 
