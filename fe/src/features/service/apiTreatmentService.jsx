@@ -36,6 +36,11 @@ const TreatmentServiceAPI = {
     );
     return response.data;
   },
+
+  updateServiceInfo: async (id, data) => {
+    const response = await axiosInstance.put(`treatment-services/${id}`, data);
+    return response.data;
+  },
 };
 
 export default TreatmentServiceAPI;

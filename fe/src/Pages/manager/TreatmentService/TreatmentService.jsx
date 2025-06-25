@@ -49,13 +49,27 @@ const TreatmentService = () => {
     setEditingService(serviceId);
   };
 
-  const handleSave = (serviceId) => {
-    setServices(
-      services.map((service) =>
-        service.id === serviceId ? { ...service, isEditing: false } : service
-      )
-    );
-    setEditingService(null);
+  const handleSave = async (serviceId) => {
+    const service = services.find((s) => s.id === serviceId);
+    if (!service) return;
+
+    const updateData = {
+      description: service.overview,
+      price: Number(service.price),
+    };
+
+    try {
+      await TreatmentServiceAPI.updateServiceInfo(serviceId, updateData);
+      setServices(
+        services.map((s) =>
+          s.id === serviceId ? { ...s, isEditing: false } : s
+        )
+      );
+      setEditingService(null);
+    } catch (error) {
+      console.error("Lỗi cập nhật thông tin dịch vụ:", error);
+      alert("Không thể lưu thay đổi. Vui lòng thử lại.");
+    }
   };
 
   const handleCancel = (serviceId) => {
@@ -192,20 +206,7 @@ const TreatmentService = () => {
               {filteredServices.map((service) => (
                 <tr key={service.id}>
                   <td>{service.order}</td>
-                  <td>
-                    {service.isEditing ? (
-                      <input
-                        type="text"
-                        value={service.name}
-                        onChange={(e) =>
-                          handleInputChange(service.id, "name", e.target.value)
-                        }
-                        className="edit-input"
-                      />
-                    ) : (
-                      service.name
-                    )}
-                  </td>
+                  <td>{service.name}</td>
                   <td>
                     {service.isEditing ? (
                       <textarea
@@ -257,7 +258,6 @@ const TreatmentService = () => {
                   <td>
                     <button
                       onClick={() => handleToggleStatus(service.id)}
-                      
                       className={`status-toggle-btn ${
                         service.isActive ? "active" : "inactive"
                       }`}
