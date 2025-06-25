@@ -2,7 +2,7 @@ package hsf302.com.hiemmuon.controller;
 
 import hsf302.com.hiemmuon.dto.ApiResponse;
 import hsf302.com.hiemmuon.dto.createDto.CreateDoctorDTO;
-import hsf302.com.hiemmuon.dto.entityDto.DoctorDTO;
+import hsf302.com.hiemmuon.dto.responseDto.DoctorDTO;
 import hsf302.com.hiemmuon.dto.updateDto.UpdateDoctorDTO;
 import hsf302.com.hiemmuon.entity.Doctor;
 import hsf302.com.hiemmuon.service.DoctorService;

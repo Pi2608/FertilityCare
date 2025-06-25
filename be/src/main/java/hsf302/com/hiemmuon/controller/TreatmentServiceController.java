@@ -2,7 +2,7 @@ package hsf302.com.hiemmuon.controller;
 
 import hsf302.com.hiemmuon.dto.ApiResponse;
 import hsf302.com.hiemmuon.dto.createDto.CreateTreatmentServiceDTO;
-import hsf302.com.hiemmuon.dto.entityDto.TreatmentStepDTO;
+import hsf302.com.hiemmuon.dto.responseDto.TreatmentStepDTO;
 import hsf302.com.hiemmuon.dto.updateDto.UpdateServiceDTO;
 import hsf302.com.hiemmuon.entity.TreatmentService;
 import hsf302.com.hiemmuon.entity.TreatmentStep;

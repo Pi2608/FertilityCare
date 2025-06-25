@@ -1,6 +1,5 @@
-package hsf302.com.hiemmuon.dto.entityDto;
+package hsf302.com.hiemmuon.dto.responseDto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

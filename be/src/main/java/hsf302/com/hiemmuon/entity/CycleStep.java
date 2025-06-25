@@ -42,4 +42,7 @@ public class CycleStep {
 
     @Column(name = "eventdate", nullable = false)
     private LocalDate eventdate;
+
+    @Column(name = "note", columnDefinition = "NVARCHAR(MAX)")
+    private String note;
 }

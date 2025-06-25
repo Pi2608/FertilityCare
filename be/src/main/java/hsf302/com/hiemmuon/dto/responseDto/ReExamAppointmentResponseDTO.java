@@ -1,4 +1,4 @@
-package hsf302.com.hiemmuon.dto.entityDto;
+package hsf302.com.hiemmuon.dto.responseDto;
 
 import java.time.LocalDateTime;
 

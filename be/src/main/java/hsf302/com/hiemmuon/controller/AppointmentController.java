@@ -2,10 +2,10 @@ package hsf302.com.hiemmuon.controller;
 
 import hsf302.com.hiemmuon.dto.createDto.CreateAppointmentDTO;
 import hsf302.com.hiemmuon.dto.createDto.ReExamAppointmentDTO;
-import hsf302.com.hiemmuon.dto.entityDto.AppointmentHistoryDTO;
-import hsf302.com.hiemmuon.dto.entityDto.AppointmentOverviewDTO;
-import hsf302.com.hiemmuon.dto.entityDto.AvailableScheduleDTO;
-import hsf302.com.hiemmuon.dto.entityDto.ReExamAppointmentResponseDTO;
+import hsf302.com.hiemmuon.dto.responseDto.AppointmentHistoryDTO;
+import hsf302.com.hiemmuon.dto.responseDto.AppointmentOverviewDTO;
+import hsf302.com.hiemmuon.dto.responseDto.AvailableScheduleDTO;
+import hsf302.com.hiemmuon.dto.responseDto.ReExamAppointmentResponseDTO;
 import hsf302.com.hiemmuon.entity.Customer;
 import hsf302.com.hiemmuon.entity.Doctor;
 import hsf302.com.hiemmuon.entity.User;

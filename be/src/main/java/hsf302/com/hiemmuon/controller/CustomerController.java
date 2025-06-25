@@ -1,11 +1,10 @@
 package hsf302.com.hiemmuon.controller;
 
 import hsf302.com.hiemmuon.dto.ApiResponse;
-import hsf302.com.hiemmuon.dto.entityDto.CustomerDTO;
+import hsf302.com.hiemmuon.dto.responseDto.CustomerDTO;
 import hsf302.com.hiemmuon.dto.createDto.RegisterCustomerDTO;
 import hsf302.com.hiemmuon.dto.updateDto.UpdateCustomerDTO;
 import hsf302.com.hiemmuon.service.CustomerService;
-import hsf302.com.hiemmuon.service.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

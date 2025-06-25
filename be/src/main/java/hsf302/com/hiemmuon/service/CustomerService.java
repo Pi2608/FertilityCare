@@ -1,7 +1,7 @@
 package hsf302.com.hiemmuon.service;
 
 import hsf302.com.hiemmuon.dto.createDto.RegisterCustomerDTO;
-import hsf302.com.hiemmuon.dto.entityDto.CustomerDTO;
+import hsf302.com.hiemmuon.dto.responseDto.CustomerDTO;
 import hsf302.com.hiemmuon.dto.updateDto.UpdateCustomerDTO;
 import hsf302.com.hiemmuon.entity.Customer;
 import hsf302.com.hiemmuon.entity.Role;
