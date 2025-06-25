@@ -18,6 +18,7 @@ axiosInstance.interceptors.request.use((config) => {
   return config;
 });
 
+// API để lấy danh sách khách hàng cho role Admin
 const CustomerAPI = {
   getAllCustomers: async () => {
     try {

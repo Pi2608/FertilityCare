@@ -1,12 +1,13 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import "./TreatmentService.css"
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./TreatmentService.css";
+import { Bell } from "lucide-react";
 
 const TreatmentService = () => {
-  const navigate = useNavigate()
-  const [searchTerm, setSearchTerm] = useState("")
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
   const [services, setServices] = useState([
     {
       id: 1,
@@ -28,32 +29,46 @@ const TreatmentService = () => {
       price: "90.000.000",
       isEditing: false,
     },
-  ])
+  ]);
 
-  const [editingService, setEditingService] = useState(null)
+  const [editingService, setEditingService] = useState(null);
 
   const handleEdit = (serviceId) => {
     setServices(
       services.map((service) =>
-        service.id === serviceId ? { ...service, isEditing: true } : { ...service, isEditing: false },
-      ),
-    )
-    setEditingService(serviceId)
-  }
+        service.id === serviceId
+          ? { ...service, isEditing: true }
+          : { ...service, isEditing: false }
+      )
+    );
+    setEditingService(serviceId);
+  };
 
   const handleSave = (serviceId) => {
-    setServices(services.map((service) => (service.id === serviceId ? { ...service, isEditing: false } : service)))
-    setEditingService(null)
-  }
+    setServices(
+      services.map((service) =>
+        service.id === serviceId ? { ...service, isEditing: false } : service
+      )
+    );
+    setEditingService(null);
+  };
 
   const handleCancel = (serviceId) => {
-    setServices(services.map((service) => (service.id === serviceId ? { ...service, isEditing: false } : service)))
-    setEditingService(null)
-  }
+    setServices(
+      services.map((service) =>
+        service.id === serviceId ? { ...service, isEditing: false } : service
+      )
+    );
+    setEditingService(null);
+  };
 
   const handleInputChange = (serviceId, field, value) => {
-    setServices(services.map((service) => (service.id === serviceId ? { ...service, [field]: value } : service)))
-  }
+    setServices(
+      services.map((service) =>
+        service.id === serviceId ? { ...service, [field]: value } : service
+      )
+    );
+  };
 
   const handleAddService = () => {
     const newService = {
@@ -65,30 +80,30 @@ const TreatmentService = () => {
       process: "Xem quy trình",
       price: "0",
       isEditing: true,
-    }
-    setServices([...services, newService])
-    setEditingService(newService.id)
-  }
+    };
+    setServices([...services, newService]);
+    setEditingService(newService.id);
+  };
 
   const handleDelete = (serviceId) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa dịch vụ này?")) {
-      setServices(services.filter((service) => service.id !== serviceId))
+      setServices(services.filter((service) => service.id !== serviceId));
     }
-  }
+  };
 
   const handleSuccessRateEdit = (serviceId) => {
-    navigate(`/manager-dashboard/treatment-service/success-rate/${serviceId}`)
-  }
+    navigate(`/manager-dashboard/treatment-service/success-rate/${serviceId}`);
+  };
 
   const handleProcessEdit = (serviceId) => {
-    navigate(`/manager-dashboard/treatment-service/process/${serviceId}`)
-  }
+    navigate(`/manager-dashboard/treatment-service/process/${serviceId}`);
+  };
 
   const filteredServices = services.filter(
     (service) =>
       service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      service.overview.toLowerCase().includes(searchTerm.toLowerCase()),
-  )
+      service.overview.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="treatment-service-page">
@@ -98,7 +113,7 @@ const TreatmentService = () => {
 
         <div className="header-actions">
           <div className="notification-bell">
-            <span>🔔</span>
+            <Bell size={20} />
             <div className="notification-dot"></div>
           </div>
 
@@ -157,7 +172,9 @@ const TreatmentService = () => {
                       <input
                         type="text"
                         value={service.name}
-                        onChange={(e) => handleInputChange(service.id, "name", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange(service.id, "name", e.target.value)
+                        }
                         className="edit-input"
                       />
                     ) : (
@@ -168,7 +185,13 @@ const TreatmentService = () => {
                     {service.isEditing ? (
                       <textarea
                         value={service.overview}
-                        onChange={(e) => handleInputChange(service.id, "overview", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange(
+                            service.id,
+                            "overview",
+                            e.target.value
+                          )
+                        }
                         className="edit-textarea"
                         rows="2"
                       />
@@ -177,12 +200,18 @@ const TreatmentService = () => {
                     )}
                   </td>
                   <td>
-                    <button className="link-btn" onClick={() => handleSuccessRateEdit(service.id)}>
+                    <button
+                      className="link-btn"
+                      onClick={() => handleSuccessRateEdit(service.id)}
+                    >
                       {service.successRate}
                     </button>
                   </td>
                   <td>
-                    <button className="link-btn" onClick={() => handleProcessEdit(service.id)}>
+                    <button
+                      className="link-btn"
+                      onClick={() => handleProcessEdit(service.id)}
+                    >
                       {service.process}
                     </button>
                   </td>
@@ -191,7 +220,9 @@ const TreatmentService = () => {
                       <input
                         type="text"
                         value={service.price}
-                        onChange={(e) => handleInputChange(service.id, "price", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange(service.id, "price", e.target.value)
+                        }
                         className="edit-input"
                       />
                     ) : (
@@ -201,19 +232,31 @@ const TreatmentService = () => {
                   <td className="action-cell">
                     {service.isEditing ? (
                       <div className="edit-actions">
-                        <button className="save-btn" onClick={() => handleSave(service.id)}>
+                        <button
+                          className="save-btn"
+                          onClick={() => handleSave(service.id)}
+                        >
                           Lưu
                         </button>
-                        <button className="cancel-btn" onClick={() => handleCancel(service.id)}>
+                        <button
+                          className="cancel-btn"
+                          onClick={() => handleCancel(service.id)}
+                        >
                           Hủy
                         </button>
                       </div>
                     ) : (
                       <div className="view-actions">
-                        <button className="edit-btn" onClick={() => handleEdit(service.id)}>
+                        <button
+                          className="edit-btn"
+                          onClick={() => handleEdit(service.id)}
+                        >
                           Chỉnh sửa
                         </button>
-                        <button className="delete-btn" onClick={() => handleDelete(service.id)}>
+                        <button
+                          className="delete-btn"
+                          onClick={() => handleDelete(service.id)}
+                        >
                           Xóa
                         </button>
                       </div>
@@ -239,7 +282,7 @@ const TreatmentService = () => {
         </div>
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default TreatmentService
+export default TreatmentService;
