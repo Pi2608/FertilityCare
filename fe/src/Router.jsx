@@ -1,4 +1,5 @@
 import React from 'react'
+import { HashLoader } from 'react-spinners';
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import Authentication from '@/Pages/Authentication/Authentication';
@@ -23,7 +24,9 @@ import TreatmentProcess from '@customerpages/TreatmentProcess/TreatmentProcess';
 import Notification from '@customerpages/Notification/Notification';
 import TreatmentHistory from '@customerpages/TreatmentHistory/TreatmentHistory';
 import Pill from '@customerpages/Dashboard/Pill/Pill';
+import Payment from '@customerpages/Payment/Payment';
 
+// Manager components
 import DocDashboard from '@doctorpages/Dashboard/DocDashboard';
 import Overview from './Pages/doctor/Dashboard/OverviewLayout/Overview';
 import Appointments from './Pages/doctor/Dashboard/AppointmentsLayout/Appointments';
@@ -59,9 +62,19 @@ const USER_ROLES = {
 // Protected Route Components
 const ProtectedRoute = ({ children, allowedRoles = [], requireAuth = true }) => {
   const { isAuthenticated, role, loading } = useSelector((state) => state.auth);
-  
-  
-  // Redirect to login if authentication is required but user is not authenticated
+
+  if (loading) {
+    return (
+      <HashLoader
+        className="loader"
+        loading={loading}
+        size={150}
+        color="#36d7b7"
+        cssOverride={{ display: 'block', margin: '0 auto', borderColor: 'red' }}
+      />
+    );
+  }
+
   if (requireAuth && !isAuthenticated) {
     return <Navigate to="/authentication" replace />;
   }
@@ -88,7 +101,6 @@ const ProtectedRoute = ({ children, allowedRoles = [], requireAuth = true }) => 
   return <>{children}</>;
 };
 
-// Specific role-based route components for cleaner code
 const AdminRoute = ({ children }) => (
   <ProtectedRoute allowedRoles={[USER_ROLES.ADMIN]}>
     {children}
@@ -125,7 +137,6 @@ const GuestRoute = ({ children }) => {
   const { isAuthenticated, role } = useSelector((state) => state.auth);
   
   if (isAuthenticated) {
-    // Redirect authenticated users to their appropriate dashboard
     switch (role) {
       case USER_ROLES.ADMIN:
         return <Navigate to="/admin-dashboard" replace />;
@@ -235,6 +246,20 @@ export const router = createBrowserRouter([
     ]
   },
   {
+    path: "/payment",
+    element: (
+      <CustomerRoute>
+        <CusLayout />
+      </CustomerRoute>
+    ),
+    children: [
+      {
+        index: true,
+        element: <Payment />,
+      },
+    ]
+  },
+  {
     path: "doctor-dashboard/appointments/session",
     element: (
       <DoctorRoute>
@@ -262,7 +287,7 @@ export const router = createBrowserRouter([
       },
     ]
   },
-  {
+  { 
     path: "/patient-dashboard/treatment-process",
     element: (
       <CustomerRoute>

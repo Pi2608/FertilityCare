@@ -7,7 +7,7 @@ import './CusLayout.css'
 
 const CusLayout = () => {
 
-    const userType = localStorage.getItem('userType') || 'Customer';
+    const userType = localStorage.getItem('userType') || 'Patient';
 
     const list = [
         {name: 'Tổng quan', path: '/patient-dashboard', icon: <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 12 12"><g fill="none" stroke="currentColor" stroke-width="1"><circle cx="6" cy="6" r="5.5"/><path stroke-linecap="round" stroke-linejoin="round" d="M5.5 3v3.5H8"/></g></svg>},

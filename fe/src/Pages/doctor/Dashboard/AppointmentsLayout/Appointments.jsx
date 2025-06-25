@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import ApiPayment from "@features/service/apiPayment";
+import { X, Plus } from 'lucide-react';
 import "./Appointments.css";
-
 
 const scheduleData = [
   {
@@ -45,8 +46,40 @@ const scheduleData = [
   },
 ];
 
-
 export default function Appointments() {
+
+  const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  
+  useEffect(() => {
+    fetchAppointments();
+  }, []);
+  
+  const fetchAppointments = async () => {
+    try {
+      setLoading(true);
+      // const response = await <Api>.getAppointments();
+      setAppointments(response.data);
+    } catch (err) {
+      setError("Không thể tải lịch hẹn. Vui lòng thử lại sau.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const handleAddPayment = async (paymentData) => {
+    try {      
+      const result = await ApiGateway.createPayment(paymentData);
+      console.log('Payment created:', result);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Error creating payment:', error);
+    }
+  };
+
   return (
     <div className="schedule-container">
       {/* PHẦN 2: DANH SÁCH LỊCH HẸN */}
@@ -109,6 +142,7 @@ export default function Appointments() {
                 <div className="actions">
                   {item.status === "ready" ? (
                     <>
+                      <button className="btn btn-medical" onClick={() => setIsPaymentModalOpen(true)}>Mở Lịch Khám</button>
                       <a href="/doctor-dashboard/appointments/session" className="btn btn-start no-underline">Bắt đầu</a>
                       <a href="" className="btn btn-message no-underline">Nhắn tin</a>
                     </>
@@ -131,9 +165,224 @@ export default function Appointments() {
         <span>Trang 1 / 3</span>
         <button>Tiếp</button>
       </div>
+
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        onSubmit={handleAddPayment}
+      />
     </div>
   );
 }
 
+const PaymentModal = ({ isOpen, onClose, onSubmit }) => {
+  const [paymentForm, setPaymentForm] = useState({
+    customerId: "",
+    serviceId: "",
+    appointmentDate: "",
+    note: "",
+    total: 0,
+    type: "",
+  });
 
+  // Mock data - replace with actual API calls later
+  const [services, setServices] = useState([
+    { id: 1, name: "IUI", price: 5000000 },
+    { id: 2, name: "IVF", price: 70000000 },
+  ]);
 
+  const [availableDates, setAvailableDates] = useState([
+    "2024-12-26",
+    "2024-12-27",
+    "2024-12-28",
+    "2024-12-30",
+    "2025-01-02",
+    "2025-01-03",
+  ]);
+
+  const typeOptions = [
+    { value: "test", label: "Test" },
+    { value: "treatment", label: "Điều trị" },
+  ];
+
+  useEffect(() => {
+    if (paymentForm.serviceId) {
+      const selectedService = services.find(service => service.id.toString() === paymentForm.serviceId);
+      if (selectedService) {
+        setPaymentForm(prev => ({ ...prev, total: selectedService.price }));
+      }
+    } else {
+      setPaymentForm(prev => ({ ...prev, total: 0 }));
+    }
+  }, [paymentForm.serviceId, services]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setPaymentForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = () => {
+    onSubmit(paymentForm);
+  };
+
+  const resetForm = () => {
+    setPaymentForm({
+      customerId: "",
+      serviceId: "",
+      appointmentDate: "",
+      note: "",
+      total: 0,
+      type: "",
+    });
+  };
+
+  const handleClose = () => {
+    resetForm();
+    onClose();
+  };
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(amount);
+  };
+
+  const isFormValid = paymentForm.serviceId && paymentForm.appointmentDate && paymentForm.type;
+
+  if (!isOpen) return null;
+
+  return (
+    <>
+      <div className="payment-modal-overlay" onClick={(e) => e.target === e.currentTarget && handleClose()}>
+        <div className="modal-container">
+          {/* Modal Header */}
+          <div className="modal-header">
+            <h2 className="modal-title">
+              Lịch khám mới
+            </h2>
+            <button className="close-btn" onClick={handleClose}>
+              <X className="icon"/>
+            </button>
+          </div>
+
+          <div className="modal-body">
+            <input
+              type="hidden"
+              name="customerId"
+              value={paymentForm.customerId}
+              onChange={handleInputChange}
+            />
+
+            <div className="form-group">
+              <label className="form-label required">Phương pháp</label>
+              <select
+                className="form-select"
+                name="serviceId"
+                value={paymentForm.serviceId}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Chọn phương pháp</option>
+                {services.map(service => (
+                  <option key={service.id} value={service.id}>
+                    {service.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Appointment Date */}
+            <div className="form-group">
+              <label className="form-label required">Ngày khám</label>
+              <select
+                className="form-select"
+                name="appointmentDate"
+                value={paymentForm.appointmentDate}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Chọn ngày khám</option>
+                {availableDates.map(date => (
+                  <option key={date} value={date}>
+                    {new Date(date).toLocaleDateString('vi-VN', {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Type */}
+            <div className="form-group">
+              <label className="form-label required">Loại</label>
+              <select
+                className="form-select"
+                name="type"
+                value={paymentForm.type}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Chọn loại khám</option>
+                {typeOptions.map(option => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Note */}
+            <div className="form-group">
+              <label className="form-label">Ghi chú</label>
+              <textarea
+                className="form-textarea"
+                name="note"
+                rows={3}
+                value={paymentForm.note}
+                onChange={handleInputChange}
+                placeholder="Enter any additional notes..."
+              />
+            </div>
+
+            {/* Total */}
+            <div className="form-group">
+              <label className="form-label">Tổng số tiền</label>
+              <input
+                type="text"
+                className="form-input"
+                value={formatCurrency(paymentForm.total)}
+                disabled
+              />
+            </div>
+
+            {/* Buttons */}
+            <div className="button-group">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={handleClose}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleSubmit}
+                disabled={!isFormValid}
+              >
+                Tạo lịch hẹn
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};

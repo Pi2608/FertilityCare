@@ -20,8 +20,6 @@ import java.util.stream.Collectors;
 @Service
 public class AppointmentService {
 
-
-
     @Autowired
     private DoctorScheduleRepository doctorScheduleRepository;
 
@@ -34,11 +32,8 @@ public class AppointmentService {
     @Autowired
     private CustomerRepository  customerRepository;
 
-
     @Autowired
     private AppointmentRepository appointmentRepository;
-
-
 
     public List<AvailableScheduleDTO> getAvailableSchedules(int doctorId, LocalDate date) {
         List<DoctorSchedule> schedules = doctorScheduleRepository
@@ -146,10 +141,9 @@ public class AppointmentService {
         doctorScheduleRepository.save(schedule);
     }
 
-    public List<ReExamAppointmentResponseDTO> getReExamAppointmentsForCustomer(int customerId){
-        List<Appointment> appointments = appointmentRepository.findByCustomer_CustomerIdAndType(
-                customerId, Appointment.Type.tai_kham
-        );
+    public List<ReExamAppointmentResponseDTO> getReExamAppointmentsForaDoctor(int doctorId){
+        List<Appointment> appointments = appointmentRepository.findByDoctor_DoctorId(
+                doctorId);
 
         return appointments.stream().map(app -> {
             ReExamAppointmentResponseDTO dto = new ReExamAppointmentResponseDTO();

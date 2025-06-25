@@ -388,7 +388,7 @@ const Booking = () => {
       <button
         className="next-btn"
         onClick={handleStepNext}
-        disabled={!selectedAppointmentType}
+        disabled={!selectedAppointmentType || (selectedAppointmentType === "procedure" && !selectedProcedureType)}
       >
         Tiếp Theo →
       </button>

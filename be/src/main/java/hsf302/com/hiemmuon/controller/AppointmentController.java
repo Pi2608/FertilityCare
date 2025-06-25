@@ -76,7 +76,8 @@ public class AppointmentController {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUserByEmail(email);
         Customer customer = customerService.getCustomerById(user.getUserId());
-        List<ReExamAppointmentResponseDTO> result = appointmentService.getReExamAppointmentsForCustomer(customer.getCustomerId());
+        Doctor doctor = doctorService.getDoctorById(user.getUserId());
+        List<ReExamAppointmentResponseDTO> result = appointmentService.getReExamAppointmentsForaDoctor(doctor.getDoctorId());
         return ResponseEntity.ok(result);
     }
 

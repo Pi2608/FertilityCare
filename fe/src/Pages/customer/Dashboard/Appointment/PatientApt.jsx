@@ -49,7 +49,7 @@ const PatientApt = ({ userName = 'Nguyễn Thị Hoa' }) => {
             </div>
 
             <div className="actions">
-                <button className="primary-btn">Đặt lịch hẹn</button>
+                {/* <button className="primary-btn">Đặt lịch hẹn</button> */}
                 <button className="secondary-btn">Liên hệ bác sĩ</button>
             </div>
         </div>
