@@ -1,35 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./TreatmentService.css";
 import { Bell } from "lucide-react";
+import TreatmentServiceAPI from "../../../features/service/apiTreatmentService";
 
 const TreatmentService = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-  const [services, setServices] = useState([
-    {
-      id: 1,
-      order: 1,
-      name: "IUI",
-      overview: "Bơm tinh trùng vào buồng tử cung (IUI)",
-      successRate: "Xem chi tiết",
-      process: "Xem quy trình",
-      price: "90.000.000",
-      isEditing: false,
-    },
-    {
-      id: 2,
-      order: 2,
-      name: "IVF",
-      overview: "Thụ tinh trong ống nghiệm (IVF) là một trong những phương",
-      successRate: "Xem chi tiết",
-      process: "Xem quy trình",
-      price: "90.000.000",
-      isEditing: false,
-    },
-  ]);
+  const [services, setServices] = useState([]);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const res = await TreatmentServiceAPI.getAll();
+        const mapped = (Array.isArray(res) ? res : res.data).map(
+          (item, index) => ({
+            id: item.serviceId,
+            order: index + 1,
+            name: item.name || "Không rõ",
+            overview: item.description || "Không có mô tả",
+            successRate: "Xem chi tiết",
+            process: "Xem quy trình",
+            price: item.price?.toString() || "0",
+            isEditing: false,
+          })
+        );
+        setServices(mapped);
+      } catch (err) {
+        console.error("Lỗi khi lấy dữ liệu treatment services:", err);
+      }
+    };
+    fetchServices();
+  }, []);
 
   const [editingService, setEditingService] = useState(null);
 
@@ -226,7 +230,7 @@ const TreatmentService = () => {
                         className="edit-input"
                       />
                     ) : (
-                      parseInt(service.price).toLocaleString()
+                      Number(service.price).toLocaleString()
                     )}
                   </td>
                   <td className="action-cell">
@@ -252,12 +256,6 @@ const TreatmentService = () => {
                           onClick={() => handleEdit(service.id)}
                         >
                           Chỉnh sửa
-                        </button>
-                        <button
-                          className="delete-btn"
-                          onClick={() => handleDelete(service.id)}
-                        >
-                          Xóa
                         </button>
                       </div>
                     )}
