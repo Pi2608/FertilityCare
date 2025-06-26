@@ -156,6 +156,13 @@ public class AppointmentController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
+    @GetMapping("/appointments/{appointmentId}/detail")
+    public ResponseEntity<AppointmentDetailDTO> getAppointmentDetailById(@PathVariable int appointmentId) {
+        AppointmentDetailDTO dto = appointmentService.getAppointmentDetailById(appointmentId);
+        return ResponseEntity.ok(dto);
+    }
+
+
 
 
 }
