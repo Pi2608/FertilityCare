@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class ReExamAppointmentDTO {
-    private int doctorId;
     private int customerId;
     private int serviceId;
     private LocalDateTime date; // ngay tai kham
