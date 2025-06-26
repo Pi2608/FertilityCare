@@ -6,10 +6,7 @@ import hsf302.com.hiemmuon.dto.createDto.CreatePaymentWithReExamDTO;
 import hsf302.com.hiemmuon.dto.entityDto.PaymentResponseDTO;
 import hsf302.com.hiemmuon.entity.*;
 import hsf302.com.hiemmuon.entity.Payment.Status;
-import hsf302.com.hiemmuon.repository.AppointmentRepository;
-import hsf302.com.hiemmuon.repository.CustomerRepository;
-import hsf302.com.hiemmuon.repository.PaymentRepository;
-import hsf302.com.hiemmuon.repository.TreatmentServiceRepository;
+import hsf302.com.hiemmuon.repository.*;
 import hsf302.com.hiemmuon.utils.VNPayUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,6 +31,9 @@ public class PaymentService {
     private CustomerRepository customerRepository;
 
     @Autowired
+    private DoctorRepository doctorRepository;
+
+    @Autowired
     private AppointmentRepository appointmentRepository;
 
     @Autowired
@@ -53,6 +53,9 @@ public class PaymentService {
 
     @Value("${vnpay.payUrl}")
     private String vnp_PayUrl;
+
+    @Value("${vnpay.returnUrl}")
+    private String vnp_Return;
 
     public PaymentService(PaymentRepository paymentRepository) {
         this.paymentRepository = paymentRepository;
@@ -79,18 +82,18 @@ public class PaymentService {
 
         Object doctorIdObj = claims.get("userId");
         Integer doctorId = Integer.parseInt(doctorIdObj.toString());
+        Doctor doc = doctorRepository.findById(doctorId).orElseThrow();
         if (dto == null) {
             throw new IllegalArgumentException("DTO null");
         }
 
         ReExamAppointmentDTO reExamDto = new ReExamAppointmentDTO();
         reExamDto.setCustomerId(dto.getCustomerId());
-        reExamDto.setDoctorId(doctorId);
         reExamDto.setDate(dto.getAppointmentDate());
         reExamDto.setServiceId(dto.getServiceId());
         reExamDto.setNote(dto.getNote());
 
-        appointmentService.scheduleReExam(reExamDto);
+        appointmentService.scheduleReExam(reExamDto, doc);
 
         Appointment appointment = appointmentRepository.findLatestAppointmentByCustomerAndDoctor(
                 dto.getCustomerId(), doctorId);
@@ -148,7 +151,7 @@ public class PaymentService {
         return PaymentResponseDTO.fromPayment(savedPayment);
     }
 
-    public String createVNPayRedirectUrl(int paymentId, String returnUrl) {
+    public String createVNPayRedirectUrl(int paymentId) {
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy payment với ID: " + paymentId));
 
@@ -164,7 +167,7 @@ public class PaymentService {
         vnp_Params.put("vnp_OrderInfo", "Thanh toan dich vu: " + serviceId);
         vnp_Params.put("vnp_OrderType", "other");
         vnp_Params.put("vnp_Locale", "vn");
-        vnp_Params.put("vnp_ReturnUrl", returnUrl);
+        vnp_Params.put("vnp_ReturnUrl", vnp_Return);
         vnp_Params.put("vnp_IpAddr", "127.0.0.1");
         vnp_Params.put("vnp_CreateDate", LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMddHHmmss")));
 
