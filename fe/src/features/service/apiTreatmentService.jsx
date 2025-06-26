@@ -18,18 +18,14 @@ axiosInstance.interceptors.request.use((config) => {
   return config;
 });
 
-// API để lấy danh sách khách hàng cho role Admin
-const CustomerAPI = {
-  getAllCustomers: async () => {
-    try {
-      const response = await axiosInstance.get("admin/customers");
-      return response.data;
-    } catch (error) {
-      console.error("Lỗi khi lấy danh sách khách hàng:", error);
-      throw error;
-    }
+// API để lấy danh sách dịch vụ điều trị cho role Manager
+const TreatmentServiceAPI = {
+  getAll: async () => {
+    const response = await axiosInstance.get("treatment-services/all");
+    return response.data;
   },
 };
 
-export default CustomerAPI;
+export default TreatmentServiceAPI;
+
 
