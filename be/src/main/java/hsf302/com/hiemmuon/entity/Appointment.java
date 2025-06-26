@@ -1,5 +1,7 @@
 package hsf302.com.hiemmuon.entity;
 
+import hsf302.com.hiemmuon.enums.StatusAppointment;
+import hsf302.com.hiemmuon.enums.TypeAppointment;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,11 +32,11 @@ public class Appointment {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false, length = 20)
-    private Type type;
+    private TypeAppointment typeAppointment;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
-    private Status status;
+    private StatusAppointment statusAppointment;
 
     @Column(name = "note", columnDefinition = "NVARCHAR(MAX)")
     private String note;
@@ -43,24 +45,23 @@ public class Appointment {
     @JoinColumn(name = "service_id")
     private TreatmentService service;
 
-    public enum Type {
-        tu_van, tai_kham
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "step_id")
+    private CycleStep cycleStep;
 
-    public enum Status {
-        confirmed, canceled, done
-    }
+
 
     public Appointment() {
     }
 
-    public Appointment(Doctor doctor, Customer customer, LocalDateTime date, Type type, Status status, String note, TreatmentService service) {
+    public Appointment(Doctor doctor, Customer customer, LocalDateTime date, TypeAppointment typeAppointment, StatusAppointment statusAppointment, String note, TreatmentService service, CycleStep cycleStep) {
         this.doctor = doctor;
         this.customer = customer;
         this.date = date;
-        this.type = type;
-        this.status = status;
+        this.typeAppointment = typeAppointment;
+        this.statusAppointment = statusAppointment;
         this.note = note;
         this.service = service;
+        this.cycleStep = cycleStep;
     }
 }

@@ -1,5 +1,7 @@
 package hsf302.com.hiemmuon.service;
 
+import hsf302.com.hiemmuon.dto.appointment.AppointmentDetailDTO;
+import hsf302.com.hiemmuon.dto.appointment.UpdateAppointmentServiceDTO;
 import hsf302.com.hiemmuon.dto.createDto.CreateAppointmentDTO;
 import hsf302.com.hiemmuon.dto.createDto.ReExamAppointmentDTO;
 import hsf302.com.hiemmuon.dto.entityDto.AppointmentHistoryDTO;
@@ -7,6 +9,8 @@ import hsf302.com.hiemmuon.dto.entityDto.AppointmentOverviewDTO;
 import hsf302.com.hiemmuon.dto.entityDto.AvailableScheduleDTO;
 import hsf302.com.hiemmuon.dto.entityDto.ReExamAppointmentResponseDTO;
 import hsf302.com.hiemmuon.entity.*;
+import hsf302.com.hiemmuon.enums.StatusAppointment;
+import hsf302.com.hiemmuon.enums.TypeAppointment;
 import hsf302.com.hiemmuon.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,11 +42,14 @@ public class AppointmentService {
     @Autowired
     private AppointmentRepository appointmentRepository;
 
+    @Autowired
+    private TestResultRepository testResultRepository;
+
 
 
     public List<AvailableScheduleDTO> getAvailableSchedules(int doctorId, LocalDate date) {
         List<DoctorSchedule> schedules = doctorScheduleRepository
-                .findByDoctor_DoctorIdAndDateAndStatus(doctorId, date, true);
+                .findByDoctor_DoctorIdAndDateAndStatus(doctorId, date, false);
 
         return schedules.stream().map(schedule ->{
             AvailableScheduleDTO dto = new AvailableScheduleDTO();
@@ -56,7 +63,7 @@ public class AppointmentService {
         }).collect(Collectors.toList());
     }
 
-    public void registerAppointment(CreateAppointmentDTO dto) {
+    public void registerAppointment(CreateAppointmentDTO dto, int customerId) {
         // Tìm bác sĩ
         Doctor doctor = doctorRepository.findById(dto.getDoctorId());
         if (doctor == null) {
@@ -64,49 +71,53 @@ public class AppointmentService {
         }
 
         // Lấy khách hàng
-        Customer customer = customerRepository.findById(dto.getCustomerId())
+        Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng"));
 
+        // Lấy giờ hẹn của bệnh nhân
+        LocalDateTime appointmentTime = dto.getDate();
+        LocalDate date = appointmentTime.toLocalDate();
+        LocalTime time = appointmentTime.toLocalTime();
 
-        // Tìm khung giờ bác sĩ khả dụng đúng ngày & giờ
-        List<DoctorSchedule> schedules = doctorScheduleRepository
-                .findByDoctor_DoctorIdAndDateAndStatus(
-                        dto.getDoctorId(),
-                        dto.getDate().toLocalDate(),
-                        true
-                );
+        // Lấy tất cả khung giờ bận của bác sĩ trong ngày đó
+        List<DoctorSchedule> busySchedules = doctorScheduleRepository
+                .findByDoctor_DoctorIdAndDateAndStatus(dto.getDoctorId(), date, false);
 
-        DoctorSchedule schedule = null;
-        for (DoctorSchedule s : schedules) {
-            if (s.getStartTime().equals(dto.getDate().toLocalTime())) {
-                schedule = s;
-                break;
-            }
-        }
+        // Kiểm tra xem giờ hẹn của bệnh nhân có trùng với bất kỳ khung giờ bận nào không
+        boolean isBusy = busySchedules.stream().anyMatch(s ->
+                s.getStartTime().equals(time)
+        );
 
-        if (schedule == null) {
-            throw new RuntimeException("Khung giờ không còn khả dụng");
+        if (isBusy) {
+            throw new RuntimeException("Bác sĩ bận vào khung giờ này");
         }
 
         // Tạo cuộc hẹn
         Appointment appointment = new Appointment();
         appointment.setDoctor(doctor);
         appointment.setCustomer(customer);
-        appointment.setDate(dto.getDate());
-        appointment.setType(Appointment.Type.tu_van);
-        appointment.setStatus(Appointment.Status.confirmed);
+        appointment.setDate(appointmentTime);
+        appointment.setTypeAppointment(TypeAppointment.tu_van);
+        appointment.setStatusAppointment(StatusAppointment.confirmed);
         appointment.setNote(dto.getNote());
+
         TreatmentService treatmentService = treatmentServiceRepository.findById(3);
         appointment.setService(treatmentService);
         appointmentRepository.save(appointment);
 
-        // Cập nhật lịch: đánh dấu đã được đặt
-        schedule.setStatus(false);
-        doctorScheduleRepository.save(schedule);
+        // Thêm lịch bận mới cho bác sĩ (vì bác sĩ vừa bị chiếm thêm khung giờ này)
+        DoctorSchedule newSchedule = new DoctorSchedule();
+        newSchedule.setDate(date);
+        newSchedule.setStartTime(time);
+        newSchedule.setEndTime(time.plusHours(2));
+        newSchedule.setDoctor(doctor);
+        newSchedule.setStatus(false);
+        doctorScheduleRepository.save(newSchedule);
     }
 
-    public void scheduleReExam(ReExamAppointmentDTO dto) {
-        Doctor doctor = doctorRepository.findById(dto.getDoctorId());
+
+    public void scheduleReExam(ReExamAppointmentDTO dto, Doctor doctor) {
+        // Tìm bác sĩ
         if (doctor == null) {
             throw new RuntimeException("Không tìm thấy bác sĩ");
         }
@@ -115,40 +126,55 @@ public class AppointmentService {
         Customer customer = customerRepository.findById(dto.getCustomerId())
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng"));
 
+        // Lấy dịch vụ
         TreatmentService service = treatmentServiceRepository.findById(dto.getServiceId());
         if (service == null) {
             throw new RuntimeException("Không tìm thấy dịch vụ");
         }
 
-        // Kiểm tra khung giờ có rảnh không
-        List<DoctorSchedule> schedules = doctorScheduleRepository.findByDoctor_DoctorIdAndDateAndStatus(
-                dto.getDoctorId(), dto.getDate().toLocalDate(), true);
+        // Lấy thông tin thời gian hẹn
+        LocalDateTime appointmentTime = dto.getDate();
+        LocalDate date = appointmentTime.toLocalDate();
+        LocalTime time = appointmentTime.toLocalTime();
 
-        DoctorSchedule schedule = schedules.stream()
-                .filter(s -> s.getStartTime().equals(dto.getDate().toLocalTime()))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Khung giờ không còn khả dụng"));
+        // Lấy tất cả khung giờ bác sĩ đã bận trong ngày đó
+        List<DoctorSchedule> busySchedules = doctorScheduleRepository
+                .findByDoctor_DoctorIdAndDateAndStatus(doctor.getDoctorId(), date, false); // status = false = đã bận
 
-        // Tạo appointment tái khám
+        // Kiểm tra giờ bệnh nhân chọn có trùng khung giờ bận không
+        boolean isBusy = busySchedules.stream().anyMatch(s ->
+                s.getStartTime().equals(time)
+        );
+
+        if (isBusy) {
+            throw new RuntimeException("Bác sĩ bận vào khung giờ này");
+        }
+
+        // Tạo cuộc hẹn tái khám
         Appointment appointment = new Appointment();
         appointment.setDoctor(doctor);
         appointment.setCustomer(customer);
-        appointment.setDate(dto.getDate());
-        appointment.setType(Appointment.Type.tai_kham);
-        appointment.setStatus(Appointment.Status.confirmed);
+        appointment.setDate(appointmentTime);
+        appointment.setTypeAppointment(TypeAppointment.tai_kham);
+        appointment.setStatusAppointment(StatusAppointment.confirmed);
         appointment.setNote(dto.getNote());
         appointment.setService(service);
-
         appointmentRepository.save(appointment);
 
-        // Cập nhật lịch
-        schedule.setStatus(false);
-        doctorScheduleRepository.save(schedule);
+        // Ghi nhận lịch bận mới cho bác sĩ
+        DoctorSchedule newSchedule = new DoctorSchedule();
+        newSchedule.setDoctor(doctor);
+        newSchedule.setDate(date);
+        newSchedule.setStartTime(time);
+        newSchedule.setEndTime(time.plusHours(2)); // ví dụ mặc định 2 tiếng
+        newSchedule.setStatus(false); // true = bận
+        doctorScheduleRepository.save(newSchedule);
     }
 
+
     public List<ReExamAppointmentResponseDTO> getReExamAppointmentsForCustomer(int customerId){
-        List<Appointment> appointments = appointmentRepository.findByCustomer_CustomerIdAndType(
-                customerId, Appointment.Type.tai_kham
+        List<Appointment> appointments = appointmentRepository.findByCustomer_CustomerIdAndTypeAppointment(
+                customerId, TypeAppointment.tai_kham
         );
 
         return appointments.stream().map(app -> {
@@ -158,7 +184,7 @@ public class AppointmentService {
             dto.setDoctorName(app.getDoctor().getUser().getName());
             dto.setServiceName(app.getService().getName());
             dto.setNote(app.getNote());
-            dto.setStatus(app.getStatus());
+            dto.setStatus(app.getStatusAppointment());
             return dto;
         }).toList();
     }
@@ -168,11 +194,16 @@ public class AppointmentService {
                 .findByAppointmentIdAndCustomer_CustomerId(appointmentId, customerId)
                 .orElseThrow(() -> new RuntimeException("Cuộc hẹn không tồn tại hoặc không thuộc quyền của bạn"));
 
+        // Chỉ cho phép hủy loại tư vấn
+        if (appointment.getTypeAppointment() == TypeAppointment.tai_kham) {
+            throw new RuntimeException("Tái khám không được phép hủy");
+        }
+
         // Hủy cuộc hẹn
-        appointment.setStatus(Appointment.Status.canceled);
+        appointment.setStatusAppointment(StatusAppointment.canceled);
         appointmentRepository.save(appointment);
 
-        // Mở lại giờ trong lịch bác sĩ
+        // Tìm khung giờ tương ứng trong DoctorSchedule
         LocalDate date = appointment.getDate().toLocalDate();
         LocalTime time = appointment.getDate().toLocalTime();
 
@@ -182,9 +213,12 @@ public class AppointmentService {
                 time
         );
 
-        schedule.setStatus(true);
-        doctorScheduleRepository.save(schedule);
+        if (schedule != null) {
+            // Xoá khung giờ khỏi bảng doctor_schedule
+            doctorScheduleRepository.delete(schedule);
+        }
     }
+
 
     public List<AppointmentHistoryDTO> getAppointmentsForDoctorAndCustomer(int doctorId, int customerId) {
         List<Appointment> appointments = appointmentRepository
@@ -194,8 +228,8 @@ public class AppointmentService {
                 .map(app -> new AppointmentHistoryDTO(
                         app.getAppointmentId(),
                         app.getDate(),
-                        app.getType() != null ? app.getType().toString() : null,
-                        app.getStatus() != null ? app.getStatus().toString() : null,
+                        app.getTypeAppointment() != null ? app.getTypeAppointment().toString() : null,
+                        app.getStatusAppointment() != null ? app.getStatusAppointment().toString() : null,
                         app.getNote(),
                         app.getService() != null ? app.getService().getName() : null
                 ))
@@ -213,15 +247,106 @@ public class AppointmentService {
             dto.setDoctorName(app.getDoctor().getUser().getName());
             dto.setCustomerName(app.getCustomer().getUser().getName());
             dto.setDate(app.getDate());
-            dto.setType(app.getType().name());
-            dto.setStatus(app.getStatus().name());
+            dto.setType(app.getTypeAppointment().name());
+            dto.setStatus(app.getStatusAppointment().name());
             dto.setNote(app.getNote());
             dto.setServiceName(app.getService().getName());
             return dto;
         }).toList();
     }
 
+    public void updateServiceForAppointment(int appointmentId, int doctorId, UpdateAppointmentServiceDTO dto) {
+        Appointment appointment = appointmentRepository.findById(appointmentId);
+                if(appointment == null){
+                    throw new RuntimeException("Không có cuộc hẹn đó!");
+                }
 
+        if (appointment.getDoctor().getDoctorId() != (doctorId)){
+            throw new RuntimeException("Bạn không có quyền truy cập cuộc hẹn này.");
+        }
+
+        if(!"confirmed".equalsIgnoreCase(String.valueOf(appointment.getStatusAppointment()))){
+            throw new RuntimeException("Chỉ có thể cap nhật dịch vụ khi cuộc hẹn là confirmed");
+        }
+
+        appointment.setService(treatmentServiceRepository.findById(dto.getServiceId()));
+        appointment.setNote(dto.getNote());
+        appointment.setStatusAppointment(StatusAppointment.valueOf(dto.getStatus()));
+
+        // ✅ Liên kết với testResult nếu bạn muốn
+        if (dto.getTestResultId() != null) {
+            TestResult testResult = testResultRepository.findById(dto.getTestResultId())
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy kết quả xét nghiệm"));
+            // Gán logic liên kết tại đây — ví dụ:
+            testResult.setAppointment(appointment); // nếu bạn muốn update ngược lại
+            testResultRepository.save(testResult);
+        }
+
+        appointmentRepository.save(appointment);
+    }
+
+    public List<AppointmentDetailDTO> getAppointmentsByDoctorId(int doctorId){
+     List<Appointment> appointments = appointmentRepository.findByDoctor_DoctorId(doctorId);
+     return appointments.stream().map(this::convertToDto).collect(Collectors.toList());
+    }
+
+    public List<AppointmentDetailDTO> getAppointmentsByCustomerId(int customerId){
+        List<Appointment> appointments = appointmentRepository.findByCustomer_CustomerId(customerId);
+        return appointments.stream().map(this::convertToDto).collect(Collectors.toList());
+    }
+
+    private AppointmentDetailDTO convertToDto(Appointment appointment) {
+        AppointmentDetailDTO dto = new AppointmentDetailDTO();
+
+        dto.setAppointmentId(appointment.getAppointmentId());
+        dto.setType(String.valueOf(appointment.getTypeAppointment()));
+
+        // Nếu appointment.getDate() là LocalDateTime
+        dto.setDate(appointment.getDate().toLocalDate());
+        dto.setStartTime(appointment.getDate().toLocalTime());
+
+        // Doctor info
+        if (appointment.getDoctor() != null && appointment.getDoctor().getUser() != null) {
+            dto.setDoctorId(appointment.getDoctor().getDoctorId());
+            dto.setDoctorName(appointment.getDoctor().getUser().getName());
+        }
+
+        // Customer info
+        if (appointment.getCustomer() != null && appointment.getCustomer().getUser() != null) {
+            dto.setCustomerId(appointment.getCustomer().getCustomerId());
+            dto.setCustomerName(appointment.getCustomer().getUser().getName());
+
+            if (appointment.getCustomer().getUser().getDob() != null) {
+                dto.setCustomerAge(
+                        LocalDate.now().getYear() - appointment.getCustomer().getUser().getDob().getYear()
+                );
+            }
+        }
+
+        dto.setStatus(String.valueOf(appointment.getStatusAppointment()));
+        dto.setNote(appointment.getNote());
+
+        if (appointment.getService() != null) {
+            dto.setServiceId(appointment.getService().getServiceId());
+        }
+
+        // ✅ TestResult — nếu bạn muốn lấy ID kết quả xét nghiệm theo appointment
+        List<TestResult> results = testResultRepository.findByAppointment_AppointmentId(appointment.getAppointmentId());
+        if (results != null && !results.isEmpty()) {
+            dto.setTestResultId(results.getFirst().getResultId()); // lấy ID đầu tiên (tuỳ bạn chọn logic)
+        }
+
+        return dto;
+    }
+
+    public AppointmentDetailDTO getAppointmentDetailById(int appointmentId) {
+        Appointment appointment = appointmentRepository.findById(appointmentId);
+        if (appointment == null) {
+            throw new RuntimeException("Không tìm thấy cuộc hẹn với ID: " + appointmentId);
+        }
+
+        return convertToDto(appointment);
+    }
 
 
 
