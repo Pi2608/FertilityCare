@@ -3,16 +3,12 @@ package hsf302.com.hiemmuon.entity;
 import hsf302.com.hiemmuon.dto.responseDto.CycleStepDTO;
 import hsf302.com.hiemmuon.enums.StatusCycle;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "cycle_steps")

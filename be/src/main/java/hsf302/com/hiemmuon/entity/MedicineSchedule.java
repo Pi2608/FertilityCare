@@ -2,15 +2,15 @@ package hsf302.com.hiemmuon.entity;
 
 import hsf302.com.hiemmuon.enums.StatusMedicineSchedule;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "medication_schedule")
 public class MedicineSchedule {
 
@@ -42,21 +42,4 @@ public class MedicineSchedule {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private StatusMedicineSchedule status;
-
-    public MedicineSchedule() {
-    }
-
-    public MedicineSchedule(Medicine medicine, CycleStep cycleStep, LocalDate startDate, LocalDate endDate,
-                            LocalDateTime eventDate, String note, StatusMedicineSchedule status) {
-        this.medicine = medicine;
-        this.cycleStep = cycleStep;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.eventDate = eventDate;
-        this.note = note;
-        this.status = status;
-    }
-
-    public MedicineSchedule(Medicine medicine, CycleStep step, String name, String dose, String frequency, java.time.LocalDate startDate, Object o, java.time.LocalDate endDate, Object o1, String note) {
-    }
 }

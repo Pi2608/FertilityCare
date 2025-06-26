@@ -1,12 +1,12 @@
 package hsf302.com.hiemmuon.dto.responseDto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ReExamAppointmentDTO {
     private int doctorId;
     private int customerId;

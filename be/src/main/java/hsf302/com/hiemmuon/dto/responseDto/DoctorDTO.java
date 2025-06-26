@@ -2,14 +2,14 @@ package hsf302.com.hiemmuon.dto.responseDto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import hsf302.com.hiemmuon.enums.Genders;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @JsonIgnoreProperties(ignoreUnknown = false)
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class DoctorDTO{
 
     private int userId;

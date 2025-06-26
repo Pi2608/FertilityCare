@@ -1,14 +1,14 @@
 package hsf302.com.hiemmuon.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "test_results")
 public class TestResult {
 
@@ -16,7 +16,6 @@ public class TestResult {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "result_id")
     private int resultId;
-
 
     @Column(name = "name", length = 100, nullable = false)
     private String name;
@@ -39,17 +38,4 @@ public class TestResult {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "appointment_id")
     private Appointment appointment;
-
-    public TestResult() {
-    }
-
-    public TestResult(String name, Float value, String unit, String referenceRange, LocalDate testDate, String note, Appointment appointment) {
-        this.name = name;
-        this.value = value;
-        this.unit = unit;
-        this.referenceRange = referenceRange;
-        this.testDate = testDate;
-        this.note = note;
-        this.appointment = appointment;
-    }
 }

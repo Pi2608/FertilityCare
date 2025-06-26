@@ -1,20 +1,19 @@
-package hsf302.com.hiemmuon.dto.appointment;
+package hsf302.com.hiemmuon.dto.responseDto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UpdateAppointmentServiceDTO {
-        @Schema(description = "Ghi chú thêm của bác sĩ")
-        private String note;
+    @Schema(description = "Ghi chú thêm của bác sĩ")
+    private String note;
 
-        @Schema(description = "ID dịch vụ muốn cập nhật")
-        private int serviceId;
+    @Schema(description = "ID dịch vụ muốn cập nhật")
+    private int serviceId;
 
-        private String status;
+    private String status;
 
-        private Integer testResultId;
-    }
-
+    private Integer testResultId;
+}

@@ -1,14 +1,14 @@
 package hsf302.com.hiemmuon.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "feedbacks")
 public class Feedback {
 
@@ -33,15 +33,4 @@ public class Feedback {
 
     @Column(name = "create_at", nullable = false)
     private LocalDateTime createAt;
-
-    public Feedback() {
-    }
-
-    public Feedback(Doctor doctor, Customer customer, int rating, String comment, LocalDateTime createAt) {
-        this.doctor = doctor;
-        this.customer = customer;
-        this.rating = rating;
-        this.comment = comment;
-        this.createAt = createAt;
-    }
 }

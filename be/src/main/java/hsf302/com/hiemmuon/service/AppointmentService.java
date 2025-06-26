@@ -1,13 +1,8 @@
 package hsf302.com.hiemmuon.service;
 
-import hsf302.com.hiemmuon.dto.appointment.AppointmentDetailDTO;
-import hsf302.com.hiemmuon.dto.appointment.UpdateAppointmentServiceDTO;
 import hsf302.com.hiemmuon.dto.createDto.CreateAppointmentDTO;
 import hsf302.com.hiemmuon.dto.createDto.ReExamAppointmentDTO;
-import hsf302.com.hiemmuon.dto.responseDto.AppointmentHistoryDTO;
-import hsf302.com.hiemmuon.dto.responseDto.AppointmentOverviewDTO;
-import hsf302.com.hiemmuon.dto.responseDto.AvailableScheduleDTO;
-import hsf302.com.hiemmuon.dto.responseDto.ReExamAppointmentResponseDTO;
+import hsf302.com.hiemmuon.dto.responseDto.*;
 import hsf302.com.hiemmuon.entity.*;
 import hsf302.com.hiemmuon.enums.StatusAppointment;
 import hsf302.com.hiemmuon.enums.TypeAppointment;
@@ -23,8 +18,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class AppointmentService {
-
-
 
     @Autowired
     private DoctorScheduleRepository doctorScheduleRepository;
@@ -44,8 +37,6 @@ public class AppointmentService {
 
     @Autowired
     private TestResultRepository testResultRepository;
-
-
 
     public List<AvailableScheduleDTO> getAvailableSchedules(int doctorId, LocalDate date) {
         List<DoctorSchedule> schedules = doctorScheduleRepository
@@ -171,7 +162,6 @@ public class AppointmentService {
         doctorScheduleRepository.save(newSchedule);
     }
 
-
     public List<ReExamAppointmentResponseDTO> getReExamAppointmentsForCustomer(int customerId){
         List<Appointment> appointments = appointmentRepository.findByCustomer_CustomerIdAndTypeAppointment(
                 customerId, TypeAppointment.tai_kham
@@ -219,7 +209,6 @@ public class AppointmentService {
         }
     }
 
-
     public List<AppointmentHistoryDTO> getAppointmentsForDoctorAndCustomer(int doctorId, int customerId) {
         List<Appointment> appointments = appointmentRepository
                 .findByDoctor_DoctorIdAndCustomer_CustomerIdOrderByDateDesc(doctorId, customerId);
@@ -237,7 +226,6 @@ public class AppointmentService {
 
     }
 
-
     public List<AppointmentOverviewDTO> getAllAppointmentsForManager() {
         List<Appointment> appointments = appointmentRepository.findAll();
 
@@ -254,7 +242,6 @@ public class AppointmentService {
             return dto;
         }).toList();
     }
-
 
     public void updateServiceForAppointment(int appointmentId, int doctorId, UpdateAppointmentServiceDTO dto) {
         Appointment appointment = appointmentRepository.findById(appointmentId);
@@ -349,4 +336,3 @@ public class AppointmentService {
         return convertToDto(appointment);
     }
 }
-

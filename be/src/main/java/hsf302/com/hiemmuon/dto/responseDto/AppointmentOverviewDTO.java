@@ -1,9 +1,14 @@
 package hsf302.com.hiemmuon.dto.responseDto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
-@lombok.Getter
-@lombok.Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AppointmentOverviewDTO {
     private int appointmentId;
     private String doctorName;

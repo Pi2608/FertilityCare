@@ -2,13 +2,13 @@ package hsf302.com.hiemmuon.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Nationalized;
 
 @Entity
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "doctors")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Doctor {
@@ -34,15 +34,4 @@ public class Doctor {
 
     @Column(name = "is_active")
     private Boolean isActive;
-
-    public Doctor() {
-    }
-
-    public Doctor(User user, String specification, int experience, Float ratingAvg, Boolean isActive) {
-        this.user = user;
-        this.specification = specification;
-        this.experience = experience;
-        this.ratingAvg = ratingAvg;
-        this.isActive = isActive;
-    }
 }

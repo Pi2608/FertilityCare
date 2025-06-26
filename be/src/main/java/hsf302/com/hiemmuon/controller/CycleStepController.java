@@ -5,12 +5,15 @@ import hsf302.com.hiemmuon.dto.createDto.NoteMedicineScheduleDTO;
 import hsf302.com.hiemmuon.dto.responseDto.CycleStepDTO;
 import hsf302.com.hiemmuon.enums.StatusCycle;
 import hsf302.com.hiemmuon.service.CycleStepService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "8. Cycle Step Controller")
 @RestController
 @RequestMapping("/api/cycle-steps")
 public class CycleStepController {
@@ -18,8 +21,10 @@ public class CycleStepController {
     @Autowired
     private CycleStepService cycleStepService;
 
-
-    //customer, doctor get list step theo cycleId
+    @Operation(
+            summary = "Lấy tất cả các bước điều trị trong chu kỳ",
+            description = "API cho phép khách hàng và bác sĩ truy xuất toàn bộ các bước (step) của một chu kỳ điều trị cụ thể."
+    )
     @GetMapping("/cycleId/{cycleId}/step/all")
     public ResponseEntity<ApiResponse<?>> getMyAllCycleStep(
             @PathVariable("cycleId") int cycleId) {
@@ -32,7 +37,10 @@ public class CycleStepController {
         return ResponseEntity.ok(response);
     }
 
-    //customer, doctor get step theo cycleId và stepId
+    @Operation(
+            summary = "Lấy một bước điều trị cụ thể",
+            description = "API giúp truy xuất thông tin chi tiết của một bước điều trị trong chu kỳ dựa trên thứ tự stepOrder."
+    )
     @GetMapping("/cycleId/{cycleId}/step/{stepOrder}")
     public ResponseEntity<ApiResponse<?>> getMyCycleStep(
             @PathVariable("cycleId") int cycleId,
@@ -47,7 +55,10 @@ public class CycleStepController {
         return ResponseEntity.ok(response);
     }
 
-    //doctor update status step
+    @Operation(
+            summary = "Cập nhật trạng thái bước điều trị",
+            description = "Bác sĩ cập nhật trạng thái (đang thực hiện, hoàn thành...) của một bước điều trị cụ thể trong chu kỳ."
+    )
     @PatchMapping("/cycleId/{cycleId}/step/{stepOrder}/status")
     public ResponseEntity<ApiResponse<?>> updateCycleStepStatus(
             @PathVariable("cycleId") int cycleId,
@@ -63,7 +74,10 @@ public class CycleStepController {
         return ResponseEntity.ok(response);
     }
 
-    //doctor update note step
+    @Operation(
+            summary = "Cập nhật ghi chú cho bước điều trị",
+            description = "Bác sĩ ghi chú thêm vào bước điều trị để theo dõi và hướng dẫn bệnh nhân chi tiết hơn."
+    )
     @PatchMapping("cycleId/{cycleId}/step/{stepOrder}/note")
     public ResponseEntity<ApiResponse<?>> updateNote(
             @PathVariable("cycleId") int cycleId,

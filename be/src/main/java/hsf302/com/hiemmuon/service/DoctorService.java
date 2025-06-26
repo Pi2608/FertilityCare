@@ -55,12 +55,6 @@ public class DoctorService {
         return dto;
     }
 
-    public List<DoctorDTO> getDoctorBySpecification(String specification) {
-        return doctorRepository.findBySpecification(specification).stream()
-                .map(this::convertToDoctorDTO)
-                .collect(Collectors.toList());
-    }
-
     public List<DoctorDTO> getDoctorByIsActive() {
         return doctorRepository.findByIsActive(true).stream()
                 .map(this::convertToDoctorDTO)

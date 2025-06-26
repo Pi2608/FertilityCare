@@ -1,13 +1,13 @@
-package hsf302.com.hiemmuon.dto.appointment;
+package hsf302.com.hiemmuon.dto.responseDto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AppointmentDetailDTO {
     private int appointmentId;
     private String type; // tư vấn - IUI - IVF

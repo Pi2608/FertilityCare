@@ -1,10 +1,15 @@
 package hsf302.com.hiemmuon.dto.responseDto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@lombok.Getter
-@lombok.Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AvailableScheduleDTO {
     private int doctorId;
     private String name;

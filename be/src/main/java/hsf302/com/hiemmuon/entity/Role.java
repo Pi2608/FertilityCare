@@ -1,12 +1,12 @@
 package hsf302.com.hiemmuon.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "roles")
 public class Role {
 
@@ -17,9 +17,4 @@ public class Role {
 
     @Column(name = "role_name", nullable = false, unique = true)
     private String roleName;
-
-    public Role() {
-    }
-
-
 }

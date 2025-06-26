@@ -6,6 +6,8 @@ import hsf302.com.hiemmuon.dto.responseDto.DoctorDTO;
 import hsf302.com.hiemmuon.dto.updateDto.UpdateDoctorDTO;
 import hsf302.com.hiemmuon.entity.Doctor;
 import hsf302.com.hiemmuon.service.DoctorService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "3. Doctor Controller")
 @RestController
 @RequestMapping("/api/doctors")
 public class DoctorController {
@@ -21,11 +24,19 @@ public class DoctorController {
     @Autowired
     private DoctorService doctorService;
 
+    @Operation(
+            summary = "Lấy danh sách tất cả bác sĩ",
+            description = "API cho phép truy xuất toàn bộ danh sách bác sĩ có trong hệ thống."
+    )
     @GetMapping("/all")
     public List<DoctorDTO> getAllDoctors() {
         return doctorService.getAllDoctor();
     }
 
+    @Operation(
+            summary = "Lấy thông tin bác sĩ theo ID",
+            description = "Truy xuất thông tin chi tiết của một bác sĩ dựa theo mã định danh."
+    )
     @GetMapping("/id/{doctorId}")
     public ResponseEntity<ApiResponse<?>> getDoctorById(
             @PathVariable("doctorId") int doctorId) {
@@ -39,6 +50,10 @@ public class DoctorController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            summary = "Tìm bác sĩ theo tên",
+            description = "Tìm kiếm một bác sĩ dựa theo tên được cung cấp."
+    )
     @GetMapping("/name/{name}")
     public ResponseEntity<ApiResponse<?>> getDoctorByName(
             @PathVariable("name") String name) {
@@ -53,6 +68,10 @@ public class DoctorController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            summary = "Lấy danh sách bác sĩ đang hoạt động",
+            description = "API trả về danh sách các bác sĩ đang có trạng thái hoạt động (isActive = true)."
+    )
     @GetMapping("/active")
     public ResponseEntity<ApiResponse<?>> getDoctorByStatus() {
         List<DoctorDTO> doctors = doctorService.getDoctorByIsActive();
@@ -65,20 +84,10 @@ public class DoctorController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/specification")
-    public ResponseEntity<ApiResponse<?>> getDoctorBySpecialization(
-            @RequestParam("specification") String specification) {
-
-        List<DoctorDTO> doctors = doctorService.getDoctorBySpecification(specification);
-
-        ApiResponse<List<DoctorDTO>> response = new ApiResponse<>(
-                200,
-                "Doctors with specialization " + specification + " retrieved successfully",
-                doctors
-        );
-        return ResponseEntity.ok(response);
-    }
-
+    @Operation(
+            summary = "Tạo tài khoản bác sĩ mới",
+            description = "Admin sử dụng API này để tạo mới tài khoản bác sĩ với các thông tin chuyên môn."
+    )
     @PostMapping
     public ResponseEntity<ApiResponse<?>> createDoctor(@RequestBody @Valid CreateDoctorDTO request) {
 
@@ -92,6 +101,10 @@ public class DoctorController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            summary = "Cập nhật thông tin cá nhân bác sĩ",
+            description = "Bác sĩ sử dụng API này để chỉnh sửa thông tin cá nhân của chính mình."
+    )
     @PutMapping("/me")
     public ResponseEntity<ApiResponse<?>> updateDoctor(
             HttpServletRequest request,
@@ -107,6 +120,10 @@ public class DoctorController {
 
     }
 
+    @Operation(
+            summary = "Cập nhật trạng thái tài khoản bác sĩ",
+            description = "Cho phép bật/tắt trạng thái hoạt động của tài khoản bác sĩ (chỉ dành cho admin)."
+    )
     @PatchMapping("/{doctorId}/status")
     public ResponseEntity<ApiResponse<?>> updateDoctorStatus(
             @PathVariable("doctorId") int doctorId,
@@ -123,6 +140,10 @@ public class DoctorController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            summary = "Lấy thông tin bác sĩ đang đăng nhập",
+            description = "Trả về thông tin chi tiết của bác sĩ đang đăng nhập dựa trên JWT token."
+    )
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<?>> getDoctorByToken(HttpServletRequest request) {
         DoctorDTO doctor = doctorService.getDoctorMe(request);
