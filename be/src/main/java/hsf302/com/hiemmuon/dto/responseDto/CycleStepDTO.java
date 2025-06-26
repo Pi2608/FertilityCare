@@ -1,10 +1,7 @@
 package hsf302.com.hiemmuon.dto.responseDto;
 
 import hsf302.com.hiemmuon.enums.StatusCycle;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,13 +10,13 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CycleStepDTO {
-
     private int stepOrder;
     private String serive;
     private String description;
     private LocalDate eventdate;
     private StatusCycle statusCycleStep;
-    private List<MedicineScheduleDTO> medicineScheduleDTO;
     private String note;
+    private List<MedicineScheduleDTO> medicineSchedule;
 }

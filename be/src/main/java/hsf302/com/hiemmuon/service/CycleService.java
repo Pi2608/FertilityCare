@@ -1,12 +1,11 @@
 package hsf302.com.hiemmuon.service;
 
 import hsf302.com.hiemmuon.dto.createDto.CreateCycleDTO;
+import hsf302.com.hiemmuon.dto.responseDto.CycleDTO;
 import hsf302.com.hiemmuon.dto.responseDto.CycleNoteDTO;
-import hsf302.com.hiemmuon.dto.responseDto.CycleOfCustomerDTO;
-import hsf302.com.hiemmuon.dto.responseDto.CycleOfDoctorDTO;
+import hsf302.com.hiemmuon.dto.responseDto.CycleStepDTO;
 import hsf302.com.hiemmuon.entity.*;
 import hsf302.com.hiemmuon.enums.StatusCycle;
-import hsf302.com.hiemmuon.enums.StatusMedicineSchedule;
 import hsf302.com.hiemmuon.repository.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -14,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CycleService {
@@ -37,22 +38,22 @@ public class CycleService {
     @Autowired
     private CycleStepRepository cycleStepRepository;
 
-    @Autowired
-    private MedicineRepository medicineRepository;
-
-    @Autowired
-    private MedicineScheduleRepository medicineScheduleRepository;
-
-    public List<CycleOfCustomerDTO> getAllCycleOfCustomer(HttpServletRequest request) {
+    public List<CycleDTO> getAllCycleOfCustomer(HttpServletRequest request) {
         User user = userService.getUserByJwt(request);
+        if (user.getCustomer() == null) {
+            throw new RuntimeException("User không phải là khách hàng.");
+        }
         List<Cycle> cycles = cycleRepository.findByCustomer_CustomerId(user.getCustomer().getCustomerId());
-        return cycles.stream().map(this::convertToCycleOfCustomerDTO).toList();
+        return cycles.stream().map(this::convertToCycleDTO).toList();
     }
 
-    public List<CycleOfDoctorDTO> getCycleOfDoctor(HttpServletRequest request) {
+    public List<CycleDTO> getAllCycleOfDoctor(HttpServletRequest request) {
         User user = userService.getUserByJwt(request);
+        if (user.getDoctor() == null) {
+            throw new RuntimeException("User không phải là bác sĩ.");
+        }
         List<Cycle> cycles = cycleRepository.findByDoctor_DoctorId(user.getDoctor().getDoctorId());
-        return cycles.stream().map(this::convertToCycleOfDoctorDTO).toList();
+        return cycles.stream().map(this::convertToCycleDTO).toList();
     }
 
     public CycleNoteDTO updateCycleNote(int cycleId, String note) {
@@ -62,32 +63,8 @@ public class CycleService {
         return new CycleNoteDTO(cycle.getNote());
     }
 
-    private CycleOfCustomerDTO convertToCycleOfCustomerDTO(Cycle cycle) {
-        return new CycleOfCustomerDTO(
-                cycle.getCycleId(),
-                cycle.getDoctor().getUser().getName(),
-                cycle.getService().getName(),
-                cycle.getStartdate(),
-                cycle.getEndDate(),
-                cycle.getStatus(),
-                cycle.getNote()
-        );
-    }
-
-    private CycleOfDoctorDTO convertToCycleOfDoctorDTO(Cycle cycle) {
-        return new CycleOfDoctorDTO(
-                cycle.getCycleId(),
-                cycle.getCustomer().getUser().getName(),
-                cycle.getService().getName(),
-                cycle.getStartdate(),
-                cycle.getEndDate(),
-                cycle.getStatus(),
-                cycle.getNote()
-        );
-    }
-
     @Transactional
-    public Cycle createCycle(CreateCycleDTO dto, HttpServletRequest request) {
+    public CycleDTO createCycle(CreateCycleDTO dto, HttpServletRequest request) {
 
         User user = userService.getUserByJwt(request);
         Doctor doctor = user.getDoctor();
@@ -113,38 +90,70 @@ public class CycleService {
         List<TreatmentStep> treatmentSteps = treatmentStepRepository
                 .findByService_ServiceIdOrderByStepOrderAsc(service.getServiceId());
 
-        LocalDate eventDate = dto.getStartDate().plusMonths(2);
+        List<CycleStepDTO> listStep = new ArrayList<>();
 
+        LocalDate eventDate = dto.getStartDate().plusMonths(2);
+        CycleStep cycleStep = null;
         for (TreatmentStep step : treatmentSteps) {
-            // Tạo CycleStep từ TreatmentStep
-            CycleStep cycleStep = new CycleStep();
+            cycleStep = new CycleStep();
             cycleStep.setCycle(savedCycle);
             cycleStep.setTreatmentStep(step);
             cycleStep.setStepOrder(step.getStepOrder());
             cycleStep.setStatusCycleStep(StatusCycle.ongoing);
             cycleStep.setDescription(null);
             cycleStep.setEventdate(eventDate);
-            System.out.println("STEP ORDER: " + step.getStepOrder());
+            cycleStepRepository.save(cycleStep);
 
-            CycleStep savedCycleStep = cycleStepRepository.save(cycleStep);
-
-            // Lấy danh sách thuốc theo treatmentStepId
-            List<Medicine> medicines = medicineRepository.findByTreatmentStep_Id(step.getId());
-
-            for (Medicine medicine : medicines) {
-                MedicineSchedule cycleMedicine = new MedicineSchedule();
-                cycleMedicine.setCycleStep(savedCycleStep);
-                cycleMedicine.setMedicine(medicine);
-                cycleMedicine.setStartdate(eventDate);
-                cycleMedicine.setEnddate(eventDate.plusDays(5));
-                cycleMedicine.setNote(null);
-                cycleMedicine.setStatus(StatusMedicineSchedule.ongoing);
-                medicineScheduleRepository.save(cycleMedicine);
-            }
-
-            // Cập nhật ngày cho step tiếp theo
             eventDate = eventDate.plusMonths(2);
+
+            CycleStepDTO cycleStepDTO = CycleStepDTO.builder()
+                    .stepOrder(cycleStep.getStepOrder())
+                    .serive(cycle.getService().getName())
+                    .description(cycleStep.getDescription())
+                    .eventdate(cycleStep.getEventdate())
+                    .statusCycleStep(cycleStep.getStatusCycleStep())
+                    .note(cycleStep.getNote())
+                    .build();
+            listStep.add(cycleStepDTO);
         }
-        return savedCycle;
+        return new CycleDTO(
+                savedCycle.getCycleId(),
+                savedCycle.getCustomer().getCustomerId(),
+                savedCycle.getDoctor().getDoctorId(),
+                savedCycle.getService().getServiceId(),
+                savedCycle.getStartdate(),
+                savedCycle.getEndDate(),
+                savedCycle.getStatus(),
+                savedCycle.getNote(),
+                listStep
+        );
+    }
+
+    private CycleDTO convertToCycleDTO(Cycle cycle) {
+        List<CycleStep> steps = cycleStepRepository.findByCycle_CycleId(cycle.getCycleId());
+
+        List<CycleStepDTO> stepDTOs = steps.stream()
+                .map(step -> CycleStepDTO.builder()
+                        .stepOrder(step.getStepOrder())
+                        .serive(step.getCycle().getService().getName())
+                        .description(step.getDescription())
+                        .eventdate(step.getEventdate())
+                        .statusCycleStep(step.getStatusCycleStep())
+                        .note(step.getNote())
+                        .build()
+                )
+                .collect(Collectors.toList());
+
+        return CycleDTO.builder()
+                .cycleId(cycle.getCycleId())
+                .customerId(cycle.getCustomer().getCustomerId())
+                .doctorId(cycle.getDoctor().getDoctorId())
+                .serviceId(cycle.getService().getServiceId())
+                .startDate(cycle.getStartdate())
+                .endDate(cycle.getEndDate())
+                .status(cycle.getStatus())
+                .note(cycle.getNote())
+                .cycleStep(stepDTOs)
+                .build();
     }
 }

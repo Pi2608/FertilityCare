@@ -2,23 +2,25 @@ package hsf302.com.hiemmuon.dto.responseDto;
 
 import hsf302.com.hiemmuon.enums.StatusCycle;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CycleOfCustomerDTO {
-
+@Builder
+public class CycleDTO {
     private int cycleId;
-    private String doctor;
-    private String service;
+    private int customerId;
+    private int doctorId;
+    private int serviceId;
     private LocalDate startDate;
     private LocalDate endDate;
     private StatusCycle status;
     private String note;
+    private List<CycleStepDTO> cycleStep;
 }

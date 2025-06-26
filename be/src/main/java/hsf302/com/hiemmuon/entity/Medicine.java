@@ -1,15 +1,20 @@
 package hsf302.com.hiemmuon.entity;
 
+import hsf302.com.hiemmuon.dto.responseDto.MedicineDTO;
+import hsf302.com.hiemmuon.utils.TimeListConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
 
+import java.sql.Time;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
 @Table(name = "medicine")
-public class Medicine {
+public class Medicine extends MedicineDTO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,18 +37,18 @@ public class Medicine {
     @Column(name = "frequency", length = 100, columnDefinition = "NVARCHAR(MAX)")
     private String frequency;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "treatment_step_id", nullable = false)
-    private TreatmentStep treatmentStep;
+    @Convert(converter = TimeListConverter.class)
+    @Column(name = "time", columnDefinition = "VARCHAR(255)")
+    private List<Time> useAt;
 
     public Medicine() {
     }
 
-    public Medicine(String name, String discription, String dose, String frequency, TreatmentStep treatmentStep) {
+    public Medicine(String name, String discription, String dose, String frequency, List<Time> useAt) {
         this.name = name;
         this.discription = discription;
         this.dose = dose;
         this.frequency = frequency;
-        this.treatmentStep = treatmentStep;
+        this.useAt = useAt;
     }
 }

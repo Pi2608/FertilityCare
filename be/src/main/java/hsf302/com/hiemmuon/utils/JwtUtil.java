@@ -8,7 +8,10 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class JwtUtil {
@@ -19,7 +22,7 @@ public class JwtUtil {
         this.SECRET = SECRET;
     }
 
-    private final long EXPIRATION_TIME = 2 * 60 * 60 * 1000;
+    private final long EXPIRATION_TIME = 24 * 60 * 60 * 1000;
 
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));

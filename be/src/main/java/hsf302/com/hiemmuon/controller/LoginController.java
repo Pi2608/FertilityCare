@@ -12,7 +12,6 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +33,9 @@ public class LoginController {
 
     @Autowired
     private JwtService jwtService;
+//
+//    @Autowired
+//    private MedicineRepository medicineRepository;
 
     @PostMapping()
     public ResponseEntity<ApiResponse<String>> loginAdmin(@RequestBody @Valid LoginRequest request) {
@@ -57,6 +59,15 @@ public class LoginController {
                 "Đăng nhập tài khoản thành công",
                 token
         );
+//        Medicine med = new Medicine();
+//        med.setName("Paracetamol");
+//        med.setUseAt(List.of(
+//                Time.valueOf("08:00:00"),
+//                Time.valueOf("12:00:00"),
+//                Time.valueOf("20:00:00")
+//        ));
+//
+//        medicineRepository.save(med);
 
         return ResponseEntity.ok(response);
     }

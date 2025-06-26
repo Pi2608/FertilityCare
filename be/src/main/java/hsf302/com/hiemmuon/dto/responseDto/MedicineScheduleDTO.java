@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -14,9 +15,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class MedicineScheduleDTO {
     private int scheduleId;
+    private int stepOrder;
     private String medicineName;
-    private String dose;
-    private String frequency;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private LocalDateTime eventDate;
     private StatusMedicineSchedule status;
+    private String note;
 }

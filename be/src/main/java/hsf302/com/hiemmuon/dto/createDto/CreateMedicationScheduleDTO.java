@@ -1,6 +1,5 @@
-package hsf302.com.hiemmuon.dto.responseDto;
+package hsf302.com.hiemmuon.dto.createDto;
 
-import hsf302.com.hiemmuon.enums.StatusCycle;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,13 +11,11 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CycleOfDoctorDTO {
-
+public class CreateMedicationScheduleDTO {
+    private int medicineId;
     private int cycleId;
-    private String customer;
-    private String service;
+    private int stepId;
     private LocalDate startDate;
     private LocalDate endDate;
-    private StatusCycle status;
-    private String note;
 }
+

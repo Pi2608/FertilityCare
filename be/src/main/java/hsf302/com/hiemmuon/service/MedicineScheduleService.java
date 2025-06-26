@@ -1,19 +1,25 @@
 package hsf302.com.hiemmuon.service;
 
+import hsf302.com.hiemmuon.dto.createDto.CreateMedicationScheduleDTO;
 import hsf302.com.hiemmuon.dto.responseDto.MedicineScheduleDTO;
 import hsf302.com.hiemmuon.dto.responseDto.StatusMedicineDTO;
 import hsf302.com.hiemmuon.entity.CycleStep;
+import hsf302.com.hiemmuon.entity.Medicine;
 import hsf302.com.hiemmuon.entity.MedicineSchedule;
 import hsf302.com.hiemmuon.enums.StatusMedicineSchedule;
 import hsf302.com.hiemmuon.exception.NotFoundException;
 import hsf302.com.hiemmuon.repository.CycleStepRepository;
+import hsf302.com.hiemmuon.repository.MedicineRepository;
 import hsf302.com.hiemmuon.repository.MedicineScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,6 +30,9 @@ public class MedicineScheduleService {
 
     @Autowired
     private CycleStepRepository cycleStepRepository;
+
+    @Autowired
+    private MedicineRepository medicineRepository;
 
     @Transactional
     public StatusMedicineDTO updateMedicineStatus(int cycleId,
@@ -81,11 +90,59 @@ public class MedicineScheduleService {
         return schedules.stream()
                 .map(ms -> new MedicineScheduleDTO(
                         ms.getMedicationId(),
+                        ms.getCycleStep().getStepOrder(),
                         ms.getMedicine().getName(),
-                        ms.getMedicine().getFrequency(),
-                        ms.getMedicine().getDose(),
+                        ms.getStartDate(),
+                        ms.getEndDate(),
                         ms.getEventDate(),
-                        ms.getStatus()
+                        ms.getStatus(),
+                        ms.getNote()
                 )).toList();
+    }
+
+    public List<MedicineScheduleDTO> createSchedule(CreateMedicationScheduleDTO dto) {
+        Medicine medicine = medicineRepository.findById(dto.getMedicineId())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy thuốc"));
+
+        CycleStep step = cycleStepRepository.findById(dto.getStepId())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy bước điều trị"));
+
+        if (step.getCycle().getCycleId() != dto.getCycleId()) {
+            throw new RuntimeException("Bước điều trị không thuộc chu kỳ đã chọn");
+        }
+
+        List<MedicineScheduleDTO> result = new ArrayList<>();
+        LocalDate currentDate = dto.getStartDate(); // Chỉ lấy ngày
+
+        while (!currentDate.isAfter(dto.getEndDate())) {
+            for (Time time : medicine.getUseAt()) {
+                LocalDateTime eventDateTime = LocalDateTime.of(currentDate, time.toLocalTime());
+
+                MedicineSchedule schedule = new MedicineSchedule();
+                schedule.setMedicine(medicine);
+                schedule.setCycleStep(step);
+                schedule.setStartDate(dto.getStartDate());
+                schedule.setEndDate(dto.getEndDate());
+                schedule.setEventDate(eventDateTime);
+                schedule.setStatus(StatusMedicineSchedule.ongoing);
+
+                medicineScheduleRepository.save(schedule);
+
+                result.add(new MedicineScheduleDTO(
+                        schedule.getMedicationId(),
+                        step.getStepOrder(),
+                        medicine.getName(),
+                        schedule.getStartDate(),
+                        schedule.getEndDate(),
+                        schedule.getEventDate(),
+                        schedule.getStatus(),
+                        schedule.getNote()
+                ));
+            }
+
+            currentDate = currentDate.plusDays(1);
+        }
+
+        return result;
     }
 }

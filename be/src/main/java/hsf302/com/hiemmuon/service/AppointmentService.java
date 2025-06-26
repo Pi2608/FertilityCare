@@ -219,9 +219,4 @@ public class AppointmentService {
             return dto;
         }).toList();
     }
-
-
-
-
-
 }

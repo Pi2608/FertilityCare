@@ -28,10 +28,10 @@ public class MedicineSchedule {
     private CycleStep cycleStep;
 
     @Column(name = "startdate")
-    private LocalDate startdate;
+    private LocalDate startDate;
 
     @Column(name = "enddate")
-    private LocalDate enddate;
+    private LocalDate endDate;
 
     @Column(name = "event_date")
     private LocalDateTime eventDate;
@@ -46,11 +46,14 @@ public class MedicineSchedule {
     public MedicineSchedule() {
     }
 
-    public MedicineSchedule(Medicine medicine, CycleStep cycleStep, LocalDate startdate, LocalDate enddate) {
+    public MedicineSchedule(Medicine medicine, CycleStep cycleStep, LocalDate startDate, LocalDate endDate,
+                            LocalDateTime eventDate, String note, StatusMedicineSchedule status) {
         this.medicine = medicine;
         this.cycleStep = cycleStep;
-        this.startdate = startdate;
-        this.enddate = enddate;
-        this.status = StatusMedicineSchedule.ongoing;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.eventDate = eventDate;
+        this.note = note;
+        this.status = status;
     }
 }

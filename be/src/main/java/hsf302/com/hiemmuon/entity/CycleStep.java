@@ -1,5 +1,6 @@
 package hsf302.com.hiemmuon.entity;
 
+import hsf302.com.hiemmuon.dto.responseDto.CycleStepDTO;
 import hsf302.com.hiemmuon.enums.StatusCycle;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "cycle_steps")
-public class CycleStep {
+public class CycleStep extends CycleStepDTO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

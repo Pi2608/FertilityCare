@@ -82,17 +82,20 @@ public class CycleStepService {
                             schedule.getMedicine().getName(),
                             schedule.getMedicine().getDiscription(),
                             schedule.getMedicine().getDose(),
-                            schedule.getMedicine().getFrequency()
+                            schedule.getMedicine().getFrequency(),
+                            schedule.getMedicine().getTime()
                     )
             );
 
             return new MedicineScheduleDTO(
                     schedule.getMedicationId(),
+                    schedule.getCycleStep().getStepOrder(),
                     schedule.getMedicine().getName(),
-                    schedule.getMedicine().getDose(),
-                    schedule.getMedicine().getFrequency(),
+                    schedule.getStartDate(),
+                    schedule.getEndDate(),
                     schedule.getEventDate(),
-                    schedule.getStatus()
+                    schedule.getStatus(),
+                    schedule.getNote()
             );
         }).collect(Collectors.toList());
 
@@ -102,8 +105,8 @@ public class CycleStepService {
                 cycleStep.getDescription(),
                 cycleStep.getEventdate(),
                 cycleStep.getStatusCycleStep(),
-                medicineScheduleDTOs,
-                cycleStep.getNote()
+                cycleStep.getNote(),
+                null
         );
     }
 
