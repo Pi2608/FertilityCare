@@ -18,14 +18,29 @@ axiosInstance.interceptors.request.use((config) => {
   return config;
 });
 
-// API để lấy danh sách dịch vụ điều trị cho role Manager
+// API để lấy danh sách Treatment Service
 const TreatmentServiceAPI = {
   getAll: async () => {
     const response = await axiosInstance.get("treatment-services/all");
     return response.data;
   },
+
+  // API update trạng thái Treatment Service
+  updateStatus: async (id, active) => {
+    const response = await axiosInstance.patch(
+      `treatment-services/${id}/status`,
+      null,
+      {
+        params: { active },
+      }
+    );
+    return response.data;
+  },
+
+  updateServiceInfo: async (id, data) => {
+    const response = await axiosInstance.put(`treatment-services/${id}`, data);
+    return response.data;
+  },
 };
 
 export default TreatmentServiceAPI;
-
-

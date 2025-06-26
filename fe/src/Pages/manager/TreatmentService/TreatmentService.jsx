@@ -24,6 +24,7 @@ const TreatmentService = () => {
             successRate: "Xem chi tiết",
             process: "Xem quy trình",
             price: item.price?.toString() || "0",
+            isActive: item.active,
             isEditing: false,
           })
         );
@@ -48,13 +49,27 @@ const TreatmentService = () => {
     setEditingService(serviceId);
   };
 
-  const handleSave = (serviceId) => {
-    setServices(
-      services.map((service) =>
-        service.id === serviceId ? { ...service, isEditing: false } : service
-      )
-    );
-    setEditingService(null);
+  const handleSave = async (serviceId) => {
+    const service = services.find((s) => s.id === serviceId);
+    if (!service) return;
+
+    const updateData = {
+      description: service.overview,
+      price: Number(service.price),
+    };
+
+    try {
+      await TreatmentServiceAPI.updateServiceInfo(serviceId, updateData);
+      setServices(
+        services.map((s) =>
+          s.id === serviceId ? { ...s, isEditing: false } : s
+        )
+      );
+      setEditingService(null);
+    } catch (error) {
+      console.error("Lỗi cập nhật thông tin dịch vụ:", error);
+      alert("Không thể lưu thay đổi. Vui lòng thử lại.");
+    }
   };
 
   const handleCancel = (serviceId) => {
@@ -101,6 +116,25 @@ const TreatmentService = () => {
 
   const handleProcessEdit = (serviceId) => {
     navigate(`/manager-dashboard/treatment-service/process/${serviceId}`);
+  };
+
+  const handleToggleStatus = async (serviceId) => {
+    const service = services.find((s) => s.id === serviceId);
+    if (!service) return;
+
+    const newStatus = !service.isActive;
+
+    try {
+      await TreatmentServiceAPI.updateStatus(serviceId, newStatus);
+      setServices((prev) =>
+        prev.map((s) =>
+          s.id === serviceId ? { ...s, isActive: newStatus } : s
+        )
+      );
+    } catch (error) {
+      console.error("Lỗi khi gọi API updateStatus:", error);
+      alert("Không thể cập nhật trạng thái. Vui lòng thử lại.");
+    }
   };
 
   const filteredServices = services.filter(
@@ -164,6 +198,7 @@ const TreatmentService = () => {
                 <th>Tỷ lệ thành công</th>
                 <th>Quy trình</th>
                 <th>Chi phí (VND)</th>
+                <th>Trạng thái</th>
                 <th>Hành động</th>
               </tr>
             </thead>
@@ -171,20 +206,7 @@ const TreatmentService = () => {
               {filteredServices.map((service) => (
                 <tr key={service.id}>
                   <td>{service.order}</td>
-                  <td>
-                    {service.isEditing ? (
-                      <input
-                        type="text"
-                        value={service.name}
-                        onChange={(e) =>
-                          handleInputChange(service.id, "name", e.target.value)
-                        }
-                        className="edit-input"
-                      />
-                    ) : (
-                      service.name
-                    )}
-                  </td>
+                  <td>{service.name}</td>
                   <td>
                     {service.isEditing ? (
                       <textarea
@@ -232,6 +254,16 @@ const TreatmentService = () => {
                     ) : (
                       Number(service.price).toLocaleString()
                     )}
+                  </td>
+                  <td>
+                    <button
+                      onClick={() => handleToggleStatus(service.id)}
+                      className={`status-toggle-btn ${
+                        service.isActive ? "active" : "inactive"
+                      }`}
+                    >
+                      {service.isActive ? "Hoạt động" : "Không hoạt động"}
+                    </button>
                   </td>
                   <td className="action-cell">
                     {service.isEditing ? (
