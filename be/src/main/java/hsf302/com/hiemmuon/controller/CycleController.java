@@ -2,24 +2,19 @@ package hsf302.com.hiemmuon.controller;
 
 import hsf302.com.hiemmuon.dto.ApiResponse;
 import hsf302.com.hiemmuon.dto.createDto.CreateCycleDTO;
-import hsf302.com.hiemmuon.dto.entityDto.CycleNoteDTO;
-import hsf302.com.hiemmuon.dto.entityDto.CycleOfCustomerDTO;
-import hsf302.com.hiemmuon.dto.entityDto.CycleOfDoctorDTO;
-import hsf302.com.hiemmuon.dto.entityDto.CycleStepDTO;
-import hsf302.com.hiemmuon.entity.Cycle;
-import hsf302.com.hiemmuon.enums.StatusCycle;
+import hsf302.com.hiemmuon.dto.responseDto.CycleDTO;
+import hsf302.com.hiemmuon.dto.responseDto.CycleNoteDTO;
 import hsf302.com.hiemmuon.service.CycleService;
-import hsf302.com.hiemmuon.service.CycleStepService;
-import hsf302.com.hiemmuon.service.DoctorService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+@Tag(name = "7. Cycle Controller")
 @RestController
 @RequestMapping("/api/cycles")
 public class CycleController {
@@ -27,28 +22,31 @@ public class CycleController {
     @Autowired
     private CycleService cycleService;
 
-    @Autowired
-    private CycleStepService cycleStepService;
-
-    //customer get list cycle của mình
+    @Operation(
+            summary = "Xem danh sách chu kỳ điều trị của khách hàng",
+            description = "API giúp khách hàng truy xuất toàn bộ các chu kỳ điều trị đã được tạo trong quá trình điều trị sinh sản."
+    )
     @GetMapping("/meC/cycle/all")
     public ResponseEntity<ApiResponse<?>> getMyAllCycle(HttpServletRequest request) {
-        List<CycleOfCustomerDTO> cycles = cycleService.getAllCycleOfCustomer(request);
+        List<CycleDTO> cycles = cycleService.getAllCycleOfCustomer(request);
 
-        ApiResponse<List<CycleOfCustomerDTO>> response = new ApiResponse<>(
+        ApiResponse<List<CycleDTO>> response = new ApiResponse<>(
                 200,
                 "Get all cycles of customer successfully",
                 cycles);
         return ResponseEntity.ok(response);
     }
 
-    //doctor lấy list cycle của mình
+    @Operation(
+            summary = "Xem danh sách chu kỳ điều trị của bác sĩ",
+            description = "API cho phép bác sĩ xem tất cả các chu kỳ mà họ đang phụ trách điều trị cho bệnh nhân."
+    )
     @GetMapping("/meD/cycle/all")
     public ResponseEntity<ApiResponse<?>> getCustomerCycleStep(
             HttpServletRequest request) {
-        List<CycleOfDoctorDTO> steps = cycleService.getCycleOfDoctor(request);
+        List<CycleDTO> steps = cycleService.getAllCycleOfDoctor(request);
 
-        ApiResponse<List<CycleOfDoctorDTO>> response = new ApiResponse<>(
+        ApiResponse<List<CycleDTO>> response = new ApiResponse<>(
                 200,
                 "Get all cycle of doctor successfully",
                 steps);
@@ -56,51 +54,10 @@ public class CycleController {
         return ResponseEntity.ok(response);
     }
 
-    //customer, doctor get list step theo cycleId
-    @GetMapping("/cycleId/{cycleId}/step/all")
-    public ResponseEntity<ApiResponse<?>> getMyAllCycleStep(
-            @PathVariable("cycleId") int cycleId) {
-        List<CycleStepDTO> steps = cycleStepService.getAllCycleStepByMe(cycleId);
-
-        ApiResponse<List<CycleStepDTO>> response = new ApiResponse<>(
-                200,
-                "Get all cycle steps successfully",
-                steps);
-        return ResponseEntity.ok(response);
-    }
-
-    //customer, doctor get step theo cycleId và stepId
-    @GetMapping("/cycleId/{cycleId}/stepId/{stepId}")
-    public ResponseEntity<ApiResponse<?>> getMyCycleStep(
-            @PathVariable("cycleId") int cycleId,
-            @PathVariable("stepId") int stepId) {
-        CycleStepDTO step = cycleStepService.getCycleStepByMe(cycleId, stepId);
-
-        ApiResponse<CycleStepDTO> response = new ApiResponse<>(
-                200,
-                "Get cycle step successfully",
-                step);
-
-        return ResponseEntity.ok(response);
-    }
-
-    //doctor update status step
-    @PatchMapping("/cycleId/{cycleId}/stepId/{stepId}/status")
-    public ResponseEntity<ApiResponse<?>> updateCycleStepStatus(
-            @PathVariable("cycleId") int cycleId,
-            @PathVariable("stepId") int stepId,
-            @RequestParam("status") StatusCycle status) {
-        CycleStepDTO updatedStep = cycleStepService.updateCycleStepStatus(cycleId, stepId, status);
-
-        ApiResponse<CycleStepDTO> response = new ApiResponse<>(
-                200,
-                "Update cycle step status successfully",
-                updatedStep);
-
-        return ResponseEntity.ok(response);
-    }
-
-    //doctor update status note
+    @Operation(
+            summary = "Cập nhật ghi chú chu kỳ điều trị",
+            description = "Bác sĩ cập nhật hoặc thêm ghi chú chuyên môn vào một chu kỳ điều trị cụ thể."
+    )
     @PatchMapping("/cycleId/{cycleId}/note")
     public ResponseEntity<ApiResponse<?>> updateCycleNote(
             @PathVariable("cycleId") int cycleId,
@@ -115,15 +72,19 @@ public class CycleController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            summary = "Tạo chu kỳ điều trị mới",
+            description = "Khởi tạo chu kỳ điều trị mới cho bệnh nhân, thường được dùng khi bắt đầu một liệu trình hỗ trợ sinh sản."
+    )
     @PostMapping("/create")
     public ResponseEntity<ApiResponse<?>> createCycle(
             @RequestBody CreateCycleDTO dto,
             HttpServletRequest request) {
 
-        Cycle cycle = cycleService.createCycle(dto, request);
+        CycleDTO cycle = cycleService.createCycle(dto, request);
 
-        ApiResponse<Cycle> response = new ApiResponse<>(
-                201,
+        ApiResponse<CycleDTO> response = new ApiResponse<>(
+                200,
                 "Cycle created successfully",
                 cycle);
         return ResponseEntity.ok(response);

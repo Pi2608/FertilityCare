@@ -1,12 +1,13 @@
 package hsf302.com.hiemmuon.controller;
 
 import hsf302.com.hiemmuon.dto.ApiResponse;
-import hsf302.com.hiemmuon.dto.entityDto.CustomerDTO;
 import hsf302.com.hiemmuon.dto.createDto.RegisterCustomerDTO;
+import hsf302.com.hiemmuon.dto.responseDto.CustomerDTO;
 import hsf302.com.hiemmuon.dto.updateDto.UpdateCustomerDTO;
 import hsf302.com.hiemmuon.service.CustomerService;
-import hsf302.com.hiemmuon.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "2. Customer Controller")
 @RestController
 @RequestMapping("/api")
 public class CustomerController {
@@ -22,6 +24,10 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
+    @Operation(
+            summary = "Lấy danh sách khách hàng",
+            description = "Admin có thể xem toàn bộ danh sách khách hàng trong hệ thống."
+    )
     @GetMapping("/admin/customers")
     @SecurityRequirement(name = "bearerAuth") // ⬅⬅⬅ THÊM DÒNG NÀY
     public ResponseEntity<ApiResponse<List<CustomerDTO>>> getAllCustomers() {
@@ -35,6 +41,10 @@ public class CustomerController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            summary = "Đăng ký tài khoản khách hàng",
+            description = "API cho phép người dùng mới đăng ký tài khoản với vai trò khách hàng."
+    )
     @PostMapping("/register/customer")
     public ResponseEntity<ApiResponse<String>> registerCustomer(@Valid @RequestBody RegisterCustomerDTO dto) {
         customerService.registerCustomer(dto);
@@ -43,6 +53,10 @@ public class CustomerController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            summary = "Lấy thông tin cá nhân khách hàng",
+            description = "Khách hàng có thể xem thông tin cá nhân của mình dựa trên token đăng nhập."
+    )
     @GetMapping("/customer/info")
     @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<ApiResponse<CustomerDTO>> getMyInfo(Authentication authentication) {
@@ -52,6 +66,10 @@ public class CustomerController {
         return ResponseEntity.ok(new ApiResponse<>(200, "Thông tin khách hàng", customer));
     }
 
+    @Operation(
+            summary = "Cập nhật thông tin khách hàng",
+            description = "Khách hàng có thể cập nhật các thông tin cá nhân như họ tên, địa chỉ, số điện thoại, v.v."
+    )
     @PutMapping("/customer/update")
     @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<ApiResponse<String>> updateCustomerInfo(
@@ -70,5 +88,4 @@ public class CustomerController {
             return ResponseEntity.status(500).body(error);
         }
     }
-
 }

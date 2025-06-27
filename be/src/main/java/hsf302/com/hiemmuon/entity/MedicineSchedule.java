@@ -1,14 +1,17 @@
 package hsf302.com.hiemmuon.entity;
 
+import hsf302.com.hiemmuon.enums.StatusMedicineSchedule;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "medication_schedule")
 public class MedicineSchedule {
 
@@ -25,38 +28,22 @@ public class MedicineSchedule {
     @JoinColumn(name = "step_id", nullable = false)
     private CycleStep cycleStep;
 
-    @Column(name = "name", length = 100)
-    private String name;
-
-    @Column(name = "dose", length = 100)
-    private String dose;
-
-    @Column(name = "frequency", length = 100)
-    private String frequency;
-
     @Column(name = "startdate")
-    private LocalDate startdate;
+    private LocalDate startDate;
 
     @Column(name = "enddate")
-    private LocalDate enddate;
+    private LocalDate endDate;
+
+    @Column(name = "event_date")
+    private LocalDateTime eventDate;
+
+    @Column(name = "time", columnDefinition = "TIME")
+    private LocalTime time;
 
     @Column(name = "note", columnDefinition = "NVARCHAR(MAX)")
     private String note;
 
-    public MedicineSchedule() {
-    }
-
-    public MedicineSchedule(Medicine medicine, CycleStep cycleStep, String name, String dose, String frequency, LocalDate startdate, LocalDate enddate, String note) {
-        this.medicine = medicine;
-        this.cycleStep = cycleStep;
-        this.name = name;
-        this.dose = dose;
-        this.frequency = frequency;
-        this.startdate = startdate;
-        this.enddate = enddate;
-        this.note = note;
-    }
-
-    public MedicineSchedule(Medicine medicine, CycleStep step, String name, String dose, String frequency, java.time.LocalDate startDate, Object o, java.time.LocalDate endDate, Object o1, String note) {
-    }
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private StatusMedicineSchedule status;
 }

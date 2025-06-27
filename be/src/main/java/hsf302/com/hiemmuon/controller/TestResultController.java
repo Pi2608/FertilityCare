@@ -5,12 +5,15 @@ import hsf302.com.hiemmuon.dto.testresult.TestResultViewDTO;
 import hsf302.com.hiemmuon.dto.testresult.UpdateTestResultDTO;
 import hsf302.com.hiemmuon.entity.TestResult;
 import hsf302.com.hiemmuon.service.TestResultService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "6. Test Result Controller")
 @RestController
 @RequestMapping("/api/test-results")
 public class TestResultController {
@@ -18,27 +21,43 @@ public class TestResultController {
     @Autowired
     private TestResultService testResultService;
 
+    @Operation(
+            summary = "Tạo mới kết quả xét nghiệm",
+            description = "API dùng để lưu kết quả xét nghiệm của bệnh nhân trong một bước điều trị cụ thể. Dành cho bác sĩ."
+    )
     @PostMapping("/create")
-    public ResponseEntity<String> create(@RequestBody CreateTestResultDTO dto){
+    public ResponseEntity<String> create(@RequestBody CreateTestResultDTO dto) {
         testResultService.createTestResult(dto);
         return ResponseEntity.ok("Đã lưu kết quả xét nghiệm.");
     }
 
+    @Operation(
+            summary = "Xem kết quả xét nghiệm theo bước điều trị",
+            description = "API giúp bác sĩ và hệ thống truy xuất tất cả kết quả xét nghiệm liên quan đến một bước điều trị (stepId)."
+    )
     @GetMapping("/step/{stepId}")
-    public ResponseEntity<List<TestResult>> getByStep(@PathVariable Integer stepId){
+    public ResponseEntity<List<TestResult>> getByStep(@PathVariable Integer stepId) {
         return ResponseEntity.ok(testResultService.getResultsByStep(stepId));
     }
 
+    @Operation(
+            summary = "Bệnh nhân xem kết quả xét nghiệm của mình",
+            description = "Trả về toàn bộ kết quả xét nghiệm liên quan đến bệnh nhân đang đăng nhập."
+    )
     @GetMapping("/test-result/customer")
-    public ResponseEntity<List<TestResultViewDTO>> getMyTestResult(){
+    public ResponseEntity<List<TestResultViewDTO>> getMyTestResult() {
         return ResponseEntity.ok(testResultService.getResultsForCustomer());
     }
 
+    @Operation(
+            summary = "Cập nhật kết quả xét nghiệm",
+            description = "API cho phép cập nhật nội dung và thông tin kết quả xét nghiệm. Dành cho bác sĩ."
+    )
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateResult(
             @PathVariable Integer id,
             @RequestBody UpdateTestResultDTO dto
-    ){
+    ) {
         testResultService.updateTestResult(id, dto);
         return ResponseEntity.ok("Cập nhật kết quả xét nghiệm thành công.");
     }

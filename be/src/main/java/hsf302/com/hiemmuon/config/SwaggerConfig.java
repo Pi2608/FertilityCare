@@ -1,18 +1,32 @@
 package hsf302.com.hiemmuon.config;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
-import io.swagger.v3.oas.models.servers.Server;
-import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
-import org.springframework.beans.factory.annotation.Value;
+import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
+@OpenAPIDefinition(
+        tags = {
+                @Tag(name = "1. Login Controller", description = "Xác thực và phân quyền người dùng"),
+                @Tag(name = "2. Customer Controller", description = "Quản lý thông tin bệnh nhân"),
+                @Tag(name = "3. Doctor Controller", description = "Quản lý thông tin bác sĩ"),
+                @Tag(name = "4. Service Controller", description = "Dịch vụ hỗ trợ sinh sản (IUI, IVF...)"),
+                @Tag(name = "5. Appointment Controller", description = "Lịch hẹn giữa bác sĩ và bệnh nhân"),
+                @Tag(name = "6. Test Result Controller", description = "Kết quả xét nghiệm trong quá trình điều trị"),
+                @Tag(name = "7. Cycle Controller", description = "Chu kỳ điều trị"),
+                @Tag(name = "8. Cycle Step Controller", description = "Các bước điều trị trong chu kỳ"),
+                @Tag(name = "9. Medicine Schedule Controller", description = "Lịch uống thuốc và theo dõi")
+        }
+)
 @Configuration
 public class SwaggerConfig {
 

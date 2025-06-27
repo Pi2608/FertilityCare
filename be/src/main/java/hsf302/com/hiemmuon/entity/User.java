@@ -4,15 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import hsf302.com.hiemmuon.enums.Genders;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Nationalized;
 
 import java.time.LocalDate;
 
 @Entity
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "users")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User {
@@ -59,20 +59,4 @@ public class User {
 
     @Column(name = "update_at")
     private LocalDate updateAt;
-
-    public User() {
-    }
-
-    public User(int userId, Role role, String name, Genders gender, LocalDate dob, String email, String phone, String password, LocalDate createAt, LocalDate updateAt) {
-        this.userId = userId;
-        this.role = role;
-        this.name = name;
-        this.gender = gender;
-        this.dob = dob;
-        this.email = email;
-        this.phone = phone;
-        this.password = password;
-        this.createAt = createAt;
-        this.updateAt = updateAt;
-    }
 }

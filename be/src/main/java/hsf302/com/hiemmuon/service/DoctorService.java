@@ -1,7 +1,7 @@
 package hsf302.com.hiemmuon.service;
 
 import hsf302.com.hiemmuon.dto.createDto.CreateDoctorDTO;
-import hsf302.com.hiemmuon.dto.entityDto.DoctorDTO;
+import hsf302.com.hiemmuon.dto.responseDto.DoctorDTO;
 import hsf302.com.hiemmuon.dto.updateDto.UpdateDoctorDTO;
 import hsf302.com.hiemmuon.entity.Doctor;
 import hsf302.com.hiemmuon.entity.User;
@@ -53,12 +53,6 @@ public class DoctorService {
         Doctor doctor = doctorRepository.findByUser_Name(name);
         DoctorDTO dto = convertToDoctorDTO(doctor);
         return dto;
-    }
-
-    public List<DoctorDTO> getDoctorBySpecification(String specification) {
-        return doctorRepository.findBySpecification(specification).stream()
-                .map(this::convertToDoctorDTO)
-                .collect(Collectors.toList());
     }
 
     public List<DoctorDTO> getDoctorByIsActive() {

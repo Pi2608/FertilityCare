@@ -1,21 +1,12 @@
 package hsf302.com.hiemmuon.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ApiResponse<T> {
     private int status;
     private String message;
     private T data;
-
-    public ApiResponse() {
-    }
-
-    public ApiResponse(int status, String message, T data) {
-        this.status = status;
-        this.message = message;
-        this.data = data;
-    }
 }
