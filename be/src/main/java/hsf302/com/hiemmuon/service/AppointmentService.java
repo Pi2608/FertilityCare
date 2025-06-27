@@ -9,6 +9,8 @@ import hsf302.com.hiemmuon.dto.entityDto.AppointmentOverviewDTO;
 import hsf302.com.hiemmuon.dto.entityDto.AvailableScheduleDTO;
 import hsf302.com.hiemmuon.dto.entityDto.ReExamAppointmentResponseDTO;
 import hsf302.com.hiemmuon.entity.*;
+import hsf302.com.hiemmuon.enums.StatusAppointment;
+import hsf302.com.hiemmuon.enums.TypeAppointment;
 import hsf302.com.hiemmuon.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,11 @@ public class AppointmentService {
 
     @Autowired
     private AppointmentRepository appointmentRepository;
+
+    @Autowired
+    private TestResultRepository testResultRepository;
+
+
 
     public List<AvailableScheduleDTO> getAvailableSchedules(int doctorId, LocalDate date) {
         List<DoctorSchedule> schedules = doctorScheduleRepository
@@ -87,8 +94,8 @@ public class AppointmentService {
         appointment.setDoctor(doctor);
         appointment.setCustomer(customer);
         appointment.setDate(appointmentTime);
-        appointment.setType(Appointment.Type.tu_van);
-        appointment.setStatus(Appointment.Status.confirmed);
+        appointment.setTypeAppointment(TypeAppointment.tu_van);
+        appointment.setStatusAppointment(StatusAppointment.confirmed);
         appointment.setNote(dto.getNote());
 
         TreatmentService treatmentService = treatmentServiceRepository.findById(3);
@@ -145,8 +152,8 @@ public class AppointmentService {
         appointment.setDoctor(doctor);
         appointment.setCustomer(customer);
         appointment.setDate(appointmentTime);
-        appointment.setType(Appointment.Type.tai_kham);
-        appointment.setStatus(Appointment.Status.confirmed);
+        appointment.setTypeAppointment(TypeAppointment.tai_kham);
+        appointment.setStatusAppointment(StatusAppointment.confirmed);
         appointment.setNote(dto.getNote());
         appointment.setService(service);
         appointmentRepository.save(appointment);
@@ -173,7 +180,7 @@ public class AppointmentService {
             dto.setDoctorName(app.getDoctor().getUser().getName());
             dto.setServiceName(app.getService().getName());
             dto.setNote(app.getNote());
-            dto.setStatus(app.getStatus());
+            dto.setStatus(app.getStatusAppointment());
             return dto;
         }).toList();
     }
@@ -183,8 +190,13 @@ public class AppointmentService {
                 .findByAppointmentIdAndCustomer_CustomerId(appointmentId, customerId)
                 .orElseThrow(() -> new RuntimeException("Cuộc hẹn không tồn tại hoặc không thuộc quyền của bạn"));
 
+        // Chỉ cho phép hủy loại tư vấn
+        if (appointment.getTypeAppointment() == TypeAppointment.tai_kham) {
+            throw new RuntimeException("Tái khám không được phép hủy");
+        }
+
         // Hủy cuộc hẹn
-        appointment.setStatus(Appointment.Status.canceled);
+        appointment.setStatusAppointment(StatusAppointment.canceled);
         appointmentRepository.save(appointment);
 
         // Tìm khung giờ tương ứng trong DoctorSchedule
@@ -212,8 +224,8 @@ public class AppointmentService {
                 .map(app -> new AppointmentHistoryDTO(
                         app.getAppointmentId(),
                         app.getDate(),
-                        app.getType() != null ? app.getType().toString() : null,
-                        app.getStatus() != null ? app.getStatus().toString() : null,
+                        app.getTypeAppointment() != null ? app.getTypeAppointment().toString() : null,
+                        app.getStatusAppointment() != null ? app.getStatusAppointment().toString() : null,
                         app.getNote(),
                         app.getService() != null ? app.getService().getName() : null
                 ))
@@ -231,8 +243,8 @@ public class AppointmentService {
             dto.setDoctorName(app.getDoctor().getUser().getName());
             dto.setCustomerName(app.getCustomer().getUser().getName());
             dto.setDate(app.getDate());
-            dto.setType(app.getType().name());
-            dto.setStatus(app.getStatus().name());
+            dto.setType(app.getTypeAppointment().name());
+            dto.setStatus(app.getStatusAppointment().name());
             dto.setNote(app.getNote());
             dto.setServiceName(app.getService().getName());
             return dto;
@@ -249,13 +261,22 @@ public class AppointmentService {
             throw new RuntimeException("Bạn không có quyền truy cập cuộc hẹn này.");
         }
 
-        if(!"confirmed".equalsIgnoreCase(String.valueOf(appointment.getStatus()))){
+        if(!"confirmed".equalsIgnoreCase(String.valueOf(appointment.getStatusAppointment()))){
             throw new RuntimeException("Chỉ có thể cap nhật dịch vụ khi cuộc hẹn là confirmed");
         }
 
         appointment.setService(treatmentServiceRepository.findById(dto.getServiceId()));
         appointment.setNote(dto.getNote());
-        appointment.setStatus(Appointment.Status.valueOf(dto.getStatus()));
+        appointment.setStatusAppointment(StatusAppointment.valueOf(dto.getStatus()));
+
+        // ✅ Liên kết với testResult nếu bạn muốn
+        if (dto.getTestResultId() != null) {
+            TestResult testResult = testResultRepository.findById(dto.getTestResultId())
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy kết quả xét nghiệm"));
+            // Gán logic liên kết tại đây — ví dụ:
+            testResult.setAppointment(appointment); // nếu bạn muốn update ngược lại
+            testResultRepository.save(testResult);
+        }
 
         appointmentRepository.save(appointment);
     }
@@ -270,25 +291,59 @@ public class AppointmentService {
         return appointments.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
-    private AppointmentDetailDTO convertToDto(Appointment appointment){
+    private AppointmentDetailDTO convertToDto(Appointment appointment) {
         AppointmentDetailDTO dto = new AppointmentDetailDTO();
+
         dto.setAppointmentId(appointment.getAppointmentId());
-        dto.setType(String.valueOf(appointment.getType()));
-        dto.setDate(LocalDate.from(appointment.getDate()));
-        dto.setStartTime(LocalTime.from(appointment.getDate()));
+        dto.setType(String.valueOf(appointment.getTypeAppointment()));
 
-        dto.setDoctorId(appointment.getDoctor().getDoctorId());
-        dto.setDoctorName(appointment.getDoctor().getUser().getName());
+        // Nếu appointment.getDate() là LocalDateTime
+        dto.setDate(appointment.getDate().toLocalDate());
+        dto.setStartTime(appointment.getDate().toLocalTime());
 
-        dto.setCustomerId(appointment.getCustomer().getCustomerId());
-        dto.setCustomerName(appointment.getCustomer().getUser().getName());
-
-        if(appointment.getCustomer().getUser().getDob() != null){
-            dto.setCustomerAge(LocalDate.now().getYear() - appointment.getCustomer().getUser().getDob().getYear());
+        // Doctor info
+        if (appointment.getDoctor() != null && appointment.getDoctor().getUser() != null) {
+            dto.setDoctorId(appointment.getDoctor().getDoctorId());
+            dto.setDoctorName(appointment.getDoctor().getUser().getName());
         }
 
-        dto.setStatus(String.valueOf(appointment.getStatus()));
+        // Customer info
+        if (appointment.getCustomer() != null && appointment.getCustomer().getUser() != null) {
+            dto.setCustomerId(appointment.getCustomer().getCustomerId());
+            dto.setCustomerName(appointment.getCustomer().getUser().getName());
+
+            if (appointment.getCustomer().getUser().getDob() != null) {
+                dto.setCustomerAge(
+                        LocalDate.now().getYear() - appointment.getCustomer().getUser().getDob().getYear()
+                );
+            }
+        }
+
+        dto.setStatus(String.valueOf(appointment.getStatusAppointment()));
+        dto.setNote(appointment.getNote());
+
+        if (appointment.getService() != null) {
+            dto.setServiceId(appointment.getService().getServiceId());
+        }
+
+        // ✅ TestResult — nếu bạn muốn lấy ID kết quả xét nghiệm theo appointment
+        List<TestResult> results = testResultRepository.findByAppointment_AppointmentId(appointment.getAppointmentId());
+        if (results != null && !results.isEmpty()) {
+            dto.setTestResultId(results.getFirst().getResultId()); // lấy ID đầu tiên (tuỳ bạn chọn logic)
+        }
 
         return dto;
     }
+
+    public AppointmentDetailDTO getAppointmentDetailById(int appointmentId) {
+        Appointment appointment = appointmentRepository.findById(appointmentId);
+        if (appointment == null) {
+            throw new RuntimeException("Không tìm thấy cuộc hẹn với ID: " + appointmentId);
+        }
+
+        return convertToDto(appointment);
+    }
+
+
+
 }

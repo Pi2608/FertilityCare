@@ -1,10 +1,50 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import "./Patient.css"
+import { useState, useEffect } from "react";
+import "./Patient.css";
+import CustomerAPI from "../../../features/service/apiCustomer1";
 
 const Patient = () => {
-  const [searchTerm, setSearchTerm] = useState("")
+  const [searchTerm, setSearchTerm] = useState("");
+  const [customers, setCustomers] = useState([]);
+
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      try {
+        const data = await CustomerAPI.getAllCustomers();
+        console.log("DATA TRẢ VỀ:", data);
+
+        const rawCustomers = Array.isArray(data) ? data : data.data;
+
+        const mappedCustomers = rawCustomers.map((c, index) => ({
+          id: c.id || index,
+          name: c.name || "Không rõ",
+          gender:
+            c.gender === "male" ? "Nam" : c.gender === "female" ? "Nữ" : "Khác",
+          birthDate: formatDate(c.dob),
+          email: c.email,
+          phoneNumber: c.phone,
+          active: c.active,
+        }));
+
+        setCustomers(mappedCustomers);
+      } catch (error) {
+        console.error("Không thể load danh sách bệnh nhân:", error);
+      }
+    };
+
+    fetchCustomers();
+  }, []);
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "";
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
 
   return (
     <div className="patient-page">
@@ -58,12 +98,27 @@ const Patient = () => {
               </tr>
             </thead>
             <tbody>
-              {/* Empty table body - data will be populated via API */}
-              <tr>
-                <td colSpan="5" className="empty-message">
-                  Dữ liệu sẽ được tải từ API
-                </td>
-              </tr>
+              {Array.isArray(customers) && customers.length > 0 ? (
+                customers
+                  .filter((c) =>
+                    c.name?.toLowerCase().includes(searchTerm.toLowerCase())
+                  )
+                  .map((customer) => (
+                    <tr key={customer.id}>
+                      <td>{customer.name}</td>
+                      <td>{customer.gender}</td>
+                      <td>{customer.birthDate}</td>
+                      <td>{customer.email}</td>
+                      <td>{customer.phoneNumber}</td>
+                    </tr>
+                  ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="empty-message">
+                    Không có dữ liệu bệnh nhân
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -83,7 +138,7 @@ const Patient = () => {
         </div>
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default Patient
+export default Patient;

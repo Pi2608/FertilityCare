@@ -17,9 +17,6 @@ public class TestResult {
     @Column(name = "result_id")
     private int resultId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "step_id", nullable = false)
-    private CycleStep cycleStep;
 
     @Column(name = "name", length = 100, nullable = false)
     private String name;
@@ -39,16 +36,20 @@ public class TestResult {
     @Column(name = "note", columnDefinition = "NVARCHAR(MAX)")
     private String note;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "appointment_id")
+    private Appointment appointment;
+
     public TestResult() {
     }
 
-    public TestResult(CycleStep cycleStep, String name, Float value, String unit, String referenceRange, LocalDate testDate, String note) {
-        this.cycleStep = cycleStep;
+    public TestResult(String name, Float value, String unit, String referenceRange, LocalDate testDate, String note, Appointment appointment) {
         this.name = name;
         this.value = value;
         this.unit = unit;
         this.referenceRange = referenceRange;
         this.testDate = testDate;
         this.note = note;
+        this.appointment = appointment;
     }
 }

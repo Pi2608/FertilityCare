@@ -3,12 +3,9 @@ package hsf302.com.hiemmuon.service;
 import hsf302.com.hiemmuon.dto.testresult.CreateTestResultDTO;
 import hsf302.com.hiemmuon.dto.testresult.TestResultViewDTO;
 import hsf302.com.hiemmuon.dto.testresult.UpdateTestResultDTO;
-import hsf302.com.hiemmuon.entity.Customer;
-import hsf302.com.hiemmuon.entity.CycleStep;
-import hsf302.com.hiemmuon.entity.TestResult;
-import hsf302.com.hiemmuon.entity.User;
+import hsf302.com.hiemmuon.entity.*;
+import hsf302.com.hiemmuon.repository.AppointmentRepository;
 import hsf302.com.hiemmuon.repository.CustomerRepository;
-import hsf302.com.hiemmuon.repository.CycleStepRepository;
 import hsf302.com.hiemmuon.repository.TestResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,30 +20,33 @@ public class TestResultService {
     private TestResultRepository testResultRepository;
 
     @Autowired
-    private CycleStepRepository cycleStepRepository;
+    private AppointmentRepository appointmentRepository;
+
     @Autowired
     private UserService userService;
+
     @Autowired
     private CustomerRepository customerRepository;
 
     public void createTestResult(CreateTestResultDTO dto){
-        CycleStep step = cycleStepRepository.findById(dto.getStepId())
-                .orElseThrow(()-> new RuntimeException("Không tìm thấy giai đoạn điều trị"));
-
+        Appointment appointment = appointmentRepository.findById(dto.getAppointmentId());
+            if(appointment == null){
+                System.out.println("khong tim thay appointment");
+            }
         TestResult result = new TestResult(
-                step,
                 dto.getName(),
                 dto.getValue(),
                 dto.getUnit(),
                 dto.getReferenceRange(),
                 dto.getTestDate(),
-                dto.getNote()
+                dto.getNote(),
+                appointment
         );
         testResultRepository.save(result);
     }
 
-    public List<TestResult> getResultsByStep(int stepId) {
-        return testResultRepository.findByCycleStep_StepId(stepId);
+    public List<TestResult> getResultsByStep(int appointmentId) {
+        return testResultRepository.findByAppointment_AppointmentId(appointmentId);
     }
 
     public List<TestResultViewDTO> getResultsForCustomer() {
@@ -84,6 +84,4 @@ public class TestResultService {
 
         testResultRepository.save(result);
     }
-
-
 }

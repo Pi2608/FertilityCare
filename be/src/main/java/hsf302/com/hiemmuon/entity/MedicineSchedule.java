@@ -57,6 +57,6 @@ public class MedicineSchedule {
         this.note = note;
     }
 
-    public MedicineSchedule(Medicine medicine, CycleStep step, String name, String dose, String frequency, LocalDate startDate, Object o, LocalDate endDate, Object o1, String note) {
+    public MedicineSchedule(Medicine medicine, CycleStep step, String name, String dose, String frequency, java.time.LocalDate startDate, Object o, java.time.LocalDate endDate, Object o1, String note) {
     }
 }

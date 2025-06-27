@@ -58,7 +58,7 @@ const DoctorAPI = {
     }
   },
 
-  // Có thể thêm các hàm khác như getDoctorById, createDoctor, updateDoctor ở đây nếu cần
+
 };
 
 export default DoctorAPI;

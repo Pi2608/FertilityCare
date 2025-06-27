@@ -13,7 +13,7 @@ public class AppointmentDetailDTO {
     private String type; // tư vấn - IUI - IVF
     private LocalDate date;
     private LocalTime startTime;
-    private String treatmentStage;
+    private int cycleStepId;
 
     private int doctorId;
     private String doctorName;
@@ -23,4 +23,7 @@ public class AppointmentDetailDTO {
     private int customerAge;
 
     private String status; // confirmed, cancelled, done
+    private String note;
+    private int serviceId;
+    private int testResultId;
 }

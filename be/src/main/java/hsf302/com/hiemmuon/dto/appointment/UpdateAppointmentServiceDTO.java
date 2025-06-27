@@ -14,5 +14,7 @@ public class UpdateAppointmentServiceDTO {
         private int serviceId;
 
         private String status;
+
+        private Integer testResultId;
     }
 
