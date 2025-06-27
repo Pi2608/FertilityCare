@@ -1,6 +1,7 @@
 package hsf302.com.hiemmuon.enums;
 
 public enum StatusMedicineSchedule {
-    ongoing,
-    finished
+    dang_dien_ra,
+    da_uong,
+    qua_han
 }

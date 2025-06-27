@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Data
@@ -19,7 +20,7 @@ public class MedicineSchedule {
     @Column(name = "medication_id")
     private int medicationId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "medicin_id", nullable = false)
     private Medicine medicine;
 
@@ -35,6 +36,9 @@ public class MedicineSchedule {
 
     @Column(name = "event_date")
     private LocalDateTime eventDate;
+
+    @Column(name = "time", columnDefinition = "TIME")
+    private LocalTime time;
 
     @Column(name = "note", columnDefinition = "NVARCHAR(MAX)")
     private String note;

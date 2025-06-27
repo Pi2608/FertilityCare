@@ -18,9 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class MedicineScheduleService {
@@ -35,47 +38,32 @@ public class MedicineScheduleService {
     private MedicineRepository medicineRepository;
 
     @Transactional
-    public StatusMedicineDTO updateMedicineStatus(int cycleId,
-                                                  int stepOrder,
-                                                  StatusMedicineSchedule newStatus,
-                                                  String eventDate) {
+    public StatusMedicineDTO updateMedicineStatus(
+            int scheduleId,
+            StatusMedicineSchedule newStatus) {
 
-        if (newStatus == StatusMedicineSchedule.ongoing) {
-            throw new IllegalArgumentException("Không thể cập nhật trạng thái về 'ONGOING'.");
+        if (newStatus == StatusMedicineSchedule.dang_dien_ra || newStatus == StatusMedicineSchedule.qua_han) {
+            throw new IllegalArgumentException("Không thể cập nhật trạng thái '" + newStatus + "' bằng tay.");
         }
-
-        // Tìm bước trong chu kỳ
-        CycleStep step = cycleStepRepository.findByCycle_CycleIdAndStepOrder(cycleId, stepOrder);
-        if (step == null) {
-            throw new NotFoundException("Không tìm thấy bước điều trị trong chu kỳ.");
-        }
-
-        // Parse thời gian
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-        LocalDateTime parsedEventDate = LocalDateTime.parse(eventDate, formatter);
 
         // Tìm lịch thuốc
         MedicineSchedule schedule = medicineScheduleRepository
-                .findByCycleStep_StepIdAndEventDate(step.getStepId(), parsedEventDate);
-
-        if (schedule == null) {
-            throw new NotFoundException("Không tìm thấy thuốc tại thời điểm " + eventDate + " trong bước " + stepOrder + ".");
-        }
+                .findById(scheduleId).orElseThrow(() -> new NotFoundException("Không tìm thấy lịch thuốc với ID: " + scheduleId));
 
         // 🚫 Không cho update nếu trạng thái đã khác 'ongoing'
-        if (schedule.getStatus() != StatusMedicineSchedule.ongoing) {
+        if (schedule.getStatus() != StatusMedicineSchedule.dang_dien_ra) {
             throw new IllegalStateException("Không thể cập nhật. Trạng thái thuốc hiện tại là '" + schedule.getStatus());
         }
 
         // ✅ Cập nhật
         schedule.setStatus(newStatus);
+        LocalTime useAt = LocalTime.now();
         medicineScheduleRepository.save(schedule);
 
         return new StatusMedicineDTO(
-                schedule.getCycleStep().getCycle().getCycleId(),
-                schedule.getCycleStep().getStepOrder(),
                 schedule.getStatus(),
-                schedule.getEventDate()
+                schedule.getEventDate(),
+                useAt
         );
     }
 
@@ -92,6 +80,9 @@ public class MedicineScheduleService {
                         ms.getMedicationId(),
                         ms.getCycleStep().getStepOrder(),
                         ms.getMedicine().getName(),
+                        ms.getMedicine().getDiscription(),
+                        ms.getMedicine().getDose(),
+                        ms.getMedicine().getFrequency(),
                         ms.getStartDate(),
                         ms.getEndDate(),
                         ms.getEventDate(),
@@ -101,6 +92,7 @@ public class MedicineScheduleService {
     }
 
     public List<MedicineScheduleDTO> createSchedule(CreateMedicationScheduleDTO dto) {
+        // Lấy thuốc và bước điều trị
         Medicine medicine = medicineRepository.findById(dto.getMedicineId())
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy thuốc"));
 
@@ -112,37 +104,100 @@ public class MedicineScheduleService {
         }
 
         List<MedicineScheduleDTO> result = new ArrayList<>();
-        LocalDate currentDate = dto.getStartDate(); // Chỉ lấy ngày
+
+        // 🧠 Bước 1: Tạo tất cả các eventDateTime cần lên lịch
+        List<LocalDateTime> targetTimes = new ArrayList<>();
+        LocalDate currentDate = dto.getStartDate();
 
         while (!currentDate.isAfter(dto.getEndDate())) {
             for (Time time : medicine.getUseAt()) {
-                LocalDateTime eventDateTime = LocalDateTime.of(currentDate, time.toLocalTime());
-
-                MedicineSchedule schedule = new MedicineSchedule();
-                schedule.setMedicine(medicine);
-                schedule.setCycleStep(step);
-                schedule.setStartDate(dto.getStartDate());
-                schedule.setEndDate(dto.getEndDate());
-                schedule.setEventDate(eventDateTime);
-                schedule.setStatus(StatusMedicineSchedule.ongoing);
-
-                medicineScheduleRepository.save(schedule);
-
-                result.add(new MedicineScheduleDTO(
-                        schedule.getMedicationId(),
-                        step.getStepOrder(),
-                        medicine.getName(),
-                        schedule.getStartDate(),
-                        schedule.getEndDate(),
-                        schedule.getEventDate(),
-                        schedule.getStatus(),
-                        schedule.getNote()
-                ));
+                targetTimes.add(LocalDateTime.of(currentDate, time.toLocalTime()));
             }
-
             currentDate = currentDate.plusDays(1);
         }
 
+        // 🧠 Bước 2: Lấy danh sách eventDateTime đã tồn tại trong DB
+        List<LocalDateTime> existedTimes = medicineScheduleRepository
+                .findAllEventTimesByMedicineAndStep(medicine.getMedicinId(), step.getStepId());
+
+        Set<LocalDateTime> existedSet = new HashSet<>(existedTimes);
+
+        // 🧠 Bước 3: Tạo lịch mới cho những event chưa có
+        for (LocalDateTime eventDateTime : targetTimes) {
+            if (existedSet.contains(eventDateTime)) {
+                continue; // Bỏ qua nếu đã tồn tại
+            }
+
+            MedicineSchedule schedule = new MedicineSchedule();
+            schedule.setMedicine(medicine);
+            schedule.setCycleStep(step);
+            schedule.setStartDate(dto.getStartDate());
+            schedule.setEndDate(dto.getEndDate());
+            schedule.setEventDate(eventDateTime);
+            schedule.setStatus(StatusMedicineSchedule.dang_dien_ra);
+
+            medicineScheduleRepository.save(schedule);
+
+            result.add(new MedicineScheduleDTO(
+                    schedule.getMedicationId(),
+                    step.getStepOrder(),
+                    medicine.getName(),
+                    medicine.getDiscription(),
+                    medicine.getDose(),
+                    medicine.getFrequency(),
+                    schedule.getStartDate(),
+                    schedule.getEndDate(),
+                    schedule.getEventDate(),
+                    schedule.getStatus(),
+                    schedule.getNote()
+            ));
+        }
         return result;
+    }
+
+    public void updateExpiredSchedules() {
+        LocalDateTime now = LocalDateTime.now();
+
+        List<MedicineSchedule> schedules = medicineScheduleRepository
+                .findByStatus(StatusMedicineSchedule.dang_dien_ra);
+
+        for (MedicineSchedule schedule : schedules) {
+            Medicine medicine = schedule.getMedicine();
+
+            List<Time> useAt = medicine.getUseAt();
+
+            for (Time time : useAt) {
+                LocalDateTime scheduledTime = LocalDateTime.of(schedule.getEventDate().toLocalDate(), time.toLocalTime());
+
+                // Nếu thời gian hiện tại đã qua thời gian sự kiện
+                if (now.isAfter(scheduledTime.plusHours(1))) {
+                    schedule.setStatus(StatusMedicineSchedule.qua_han);
+                }
+            }
+        }
+        medicineScheduleRepository.saveAll(schedules);
+    }
+
+    public List<MedicineScheduleDTO> getSchedulesByDate(LocalDate date) {
+        // Lấy từ 00:00 đến 23:59:59
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
+
+        List<MedicineSchedule> schedules = medicineScheduleRepository
+                .findAllByEventDateBetween(startOfDay, endOfDay);
+
+        return schedules.stream().map(schedule -> new MedicineScheduleDTO(
+                schedule.getMedicationId(),
+                schedule.getCycleStep().getStepOrder(),
+                schedule.getMedicine().getName(),
+                schedule.getMedicine().getDiscription(),
+                schedule.getMedicine().getDose(),
+                schedule.getMedicine().getFrequency(),
+                schedule.getStartDate(),
+                schedule.getEndDate(),
+                schedule.getEventDate(),
+                schedule.getStatus(),
+                schedule.getNote()
+        )).toList();
     }
 }

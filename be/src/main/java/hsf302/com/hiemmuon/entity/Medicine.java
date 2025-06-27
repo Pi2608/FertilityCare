@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "medicine")
-public class Medicine extends MedicineDTO {
+public class Medicine{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

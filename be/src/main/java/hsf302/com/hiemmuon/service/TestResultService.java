@@ -35,6 +35,7 @@ public class TestResultService {
                 System.out.println("khong tim thay appointment");
             }
         TestResult result = new TestResult(
+                0,
                 dto.getName(),
                 dto.getValue(),
                 dto.getUnit(),

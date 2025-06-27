@@ -3,6 +3,7 @@ package hsf302.com.hiemmuon.dto.responseDto;
 import lombok.*;
 
 import java.sql.Time;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -12,5 +13,5 @@ public class MedicineDTO {
     private String discription;
     private String dose;
     private String frequency;
-    private Time time;
+    private List<Time> time;
 }

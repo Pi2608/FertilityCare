@@ -1,7 +1,7 @@
 package hsf302.com.hiemmuon.controller;
 
 import hsf302.com.hiemmuon.dto.ApiResponse;
-import hsf302.com.hiemmuon.dto.createDto.NoteMedicineScheduleDTO;
+import hsf302.com.hiemmuon.dto.updateDto.NoteMedicineScheduleDTO;
 import hsf302.com.hiemmuon.dto.responseDto.CycleStepDTO;
 import hsf302.com.hiemmuon.enums.StatusCycle;
 import hsf302.com.hiemmuon.service.CycleStepService;

@@ -18,4 +18,5 @@ public class CycleStepDTO {
     private StatusCycle statusCycleStep;
     private String note;
     private List<MedicineScheduleDTO> medicineSchedule;
+    private List<AppointmentOverviewDTO> appointment;
 }

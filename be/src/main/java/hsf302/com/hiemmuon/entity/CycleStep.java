@@ -6,13 +6,14 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "cycle_steps")
-public class CycleStep extends CycleStepDTO {
+public class CycleStep{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,4 +43,7 @@ public class CycleStep extends CycleStepDTO {
 
     @Column(name = "note", columnDefinition = "NVARCHAR(MAX)")
     private String note;
+
+    @OneToMany(mappedBy = "cycleStep", fetch = FetchType.LAZY)
+    private List<Appointment> appointments;
 }

@@ -1,6 +1,7 @@
 package hsf302.com.hiemmuon.service;
 
-import hsf302.com.hiemmuon.dto.createDto.NoteMedicineScheduleDTO;
+import hsf302.com.hiemmuon.dto.responseDto.AppointmentOverviewDTO;
+import hsf302.com.hiemmuon.dto.updateDto.NoteMedicineScheduleDTO;
 import hsf302.com.hiemmuon.dto.responseDto.CycleStepDTO;
 import hsf302.com.hiemmuon.dto.responseDto.MedicineDTO;
 import hsf302.com.hiemmuon.dto.responseDto.MedicineScheduleDTO;
@@ -73,6 +74,15 @@ public class CycleStepService {
         return convertToDTO(step);
     }
 
+    public NoteMedicineScheduleDTO updateNote(int cycleId, int stepId, String note) {
+        CycleStep cycleStep = cycleStepRepository.findByCycle_CycleIdAndStepOrder(cycleId, stepId);
+
+        cycleStep.setNote(note);
+        cycleStepRepository.save(cycleStep);
+
+        return new NoteMedicineScheduleDTO(note);
+    }
+
     private CycleStepDTO convertToDTO(CycleStep cycleStep) {
         List<MedicineSchedule> schedules = medicineScheduleRepository.findByCycleStep_StepId(cycleStep.getStepId());
 
@@ -83,7 +93,7 @@ public class CycleStepService {
                             schedule.getMedicine().getDiscription(),
                             schedule.getMedicine().getDose(),
                             schedule.getMedicine().getFrequency(),
-                            schedule.getMedicine().getTime()
+                            schedule.getMedicine().getUseAt()
                     )
             );
 
@@ -91,6 +101,9 @@ public class CycleStepService {
                     schedule.getMedicationId(),
                     schedule.getCycleStep().getStepOrder(),
                     schedule.getMedicine().getName(),
+                    schedule.getMedicine().getDiscription(),
+                    schedule.getMedicine().getDose(),
+                    schedule.getMedicine().getFrequency(),
                     schedule.getStartDate(),
                     schedule.getEndDate(),
                     schedule.getEventDate(),
@@ -99,6 +112,20 @@ public class CycleStepService {
             );
         }).collect(Collectors.toList());
 
+        List<AppointmentOverviewDTO> appointmentDTOs = cycleStep.getAppointments()
+                .stream()
+                .map(appointment -> new AppointmentOverviewDTO(
+                        appointment.getAppointmentId(),
+                        appointment.getDoctor().getUser().getName(),   // <-- đây là Doctor trong entity
+                        appointment.getCustomer().getUser().getName(),
+                        appointment.getDate(),
+                        appointment.getTypeAppointment().name(),
+                        appointment.getStatusAppointment().name(),
+                        appointment.getNote(),
+                        appointment.getService().getName()
+                ))
+                .collect(Collectors.toList());
+
         return new CycleStepDTO(
                 cycleStep.getStepOrder(),
                 cycleStep.getCycle().getService().getName(),
@@ -106,17 +133,8 @@ public class CycleStepService {
                 cycleStep.getEventdate(),
                 cycleStep.getStatusCycleStep(),
                 cycleStep.getNote(),
-                null
+                medicineScheduleDTOs,
+                appointmentDTOs
         );
     }
-
-    public NoteMedicineScheduleDTO updateNote(int cycleId, int stepId, String note) {
-        CycleStep cycleStep = cycleStepRepository.findByCycle_CycleIdAndStepOrder(cycleId, stepId);
-
-        cycleStep.setNote(note);
-        cycleStepRepository.save(cycleStep);
-
-        return new NoteMedicineScheduleDTO(note);
-    }
-
 }

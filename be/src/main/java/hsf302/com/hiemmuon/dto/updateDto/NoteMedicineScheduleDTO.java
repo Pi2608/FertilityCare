@@ -1,4 +1,4 @@
-package hsf302.com.hiemmuon.dto.createDto;
+package hsf302.com.hiemmuon.dto.updateDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

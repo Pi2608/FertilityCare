@@ -4,15 +4,19 @@ import hsf302.com.hiemmuon.dto.ApiResponse;
 import hsf302.com.hiemmuon.dto.createDto.CreateMedicationScheduleDTO;
 import hsf302.com.hiemmuon.dto.responseDto.MedicineScheduleDTO;
 import hsf302.com.hiemmuon.dto.responseDto.StatusMedicineDTO;
+import hsf302.com.hiemmuon.entity.Medicine;
 import hsf302.com.hiemmuon.enums.StatusMedicineSchedule;
 import hsf302.com.hiemmuon.service.MedicineScheduleService;
+import hsf302.com.hiemmuon.service.MedicineService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Tag(name = "9. Medicine Schedule Controller")
@@ -21,25 +25,23 @@ import java.util.List;
 public class MedicineController {
 
     @Autowired
+    private MedicineService medicineService;
+
+    @Autowired
     private MedicineScheduleService medicineScheduleService;
 
     @Operation(
-            summary = "Cập nhật trạng thái uống thuốc",
-            description = "API cho phép cập nhật trạng thái thuốc (đã uống, bỏ liều, uống sai giờ...) và ghi nhận thời điểm sự kiện diễn ra."
+            summary = "Lấy danh sách thuốc",
+            description = "API cho phép lấy danh sách thông tin thuốc."
     )
-    @PatchMapping("/cycle/{cycleId}/step/{stepOrder}/order/{orderInStep}")
-    public ResponseEntity<ApiResponse<?>> updateStatus(
-            @PathVariable int cycleId,
-            @PathVariable int stepOrder,
-            @RequestParam StatusMedicineSchedule status,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) String eventDate
-    ) {
-        StatusMedicineDTO dto = medicineScheduleService
-                .updateMedicineStatus(cycleId, stepOrder, status, eventDate);
-        ApiResponse<StatusMedicineDTO> response = new ApiResponse<>(
+    @GetMapping("/all")
+    public ResponseEntity<ApiResponse<?>> getAllMedicineSchedules() {
+        List<Medicine> medicines = medicineService.getAllMedicines();
+
+        ApiResponse<List<Medicine>> response = new ApiResponse<>(
                 200,
-                "Update medicine status successfully",
-                dto
+                "Get all medicines successfully",
+                medicines
         );
         return ResponseEntity.ok(response);
     }
@@ -58,7 +60,7 @@ public class MedicineController {
 
         ApiResponse<List<MedicineScheduleDTO>> response = new ApiResponse<>(
                 200,
-                "Update medicine status successfully",
+                "Get medicine schedule successfully",
                 dto
         );
         return ResponseEntity.ok(response);
@@ -78,5 +80,45 @@ public class MedicineController {
                 scheduleDto
         );
         return ResponseEntity.ok(response);
+    }
+
+    @Operation(
+            summary = "Cập nhật trạng thái uống thuốc",
+            description = "API cho phép cập nhật trạng thái thuốc (đã uống, bỏ liều, uống sai giờ...) và ghi nhận thời điểm sự kiện diễn ra."
+    )
+    @PatchMapping("/medicine-schedules/{scheduleId}")
+    public ResponseEntity<ApiResponse<?>> updateStatus(
+            @PathVariable int scheduleId,
+            @RequestParam StatusMedicineSchedule status) {
+        StatusMedicineDTO dto = medicineScheduleService
+                .updateMedicineStatus(scheduleId, status);
+        ApiResponse<StatusMedicineDTO> response = new ApiResponse<>(
+                200,
+                "Update medicine status successfully",
+                dto
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(
+            summary = "Lấy danh sách thuốc theo ngày",
+            description = "Truy xuất toàn bộ lịch uống thuốc trong một ngày cụ thể."
+    )
+    @GetMapping("/medicine-schedules/by-date")
+    public ResponseEntity<ApiResponse<?>> getSchedulesByDate(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+    ) {
+        List<MedicineScheduleDTO> schedules = medicineScheduleService.getSchedulesByDate(date);
+        ApiResponse<List<MedicineScheduleDTO>> response = new ApiResponse<>(
+                200,
+                "Lấy danh sách thuốc theo ngày thành công",
+                schedules
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @Scheduled(fixedRate = 300000)
+    public void autoUpdateExpired() {
+        medicineScheduleService.updateExpiredSchedules();
     }
 }
