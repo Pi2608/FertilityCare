@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,7 +21,9 @@ public interface MedicineScheduleRepository extends JpaRepository<MedicineSchedu
     List<LocalDateTime> findAllEventTimesByMedicineAndStep(@Param("medicineId") int medicineId,
                                                             @Param("stepId") int stepId);
 
-    List<MedicineSchedule> findAllByEventDateBetween(
+    List<MedicineSchedule> findAllByCycleStep_Cycle_CycleIdAndCycleStep_StepOrderAndEventDateBetween(
+            int cycleId,
+            int stepOrder,
             LocalDateTime startDate,
             LocalDateTime endDate
     );

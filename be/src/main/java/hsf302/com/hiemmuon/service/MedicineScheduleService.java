@@ -178,14 +178,18 @@ public class MedicineScheduleService {
         medicineScheduleRepository.saveAll(schedules);
     }
 
-    public List<MedicineScheduleDTO> getSchedulesByDate(LocalDate date) {
-        // Lấy từ 00:00 đến 23:59:59
+    public List<MedicineScheduleDTO> getSchedulesByCycleStepAndDate(int cycleId, int stepOrder, LocalDate date) {
+        // Tạo khoảng thời gian từ đầu đến cuối ngày
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
 
+        // Gọi repository để lấy đúng lịch uống thuốc theo chu kỳ, bước, và ngày
         List<MedicineSchedule> schedules = medicineScheduleRepository
-                .findAllByEventDateBetween(startOfDay, endOfDay);
+                .findAllByCycleStep_Cycle_CycleIdAndCycleStep_StepOrderAndEventDateBetween(
+                        cycleId, stepOrder, startOfDay, endOfDay
+                );
 
+        // Map sang DTO
         return schedules.stream().map(schedule -> new MedicineScheduleDTO(
                 schedule.getMedicationId(),
                 schedule.getCycleStep().getStepOrder(),

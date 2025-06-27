@@ -67,6 +67,28 @@ public class MedicineController {
     }
 
     @Operation(
+            summary = "Lấy lịch thuốc theo ngày, chu kỳ và bước điều trị",
+            description = "Truy xuất lịch uống thuốc vào một ngày cụ thể trong bước điều trị của chu kỳ."
+    )
+    @GetMapping("/cycles/{cycleId}/steps/{stepOrder}/medicine-schedules/by-date")
+    public ResponseEntity<ApiResponse<?>> getSchedulesByDateInCycleStep(
+            @PathVariable int cycleId,
+            @PathVariable int stepOrder,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+    ) {
+        List<MedicineScheduleDTO> schedules = medicineScheduleService
+                .getSchedulesByCycleStepAndDate(cycleId, stepOrder, date);
+
+        ApiResponse<List<MedicineScheduleDTO>> response = new ApiResponse<>(
+                200,
+                "Lấy danh sách thuốc theo ngày trong bước điều trị thành công",
+                schedules
+        );
+        return ResponseEntity.ok(response);
+    }
+
+
+    @Operation(
             summary = "Tạo lịch uống thuốc",
             description = "API tạo mới lịch uống thuốc cho bệnh nhân dựa trên phác đồ điều trị. Dành cho bác sĩ hoặc hệ thống tự động."
     )
@@ -96,23 +118,6 @@ public class MedicineController {
                 200,
                 "Update medicine status successfully",
                 dto
-        );
-        return ResponseEntity.ok(response);
-    }
-
-    @Operation(
-            summary = "Lấy danh sách thuốc theo ngày",
-            description = "Truy xuất toàn bộ lịch uống thuốc trong một ngày cụ thể."
-    )
-    @GetMapping("/medicine-schedules/by-date")
-    public ResponseEntity<ApiResponse<?>> getSchedulesByDate(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
-    ) {
-        List<MedicineScheduleDTO> schedules = medicineScheduleService.getSchedulesByDate(date);
-        ApiResponse<List<MedicineScheduleDTO>> response = new ApiResponse<>(
-                200,
-                "Lấy danh sách thuốc theo ngày thành công",
-                schedules
         );
         return ResponseEntity.ok(response);
     }

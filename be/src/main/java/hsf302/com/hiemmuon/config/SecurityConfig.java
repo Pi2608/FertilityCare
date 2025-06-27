@@ -61,7 +61,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,
                                 "/api/doctors/me",
                                 "api/appointment-services/appointments/history",
-                                "/api/cycles/meD").hasRole("DOCTOR")
+                                "/api/cycles/meD",
+                                "/api/medicine/all").hasRole("DOCTOR")
 
                         .requestMatchers(HttpMethod.GET,
                                 "/api/doctors/all",
@@ -76,7 +77,9 @@ public class SecurityConfig {
                                 "/api/customer/info",
                                 "api/appointment-services/appointments/detail",
                                 "api/test-results/step/{stepId}",
-                                "api/appointment-services/appointments/{appointmentId}/detail").hasAnyRole("CUSTOMER", "DOCTOR")
+                                "api/appointment-services/appointments/{appointmentId}/detail",
+                                "/api/medicine/cycles/*/steps/*/medicine-schedules",
+                                "/api/medicine/cycles/*/steps/*/medicine-schedules/by-date").hasAnyRole("CUSTOMER", "DOCTOR")
 
                         .requestMatchers(HttpMethod.GET,
                                 "api/login/roles").hasAnyRole("CUSTOMER", "DOCTOR", "ADMIN", "MANAGER")
@@ -91,7 +94,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,
                                 "/api/appointment-services/appointments/reexam",
                                 "/api/cycles/create",
-                                "api/test-results/create").hasRole("DOCTOR")
+                                "api/test-results/create",
+                                "/api/medicine/medication-schedule").hasRole("DOCTOR")
 
                         .requestMatchers(HttpMethod.POST,
                                 "/api/doctors",
@@ -114,7 +118,8 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.PATCH,
                                 "/api/appointment-services/appointments/cancel/{appointmentId}",
-                                "/api/medicine/cycles/*/step/*/medicines/*/status").hasRole("CUSTOMER")
+                                "/api/medicine/cycles/*/step/*/medicines/*/status",
+                                "/api/medicine/medicine-schedules/*").hasRole("CUSTOMER")
 
                         .requestMatchers(HttpMethod.PATCH,
                                 "/api/cycles/cycleId/*/note",
