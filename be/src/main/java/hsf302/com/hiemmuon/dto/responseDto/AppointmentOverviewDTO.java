@@ -1,23 +1,21 @@
-package hsf302.com.hiemmuon.dto.entityDto;
+package hsf302.com.hiemmuon.dto.responseDto;
 
-import hsf302.com.hiemmuon.entity.Appointment;
-import hsf302.com.hiemmuon.entity.TreatmentService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@lombok.Getter
-@lombok.Setter
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
-public class AppointmentHistoryDTO {
-    private Integer appointmentId;
+@AllArgsConstructor
+public class AppointmentOverviewDTO {
+    private int appointmentId;
+    private String doctorName;
+    private String customerName;
     private LocalDateTime date;
     private String type;
     private String status;
     private String note;
     private String serviceName;
 }
-

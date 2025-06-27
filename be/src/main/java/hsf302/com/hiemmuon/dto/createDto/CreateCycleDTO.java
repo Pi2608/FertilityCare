@@ -1,6 +1,8 @@
 package hsf302.com.hiemmuon.dto.createDto;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,18 +16,15 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class CreateCycleDTO {
 
-    @Positive(message = "customerId phải lớn hơn 0")
+    @Positive(message = "customerId không hợp lệ!")
     private int customerId;
 
-    @Positive(message = "serviceId phải lớn hơn 0")
+    @Positive(message = "serviceId không hợp lệ!")
     private int serviceId;
 
     @NotNull(message = "startDate không được để trống")
     @FutureOrPresent(message = "startDate phải là ngày hiện tại hoặc tương lai")
     private LocalDate startDate;
-
-    @NotNull(message = "endDate không được để trống")
-    private LocalDate endDate;
 
     private String note;
 }

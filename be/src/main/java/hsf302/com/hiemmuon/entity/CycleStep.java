@@ -1,21 +1,19 @@
 package hsf302.com.hiemmuon.entity;
 
+import hsf302.com.hiemmuon.dto.responseDto.CycleStepDTO;
 import hsf302.com.hiemmuon.enums.StatusCycle;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "cycle_steps")
-public class CycleStep {
+public class CycleStep{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,4 +40,10 @@ public class CycleStep {
 
     @Column(name = "eventdate", nullable = false)
     private LocalDate eventdate;
+
+    @Column(name = "note", columnDefinition = "NVARCHAR(MAX)")
+    private String note;
+
+    @OneToMany(mappedBy = "cycleStep", fetch = FetchType.LAZY)
+    private List<Appointment> appointments;
 }

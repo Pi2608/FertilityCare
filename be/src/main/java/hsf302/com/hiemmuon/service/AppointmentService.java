@@ -1,13 +1,8 @@
 package hsf302.com.hiemmuon.service;
 
-import hsf302.com.hiemmuon.dto.appointment.AppointmentDetailDTO;
-import hsf302.com.hiemmuon.dto.appointment.UpdateAppointmentServiceDTO;
 import hsf302.com.hiemmuon.dto.createDto.CreateAppointmentDTO;
 import hsf302.com.hiemmuon.dto.createDto.ReExamAppointmentDTO;
-import hsf302.com.hiemmuon.dto.entityDto.AppointmentHistoryDTO;
-import hsf302.com.hiemmuon.dto.entityDto.AppointmentOverviewDTO;
-import hsf302.com.hiemmuon.dto.entityDto.AvailableScheduleDTO;
-import hsf302.com.hiemmuon.dto.entityDto.ReExamAppointmentResponseDTO;
+import hsf302.com.hiemmuon.dto.responseDto.*;
 import hsf302.com.hiemmuon.entity.*;
 import hsf302.com.hiemmuon.enums.StatusAppointment;
 import hsf302.com.hiemmuon.enums.TypeAppointment;
@@ -41,8 +36,6 @@ public class AppointmentService {
 
     @Autowired
     private TestResultRepository testResultRepository;
-
-
 
     public List<AvailableScheduleDTO> getAvailableSchedules(int doctorId, LocalDate date) {
         List<DoctorSchedule> schedules = doctorScheduleRepository
@@ -169,9 +162,10 @@ public class AppointmentService {
     }
 
 
-    public List<ReExamAppointmentResponseDTO> getReExamAppointmentsForaDoctor(int doctorId){
-        List<Appointment> appointments = appointmentRepository.findByDoctor_DoctorId(
-                doctorId);
+    public List<ReExamAppointmentResponseDTO> getReExamAppointmentsForCustomer(int customerId){
+        List<Appointment> appointments = appointmentRepository.findByCustomer_CustomerIdAndTypeAppointment(
+                customerId, TypeAppointment.tai_kham
+        );
 
         return appointments.stream().map(app -> {
             ReExamAppointmentResponseDTO dto = new ReExamAppointmentResponseDTO();
@@ -215,7 +209,6 @@ public class AppointmentService {
         }
     }
 
-
     public List<AppointmentHistoryDTO> getAppointmentsForDoctorAndCustomer(int doctorId, int customerId) {
         List<Appointment> appointments = appointmentRepository
                 .findByDoctor_DoctorIdAndCustomer_CustomerIdOrderByDateDesc(doctorId, customerId);
@@ -232,7 +225,6 @@ public class AppointmentService {
                 .collect(Collectors.toList());
 
     }
-
 
     public List<AppointmentOverviewDTO> getAllAppointmentsForManager() {
         List<Appointment> appointments = appointmentRepository.findAll();
@@ -343,7 +335,4 @@ public class AppointmentService {
 
         return convertToDto(appointment);
     }
-
-
-
 }

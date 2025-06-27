@@ -1,14 +1,14 @@
 package hsf302.com.hiemmuon.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Entity
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "treatment_services")
 public class TreatmentService {
 
@@ -17,7 +17,7 @@ public class TreatmentService {
     @Column(name = "service_id")
     private int serviceId;
 
-    @Column(name = "name")
+    @Column(name = "name", columnDefinition = "NVARCHAR(MAX)")
     private String name;
 
     @Column(name = "description", columnDefinition = "NVARCHAR(MAX)")
@@ -34,17 +34,4 @@ public class TreatmentService {
 
     @Column(name = "isActive", length = 255)
     private boolean isActive;
-
-    public TreatmentService() {
-    }
-
-    public TreatmentService(int serviceId, String name, String description, Float successRate, BigDecimal price, String specifications, boolean isActive) {
-        this.serviceId = serviceId;
-        this.name = name;
-        this.description = description;
-        this.successRate = successRate;
-        this.price = price;
-        this.specifications = specifications;
-        this.isActive = isActive;
-    }
 }

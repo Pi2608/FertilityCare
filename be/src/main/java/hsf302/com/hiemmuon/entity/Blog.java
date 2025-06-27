@@ -1,14 +1,14 @@
 package hsf302.com.hiemmuon.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "blogs")
 public class Blog {
 
@@ -35,16 +35,4 @@ public class Blog {
 
     @Column(name = "view_count")
     private Integer viewCount;
-
-    public Blog() {
-    }
-
-    public Blog(User user, String title, String content, String tags, LocalDate createDate, Integer viewCount) {
-        this.user = user;
-        this.title = title;
-        this.content = content;
-        this.tags = tags;
-        this.createDate = createDate;
-        this.viewCount = viewCount;
-    }
 }

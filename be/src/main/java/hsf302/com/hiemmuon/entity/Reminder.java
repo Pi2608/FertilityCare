@@ -1,14 +1,15 @@
 package hsf302.com.hiemmuon.entity;
 
+import hsf302.com.hiemmuon.enums.RelatedTypeReminder;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "reminders")
 public class Reminder {
 
@@ -23,7 +24,7 @@ public class Reminder {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "related_type", nullable = false, length = 20)
-    private RelatedType relatedType;
+    private RelatedTypeReminder relatedType;
 
     @Column(name = "related_id", nullable = false)
     private int relatedId;
@@ -45,23 +46,4 @@ public class Reminder {
 
     @Column(name = "create_at", nullable = false)
     private LocalDateTime createAt;
-
-    public enum RelatedType {
-        medication, appointment
-    }
-
-    public Reminder() {
-    }
-
-    public Reminder(Customer customer, RelatedType relatedType, int relatedId, String title, String description, LocalDateTime remindAt, Boolean isSent, String status, LocalDateTime createAt) {
-        this.customer = customer;
-        this.relatedType = relatedType;
-        this.relatedId = relatedId;
-        this.title = title;
-        this.description = description;
-        this.remindAt = remindAt;
-        this.isSent = isSent;
-        this.status = status;
-        this.createAt = createAt;
-    }
 }

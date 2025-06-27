@@ -1,13 +1,13 @@
 package hsf302.com.hiemmuon.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Nationalized;
 
-@Getter
-@Setter
+@Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "customer")
 public class Customer {
 
@@ -26,14 +26,4 @@ public class Customer {
 
     @Column(name = "is_active")
     private boolean isActive;
-
-    public Customer() {
-    }
-
-    public Customer(int customerId, User user, String medicalHistory, boolean isActive) {
-        this.customerId = customerId;
-        this.user = user;
-        this.medicalHistory = medicalHistory;
-        this.isActive = isActive;
-    }
 }

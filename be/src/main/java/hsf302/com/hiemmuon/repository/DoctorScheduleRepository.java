@@ -18,17 +18,14 @@ public interface DoctorScheduleRepository extends JpaRepository<DoctorSchedule, 
     );
 
     @Query(value = """
-    SELECT * FROM doctor_schedules 
-    WHERE doctor_id = :doctorId 
-      AND date = :date 
-      AND start_time = CAST(:startTime AS TIME)
-    """, nativeQuery = true)
+            SELECT * FROM doctor_schedules 
+            WHERE doctor_id = :doctorId 
+              AND date = :date 
+              AND start_time = CAST(:startTime AS TIME)
+            """, nativeQuery = true)
     DoctorSchedule findScheduleByDoctorDateTime(
             @Param("doctorId") int doctorId,
             @Param("date") LocalDate date,
             @Param("startTime") LocalTime startTime
     );
-
-
-
 }

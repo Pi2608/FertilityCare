@@ -1,10 +1,14 @@
 package hsf302.com.hiemmuon.dto.testresult;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@lombok.Getter
-@lombok.Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UpdateTestResultDTO {
     private String name;
     private Float value;

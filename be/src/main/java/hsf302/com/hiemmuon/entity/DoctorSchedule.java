@@ -1,16 +1,15 @@
 package hsf302.com.hiemmuon.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "doctor_schedules")
 public class DoctorSchedule {
 
@@ -34,15 +33,4 @@ public class DoctorSchedule {
 
     @Column(name = "status", nullable = false)
     private boolean status;
-
-    public DoctorSchedule() {
-    }
-
-    public DoctorSchedule(Doctor doctor, LocalDate date, LocalTime startTime, LocalTime endTime, boolean status) {
-        this.doctor = doctor;
-        this.date = date;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.status = status;
-    }
 }

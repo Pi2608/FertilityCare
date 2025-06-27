@@ -1,11 +1,10 @@
 package hsf302.com.hiemmuon.service;
 
-import hsf302.com.hiemmuon.dto.createDto.CreatePaymentDTO;
 import hsf302.com.hiemmuon.dto.createDto.ReExamAppointmentDTO;
 import hsf302.com.hiemmuon.dto.createDto.CreatePaymentWithReExamDTO;
-import hsf302.com.hiemmuon.dto.entityDto.PaymentResponseDTO;
+import hsf302.com.hiemmuon.dto.responseDto.PaymentResponsesDTO;
 import hsf302.com.hiemmuon.entity.*;
-import hsf302.com.hiemmuon.entity.Payment.Status;
+import hsf302.com.hiemmuon.enums.StatusPayment;
 import hsf302.com.hiemmuon.repository.*;
 import hsf302.com.hiemmuon.utils.VNPayUtil;
 import io.jsonwebtoken.Claims;
@@ -13,11 +12,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -61,21 +57,21 @@ public class PaymentService {
         this.paymentRepository = paymentRepository;
     }
 
-    public List<PaymentResponseDTO> getAllPayments() {
+    public List<PaymentResponsesDTO> getAllPayments() {
         List<Payment> payments = paymentRepository.findAll();
         return payments.stream()
-                .map(PaymentResponseDTO::fromPayment)
+                .map(PaymentResponsesDTO::fromPayment)
                 .collect(Collectors.toList());
     }
 
-    public List<PaymentResponseDTO> getPaymentsByCustomerId(int customerId) {
+    public List<PaymentResponsesDTO> getPaymentsByCustomerId(int customerId) {
         List<Payment> payments = paymentRepository.findByCustomerId(customerId);
         return payments.stream()
-                .map(PaymentResponseDTO::fromPayment)
+                .map(PaymentResponsesDTO::fromPayment)
                 .collect(Collectors.toList());
     }
 
-    public PaymentResponseDTO createPayment(HttpServletRequest request, CreatePaymentWithReExamDTO dto) {
+    public PaymentResponsesDTO createPayment(HttpServletRequest request, CreatePaymentWithReExamDTO dto) {
         final String authHeader = request.getHeader("Authorization");
         final String token = authHeader.substring(7);
         Claims claims = jwtService.extractAllClaims(token);
@@ -119,36 +115,36 @@ public class PaymentService {
         payment.setService(service);
         payment.setTotal(dto.getTotal());
         payment.setPaid(dto.getPaidDate());
-        payment.setStatus(dto.getStatus() != null ? dto.getStatus() : Status.pending);
+        payment.setStatus(dto.getStatus() != null ? dto.getStatus() : StatusPayment.pending);
         payment.setType(dto.getType());
 
         Payment savedPayment = paymentRepository.save(payment);
-        return PaymentResponseDTO.fromPayment(savedPayment);
+        return PaymentResponsesDTO.fromPayment(savedPayment);
     }
 
-    public void updatePaymentStatus(int paymentId, Status status) {
+    public void updatePaymentStatus(int paymentId, StatusPayment status) {
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy payment với ID: " + paymentId));
 
         payment.setStatus(status);
-        if (status == Status.paid) {
+        if (status == StatusPayment.paid) {
             payment.setPaid(LocalDateTime.now());
         }
         paymentRepository.save(payment);
     }
 
-    public PaymentResponseDTO cancelPayment(int paymentId) {
+    public PaymentResponsesDTO cancelPayment(int paymentId) {
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy payment với ID: " + paymentId));
 
         // Only allow cancellation if payment is not already completed
-        if (payment.getStatus() == Status.paid) {
+        if (payment.getStatus() == StatusPayment.paid) {
             throw new RuntimeException("Không thể hủy payment đã hoàn thành");
         }
 
-        payment.setStatus(Status.failed);
+        payment.setStatus(StatusPayment.failed);
         Payment savedPayment = paymentRepository.save(payment);
-        return PaymentResponseDTO.fromPayment(savedPayment);
+        return PaymentResponsesDTO.fromPayment(savedPayment);
     }
 
     public String createVNPayRedirectUrl(int paymentId) {
@@ -196,10 +192,10 @@ public class PaymentService {
                 int paymentId = Integer.parseInt(vnp_TxnRef);
 
                 if ("00".equals(vnp_ResponseCode)) {
-                    updatePaymentStatus(paymentId, Status.paid);
+                    updatePaymentStatus(paymentId, StatusPayment.paid);
                     return "Payment successful";
                 } else {
-                    updatePaymentStatus(paymentId, Status.failed);
+                    updatePaymentStatus(paymentId, StatusPayment.failed);
                     return "Payment failed with code: " + vnp_ResponseCode;
                 }
             } catch (NumberFormatException e) {

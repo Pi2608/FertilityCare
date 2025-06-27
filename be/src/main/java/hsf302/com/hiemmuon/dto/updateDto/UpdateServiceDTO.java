@@ -1,8 +1,13 @@
 package hsf302.com.hiemmuon.dto.updateDto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -10,6 +15,8 @@ import java.math.BigDecimal;
 @JsonIgnoreProperties(ignoreUnknown = false)
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UpdateServiceDTO {
 
     @NotBlank(message = "Mô tả không được để trống")

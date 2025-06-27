@@ -1,7 +1,7 @@
 package hsf302.com.hiemmuon.controller;
 
 import hsf302.com.hiemmuon.dto.createDto.CreatePaymentWithReExamDTO;
-import hsf302.com.hiemmuon.dto.entityDto.PaymentResponseDTO;
+import hsf302.com.hiemmuon.dto.responseDto.PaymentResponsesDTO;
 import hsf302.com.hiemmuon.entity.Payment;
 import hsf302.com.hiemmuon.service.PaymentService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,26 +33,26 @@ public class PaymentController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<PaymentResponseDTO>> getAllPayments() {
-        List<PaymentResponseDTO> payments = paymentService.getAllPayments();
+    public ResponseEntity<List<PaymentResponsesDTO>> getAllPayments() {
+        List<PaymentResponsesDTO> payments = paymentService.getAllPayments();
         return ResponseEntity.ok(payments);
     }
 
     @GetMapping("/customer/{customerId}")
-    public ResponseEntity<List<PaymentResponseDTO>> getPaymentsByCustomerId(@PathVariable int customerId) {
-        List<PaymentResponseDTO> payments = paymentService.getPaymentsByCustomerId(customerId);
+    public ResponseEntity<List<PaymentResponsesDTO>> getPaymentsByCustomerId(@PathVariable int customerId) {
+        List<PaymentResponsesDTO> payments = paymentService.getPaymentsByCustomerId(customerId);
         return ResponseEntity.ok(payments);
     }
 
     @PostMapping
-    public ResponseEntity<PaymentResponseDTO> createPayment(HttpServletRequest request, @RequestBody CreatePaymentWithReExamDTO dto) {
-        PaymentResponseDTO payment = paymentService.createPayment(request, dto);
+    public ResponseEntity<PaymentResponsesDTO> createPayment(HttpServletRequest request, @RequestBody CreatePaymentWithReExamDTO dto) {
+        PaymentResponsesDTO payment = paymentService.createPayment(request, dto);
         return ResponseEntity.ok(payment);
     }
 
     @PutMapping("/cancel/{id}")
-    public ResponseEntity<PaymentResponseDTO> cancelPayment(@PathVariable int paymentId) {
-        PaymentResponseDTO payment = paymentService.cancelPayment(paymentId);
+    public ResponseEntity<PaymentResponsesDTO> cancelPayment(@PathVariable int paymentId) {
+        PaymentResponsesDTO payment = paymentService.cancelPayment(paymentId);
         return ResponseEntity.ok(payment);
     }
 

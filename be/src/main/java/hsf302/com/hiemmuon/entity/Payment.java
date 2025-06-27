@@ -1,15 +1,17 @@
 package hsf302.com.hiemmuon.entity;
 
+import hsf302.com.hiemmuon.enums.StatusPayment;
+import hsf302.com.hiemmuon.enums.TypePayment;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "payments")
 public class Payment {
 
@@ -38,30 +40,9 @@ public class Payment {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 10)
-    private Status status;
+    private StatusPayment status;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false, length = 20)
-    private Type type;
-
-    public enum Status {
-        pending, paid, failed
-    }
-
-    public enum Type {
-        consultation, test, treatment, canceled
-    }
-
-    public Payment() {
-    }
-
-    public Payment(Customer customer, Appointment appointment, TreatmentService service, BigDecimal total, LocalDateTime paid, Status status, Type type) {
-        this.customer = customer;
-        this.appointment = appointment;
-        this.service = service;
-        this.total = total;
-        this.paid = paid;
-        this.status = status;
-        this.type = type;
-    }
+    private TypePayment type;
 }

@@ -16,6 +16,7 @@ import java.util.List;
 
 @Service
 public class TestResultService {
+
     @Autowired
     private TestResultRepository testResultRepository;
 
@@ -34,6 +35,7 @@ public class TestResultService {
                 System.out.println("khong tim thay appointment");
             }
         TestResult result = new TestResult(
+                0,
                 dto.getName(),
                 dto.getValue(),
                 dto.getUnit(),

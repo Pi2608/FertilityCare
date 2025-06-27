@@ -14,8 +14,9 @@ import java.util.Optional;
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Integer> {
     List<Appointment> findByCustomer_CustomerIdAndTypeAppointment(int customerId, TypeAppointment type);
+
     Optional<Appointment> findByAppointmentIdAndCustomer_CustomerId(int appointmentId, int customerId);
-    List<Appointment> findByDoctor_DoctorIdAndDateBefore(int doctorId, LocalDateTime now);
+
     List<Appointment> findAll(); // lấy tất cả lịch hẹn
 
     Appointment findById(int appointmentId);
@@ -27,5 +28,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
     Appointment findLatestAppointmentByCustomerAndDoctor(@Param("customerId") int customerId, @Param("doctorId") int doctorId);
 
     List<Appointment> findByDoctor_DoctorId(int doctorId);
+
     List<Appointment> findByCustomer_CustomerId(int customerId);
 }
