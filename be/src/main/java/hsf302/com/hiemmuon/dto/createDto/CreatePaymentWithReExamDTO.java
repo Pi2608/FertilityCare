@@ -20,8 +20,6 @@ public class CreatePaymentWithReExamDTO {
     private LocalDateTime paidDate;
     private StatusPayment status;
     private TypePayment type;
-
-    // Thông tin cho appointment tái khám
     private LocalDateTime appointmentDate;
     private String note;
 }

@@ -230,3 +230,7 @@
     outline-offset: 2px;
     border-radius: 4px;
 }
+
+.auth-container .error-message {
+    text-align: center;
+}

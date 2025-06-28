@@ -38,20 +38,43 @@ public class PaymentController {
         return ResponseEntity.ok(payments);
     }
 
-    @GetMapping("/customer/{customerId}")
-    public ResponseEntity<List<PaymentResponsesDTO>> getPaymentsByCustomerId(@PathVariable int customerId) {
-        List<PaymentResponsesDTO> payments = paymentService.getPaymentsByCustomerId(customerId);
+    @GetMapping("/customer")
+    public ResponseEntity<List<PaymentResponsesDTO>> getPaymentsByCustomerId(HttpServletRequest request) {
+        List<PaymentResponsesDTO> payments = paymentService.getPaymentsByCustomerId(request);
         return ResponseEntity.ok(payments);
     }
 
-    @PostMapping
-    public ResponseEntity<PaymentResponsesDTO> createPayment(HttpServletRequest request, @RequestBody CreatePaymentWithReExamDTO dto) {
-        PaymentResponsesDTO payment = paymentService.createPayment(request, dto);
-        return ResponseEntity.ok(payment);
+    @GetMapping("/pending/customer")
+    public ResponseEntity<List<PaymentResponsesDTO>> getPendingPaymentsByCustomerId(HttpServletRequest request) {
+        try {
+            List<PaymentResponsesDTO> pendingPayments = paymentService.getPendingPaymentsByCustomerId(request);
+            return ResponseEntity.ok(pendingPayments);
+        } catch (Exception e) {
+            System.err.println("Error getting payment: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
-    @PutMapping("/cancel/{id}")
-    public ResponseEntity<PaymentResponsesDTO> cancelPayment(@PathVariable int paymentId) {
+    @PostMapping
+    public ResponseEntity<PaymentResponsesDTO> createPayment(
+            HttpServletRequest request,
+            @RequestBody CreatePaymentWithReExamDTO dto) {
+
+        System.out.println("Received payment data: " + dto.toString());
+
+        try {
+            PaymentResponsesDTO payment = paymentService.createPayment(request, dto);
+            return ResponseEntity.ok(payment);
+        } catch (Exception e) {
+            System.err.println("Error creating payment: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    @PutMapping("/cancel")
+    public ResponseEntity<PaymentResponsesDTO> cancelPayment(@RequestBody int paymentId) {
         PaymentResponsesDTO payment = paymentService.cancelPayment(paymentId);
         return ResponseEntity.ok(payment);
     }

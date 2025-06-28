@@ -161,6 +161,125 @@ class ApiGateway {
       throw error;
     }
   }
+
+  // Payment APIs
+    
+  /**
+   * Get all payments
+   * @returns {Promise} - List of all payments
+   */
+  static async getAllPayments() {
+      try {
+          const response = await ApiGateway.axiosInstance.get('/payments/all');
+          return response.data;
+      } catch (error) {
+          console.error('Error fetching all payments:', error);
+          throw error;
+      }
+  }
+
+  /**
+   * Get payments by customer ID
+   * @param {number} customerId - The customer ID
+   * @returns {Promise} - List of payments for the customer
+   */
+  static async getPaymentsByCustomerId() {
+      try {
+          const response = await ApiGateway.axiosInstance.get(`/payments/customer`);
+          return response.data;
+      } catch (error) {
+          console.error(`Error fetching payments for customer ${customerId}:`, error);
+          throw error;
+      }
+  }
+
+  /**
+   * Get payments by customer ID
+   * @param {number} customerId - The customer ID
+   * @returns {Promise} - List of payments for the customer
+   */
+  static async getPendingPaymentsByCustomerId() {
+      try {
+          const response = await ApiGateway.axiosInstance.get(`/payments/pending/customer`);
+          return response.data;
+      } catch (error) {
+          console.error(`Error fetching payments for customer ${customerId}:`, error);
+          throw error;
+      }
+  }
+
+  /**
+   * Create a new payment
+   * @param {Object} payment - Payment creation data
+   * @returns {Promise} - Created payment response
+   */
+  static async createPayment(payment) {
+      try {
+          const paymentForm = {
+              customerId: payment.customerId || "4",
+              serviceId: payment.serviceId || "",
+              total: payment.total || 0,  
+              paidDate: null,
+              status: "pending",
+              type: payment.type || "treatment",
+              appointmentDate: payment.appointmentDate || "",
+              note: payment.note || "",
+          };
+          
+          console.log('Creating payment with data:', paymentForm);
+          const response = await ApiGateway.axiosInstance.post('/payments', paymentForm);
+          return response.data;
+      } catch (error) {
+          console.error('Error creating payment:', error);
+          throw error;
+      }
+  }
+
+  /**
+   * Cancel a payment
+   * @param {number} paymentId - The payment ID to cancel
+   * @returns {Promise} - Cancelled payment response
+   */
+  static async cancelPayment(paymentId) {
+      try {
+          const response = await ApiGateway.axiosInstance.put(`/payments/cancel`, paymentId);
+          return response.data;
+      } catch (error) {
+          console.error(`Error cancelling payment ${paymentId}:`, error);
+          throw error;
+      }
+  }
+
+  /**
+   * Create VNPay payment URL
+   * @param {number} paymentId - The payment ID
+   * @returns {Promise} - VNPay redirect URL
+   */
+  static async createVNPayUrl(paymentId) {
+      try {
+          const response = await ApiGateway.axiosInstance.post('/payments/vnpay', paymentId);
+          return response.data;
+      } catch (error) {
+          console.error(`Error creating VNPay URL for payment ${paymentId}:`, error);
+          throw error;
+      }
+  }
+
+  /**
+   * Handle VNPay callback (usually called by VNPay, but can be used for verification)
+   * @param {Object} callbackParams - VNPay callback parameters
+   * @returns {Promise} - Callback processing result
+   */
+  static async processVNPayCallback(callbackParams) {
+      try {
+          const queryString = new URLSearchParams(callbackParams).toString();
+          const response = await ApiGateway.axiosInstance.get(`/payments/vnpay-callback?${queryString}`);
+          return response.data;
+      } catch (error) {
+          console.error('Error processing VNPay callback:', error);
+          throw error;
+      }
+  }
 }
 
 export default ApiGateway;

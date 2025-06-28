@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ApiPayment from "@features/service/apiPayment";
+import ApiGateway from "@features/service/apiGateway";
 import { X, Plus } from 'lucide-react';
 import "./Appointments.css";
 
@@ -74,7 +74,7 @@ export default function Appointments() {
     try {      
       const result = await ApiGateway.createPayment(paymentData);
       console.log('Payment created:', result);
-      setIsModalOpen(false);
+      setIsPaymentModalOpen(false);
     } catch (error) {
       console.error('Error creating payment:', error);
     }
@@ -176,6 +176,8 @@ export default function Appointments() {
 }
 
 const PaymentModal = ({ isOpen, onClose, onSubmit }) => {
+  const today = new Date();
+
   const [paymentForm, setPaymentForm] = useState({
     customerId: "",
     serviceId: "",
@@ -189,15 +191,6 @@ const PaymentModal = ({ isOpen, onClose, onSubmit }) => {
   const [services, setServices] = useState([
     { id: 1, name: "IUI", price: 5000000 },
     { id: 2, name: "IVF", price: 70000000 },
-  ]);
-
-  const [availableDates, setAvailableDates] = useState([
-    "2024-12-26",
-    "2024-12-27",
-    "2024-12-28",
-    "2024-12-30",
-    "2025-01-02",
-    "2025-01-03",
   ]);
 
   const typeOptions = [
@@ -297,26 +290,17 @@ const PaymentModal = ({ isOpen, onClose, onSubmit }) => {
 
             {/* Appointment Date */}
             <div className="form-group">
-              <label className="form-label required">Ngày khám</label>
-              <select
-                className="form-select"
+              <label className="form-label required">Ngày & Giờ khám</label>
+              <input
+                type="datetime-local"
+                className="form-input"
                 name="appointmentDate"
                 value={paymentForm.appointmentDate}
+                min={today.toISOString().slice(0, 16)}
+                step={3600}
                 onChange={handleInputChange}
                 required
-              >
-                <option value="">Chọn ngày khám</option>
-                {availableDates.map(date => (
-                  <option key={date} value={date}>
-                    {new Date(date).toLocaleDateString('vi-VN', {
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </option>
-                ))}
-              </select>
+              />
             </div>
 
             {/* Type */}

@@ -65,13 +65,15 @@ const ProtectedRoute = ({ children, allowedRoles = [], requireAuth = true }) => 
 
   if (loading) {
     return (
-      <HashLoader
-        className="loader"
-        loading={loading}
-        size={150}
-        color="#36d7b7"
-        cssOverride={{ display: 'block', margin: '0 auto', borderColor: 'red' }}
-      />
+      <div className="loader-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <HashLoader
+          className="loader"
+          loading={loading}
+          size={150}
+          color="#36d7b7"
+          cssOverride={{ display: 'block', margin: '0 auto', borderColor: 'red' }}
+        />
+      </div>
     );
   }
 

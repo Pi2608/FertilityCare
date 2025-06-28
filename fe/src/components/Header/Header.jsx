@@ -70,7 +70,7 @@ const Header = () => {
       
       <nav className="nav-links">
         {pages.map((item, index) => (
-          <a className={location.pathname === item.path ? 'active' : ''} href={item.path}>{item.name}</a>
+          <a key={index} className={location.pathname === item.path ? 'active' : ''} href={item.path}>{item.name}</a>
         ))}
       </nav>
       

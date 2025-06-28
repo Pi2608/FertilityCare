@@ -229,13 +229,6 @@ const Authentication = () => {
           </div>
         </div>
 
-        {/* Display Redux error */}
-        {error && (
-          <div className="error-message">
-            <p className="error-text">{error}</p>
-          </div>
-        )}
-
         <form
           className={`auth-form ${isLogin ? "login-form" : "register-form"}`}
           onSubmit={handleSubmit}
@@ -289,6 +282,13 @@ const Authentication = () => {
                   <p className="error-text">{errors.password}</p>
                 )}
               </div>
+
+              {/* Display Redux error */}
+              {error && (
+                <div className="error-message">
+                  <p className="error-text">{error}</p>
+                </div>
+              )}
 
               <button type="submit" className="submit-btn" disabled={loading}>
                 {loading ? "Đang đăng nhập..." : "Đăng nhập"}

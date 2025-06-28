@@ -64,9 +64,28 @@ public class PaymentService {
                 .collect(Collectors.toList());
     }
 
-    public List<PaymentResponsesDTO> getPaymentsByCustomerId(int customerId) {
+    public List<PaymentResponsesDTO> getPaymentsByCustomerId(HttpServletRequest request) {
+        final String authHeader = request.getHeader("Authorization");
+        final String token = authHeader.substring(7);
+        Claims claims = jwtService.extractAllClaims(token);
+
+        Object customerIdObj = claims.get("userId");
+        Integer customerId = Integer.parseInt(customerIdObj.toString());
         List<Payment> payments = paymentRepository.findByCustomerId(customerId);
         return payments.stream()
+                .map(PaymentResponsesDTO::fromPayment)
+                .collect(Collectors.toList());
+    }
+
+    public List<PaymentResponsesDTO> getPendingPaymentsByCustomerId(HttpServletRequest request) {
+        final String authHeader = request.getHeader("Authorization");
+        final String token = authHeader.substring(7);
+        Claims claims = jwtService.extractAllClaims(token);
+
+        Object customerIdObj = claims.get("userId");
+        Integer customerId = Integer.parseInt(customerIdObj.toString());
+        List<Payment> pendingPayments = paymentRepository.findByCustomerIdAndStatus(customerId, StatusPayment.pending);
+        return pendingPayments.stream()
                 .map(PaymentResponsesDTO::fromPayment)
                 .collect(Collectors.toList());
     }
