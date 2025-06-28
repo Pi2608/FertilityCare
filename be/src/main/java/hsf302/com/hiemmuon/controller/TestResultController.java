@@ -24,10 +24,6 @@ public class TestResultController {
         return ResponseEntity.ok("Đã lưu kết quả xét nghiệm.");
     }
 
-    @GetMapping("/step/{stepId}")
-    public ResponseEntity<List<TestResult>> getByStep(@PathVariable Integer stepId){
-        return ResponseEntity.ok(testResultService.getResultsByStep(stepId));
-    }
 
     @GetMapping("/test-result/customer")
     public ResponseEntity<List<TestResultViewDTO>> getMyTestResult(){

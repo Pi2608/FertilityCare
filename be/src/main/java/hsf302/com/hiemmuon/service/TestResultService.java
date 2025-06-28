@@ -45,9 +45,6 @@ public class TestResultService {
         testResultRepository.save(result);
     }
 
-    public List<TestResult> getResultsByStep(int appointmentId) {
-        return testResultRepository.findByAppointment_AppointmentId(appointmentId);
-    }
 
     public List<TestResultViewDTO> getResultsForCustomer() {
         // Lấy email từ security context
@@ -68,7 +65,7 @@ public class TestResultService {
         }
 
         // Trả về danh sách kết quả xét nghiệm
-        return testResultRepository.getResultsByCustomerId(customer.getCustomerId());
+        return testResultRepository.findAllByCustomerId(customer.getCustomerId());
     }
 
     public void updateTestResult(int id, UpdateTestResultDTO dto){

@@ -8,6 +8,7 @@ import hsf302.com.hiemmuon.dto.entityDto.AppointmentHistoryDTO;
 import hsf302.com.hiemmuon.dto.entityDto.AppointmentOverviewDTO;
 import hsf302.com.hiemmuon.dto.entityDto.AvailableScheduleDTO;
 import hsf302.com.hiemmuon.dto.entityDto.ReExamAppointmentResponseDTO;
+import hsf302.com.hiemmuon.dto.testresult.TestResultViewDTO;
 import hsf302.com.hiemmuon.entity.*;
 import hsf302.com.hiemmuon.enums.StatusAppointment;
 import hsf302.com.hiemmuon.enums.TypeAppointment;
@@ -300,41 +301,33 @@ public class AppointmentService {
 
         dto.setAppointmentId(appointment.getAppointmentId());
         dto.setType(String.valueOf(appointment.getTypeAppointment()));
-
-        // Nếu appointment.getDate() là LocalDateTime
         dto.setDate(appointment.getDate().toLocalDate());
         dto.setStartTime(appointment.getDate().toLocalTime());
 
-        // Doctor info
         if (appointment.getDoctor() != null && appointment.getDoctor().getUser() != null) {
             dto.setDoctorId(appointment.getDoctor().getDoctorId());
             dto.setDoctorName(appointment.getDoctor().getUser().getName());
         }
 
-        // Customer info
         if (appointment.getCustomer() != null && appointment.getCustomer().getUser() != null) {
             dto.setCustomerId(appointment.getCustomer().getCustomerId());
             dto.setCustomerName(appointment.getCustomer().getUser().getName());
 
             if (appointment.getCustomer().getUser().getDob() != null) {
-                dto.setCustomerAge(
-                        LocalDate.now().getYear() - appointment.getCustomer().getUser().getDob().getYear()
-                );
+                dto.setCustomerAge(LocalDate.now().getYear() - appointment.getCustomer().getUser().getDob().getYear());
             }
         }
 
-        dto.setStatus(String.valueOf(appointment.getStatusAppointment()));
+        dto.setStatus(appointment.getStatusAppointment().name());
         dto.setNote(appointment.getNote());
 
         if (appointment.getService() != null) {
             dto.setServiceId(appointment.getService().getServiceId());
         }
 
-        // ✅ TestResult — nếu bạn muốn lấy ID kết quả xét nghiệm theo appointment
-        List<TestResult> results = testResultRepository.findByAppointment_AppointmentId(appointment.getAppointmentId());
-        if (results != null && !results.isEmpty()) {
-            dto.setTestResultId(results.getFirst().getResultId()); // lấy ID đầu tiên (tuỳ bạn chọn logic)
-        }
+        // ✅ Lấy toàn bộ test result theo appointmentId
+        List<TestResultViewDTO> testResults = testResultRepository.getAllByAppointmentId(appointment.getAppointmentId());
+        dto.setTestResultViewDTOList(testResults);
 
         return dto;
     }

@@ -1,10 +1,12 @@
 package hsf302.com.hiemmuon.dto.appointment;
 
+import hsf302.com.hiemmuon.dto.testresult.TestResultViewDTO;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,5 +27,5 @@ public class AppointmentDetailDTO {
     private String status; // confirmed, cancelled, done
     private String note;
     private int serviceId;
-    private int testResultId;
+    private List<TestResultViewDTO> testResultViewDTOList;
 }
