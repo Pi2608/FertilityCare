@@ -17,6 +17,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Tag(name = "9. Medicine Schedule Controller")
@@ -122,8 +123,9 @@ public class MedicineController {
         return ResponseEntity.ok(response);
     }
 
-    @Scheduled(fixedRate = 300000)
+    @Scheduled(fixedRate = 60000)
     public void autoUpdateExpired() {
+        System.err.println("da qua han");
         medicineScheduleService.updateExpiredSchedules();
     }
 }

@@ -107,6 +107,7 @@ public class CycleService {
             eventDate = eventDate.plusMonths(2);
 
             CycleStepDTO cycleStepDTO = CycleStepDTO.builder()
+                    .stepId(cycleStep.getStepId())
                     .stepOrder(cycleStep.getStepOrder())
                     .serive(cycle.getService().getName())
                     .description(cycleStep.getDescription())
@@ -130,19 +131,27 @@ public class CycleService {
     }
 
     private CycleDTO convertToCycleDTO(Cycle cycle) {
-        List<CycleStep> steps = cycleStepRepository.findByCycle_CycleId(cycle.getCycleId());
+        List<CycleStepDTO> stepDTOs = new ArrayList<>();
 
-        List<CycleStepDTO> stepDTOs = steps.stream()
-                .map(step -> CycleStepDTO.builder()
-                        .stepOrder(step.getStepOrder())
-                        .serive(step.getCycle().getService().getName())
-                        .description(step.getDescription())
-                        .eventdate(step.getEventdate())
-                        .statusCycleStep(step.getStatusCycleStep())
-                        .note(step.getNote())
-                        .build()
-                )
-                .collect(Collectors.toList());
+        List<CycleStep> finishedSteps = cycleStepRepository
+                .findByCycle_CycleIdAndStatusCycleStepOrderByStepOrderAsc(
+                        cycle.getCycleId(), StatusCycle.finished
+                );
+
+        if (!finishedSteps.isEmpty()) {
+            CycleStep lastFinishedStep = finishedSteps.get(finishedSteps.size() - 1);
+
+            stepDTOs.add(convertToCycleStepDTO(lastFinishedStep));
+        } else {
+            CycleStep firstOngoing = cycleStepRepository
+                        .findFirstByCycle_CycleIdAndStatusCycleStepOrderByStepOrderAsc(
+                            cycle.getCycleId(), StatusCycle.ongoing
+                    );
+
+            if (firstOngoing != null) {
+                stepDTOs.add(convertToCycleStepDTO(firstOngoing));
+            }
+        }
 
         return CycleDTO.builder()
                 .cycleId(cycle.getCycleId())
@@ -154,6 +163,18 @@ public class CycleService {
                 .status(cycle.getStatus())
                 .note(cycle.getNote())
                 .cycleStep(stepDTOs)
+                .build();
+    }
+
+    private CycleStepDTO convertToCycleStepDTO(CycleStep step) {
+        return CycleStepDTO.builder()
+                .stepId(step.getStepId())
+                .stepOrder(step.getStepOrder())
+                .serive(step.getCycle().getService().getName())
+                .description(step.getDescription())
+                .eventdate(step.getEventdate())
+                .statusCycleStep(step.getStatusCycleStep())
+                .note(step.getNote())
                 .build();
     }
 }
