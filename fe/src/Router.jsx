@@ -7,6 +7,7 @@ import CusLayout from '@components/Layout/CusLayout/CusLayout';
 import DocLayout from '@components/Layout/DocLayout/DocLayout';
 import ManagerLayout from '@components/Layout/ManagerLayout/ManagerLayout.jsx';
 
+
 import AdminLayout from '@components/Layout/AdminLayout/AdminLayout.jsx';
 import Homepage from "@customerpages/Homepage/Homepage";
 import TreatmentMethod from '@customerpages/TreatmentMethod/TreatmentMethod';
@@ -24,6 +25,7 @@ import Notification from '@customerpages/Notification/Notification';
 import TreatmentHistory from '@customerpages/TreatmentHistory/TreatmentHistory';
 import Pill from '@customerpages/Dashboard/Pill/Pill';
 
+
 import DocDashboard from '@doctorpages/Dashboard/DocDashboard';
 import Overview from './Pages/doctor/Dashboard/OverviewLayout/Overview';
 import Appointments from './Pages/doctor/Dashboard/AppointmentsLayout/Appointments';
@@ -33,13 +35,16 @@ import Message from './Pages/doctor/Dashboard/MessageLayout/Message';
 import ProfileLayout from './Pages/doctor/Dashboard/ProfileLayout/ProfileLayout';
 import PatientRecord from './Pages/doctor/Dashboard/PatientRecord/PatientRecord';
 
+
 import PatientProfileLayout from './Pages/doctor/Dashboard/PatientProfileLayout/PatientProfileLayout';
 import PatientAppointment from './Pages/doctor/Dashboard/PatientAppointment/PatientAppointment';
+
 
 import Doctor from './Pages/manager/Doctor/Doctor';
 import TreatmentService from './Pages/manager/TreatmentService/TreatmentService';
 import SuccessRate from './Pages/manager/TreatmentService/SuccessRate';
 import ProcessEdit from './Pages/manager/TreatmentService/ProcessEdit';
+
 
 // Admin components
 import AdminAppointment from './Pages/admin/Appointment/Appointment';
@@ -49,27 +54,29 @@ import AdminTreatmentService from './Pages/admin/TreatmentService/TreatmentServi
 import DoctorDetail from './Pages/customer/DoctorDetail/DoctorDetail';
 import Dashboard from './Pages/admin/Dashboard/Dashboard';
 
+
 const USER_ROLES = {
   CUSTOMER: "customer",
-  ADMIN: "admin", 
+  ADMIN: "admin",
   DOCTOR: "doctor",
   MANAGER: "manager"
 };
 
+
 // Protected Route Components
 const ProtectedRoute = ({ children, allowedRoles = [], requireAuth = true }) => {
   const { isAuthenticated, role, loading } = useSelector((state) => state.auth);
-  
-  
+ 
+ 
   // Redirect to login if authentication is required but user is not authenticated
   if (requireAuth && !isAuthenticated) {
     return <Navigate to="/authentication" replace />;
   }
-  
+ 
   if (allowedRoles.length === 0) {
     return <>{children}</>;
   }
-  
+ 
   if (!allowedRoles.includes(role)) {
     switch (role) {
       case USER_ROLES.ADMIN:
@@ -84,9 +91,10 @@ const ProtectedRoute = ({ children, allowedRoles = [], requireAuth = true }) => 
         return <Navigate to="/homepage" replace />;
     }
   }
-  
+ 
   return <>{children}</>;
 };
+
 
 // Specific role-based route components for cleaner code
 const AdminRoute = ({ children }) => (
@@ -95,11 +103,13 @@ const AdminRoute = ({ children }) => (
   </ProtectedRoute>
 );
 
+
 const DoctorRoute = ({ children }) => (
   <ProtectedRoute allowedRoles={[USER_ROLES.DOCTOR]}>
     {children}
   </ProtectedRoute>
 );
+
 
 const ManagerRoute = ({ children }) => (
   <ProtectedRoute allowedRoles={[USER_ROLES.MANAGER]}>
@@ -107,11 +117,13 @@ const ManagerRoute = ({ children }) => (
   </ProtectedRoute>
 );
 
+
 const CustomerRoute = ({ children }) => (
   <ProtectedRoute allowedRoles={[USER_ROLES.CUSTOMER]}>
     {children}
   </ProtectedRoute>
 );
+
 
 // Public routes (no authentication required)
 const PublicRoute = ({ children }) => (
@@ -120,10 +132,11 @@ const PublicRoute = ({ children }) => (
   </ProtectedRoute>
 );
 
+
 // Guest routes (only for non-authenticated users)
 const GuestRoute = ({ children }) => {
   const { isAuthenticated, role } = useSelector((state) => state.auth);
-  
+ 
   if (isAuthenticated) {
     // Redirect authenticated users to their appropriate dashboard
     switch (role) {
@@ -139,9 +152,10 @@ const GuestRoute = ({ children }) => {
         return <Navigate to="/homepage" replace />;
     }
   }
-  
+ 
   return <>{children}</>;
 };
+
 
 export const router = createBrowserRouter([
   {
@@ -415,6 +429,14 @@ export const router = createBrowserRouter([
         path: "treatment-service/process/:serviceId",
         element: <ProcessEdit/>,
       },
+      {
+        path: "message",
+        element: <TreatmentService/>,
+      },
+      {
+        path: "setting",
+        element: <TreatmentService/>,
+      },
     ],
   },
   {
@@ -460,5 +482,6 @@ export const router = createBrowserRouter([
     ],
   },
 ]);
+
 
 export { USER_ROLES };

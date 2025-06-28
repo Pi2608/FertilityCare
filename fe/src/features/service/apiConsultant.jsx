@@ -1,7 +1,11 @@
 import axios from "axios";
 
 
+
+
 const API_BASE = "http://localhost:8080/api/";
+
+
 
 
 const axiosInstance = axios.create({
@@ -10,6 +14,8 @@ const axiosInstance = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+
 
 
 // Gắn token từ localStorage
@@ -22,6 +28,8 @@ axiosInstance.interceptors.request.use((config) => {
 });
 
 
+
+
 const apiConsultant = {
   getCustomerInfo: async () => {
     const res = await axiosInstance.get("customer/info");
@@ -29,10 +37,14 @@ const apiConsultant = {
   },
 
 
+
+
   getActiveDoctors: async () => {
     const res = await axiosInstance.get("doctors/active");
     return res.data;
   },
+
+
 
 
   getAvailableSchedules: async (doctorId, date) => {
@@ -43,11 +55,24 @@ const apiConsultant = {
   },
 
 
+  getUnavailableSchedules: async (doctorId, date) => {
+    const res = await axiosInstance.get(`appointment-services/doctors/${doctorId}/unavailable-schedules`, {
+      params: { date },
+    });
+    return res.data;
+  },
+ 
+
+
+
+
   registerAppointment: async (data) => {
     const res = await axiosInstance.post("appointment-services/register/appointments", data);
     return res.data;
   },
 };
+
+
 
 
 export default apiConsultant;

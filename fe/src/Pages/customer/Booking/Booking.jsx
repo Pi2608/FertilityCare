@@ -107,6 +107,17 @@ const Booking = () => {
   const [doctors, setDoctors] = useState([]);
   const [availableSchedules, setAvailableSchedules] = useState([]);
   const today = new Date();
+  const FIXED_TIME_SLOTS = [
+    "09:00",
+    "10:00",
+    "11:00",
+    "12:00",
+    "13:00",
+    "14:00",
+    "15:00",
+    "16:00",
+    "17:00",
+  ];
 
 
   useEffect(() => {
@@ -212,45 +223,72 @@ const Booking = () => {
 
 
   const handleDoctorSelect = async (doctor) => {
-    // Gán selectedDoctor với id tương thích backend
     setSelectedDoctor({
       ...doctor,
-      id: doctor.userId, // Đảm bảo có 'id' để gửi đi đúng trong payload
+      id: doctor.userId,
     });
 
 
+    // Nếu đã có ngày → gọi lại getUnavailableSchedules
     if (selectedDate) {
       try {
-        const res = await apiConsultant.getAvailableSchedules(
+        const unavailable = await apiConsultant.getUnavailableSchedules(
           doctor.userId,
           selectedDate
         );
-        setAvailableSchedules(res);
+
+
+        const busyTimes = unavailable.map((slot) =>
+          slot.startTime?.slice(0, 5)
+        );
+
+
+        const available = FIXED_TIME_SLOTS.filter(
+          (slot) => !busyTimes.includes(slot)
+        );
+
+
+        setAvailableSchedules(available);
       } catch (err) {
-        console.error("Lỗi lấy lịch rảnh:", err);
-        setAvailableSchedules([]);
+        console.error("Lỗi khi lấy lịch bận của bác sĩ:", err);
+        setAvailableSchedules(FIXED_TIME_SLOTS);
       }
     }
   };
 
 
   const handleDateSelect = async (date) => {
-    const formatted = `2025-06-${String(date).padStart(2, "0")}`; // yyyy-MM-dd
+    const formatted = `2025-06-${String(date).padStart(2, "0")}`;
     setSelectedDate(formatted);
     setShowCalendar(false);
 
 
-    if (selectedDoctor) {
-      try {
-        const res = await apiConsultant.getAvailableSchedules(
-          selectedDoctor.userId,
-          formatted
-        );
-        setAvailableSchedules(res);
-      } catch (err) {
-        console.error("Lỗi lấy lịch rảnh:", err);
-        setAvailableSchedules([]);
-      }
+    // Nếu chưa chọn bác sĩ thì vẫn hiển thị toàn bộ FIXED_TIME_SLOTS
+    if (!selectedDoctor) {
+      setAvailableSchedules(FIXED_TIME_SLOTS);
+      return;
+    }
+
+
+    try {
+      const unavailable = await apiConsultant.getUnavailableSchedules(
+        selectedDoctor.userId,
+        formatted
+      );
+
+
+      const busyTimes = unavailable.map((slot) => slot.startTime?.slice(0, 5));
+
+
+      const available = FIXED_TIME_SLOTS.filter(
+        (slot) => !busyTimes.includes(slot)
+      );
+
+
+      setAvailableSchedules(available);
+    } catch (err) {
+      console.error("Lỗi lấy lịch rảnh:", err);
+      setAvailableSchedules(FIXED_TIME_SLOTS); // fallback khi lỗi
     }
   };
 
@@ -275,12 +313,13 @@ const Booking = () => {
 
   const handleFinalSubmit = async () => {
     try {
+      const formattedTime = selectedTime.slice(0, 5); // Lấy đúng định dạng HH:mm (cắt bỏ nếu lỡ có giây)
       const payload = {
         doctorId: selectedDoctor?.userId,
-        customerId: customerId,
-        date: `${selectedDate}T${selectedTime}`,
+        date: `${selectedDate}T${formattedTime}`,
         note: personalInfo.reason,
       };
+     
 
 
       console.log("🟡 DỮ LIỆU GỬI LÊN API ĐẶT LỊCH:", payload);
@@ -541,8 +580,7 @@ const Booking = () => {
           <div className="time-slots">
             {Array.isArray(availableSchedules) &&
             availableSchedules.length > 0 ? (
-              availableSchedules.map((slot) => {
-                const time = slot.startTime.slice(0, 5);
+              availableSchedules.map((time) => {
                 const isSelected = selectedTime === time;
                 return (
                   <button
