@@ -1,4 +1,5 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import ApiGateway from "@features/service/apiGateway"
 import "./PatientProfileLayout1.css"
 
 
@@ -23,9 +24,6 @@ const PatientProfileLayout1 = () => {
       [section]: !prev[section],
     }))
   }
-
-
-
 
   const patientData = {
     name: "Nguyễn Thị Hoa",
@@ -58,9 +56,6 @@ const PatientProfileLayout1 = () => {
     }
   }
 
-
-
-
   const tabs = [
     // { id: "overview", label: "Tổng quan", icon: "👤" },
     // { id: "schedule", label: "Lịch hẹn", icon: "📅" },
@@ -68,12 +63,7 @@ const PatientProfileLayout1 = () => {
     { id: "results", label: "Kết quả xét nghiệm", icon: "📋" },
     { id: "medications", label: "Thuốc", icon: "💊" },
     { id: "service", label: "Chỉ định dịch vụ", icon: "🧪" }
-
-
   ]
-
-
-
 
   // Data for timeline - linked to other tabs
   const treatmentPhases = [
@@ -141,24 +131,7 @@ const PatientProfileLayout1 = () => {
   ]
 
 
-  const renderServiceTab = () => (
-    <div className="patient-profile-tab-content">
-      <div className="patient-profile-medications-header">
-        <div>
-          <h3>Chỉ định dịch vụ</h3>
-          <p>Chọn dịch vụ chỉ định cho bệnh nhân</p>
-        </div>
-      </div>
-      <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
-        <select className="patient-profile-btn-outline" style={{ minWidth: "200px" }}>
-          <option value="">-- Chọn dịch vụ --</option>
-          <option value="IVF">IVF</option>
-          <option value="IUI">IUI</option>
-        </select>
-        <button className="patient-profile-btn-primary">Lưu</button>
-      </div>
-    </div>
-  );
+  const renderServiceTab = () => <ServiceTabContent />;
  
   const renderOverviewTab = () => (
     <div className="patient-profile-tab-content">
@@ -779,7 +752,151 @@ const PatientProfileLayout1 = () => {
   )
 }
 
-
-
-
 export default PatientProfileLayout1
+
+const ServiceTabContent = () => {
+  const today = new Date();
+
+  const [paymentForm, setPaymentForm] = useState({
+    customerId: "",
+    serviceId: "",
+    appointmentDate: "",
+    note: "",
+    total: 0,
+    type: "",
+  });
+
+  const [services, setServices] = useState([
+    { id: 1, name: "IUI", price: 5000000 },
+    { id: 2, name: "IVF", price: 70000000 },
+  ]);
+
+  const typeOptions = [
+    { value: "test", label: "Test" },
+    { value: "treatment", label: "Điều trị" },
+  ];
+
+  useEffect(() => {
+    if (paymentForm.serviceId) {
+      const selectedService = services.find(service => service.id.toString() === paymentForm.serviceId);
+      if (selectedService) {
+        setPaymentForm(prev => ({ ...prev, total: selectedService.price }));
+      }
+    } else {
+      setPaymentForm(prev => ({ ...prev, total: 0 }));
+    }
+  }, [paymentForm.serviceId, services]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setPaymentForm(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const res = await ApiGateway.createPayment(paymentForm);
+      console.log("Tạo chỉ định thành công:", res);
+      alert("Tạo chỉ định thành công!");
+      // Có thể reset form hoặc cập nhật state khác nếu cần
+    } catch (error) {
+      console.error("Tạo chỉ định thất bại:", error);
+      alert("Đã xảy ra lỗi khi tạo chỉ định.");
+    }
+  };
+
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(amount);
+  };
+
+  const isFormValid = paymentForm.serviceId && paymentForm.appointmentDate && paymentForm.type;
+
+  return (
+    <div className="patient-profile-tab-content">
+      <h3>Chỉ định dịch vụ</h3>
+      <p>Điền thông tin chỉ định dịch vụ cho bệnh nhân</p>
+
+      <div className="form-group">
+        <label className="form-label required">Phương pháp</label>
+        <select
+          className="form-select"
+          name="serviceId"
+          value={paymentForm.serviceId}
+          onChange={handleInputChange}
+        >
+          <option value="">Chọn phương pháp</option>
+          {services.map(service => (
+            <option key={service.id} value={service.id}>
+              {service.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="form-group">
+        <label className="form-label required">Ngày & Giờ khám</label>
+        <input
+          type="datetime-local"
+          className="form-input"
+          name="appointmentDate"
+          value={paymentForm.appointmentDate}
+          min={today.toISOString().slice(0, 16)}
+          step={3600}
+          onChange={handleInputChange}
+        />
+      </div>
+
+      <div className="form-group">
+        <label className="form-label required">Loại</label>
+        <select
+          className="form-select"
+          name="type"
+          value={paymentForm.type}
+          onChange={handleInputChange}
+        >
+          <option value="">Chọn loại khám</option>
+          {typeOptions.map(option => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="form-group">
+        <label className="form-label">Ghi chú</label>
+        <textarea
+          className="form-textarea"
+          name="note"
+          rows={3}
+          value={paymentForm.note}
+          onChange={handleInputChange}
+        />
+      </div>
+
+      <div className="form-group">
+        <label className="form-label">Tổng số tiền</label>
+        <input
+          type="text"
+          className="form-input"
+          value={formatCurrency(paymentForm.total)}
+          disabled
+        />
+      </div>
+
+      <div className="button-group">
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={handleSubmit}
+          disabled={!isFormValid}
+        >
+          Tạo lịch khám
+        </button>
+      </div>
+    </div>
+  );
+};

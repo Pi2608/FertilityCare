@@ -138,3 +138,138 @@
 .appointment-page .appointment-card.completed {
   border-left: 4px solid #4caf50;
 }
+
+.appointment-page .notification-card {
+  display: flex;
+  align-items: flex-start;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-left: 4px solid #d6004c;
+}
+
+.appointment-page .notification-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+} 
+
+.appointment-page .notification-card .payment-icon {
+  font-size: 24px;
+  width: 48px;
+  height: 48px;
+  margin-right: 1rem;
+  padding: 0.5rem;
+  border-radius: 50%;
+  border: 1px solid #dee2e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.appointment-page .notification-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.appointment-page .notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.appointment-page .notification-header h5 {
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.appointment-page .notification-time {
+  font-size: 0.75rem;
+  color: #999;
+  white-space: nowrap;
+  margin-left: 1rem;
+}
+
+.appointment-page .notification-message {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.875rem;
+  color: #555;
+  line-height: 1.4;
+}
+
+.appointment-page .notification-meta {
+  margin: 0.25rem 0;
+  font-size: 0.75rem;
+  color: #777;
+}
+
+.appointment-page .doctor-name {
+  font-style: italic;
+  color: #d6004c;
+}
+
+.appointment-page .medication-name {
+  font-weight: 500;
+  color: #7b1fa2;
+}
+
+.appointment-page .test-type {
+  color: #f57c00;
+}
+
+.appointment-page .payment-total {
+  background: #e8f5e8;
+  color: #388e3c;
+}
+
+.appointment-page .notification-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: 1rem;
+  flex-shrink: 0;
+}
+
+
+.appointment-page .action-btn {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+
+.appointment-page .action-btn.primary {
+  background-color: #d6004c;
+  color: #fff;
+}
+
+
+.appointment-page .action-btn.primary:hover {
+  background-color: #b8003f;
+}
+
+
+.appointment-page .action-btn.secondary {
+  background-color: #fff;
+  color: #d6004c;
+  border: 1px solid #d6004c;
+}
+
+
+.appointment-page .action-btn.secondary:hover {
+  background-color: #d6004c;
+  color: #fff;
+}
