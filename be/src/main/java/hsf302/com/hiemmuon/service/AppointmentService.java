@@ -35,7 +35,6 @@ public class AppointmentService {
     @Autowired
     private CustomerRepository  customerRepository;
 
-
     @Autowired
     private AppointmentRepository appointmentRepository;
 
@@ -165,6 +164,7 @@ public class AppointmentService {
         newSchedule.setStatus(false); // true = bận
         doctorScheduleRepository.save(newSchedule);
     }
+
 
     public List<ReExamAppointmentResponseDTO> getReExamAppointmentsForCustomer(int customerId){
         List<Appointment> appointments = appointmentRepository.findByCustomer_CustomerIdAndTypeAppointment(

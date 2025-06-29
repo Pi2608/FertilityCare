@@ -33,5 +33,5 @@ build/
 .vscode/
 
 # Ignore config with secrets
-be/src/main/resources/application.properties
+src/main/resources/application.properties
 

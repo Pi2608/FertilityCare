@@ -1,0 +1,20 @@
+.payment-method-card {
+  flex: 1 1 30%;
+  border: 2px solid #ccc;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.payment-method-card.selected {
+  border-color: #007bff;
+  background-color: #e6f0ff;
+}
+
+.payment-method-card img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}

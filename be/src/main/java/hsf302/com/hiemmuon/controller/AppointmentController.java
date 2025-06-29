@@ -87,18 +87,19 @@ public class AppointmentController {
         return ResponseEntity.ok("Đặt lịch tái khám thành công.");
     }
 
-    @Operation(
-            summary = "Lịch tái khám của khách hàng",
-            description = "Trả về tất cả các lịch tái khám đã được bác sĩ đặt cho khách hàng hiện tại."
-    )
-    @GetMapping("/appointments/reexam")
-    public ResponseEntity<List<ReExamAppointmentResponseDTO>> getOwnReExamAppointments() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUserByEmail(email);
-        Customer customer = customerService.getCustomerById(user.getUserId());
-        List<ReExamAppointmentResponseDTO> result = appointmentService.getReExamAppointmentsForCustomer(customer.getCustomerId());
-        return ResponseEntity.ok(result);
-    }
+//    @Operation(
+//            summary = "Lịch tái khám của khách hàng",
+//            description = "Trả về tất cả các lịch tái khám đã được bác sĩ đặt cho khách hàng hiện tại."
+//    )
+//    @GetMapping("/appointments/reexam")
+//    public ResponseEntity<List<ReExamAppointmentResponseDTO>> getOwnReExamAppointments() {
+//        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+//        User user = userService.getUserByEmail(email);
+//        Customer customer = customerService.getCustomerById(user.getUserId());
+//        Doctor doctor = doctorService.getDoctorById(user.getUserId());
+//        List<ReExamAppointmentResponseDTO> result = appointmentService.getReExamAppointmentsForaDoctor(doctor.getDoctorId());
+//        return ResponseEntity.ok(result);
+//    }
 
     @Operation(
             summary = "Hủy cuộc hẹn",

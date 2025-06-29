@@ -1,0 +1,44 @@
+.payment-container {
+    max-width: 600px;
+    margin: 15vh auto;
+    padding: 20px;
+    font-family: sans-serif;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.payment-container .service-info {
+    line-height: 1.3;
+    margin-bottom: 20px;
+    background: #f8f8f8;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.payment-container .payment-methods {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.payment-container .total-section {
+  text-align: center;
+}
+
+.payment-container .total-section button {
+  background-color: #e11d48;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.3s ease;
+}
+
+.total-section button:hover {
+  background-color: #c41a3b;
+}

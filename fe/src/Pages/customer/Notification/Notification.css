@@ -206,10 +206,15 @@
 }
 
 
-.notification-page .notification-icon {
+.notification-page .notification-icon,
+.notification-page .payment-icon {
+  font-size: 24px;
+  width: 48px;
+  height: 48px;
   margin-right: 1rem;
   padding: 0.5rem;
   border-radius: 50%;
+  border: 1px solid #dee2e6;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -217,7 +222,8 @@
 }
 
 
-.notification-page .appointment-icon {
+.notification-page .appointment-icon,
+.notification-page .payment-icon {
   background: #e3f2fd;
   color: #1976d2;
 }
