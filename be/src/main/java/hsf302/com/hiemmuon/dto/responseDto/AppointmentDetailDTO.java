@@ -1,8 +1,7 @@
 package hsf302.com.hiemmuon.dto.responseDto;
 
 import hsf302.com.hiemmuon.dto.testresult.TestResultViewDTO;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
