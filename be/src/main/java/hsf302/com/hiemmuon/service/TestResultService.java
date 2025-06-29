@@ -65,7 +65,7 @@ public class TestResultService {
         }
 
         // Trả về danh sách kết quả xét nghiệm
-        return testResultRepository.findAllByCustomerId(customer.getCustomerId());
+        return testResultRepository.getAllByCustomerId(customer.getCustomerId());
     }
 
     public void updateTestResult(int id, UpdateTestResultDTO dto){
