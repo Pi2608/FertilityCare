@@ -31,14 +31,6 @@ public class TestResultController {
         return ResponseEntity.ok("Đã lưu kết quả xét nghiệm.");
     }
 
-    @Operation(
-            summary = "Xem kết quả xét nghiệm theo bước điều trị",
-            description = "API giúp bác sĩ và hệ thống truy xuất tất cả kết quả xét nghiệm liên quan đến một bước điều trị (stepId)."
-    )
-    @GetMapping("/step/{stepId}")
-    public ResponseEntity<List<TestResult>> getByStep(@PathVariable Integer stepId) {
-        return ResponseEntity.ok(testResultService.getResultsByStep(stepId));
-    }
 
     @Operation(
             summary = "Bệnh nhân xem kết quả xét nghiệm của mình",

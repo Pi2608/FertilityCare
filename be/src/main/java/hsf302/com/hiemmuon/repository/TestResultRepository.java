@@ -12,13 +12,28 @@ import java.util.List;
 @Repository
 public interface TestResultRepository extends JpaRepository<TestResult, Integer> {
     List<TestResult> findByAppointment_AppointmentId(Integer appointmentId);
+
     @Query("""
     SELECT new hsf302.com.hiemmuon.dto.testresult.TestResultViewDTO(
-        r.name, r.value, r.unit, r.referenceRange,
-        r.testDate, r.note, r.appointment.note, r.appointment.cycleStep.description
+        r.resultId, r.name, r.value, r.unit, r.referenceRange,
+        r.testDate, r.note, r.appointment.appointmentId
     )
     FROM TestResult r
-    WHERE r.appointment.customer.customerId = :customerId
+    JOIN r.appointment a
+    WHERE a.customer.customerId = :customerId
 """)
-    List<TestResultViewDTO> getResultsByCustomerId(@Param("customerId") int customerId);
+    List<TestResultViewDTO> getAllByCustomerId(@Param("customerId") int customerId);
+
+
+
+@Query("""
+    SELECT new hsf302.com.hiemmuon.dto.testresult.TestResultViewDTO(
+    r.resultId, r.name, r.value, r.unit, r.referenceRange, r.testDate, r.note
+    )
+    FROM TestResult r
+    WHERE r.appointment.appointmentId = :appointmentId
+""")
+List<TestResultViewDTO> getAllByAppointmentId(@Param("appointmentId") int appointmentId);
+
+
 }
