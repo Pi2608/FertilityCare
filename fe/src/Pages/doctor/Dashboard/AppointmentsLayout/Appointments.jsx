@@ -1,25 +1,27 @@
 import React, { useState, useEffect } from "react";
 import apiAppointment from "../../../../features/service/apiAppointment";
 import "./Appointments.css";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Appointments() {
-
   const [appointments, setAppointments] = useState([]);
+  const navigate = useNavigate();
 
 
-useEffect(() => {
-  const fetchAppointments = async () => {
-    try {
-      const data = await apiAppointment.getAllAppointments();
-      setAppointments(data);
-    } catch (err) {
-      console.error("Lỗi khi gọi API lịch hẹn:", err);
-    }
-  };
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const data = await apiAppointment.getAllAppointments();
+        setAppointments(data);
+      } catch (err) {
+        console.error("Lỗi khi gọi API lịch hẹn:", err);
+      }
+    };
 
 
-  fetchAppointments();
-}, []);
+    fetchAppointments();
+  }, []);
 
 
   return (
@@ -90,12 +92,20 @@ useEffect(() => {
                 <div className="actions">
                   {item.status === "confirmed" ? (
                     <>
-                      <a
-                        href="/doctor-dashboard/appointments/session"
+                      <button
+                        onClick={() =>
+                          navigate(
+                            item.type === "tu_van"
+                              ? "/doctor-dashboard/appointments/tu_van"
+                              : "/doctor-dashboard/appointments/dieu_tri"
+                          )
+                        }
                         className="btn btn-start no-underline"
                       >
                         Bắt đầu
-                      </a>
+                      </button>
+
+
                       <a href="" className="btn btn-message no-underline">
                         Nhắn tin
                       </a>
@@ -124,6 +134,8 @@ useEffect(() => {
         <button>Tiếp</button>
       </div>
     </div>
-   
   );
 }
+
+
+
