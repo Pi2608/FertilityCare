@@ -22,7 +22,7 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-    @Value("${vnpay.returnUrl")
+    @Value("${vnpay.returnUrl}")
     private String returnUrl;
 
     @Value("${vnpay.redirectUrl}")
