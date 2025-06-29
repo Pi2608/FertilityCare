@@ -10,6 +10,7 @@ const TreatmentService = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [services, setServices] = useState([]);
+  const [newServiceDraft, setNewServiceDraft] = useState(null);
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -90,18 +91,54 @@ const TreatmentService = () => {
   };
 
   const handleAddService = () => {
-    const newService = {
-      id: Date.now(),
-      order: services.length + 1,
-      name: "Dịch vụ mới",
-      overview: "Mô tả dịch vụ",
-      successRate: "Xem chi tiết",
-      process: "Xem quy trình",
-      price: "0",
-      isEditing: true,
+    if (newServiceDraft) return; // Chỉ cho tạo 1 dịch vụ mới tại 1 thời điểm
+
+    setNewServiceDraft({
+      name: "",
+      description: "",
+      price: "",
+    });
+  };
+
+  const handleCreateService = async () => {
+    if (
+      !newServiceDraft.name ||
+      !newServiceDraft.description ||
+      !newServiceDraft.price
+    ) {
+      alert("Vui lòng nhập đầy đủ thông tin.");
+      return;
+    }
+
+    const payload = {
+      name: newServiceDraft.name,
+      description: newServiceDraft.description,
+      price: Number(newServiceDraft.price),
+      successRate: 100,
+      specialfications: "string",
     };
-    setServices([...services, newService]);
-    setEditingService(newService.id);
+
+    console.log("Payload gửi lên:", payload);
+
+    try {
+      const created = await TreatmentServiceAPI.createService(payload);
+      const newService = {
+        id: created.serviceId,
+        order: services.length + 1,
+        name: created.name,
+        overview: created.description,
+        successRate: "Xem chi tiết",
+        process: "Xem quy trình",
+        price: created.price.toString(),
+        isActive: created.active,
+        isEditing: false,
+      };
+      setServices([...services, newService]);
+      setNewServiceDraft(null);
+    } catch (error) {
+      console.error("Lỗi khi tạo dịch vụ:", error.response?.data || error); // DEBUG LỖI CỤ THỂ
+      alert("Không thể tạo dịch vụ mới.");
+    }
   };
 
   const handleDelete = (serviceId) => {
@@ -203,6 +240,73 @@ const TreatmentService = () => {
               </tr>
             </thead>
             <tbody>
+              {newServiceDraft && (
+                <tr>
+                  <td>{services.length + 1}</td>
+                  <td>
+                    <input
+                      type="text"
+                      value={newServiceDraft.name}
+                      onChange={(e) =>
+                        setNewServiceDraft({
+                          ...newServiceDraft,
+                          name: e.target.value,
+                        })
+                      }
+                      placeholder="Tên dịch vụ"
+                      className="edit-input"
+                    />
+                  </td>
+                  <td>
+                    <textarea
+                      value={newServiceDraft.description}
+                      onChange={(e) =>
+                        setNewServiceDraft({
+                          ...newServiceDraft,
+                          description: e.target.value,
+                        })
+                      }
+                      placeholder="Tổng quan"
+                      className="edit-textarea"
+                      rows="2"
+                    />
+                  </td>
+                  <td>Xem chi tiết</td>
+                  <td>Xem quy trình</td>
+                  <td>
+                    <input
+                      type="text"
+                      value={newServiceDraft.price}
+                      onChange={(e) =>
+                        setNewServiceDraft({
+                          ...newServiceDraft,
+                          price: e.target.value,
+                        })
+                      }
+                      placeholder="Giá"
+                      className="edit-input"
+                    />
+                  </td>
+                  <td>--</td>
+                  <td className="action-cell">
+                    <div className="edit-actions">
+                      <button
+                        className="save-btn"
+                        onClick={handleCreateService}
+                      >
+                        Lưu
+                      </button>
+                      <button
+                        className="cancel-btn"
+                        onClick={() => setNewServiceDraft(null)}
+                      >
+                        Hủy
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              )}
+
               {filteredServices.map((service) => (
                 <tr key={service.id}>
                   <td>{service.order}</td>
