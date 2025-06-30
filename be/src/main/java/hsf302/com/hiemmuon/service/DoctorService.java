@@ -5,6 +5,7 @@ import hsf302.com.hiemmuon.dto.responseDto.DoctorDTO;
 import hsf302.com.hiemmuon.dto.updateDto.UpdateDoctorDTO;
 import hsf302.com.hiemmuon.entity.Doctor;
 import hsf302.com.hiemmuon.entity.User;
+import hsf302.com.hiemmuon.exception.NotFoundException;
 import hsf302.com.hiemmuon.repository.DoctorRepository;
 import hsf302.com.hiemmuon.repository.RoleRepository;
 import hsf302.com.hiemmuon.repository.UserRepository;
@@ -36,7 +37,8 @@ public class DoctorService {
     private UserService userService;
 
     public Doctor getDoctorById(int id) {
-        return doctorRepository.findById(id);
+        return doctorRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy bác sĩ với ID: " + id));
     }
 
     public Doctor saveDoctor(Doctor doctor) {
@@ -44,7 +46,8 @@ public class DoctorService {
     }
 
     public DoctorDTO getDoctorByDoctorId(int id) {
-        Doctor doctor = doctorRepository.findById(id);
+        Doctor doctor = doctorRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy bác sĩ với ID: " + id));
         DoctorDTO dto = convertToDoctorDTO(doctor);
         return dto;
     }
@@ -95,7 +98,7 @@ public class DoctorService {
         return doctorRepository.save(doctor);
     }
 
-    public Doctor updateDoctorMe(HttpServletRequest request, UpdateDoctorDTO updateDoctorDTO) {
+    public DoctorDTO updateDoctorMe(HttpServletRequest request, UpdateDoctorDTO updateDoctorDTO) {
 
         User existingDoctor = userService.getUserByJwt(request);
 
@@ -114,7 +117,7 @@ public class DoctorService {
         if (updateDoctorDTO.getDescription() != null) {
             existingDoctor.getDoctor().setSpecification(updateDoctorDTO.getDescription());
         }
-        return saveDoctor(existingDoctor.getDoctor());
+        return convertToDoctorDTO(saveDoctor(existingDoctor.getDoctor()));
     }
 
     public Doctor updateDoctorActive(int id, boolean active) {

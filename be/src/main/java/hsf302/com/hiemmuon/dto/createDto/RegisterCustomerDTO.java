@@ -3,7 +3,9 @@ package hsf302.com.hiemmuon.dto.createDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import hsf302.com.hiemmuon.enums.Genders;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -11,6 +13,8 @@ import java.time.LocalDate;
 @JsonIgnoreProperties(ignoreUnknown = false)
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class RegisterCustomerDTO {
 
     @NotBlank(message = "Tên không được để trống")

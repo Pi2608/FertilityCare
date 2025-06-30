@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class CycleStepDTO {
+    private int stepId;
     private int stepOrder;
     private String serive;
     private String description;

@@ -109,9 +109,9 @@ public class DoctorController {
     public ResponseEntity<ApiResponse<?>> updateDoctor(
             HttpServletRequest request,
             @RequestBody UpdateDoctorDTO updateDoctorDTO) {
-        Doctor savedDoctor = doctorService.updateDoctorMe(request, updateDoctorDTO);
+        DoctorDTO savedDoctor = doctorService.updateDoctorMe(request, updateDoctorDTO);
 
-        ApiResponse<Doctor> response = new ApiResponse<>(
+        ApiResponse<DoctorDTO> response = new ApiResponse<>(
                 200,
                 "Doctor updated successfully",
                 savedDoctor

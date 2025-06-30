@@ -7,6 +7,7 @@ import hsf302.com.hiemmuon.dto.testresult.TestResultViewDTO;
 import hsf302.com.hiemmuon.entity.*;
 import hsf302.com.hiemmuon.enums.StatusAppointment;
 import hsf302.com.hiemmuon.enums.TypeAppointment;
+import hsf302.com.hiemmuon.exception.NotFoundException;
 import hsf302.com.hiemmuon.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,10 +57,8 @@ public class AppointmentService {
 
     public void registerAppointment(CreateAppointmentDTO dto, int customerId) {
         // Tìm bác sĩ
-        Doctor doctor = doctorRepository.findById(dto.getDoctorId());
-        if (doctor == null) {
-            throw new RuntimeException("Không tìm thấy bác sĩ");
-        }
+        Doctor doctor = doctorRepository.findById(dto.getDoctorId())
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy bác sĩ với ID: " + dto.getDoctorId()));
 
         // Lấy khách hàng
         Customer customer = customerRepository.findById(customerId)

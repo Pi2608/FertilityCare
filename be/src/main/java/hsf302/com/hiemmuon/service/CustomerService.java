@@ -10,10 +10,16 @@ import hsf302.com.hiemmuon.enums.Genders;
 import hsf302.com.hiemmuon.repository.CustomerRepository;
 import hsf302.com.hiemmuon.repository.RoleRepository;
 import hsf302.com.hiemmuon.repository.UserRepository;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -33,6 +39,9 @@ public class CustomerService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JavaMailSender mailSender;
 
     public List<CustomerDTO> getAllCustomers() {
         List<Customer> customers = customerRepository.findAllWithUser();
@@ -56,7 +65,7 @@ public class CustomerService {
         User user = userRepository.findByEmail(email);
 
         Customer customer = customerRepository.findByUser(user);
-        if(customer == null) throw new RuntimeException("Không tìm tháy customer");
+        if (customer == null) throw new RuntimeException("Không tìm tháy customer");
 
         CustomerDTO dto = new CustomerDTO();
         dto.setId(customer.getCustomerId());
@@ -73,12 +82,12 @@ public class CustomerService {
     public void updateMyInfo(String email, UpdateCustomerDTO dto) {
         User user = userRepository.findByEmail(email);
 
-        if(user == null){
+        if (user == null) {
             throw new RuntimeException("không tìm tha người dùng");
         }
 
         Customer customer = customerRepository.findByUser(user);
-        if(customer == null){
+        if (customer == null) {
             throw new RuntimeException("không tìm thấy khách hàng");
         }
 
@@ -121,8 +130,26 @@ public class CustomerService {
         customerRepository.save(customer);
     }
 
-    public Customer getCustomerById(int id){
+    public Customer getCustomerById(int id) {
         Customer customer = customerRepository.findById(id).get();
         return customer;
+    }
+
+    public void sendMail(String to, String name) {
+
+        String body = "<h1>Welcome, " + name + "!</h1>"
+                + "<p>Welcome to FercilyCare.</p>";
+
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setTo(to);
+            helper.setSubject("You have successfully registered!");
+            helper.setText(body, true);
+            mailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Gửi email thất bại", e);
+        }
     }
 }

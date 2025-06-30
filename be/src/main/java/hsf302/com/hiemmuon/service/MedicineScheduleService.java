@@ -46,11 +46,9 @@ public class MedicineScheduleService {
             throw new IllegalArgumentException("Không thể cập nhật trạng thái '" + newStatus + "' bằng tay.");
         }
 
-        // Tìm lịch thuốc
         MedicineSchedule schedule = medicineScheduleRepository
                 .findById(scheduleId).orElseThrow(() -> new NotFoundException("Không tìm thấy lịch thuốc với ID: " + scheduleId));
 
-        // 🚫 Không cho update nếu trạng thái đã khác 'ongoing'
         if (schedule.getStatus() != StatusMedicineSchedule.dang_dien_ra) {
             throw new IllegalStateException("Không thể cập nhật. Trạng thái thuốc hiện tại là '" + schedule.getStatus());
         }
@@ -76,19 +74,8 @@ public class MedicineScheduleService {
         List<MedicineSchedule> schedules = medicineScheduleRepository.findByCycleStep_StepId(step.getStepId());
 
         return schedules.stream()
-                .map(ms -> new MedicineScheduleDTO(
-                        ms.getMedicationId(),
-                        ms.getCycleStep().getStepOrder(),
-                        ms.getMedicine().getName(),
-                        ms.getMedicine().getDiscription(),
-                        ms.getMedicine().getDose(),
-                        ms.getMedicine().getFrequency(),
-                        ms.getStartDate(),
-                        ms.getEndDate(),
-                        ms.getEventDate(),
-                        ms.getStatus(),
-                        ms.getNote()
-                )).toList();
+                .map(this::convertToDTO)
+                .toList();
     }
 
     public List<MedicineScheduleDTO> createSchedule(CreateMedicationScheduleDTO dto) {
@@ -138,23 +125,12 @@ public class MedicineScheduleService {
 
             medicineScheduleRepository.save(schedule);
 
-            result.add(new MedicineScheduleDTO(
-                    schedule.getMedicationId(),
-                    step.getStepOrder(),
-                    medicine.getName(),
-                    medicine.getDiscription(),
-                    medicine.getDose(),
-                    medicine.getFrequency(),
-                    schedule.getStartDate(),
-                    schedule.getEndDate(),
-                    schedule.getEventDate(),
-                    schedule.getStatus(),
-                    schedule.getNote()
-            ));
+            result.add(convertToDTO(schedule));
         }
         return result;
     }
 
+    @Transactional
     public void updateExpiredSchedules() {
         LocalDateTime now = LocalDateTime.now();
 
@@ -162,19 +138,12 @@ public class MedicineScheduleService {
                 .findByStatus(StatusMedicineSchedule.dang_dien_ra);
 
         for (MedicineSchedule schedule : schedules) {
-            Medicine medicine = schedule.getMedicine();
-
-            List<Time> useAt = medicine.getUseAt();
-
-            for (Time time : useAt) {
-                LocalDateTime scheduledTime = LocalDateTime.of(schedule.getEventDate().toLocalDate(), time.toLocalTime());
-
-                // Nếu thời gian hiện tại đã qua thời gian sự kiện
-                if (now.isAfter(scheduledTime.plusHours(1))) {
-                    schedule.setStatus(StatusMedicineSchedule.qua_han);
-                }
+            LocalDateTime eventTime = schedule.getEventDate();
+            if (now.isAfter(eventTime.plusMinutes(1))) {
+                schedule.setStatus(StatusMedicineSchedule.qua_han);
             }
         }
+
         medicineScheduleRepository.saveAll(schedules);
     }
 
@@ -190,7 +159,13 @@ public class MedicineScheduleService {
                 );
 
         // Map sang DTO
-        return schedules.stream().map(schedule -> new MedicineScheduleDTO(
+        return schedules.stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    private MedicineScheduleDTO convertToDTO(MedicineSchedule schedule) {
+        return new MedicineScheduleDTO(
                 schedule.getMedicationId(),
                 schedule.getCycleStep().getStepOrder(),
                 schedule.getMedicine().getName(),
@@ -202,6 +177,6 @@ public class MedicineScheduleService {
                 schedule.getEventDate(),
                 schedule.getStatus(),
                 schedule.getNote()
-        )).toList();
+        );
     }
 }

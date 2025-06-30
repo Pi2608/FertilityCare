@@ -55,8 +55,40 @@ public class CycleStepService {
 
     public CycleStepDTO updateCycleStepStatus(int cycleId, int stepId, StatusCycle status) {
         CycleStep step = cycleStepRepository.findByCycle_CycleIdAndStepOrder(cycleId, stepId);
+
+        if (step.getStatusCycleStep() == StatusCycle.finished || step.getStatusCycleStep() == StatusCycle.stopped) {
+            throw new IllegalStateException("Không thể cập nhật: Bước đã kết thúc hoặc đã bị dừng.");
+        }
+
+        if (step.getStatusCycleStep() == status) {
+            throw new IllegalStateException("Trạng thái đã là '" + status + "', không thể cập nhật lại.");
+        }
+
+        List<CycleStep> previousSteps = cycleStepRepository
+                .findByCycle_CycleIdAndStepOrderLessThan(cycleId, step.getStepOrder());
+
+        boolean allPreviousFinished = previousSteps.stream()
+                .allMatch(s -> s.getStatusCycleStep() == StatusCycle.finished);
+
+        if (!allPreviousFinished) {
+            throw new IllegalStateException("Không thể cập nhật: Tất cả các bước trước phải hoàn thành trước.");
+        }
+
         step.setStatusCycleStep(status);
         cycleStepRepository.save(step);
+
+        if (status == StatusCycle.finished) {
+            List<CycleStep> allSteps = cycleStepRepository.findByCycle_CycleId(cycleId);
+
+            boolean allStepsFinished = allSteps.stream()
+                    .allMatch(s -> s.getStatusCycleStep() == StatusCycle.finished);
+
+            if (allStepsFinished) {
+                Cycle cycle = step.getCycle();
+                cycle.setStatus(StatusCycle.finished);
+                cycleRepository.save(cycle);
+            }
+        }
 
         if (status == StatusCycle.stopped) {
             List<CycleStep> lateSteps = cycleStepRepository
@@ -127,6 +159,7 @@ public class CycleStepService {
                 .collect(Collectors.toList());
 
         return new CycleStepDTO(
+                cycleStep.getStepId(),
                 cycleStep.getStepOrder(),
                 cycleStep.getCycle().getService().getName(),
                 cycleStep.getDescription(),
