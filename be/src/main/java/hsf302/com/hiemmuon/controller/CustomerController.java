@@ -48,6 +48,7 @@ public class CustomerController {
     @PostMapping("/register/customer")
     public ResponseEntity<ApiResponse<String>> registerCustomer(@Valid @RequestBody RegisterCustomerDTO dto) {
         customerService.registerCustomer(dto);
+        customerService.sendMail(dto.getEmail(), dto.getName());
         ApiResponse<String> response = new ApiResponse<>(
                 200, "Đăng ký khách hàng thành công", null);
         return ResponseEntity.ok(response);

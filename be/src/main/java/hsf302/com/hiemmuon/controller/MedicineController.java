@@ -125,7 +125,6 @@ public class MedicineController {
 
     @Scheduled(fixedRate = 60000)
     public void autoUpdateExpired() {
-        System.err.println("da qua han");
         medicineScheduleService.updateExpiredSchedules();
     }
 }
