@@ -15,7 +15,7 @@ public class AppointmentDetailDTO {
     private String type; // tư vấn - IUI - IVF
     private LocalDate date;
     private LocalTime startTime;
-    private int cycleStepId;
+    private Integer cycleStepId;
 
     private int doctorId;
     private String doctorName;

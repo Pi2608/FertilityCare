@@ -260,15 +260,14 @@ const Authentication = () => {
                     onChange={handleInputChange}
                     placeholder="Nhập mật khẩu"
                     disabled={loading}
-                    style={{ paddingRight: "36px" }}
                   />
                   <span
                     onClick={() => setShowPassword((prev) => !prev)}
                     style={{
                       position: "absolute",
-                      right: "10px",
+                      right: "1rem",
                       top: "50%",
-                      transform: "translateY(-50%)",
+                      transform: "translateY(-40%)",
                       cursor: "pointer",
                       color: "#888",
                     }}
