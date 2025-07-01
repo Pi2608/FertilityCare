@@ -17,8 +17,9 @@ public class TestResultViewDTO {
     private LocalDate testDate;
     private String note;
     private int appointmentId;
+    private int cycleStepId;
 
-    public TestResultViewDTO(int resultId, String name, Float value, String unit, String referenceRange, LocalDate testDate, String note, int appointmentId) {
+    public TestResultViewDTO(int resultId, String name, Float value, String unit, String referenceRange, LocalDate testDate, String note, int appointmentId, int cycleStepId) {
         this.resultId = resultId;
         this.name = name;
         this.value = value;
@@ -27,6 +28,7 @@ public class TestResultViewDTO {
         this.testDate = testDate;
         this.note = note;
         this.appointmentId = appointmentId;
+        this.cycleStepId = cycleStepId;
     }
 
     public TestResultViewDTO(int resultId, String name, Float value, String unit, String referenceRange, LocalDate testDate, String note) {

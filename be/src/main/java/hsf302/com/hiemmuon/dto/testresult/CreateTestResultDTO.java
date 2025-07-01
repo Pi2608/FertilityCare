@@ -15,4 +15,5 @@ public class CreateTestResultDTO {
     private String referenceRange;
     private LocalDate testDate;
     private String note;
+    private int cycleStepId;
 }

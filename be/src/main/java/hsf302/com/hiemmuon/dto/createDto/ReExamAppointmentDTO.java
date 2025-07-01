@@ -12,4 +12,5 @@ public class ReExamAppointmentDTO {
     private int serviceId;
     private LocalDateTime date; // ngay tai kham
     private String note; // ghi chu tai kham
+    private int cycleStepId;
 }
