@@ -16,6 +16,7 @@ import hsf302.com.hiemmuon.repository.MedicineScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,8 +79,18 @@ public class CycleStepService {
         cycleStepRepository.save(step);
 
         if (status == StatusCycle.finished) {
-            List<CycleStep> allSteps = cycleStepRepository.findByCycle_CycleId(cycleId);
+            // Gán eventDate cho bước kế tiếp nếu chưa có
+            CycleStep nextStep = cycleStepRepository.findByCycle_CycleIdAndStepOrder(
+                    cycleId, step.getStepOrder() + 1);
 
+            if (nextStep != null && nextStep.getEventdate() == null) {
+                LocalDate nextEventDate = step.getEventdate().plusDays(1);
+                nextStep.setEventdate(nextEventDate);
+                cycleStepRepository.save(nextStep);
+            }
+
+            // Nếu tất cả các bước đã hoàn thành -> kết thúc cycle
+            List<CycleStep> allSteps = cycleStepRepository.findByCycle_CycleId(cycleId);
             boolean allStepsFinished = allSteps.stream()
                     .allMatch(s -> s.getStatusCycleStep() == StatusCycle.finished);
 
@@ -91,6 +102,7 @@ public class CycleStepService {
         }
 
         if (status == StatusCycle.stopped) {
+            // Dừng các bước sau
             List<CycleStep> lateSteps = cycleStepRepository
                     .findByCycle_CycleIdAndStepOrderGreaterThan(cycleId, step.getStepOrder());
 
