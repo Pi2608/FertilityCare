@@ -1,5 +1,6 @@
 package hsf302.com.hiemmuon.service;
 
+import hsf302.com.hiemmuon.dto.createDto.CreateCycleDTO;
 import hsf302.com.hiemmuon.dto.createDto.ReExamAppointmentDTO;
 import hsf302.com.hiemmuon.dto.createDto.CreatePaymentWithReExamDTO;
 import hsf302.com.hiemmuon.dto.responseDto.PaymentResponsesDTO;
@@ -37,6 +38,9 @@ public class PaymentService {
 
     @Autowired
     private AppointmentService appointmentService;
+
+    @Autowired
+    private CycleService cycleService;
 
     @Autowired
     private JwtService jwtService;
@@ -193,7 +197,7 @@ public class PaymentService {
         return vnp_PayUrl + "?" + queryString + "&vnp_SecureHash=" + vnp_SecureHash;
     }
 
-    public String processVNPayCallback(Map<String, String> fields) {
+    public String processVNPayCallback(HttpServletRequest request, Map<String, String> fields) {
         try {
             // Verify signature using utility method
             if (!VNPayUtil.verifySignature(fields, vnp_HashSecret)) {
@@ -212,6 +216,8 @@ public class PaymentService {
 
                 if ("00".equals(vnp_ResponseCode)) {
                     updatePaymentStatus(paymentId, StatusPayment.paid);
+                    // CreateCycleDTO createCycle = new CreateCycleDTO();
+                    // cycleService.createCycle(createCycle, request);
                     return "Payment successful";
                 } else {
                     updatePaymentStatus(paymentId, StatusPayment.failed);

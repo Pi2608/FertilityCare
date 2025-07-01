@@ -28,6 +28,7 @@ import Notification from '@customerpages/Notification/Notification';
 import TreatmentHistory from '@customerpages/TreatmentHistory/TreatmentHistory';
 import Pill from '@customerpages/Dashboard/Pill/Pill';
 import Payment from '@customerpages/Payment/Payment';
+import PaymentList from '@customerpages/Dashboard/Payment/PaymentList';
 
 // Manager components
 import DocDashboard from '@doctorpages/Dashboard/DocDashboard';
@@ -412,6 +413,11 @@ export const router = createBrowserRouter([
         index: false,
         path: "notifications",
         element: <Notification />,
+      },
+      {
+        index: false,
+        path: "payment",
+        element: <PaymentList />,
       },
       {
         index: false,
