@@ -6,6 +6,7 @@ import hsf302.com.hiemmuon.dto.createDto.CreatePaymentWithReExamDTO;
 import hsf302.com.hiemmuon.dto.responseDto.PaymentResponsesDTO;
 import hsf302.com.hiemmuon.entity.*;
 import hsf302.com.hiemmuon.enums.StatusPayment;
+import hsf302.com.hiemmuon.exception.NotFoundException;
 import hsf302.com.hiemmuon.repository.*;
 import hsf302.com.hiemmuon.utils.VNPayUtil;
 import io.jsonwebtoken.Claims;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -213,11 +215,16 @@ public class PaymentService {
 
             try {
                 int paymentId = Integer.parseInt(vnp_TxnRef);
+                Payment payment = paymentRepository.findById(paymentId).orElseThrow(() -> new NotFoundException("Không tìm thấy Payment ID: " + paymentId));
 
                 if ("00".equals(vnp_ResponseCode)) {
                     updatePaymentStatus(paymentId, StatusPayment.paid);
-                    // CreateCycleDTO createCycle = new CreateCycleDTO();
-                    // cycleService.createCycle(createCycle, request);
+                    CreateCycleDTO createCycle = new CreateCycleDTO();
+                    createCycle.setCustomerId(payment.getCustomer().getCustomerId());
+                    createCycle.setServiceId(payment.getService().getServiceId());
+                    createCycle.setStartDate(LocalDate.now());
+                    createCycle.setNote("Bệnh nhân bắt đầu chu trình điều trị hiếm muộn tại cơ sở.");
+                    cycleService.createCycle(createCycle, request);
                     return "Payment successful";
                 } else {
                     updatePaymentStatus(paymentId, StatusPayment.failed);
@@ -229,9 +236,5 @@ public class PaymentService {
         } catch (Exception e) {
             return "Error processing callback: " + e.getMessage();
         }
-    }
-
-    public String processVNPayIPN(Map<String, String> fields) {
-        return processVNPayCallback(fields);
     }
 }

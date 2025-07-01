@@ -24,7 +24,8 @@ import java.util.List;
                 @Tag(name = "6. Test Result Controller", description = "Kết quả xét nghiệm trong quá trình điều trị"),
                 @Tag(name = "7. Cycle Controller", description = "Chu kỳ điều trị"),
                 @Tag(name = "8. Cycle Step Controller", description = "Các bước điều trị trong chu kỳ"),
-                @Tag(name = "9. Medicine Schedule Controller", description = "Lịch uống thuốc và theo dõi")
+                @Tag(name = "9. Medicine Schedule Controller", description = "Lịch uống thuốc và theo dõi"),
+                @Tag(name = "10. Payment Controller", description = "Thanh toán dịch vụ hiếm muộn")
         }
 )
 @Configuration
