@@ -1,5 +1,6 @@
 package hsf302.com.hiemmuon.dto.responseDto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import hsf302.com.hiemmuon.enums.StatusCycle;
 import lombok.*;
 
@@ -10,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CycleStepDTO {
     private int stepId;
     private int stepOrder;

@@ -86,25 +86,27 @@ public class CycleService {
 
         Cycle savedCycle = cycleRepository.save(cycle);
 
-        // Lấy các bước điều trị theo service
         List<TreatmentStep> treatmentSteps = treatmentStepRepository
                 .findByService_ServiceIdOrderByStepOrderAsc(service.getServiceId());
 
         List<CycleStepDTO> listStep = new ArrayList<>();
 
-        LocalDate eventDate = dto.getStartDate().plusMonths(2);
-        CycleStep cycleStep = null;
-        for (TreatmentStep step : treatmentSteps) {
-            cycleStep = new CycleStep();
+        LocalDate eventDate = dto.getStartDate().plusMonths(2); // ngày đầu tiên
+        for (int i = 0; i < treatmentSteps.size(); i++) {
+            TreatmentStep step = treatmentSteps.get(i);
+
+            CycleStep cycleStep = new CycleStep();
             cycleStep.setCycle(savedCycle);
             cycleStep.setTreatmentStep(step);
             cycleStep.setStepOrder(step.getStepOrder());
             cycleStep.setStatusCycleStep(StatusCycle.ongoing);
-            cycleStep.setDescription(null);
-            cycleStep.setEventdate(eventDate);
-            cycleStepRepository.save(cycleStep);
+            cycleStep.setDescription(step.getDescription());
 
-            eventDate = eventDate.plusMonths(2);
+            if (i == 0) {
+                cycleStep.setEventdate(eventDate);
+            }
+
+            cycleStepRepository.save(cycleStep);
 
             CycleStepDTO cycleStepDTO = CycleStepDTO.builder()
                     .stepId(cycleStep.getStepId())
@@ -117,6 +119,7 @@ public class CycleService {
                     .build();
             listStep.add(cycleStepDTO);
         }
+
         return new CycleDTO(
                 savedCycle.getCycleId(),
                 savedCycle.getCustomer().getCustomerId(),
@@ -133,23 +136,20 @@ public class CycleService {
     private CycleDTO convertToCycleDTO(Cycle cycle) {
         List<CycleStepDTO> stepDTOs = new ArrayList<>();
 
-        List<CycleStep> finishedSteps = cycleStepRepository
-                .findByCycle_CycleIdAndStatusCycleStepOrderByStepOrderAsc(
-                        cycle.getCycleId(), StatusCycle.finished
-                );
+        CycleStep ongoingStep = cycleStepRepository
+                .findFirstByCycle_CycleIdAndStatusCycleStepOrderByStepOrderAsc(
+                        cycle.getCycleId(), StatusCycle.ongoing);
 
-        if (!finishedSteps.isEmpty()) {
-            CycleStep lastFinishedStep = finishedSteps.get(finishedSteps.size() - 1);
-
-            stepDTOs.add(convertToCycleStepDTO(lastFinishedStep));
+        if (ongoingStep != null) {
+            stepDTOs.add(convertToCycleStepDTO(ongoingStep));
         } else {
-            CycleStep firstOngoing = cycleStepRepository
-                        .findFirstByCycle_CycleIdAndStatusCycleStepOrderByStepOrderAsc(
-                            cycle.getCycleId(), StatusCycle.ongoing
-                    );
+            List<CycleStep> finishedSteps = cycleStepRepository
+                    .findByCycle_CycleIdAndStatusCycleStepOrderByStepOrderAsc(
+                            cycle.getCycleId(), StatusCycle.finished);
 
-            if (firstOngoing != null) {
-                stepDTOs.add(convertToCycleStepDTO(firstOngoing));
+            if (!finishedSteps.isEmpty()) {
+                CycleStep lastFinishedStep = finishedSteps.get(finishedSteps.size() - 1);
+                stepDTOs.add(convertToCycleStepDTO(lastFinishedStep));
             }
         }
 
