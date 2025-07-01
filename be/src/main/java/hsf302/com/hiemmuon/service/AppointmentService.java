@@ -11,6 +11,7 @@ import hsf302.com.hiemmuon.exception.NotFoundException;
 import hsf302.com.hiemmuon.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import hsf302.com.hiemmuon.enums.StatusCycle;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,6 +39,9 @@ public class AppointmentService {
 
     @Autowired
     private TestResultRepository testResultRepository;
+
+    @Autowired
+    private CycleStepRepository cycleStepRepository;
 
     public List<AvailableScheduleDTO> getAvailableSchedules(int doctorId, LocalDate date) {
         List<DoctorSchedule> schedules = doctorScheduleRepository
@@ -122,6 +126,11 @@ public class AppointmentService {
             throw new RuntimeException("Không tìm thấy dịch vụ");
         }
 
+        CycleStep cycleStep = cycleStepRepository.findById(dto.getCycleStepId());
+        if(cycleStep == null || cycleStep.getStatusCycleStep() != StatusCycle.ongoing){
+                    throw new RuntimeException("bác sĩ chọn sai cycleStep cho bênh nhân hoặc bênh nhân not ongoing - bênh nhân không trong giai đoanaj này ");
+                }
+
         // Lấy thông tin thời gian hẹn
         LocalDateTime appointmentTime = dto.getDate();
         LocalDate date = appointmentTime.toLocalDate();
@@ -149,6 +158,7 @@ public class AppointmentService {
         appointment.setStatusAppointment(StatusAppointment.confirmed);
         appointment.setNote(dto.getNote());
         appointment.setService(service);
+        appointment.setCycleStep(cycleStep);
         appointmentRepository.save(appointment);
 
         // Ghi nhận lịch bận mới cho bác sĩ
@@ -290,6 +300,7 @@ public class AppointmentService {
         dto.setType(String.valueOf(appointment.getTypeAppointment()));
         dto.setDate(appointment.getDate().toLocalDate());
         dto.setStartTime(appointment.getDate().toLocalTime());
+        dto.setCycleStepId(appointment.getCycleStep().getStepId());
 
         if (appointment.getDoctor() != null && appointment.getDoctor().getUser() != null) {
             dto.setDoctorId(appointment.getDoctor().getDoctorId());

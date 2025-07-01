@@ -38,4 +38,22 @@ public class TestResult {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "appointment_id")
     private Appointment appointment;
+    
+    @ManyToOne
+    @JoinColumn(name = "step_id")
+    private CycleStep cycleStep;
+
+    public TestResult(int resultId, String name, Float value, String unit, String referenceRange,
+                      LocalDate testDate, String note, CycleStep cycleStep, Appointment appointment) {
+        this.resultId = resultId;
+        this.name = name;
+        this.value = value;
+        this.unit = unit;
+        this.referenceRange = referenceRange;
+        this.testDate = testDate;
+        this.note = note;
+        this.cycleStep = cycleStep;
+        this.appointment = appointment;
+    }
+
 }

@@ -6,6 +6,7 @@ import hsf302.com.hiemmuon.dto.testresult.UpdateTestResultDTO;
 import hsf302.com.hiemmuon.entity.*;
 import hsf302.com.hiemmuon.repository.AppointmentRepository;
 import hsf302.com.hiemmuon.repository.CustomerRepository;
+import hsf302.com.hiemmuon.repository.CycleStepRepository;
 import hsf302.com.hiemmuon.repository.TestResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,11 +30,18 @@ public class TestResultService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    public void createTestResult(CreateTestResultDTO dto){
+    @Autowired
+    private CycleStepRepository cycleStepRepository;
+
+    public void createTestResult(CreateTestResultDTO dto) {
         Appointment appointment = appointmentRepository.findById(dto.getAppointmentId());
-            if(appointment == null){
-                System.out.println("khong tim thay appointment");
-            }
+        if (appointment == null) {
+            throw new RuntimeException("Không tìm thấy appointment với ID: " + dto.getAppointmentId());
+        }
+
+        CycleStep cycleStep = cycleStepRepository.findById(dto.getCycleStepId())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy cycleStep với ID: " + dto.getCycleStepId()));
+
         TestResult result = new TestResult(
                 0,
                 dto.getName(),
@@ -42,8 +50,10 @@ public class TestResultService {
                 dto.getReferenceRange(),
                 dto.getTestDate(),
                 dto.getNote(),
+                cycleStep,
                 appointment
         );
+
         testResultRepository.save(result);
     }
 

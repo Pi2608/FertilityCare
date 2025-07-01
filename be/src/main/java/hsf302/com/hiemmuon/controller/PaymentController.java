@@ -87,12 +87,12 @@ public class PaymentController {
 
     @GetMapping("/vnpay-callback")
     public void handleVNPayCallback(@RequestParam Map<String, String> fields, HttpServletResponse response) throws IOException {
-        String result = paymentService.processVNPayCallback(fields);
-
-        if (result.equals("Payment successful")) {
-            response.sendRedirect(redirectUrl + "?status=success");
-        } else {
-            response.sendRedirect(redirectUrl + "?status=failure&message=" + URLEncoder.encode(result, StandardCharsets.UTF_8));
-        }
+//       String result = paymentService.processVNPayCallback(fields);
+//
+//        if (result.equals("Payment successful")) {
+//            response.sendRedirect(redirectUrl + "?status=success");
+//        } else {
+//            response.sendRedirect(redirectUrl + "?status=failure&message=" + URLEncoder.encode(result, StandardCharsets.UTF_8));
+//        }
     }
 }

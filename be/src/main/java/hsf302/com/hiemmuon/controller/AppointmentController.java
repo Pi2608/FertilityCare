@@ -39,8 +39,8 @@ public class AppointmentController {
     private CustomerService customerService;
 
     @Operation(
-            summary = "Xem lịch trống của bác sĩ",
-            description = "Lấy danh sách các khung giờ bác sĩ còn trống trong ngày đã chọn. Dùng để đặt lịch mới."
+            summary = "Xem lịch ban của bác sĩ",
+            description = "Lấy danh sách các khung giờ bác sĩ còn ban trong ngày đã chọn. Dùng để đặt lịch mới."
     )
     @GetMapping("/doctors/{doctorId}/unavailable-schedules")
     public ResponseEntity<?> getDoctorSchedules(

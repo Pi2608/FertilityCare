@@ -231,7 +231,7 @@ public class PaymentService {
         }
     }
 
-    public String processVNPayIPN(Map<String, String> fields) {
-        return processVNPayCallback(fields);
-    }
+//    public String processVNPayIPN(Map<String, String> fields) {
+//        return processVNPayCallback(fields);
+//    }
 }

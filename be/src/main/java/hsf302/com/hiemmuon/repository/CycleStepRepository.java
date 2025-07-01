@@ -25,4 +25,6 @@ public interface CycleStepRepository extends JpaRepository<CycleStep, Integer> {
     CycleStep findFirstByCycle_CycleIdAndStatusCycleStepOrderByStepOrderAsc(
             int cycleId, StatusCycle statusCycleStep
     );
+
+    CycleStep findById(int cycleStepId);
 }
