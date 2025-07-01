@@ -1,73 +1,24 @@
-import React, { useEffect, useState } from "react";
-import ApiGateway from "@features/service/apiGateway";
-import { X, Plus } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import apiAppointment from "../../../../features/service/apiAppointment";
 import "./Appointments.css";
-
-const scheduleData = [
-  {
-    id: "PT-2024-0123",
-    name: "Nguyễn Thị Hoa",
-    age: 34,
-    time: "09:00 - 09:30",
-    date: "20/05/2024",
-    treatmentType: "IVF chu kỳ 2",
-    treatmentStage: "Kích trứng",
-    status: "ready",
-  },
-  {
-    id: "PT-2024-0145",
-    name: "Trần Văn Linh",
-    age: 28,
-    time: "10:30 - 11:15",
-    date: "20/05/2024",
-    treatmentType: "Tư vấn",
-    treatmentStage: "Kích trứng",
-    status: "not_ready",
-  },
-  {
-    id: "PT-2024-0098",
-    name: "Phạm Thị Mai",
-    age: 31,
-    time: "13:15 - 13:45",
-    date: "20/05/2024",
-    treatmentType: "IUI chu kỳ cuối",
-    treatmentStage: "Kích trứng",
-    status: "not_ready",
-  },
-  {
-    id: "PT-2024-0112",
-    name: "Lê Thị Hương",
-    age: 29,
-    time: "14:30 - 15:00",
-    date: "20/05/2024",
-    treatmentType: "Tư vấn",
-    treatmentStage: "Kích trứng",
-    status: "not_ready",
-  },
-];
+import { useNavigate } from "react-router-dom";
 
 export default function Appointments() {
-
   const [appointments, setAppointments] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [selectedAppointment, setSelectedAppointment] = useState(null);
-  
+  const navigate = useNavigate();
+
   useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const data = await apiAppointment.getAllAppointments();
+        setAppointments(data);
+      } catch (err) {
+        console.error("Lỗi khi gọi API lịch hẹn:", err);
+      }
+    };
+
     fetchAppointments();
   }, []);
-  
-  const fetchAppointments = async () => {
-    try {
-      setLoading(true);
-      // const response = await <Api>.getAppointments();
-      setAppointments(response.data);
-    } catch (err) {
-      setError("Không thể tải lịch hẹn. Vui lòng thử lại sau.");
-    } finally {
-      setLoading(false);
-    }
-  }
 
   return (
     <div className="schedule-container">
@@ -86,7 +37,6 @@ export default function Appointments() {
           </select>
         </div>
       </div>
-
 
       <table className="schedule-table">
         <thead>
@@ -137,8 +87,23 @@ export default function Appointments() {
                 <div className="actions">
                   {item.status === "confirmed" ? (
                     <>
-                      <a href="/doctor-dashboard/appointments/session" className="btn btn-start no-underline">Bắt đầu</a>
-                      <a href="" className="btn btn-message no-underline">Nhắn tin</a>
+                      <button
+                        className="btn btn-start"
+                        onClick={() =>
+                          navigate(
+                            item.type === "tu_van"
+                              ? "/doctor-dashboard/appointments/tu_van"
+                              : "/doctor-dashboard/appointments/dieu_tri",
+                            { state: { appointmentId: item.appointmentId } }
+                          )
+                        }
+                      >
+                        Bắt đầu
+                      </button>
+
+                      <a href="" className="btn btn-message no-underline">
+                        Nhắn tin
+                      </a>
                     </>
                   ) : (
                     <>
@@ -156,7 +121,6 @@ export default function Appointments() {
           ))}
         </tbody>
       </table>
-
 
       <div className="pagination">
         <button>Trước</button>

@@ -25,7 +25,23 @@ axiosInstance.interceptors.request.use((config) => {
 
 const apiAppointment = {
   getAllAppointments: async () => {
-    const response = await axiosInstance.get("appointment-services/appointments/detail");
+    const response = await axiosInstance.get(
+      "appointment-services/appointments/detail"
+    );
+    return response.data;
+  },
+
+
+  getAppointmentDetailById: async (id) => {
+    const response = await axiosInstance.get(
+      `appointment-services/appointments/${id}/detail`
+    );
+    return response.data;
+  },
+
+
+  createTestResult: async (data) => {
+    const response = await axiosInstance.post("test-results/create", data);
     return response.data;
   },
 };
