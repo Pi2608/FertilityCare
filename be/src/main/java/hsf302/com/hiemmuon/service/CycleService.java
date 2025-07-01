@@ -177,4 +177,65 @@ public class CycleService {
                 .note(step.getNote())
                 .build();
     }
+
+    @Transactional
+    public CycleDTO createCycle(CreateCycleDTO dto, Customer customer, Doctor doctor) {
+
+        TreatmentService service = treatmentServiceRepository.findById(dto.getServiceId());
+
+        // Tạo Cycle
+        Cycle cycle = new Cycle();
+        cycle.setCustomer(customer);
+        cycle.setDoctor(doctor);
+        cycle.setService(service);
+        cycle.setStartdate(dto.getStartDate());
+        cycle.setEndDate(dto.getStartDate().plusMonths(10));
+        cycle.setNote(dto.getNote());
+        cycle.setStatus(StatusCycle.ongoing);
+
+        Cycle savedCycle = cycleRepository.save(cycle);
+
+        // Lấy các bước điều trị theo service
+        List<TreatmentStep> treatmentSteps = treatmentStepRepository
+                .findByService_ServiceIdOrderByStepOrderAsc(service.getServiceId());
+
+        List<CycleStepDTO> listStep = new ArrayList<>();
+
+        LocalDate eventDate = dto.getStartDate().plusMonths(2);
+        CycleStep cycleStep = null;
+        for (TreatmentStep step : treatmentSteps) {
+            cycleStep = new CycleStep();
+            cycleStep.setCycle(savedCycle);
+            cycleStep.setTreatmentStep(step);
+            cycleStep.setStepOrder(step.getStepOrder());
+            cycleStep.setStatusCycleStep(StatusCycle.ongoing);
+            cycleStep.setDescription(null);
+            cycleStep.setEventdate(eventDate);
+            cycleStepRepository.save(cycleStep);
+
+            eventDate = eventDate.plusMonths(2);
+
+            CycleStepDTO cycleStepDTO = CycleStepDTO.builder()
+                    .stepId(cycleStep.getStepId())
+                    .stepOrder(cycleStep.getStepOrder())
+                    .serive(cycle.getService().getName())
+                    .description(cycleStep.getDescription())
+                    .eventdate(cycleStep.getEventdate())
+                    .statusCycleStep(cycleStep.getStatusCycleStep())
+                    .note(cycleStep.getNote())
+                    .build();
+            listStep.add(cycleStepDTO);
+        }
+        return new CycleDTO(
+                savedCycle.getCycleId(),
+                savedCycle.getCustomer().getCustomerId(),
+                savedCycle.getDoctor().getDoctorId(),
+                savedCycle.getService().getServiceId(),
+                savedCycle.getStartdate(),
+                savedCycle.getEndDate(),
+                savedCycle.getStatus(),
+                savedCycle.getNote(),
+                listStep
+        );
+    }
 }

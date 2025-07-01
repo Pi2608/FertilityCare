@@ -123,7 +123,6 @@ public class PaymentController {
             summary = "Hồi đáp kết quả giao dịch (C)",
             description = "Nhận kết quả thanh toán của VNPay"
     )
-    @PreAuthorize("hasRole('CUSTOMER')")
     @GetMapping("/vnpay-callback")
     public void handleVNPayCallback(@RequestParam Map<String, String> fields, HttpServletResponse response, HttpServletRequest request) throws IOException {
         String result = paymentService.processVNPayCallback(request, fields);

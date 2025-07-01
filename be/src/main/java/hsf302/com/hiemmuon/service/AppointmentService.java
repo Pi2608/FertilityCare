@@ -106,7 +106,7 @@ public class AppointmentService {
     }
 
 
-    public void scheduleReExam(ReExamAppointmentDTO dto, Doctor doctor) {
+    public AppointmentHistoryDTO scheduleReExam(ReExamAppointmentDTO dto, Doctor doctor) {
         // Tìm bác sĩ
         if (doctor == null) {
             throw new RuntimeException("Không tìm thấy bác sĩ");
@@ -159,6 +159,15 @@ public class AppointmentService {
         newSchedule.setEndTime(time.plusHours(2)); // ví dụ mặc định 2 tiếng
         newSchedule.setStatus(false); // true = bận
         doctorScheduleRepository.save(newSchedule);
+
+        return new AppointmentHistoryDTO(
+                appointment.getAppointmentId(),
+                appointment.getDate(),
+                customer.getUser().getName(),
+                appointment.getTypeAppointment() != null ? appointment.getTypeAppointment().toString() : null,
+                appointment.getStatusAppointment() != null ? appointment.getStatusAppointment().toString() : null,
+                appointment.getNote()
+        );
     }
 
 

@@ -3,6 +3,7 @@ package hsf302.com.hiemmuon.service;
 import hsf302.com.hiemmuon.dto.createDto.CreateCycleDTO;
 import hsf302.com.hiemmuon.dto.createDto.ReExamAppointmentDTO;
 import hsf302.com.hiemmuon.dto.createDto.CreatePaymentWithReExamDTO;
+import hsf302.com.hiemmuon.dto.responseDto.AppointmentHistoryDTO;
 import hsf302.com.hiemmuon.dto.responseDto.PaymentResponsesDTO;
 import hsf302.com.hiemmuon.entity.*;
 import hsf302.com.hiemmuon.enums.StatusPayment;
@@ -114,10 +115,9 @@ public class PaymentService {
         reExamDto.setServiceId(dto.getServiceId());
         reExamDto.setNote(dto.getNote());
 
-        appointmentService.scheduleReExam(reExamDto, doc);
+        AppointmentHistoryDTO appointmentHistory = appointmentService.scheduleReExam(reExamDto, doc);
 
-        Appointment appointment = appointmentRepository.findLatestAppointmentByCustomerAndDoctor(
-                dto.getCustomerId(), doctorId);
+        Appointment appointment = appointmentRepository.findById(appointmentHistory.getAppointmentId());
 
         if (appointment == null) {
             throw new RuntimeException("Không thể tạo appointment tái khám");
@@ -216,6 +216,9 @@ public class PaymentService {
             try {
                 int paymentId = Integer.parseInt(vnp_TxnRef);
                 Payment payment = paymentRepository.findById(paymentId).orElseThrow(() -> new NotFoundException("Không tìm thấy Payment ID: " + paymentId));
+                Customer customer = payment.getCustomer();
+                Appointment appointment = payment.getAppointment();
+                Doctor doctor = appointment.getDoctor();
 
                 if ("00".equals(vnp_ResponseCode)) {
                     updatePaymentStatus(paymentId, StatusPayment.paid);
@@ -224,7 +227,7 @@ public class PaymentService {
                     createCycle.setServiceId(payment.getService().getServiceId());
                     createCycle.setStartDate(LocalDate.now());
                     createCycle.setNote("Bệnh nhân bắt đầu chu trình điều trị hiếm muộn tại cơ sở.");
-                    cycleService.createCycle(createCycle, request);
+                    cycleService.createCycle(createCycle, customer, doctor);
                     return "Payment successful";
                 } else {
                     updatePaymentStatus(paymentId, StatusPayment.failed);

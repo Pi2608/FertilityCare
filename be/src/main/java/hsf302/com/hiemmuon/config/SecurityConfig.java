@@ -183,8 +183,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/api/payments/all").hasAnyRole("ADMIN", "MANAGER")
                                 .requestMatchers(HttpMethod.GET,
                                         "/api/payments/customer",
-                                        "/api/payments/pending/customer",
-                                        "/api/payments/vnpay-callback"
+                                        "/api/payments/pending/customer"
                                 ).hasRole("CUSTOMER")
                                 .requestMatchers(HttpMethod.POST,
                                         "/api/payments/"
@@ -195,6 +194,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.PUT,
                                         "/api/payments/cancel"
                                 ).hasRole("CUSTOMER")
+                                .requestMatchers(HttpMethod.GET, "/api/payments/vnpay-callback").permitAll()
 
                                 .requestMatchers(
                                                 "/swagger-ui/**",
