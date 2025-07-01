@@ -309,7 +309,13 @@ public class AppointmentService {
         dto.setType(String.valueOf(appointment.getTypeAppointment()));
         dto.setDate(appointment.getDate().toLocalDate());
         dto.setStartTime(appointment.getDate().toLocalTime());
-        dto.setCycleStepId(appointment.getCycleStep().getStepId());
+
+        // ✅ Check null trước khi gọi getStepId()
+        if (appointment.getCycleStep() != null) {
+            dto.setCycleStepId(appointment.getCycleStep().getStepId());
+        } else {
+            dto.setCycleStepId(null);  // hoặc không set gì nếu bạn để default null
+        }
 
         if (appointment.getDoctor() != null && appointment.getDoctor().getUser() != null) {
             dto.setDoctorId(appointment.getDoctor().getDoctorId());
@@ -338,6 +344,7 @@ public class AppointmentService {
 
         return dto;
     }
+
 
     public AppointmentDetailDTO getAppointmentDetailById(int appointmentId) {
         Appointment appointment = appointmentRepository.findById(appointmentId);
