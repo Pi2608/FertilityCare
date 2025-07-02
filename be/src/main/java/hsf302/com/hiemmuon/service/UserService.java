@@ -15,6 +15,10 @@ public class UserService {
     @Autowired
     private JwtService jwtService;
 
+    public boolean isEmailExists(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }

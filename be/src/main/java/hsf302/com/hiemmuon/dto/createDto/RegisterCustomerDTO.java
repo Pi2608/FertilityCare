@@ -42,4 +42,6 @@ public class RegisterCustomerDTO {
     @NotNull(message = "Ngày sinh không được để trống")
     @Past(message = "Ngày sinh phải là một ngày trong quá khứ")
     private LocalDate dob;
+
+    private String otp;
 }

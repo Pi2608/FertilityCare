@@ -41,7 +41,7 @@ public class CustomerService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private JavaMailSender mailSender;
+    private SendMailService sendMailService;
 
     public List<CustomerDTO> getAllCustomers() {
         List<Customer> customers = customerRepository.findAllWithUser();
@@ -101,55 +101,37 @@ public class CustomerService {
         customerRepository.save(customer);
     }
 
-    @Transactional
-    public void registerCustomer(RegisterCustomerDTO dto) {
-        if (userRepository.existsByEmail(dto.getEmail())) {
-            throw new RuntimeException("Email đã tồn tại");
+        @Transactional
+        public void registerCustomer(RegisterCustomerDTO dto) {
+            if (userRepository.existsByEmail(dto.getEmail())) {
+                throw new RuntimeException("Email đã tồn tại");
+            }
+
+            Role customerRole = roleRepository.findByRoleName("CUSTOMER");
+            if (customerRole == null) {
+                throw new RuntimeException("Không tìm thấy role CUSTOMER");
+            }
+
+            User user = new User();
+            user.setName(dto.getName());
+            user.setEmail(dto.getEmail());
+            user.setPassword(passwordEncoder.encode(dto.getPassword()));
+            user.setPhone(dto.getPhone());
+            user.setDob(dto.getDob());
+            user.setGender(dto.getGender());
+            user.setRole(customerRole);
+            user.setCreateAt(LocalDate.now());
+            userRepository.save(user);
+
+            Customer customer = new Customer();
+            customer.setUser(user);
+            customer.setActive(true);
+            customer.setMedicalHistory(dto.getMedicalHistory());
+            customerRepository.save(customer);
         }
-
-        Role customerRole = roleRepository.findByRoleName("CUSTOMER");
-        if (customerRole == null) {
-            throw new RuntimeException("Không tìm thấy role CUSTOMER");
-        }
-
-        User user = new User();
-        user.setName(dto.getName());
-        user.setEmail(dto.getEmail());
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        user.setPhone(dto.getPhone());
-        user.setDob(dto.getDob());
-        user.setGender(dto.getGender());
-        user.setRole(customerRole);
-        user.setCreateAt(LocalDate.now());
-        userRepository.save(user);
-
-        Customer customer = new Customer();
-        customer.setUser(user);
-        customer.setActive(true);
-        customer.setMedicalHistory(dto.getMedicalHistory());
-        customerRepository.save(customer);
-    }
 
     public Customer getCustomerById(int id) {
         Customer customer = customerRepository.findById(id).get();
         return customer;
-    }
-
-    public void sendMail(String to, String name) {
-
-        String body = "<h1>Welcome, " + name + "!</h1>"
-                + "<p>Welcome to FercilyCare.</p>";
-
-        MimeMessage mimeMessage = mailSender.createMimeMessage();
-
-        try {
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-            helper.setTo(to);
-            helper.setSubject("You have successfully registered!");
-            helper.setText(body, true);
-            mailSender.send(mimeMessage);
-        } catch (MessagingException e) {
-            throw new RuntimeException("Gửi email thất bại", e);
-        }
     }
 }
