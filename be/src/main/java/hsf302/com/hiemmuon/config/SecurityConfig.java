@@ -110,9 +110,10 @@ public class SecurityConfig {
                                                 "/api/treatment-services")
                                 .hasAnyRole("MANAGER","ADMIN")
 
-                                .requestMatchers(HttpMethod.POST,
-                                                "/api/register/customer"
-                                ).permitAll()
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/register/request",
+                                "/api/register/confirm").permitAll()
+
 
                                 .requestMatchers(HttpMethod.PUT,
                                                 "/api/customer/update"
