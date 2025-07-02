@@ -26,5 +26,4 @@ public interface CycleStepRepository extends JpaRepository<CycleStep, Integer> {
             int cycleId, StatusCycle statusCycleStep
     );
 
-    CycleStep findById(int cycleStepId);
 }
