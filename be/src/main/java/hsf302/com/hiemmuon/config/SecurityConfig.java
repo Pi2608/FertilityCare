@@ -43,7 +43,6 @@ public class SecurityConfig {
                         .csrf(csrf -> csrf.disable())
                         .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/api/login/**").permitAll()
-                                .requestMatchers("/api/login/**").permitAll()
 
                                 /// Doctor APIs
                                 .requestMatchers(HttpMethod.GET,

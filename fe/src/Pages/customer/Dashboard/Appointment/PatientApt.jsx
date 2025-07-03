@@ -41,7 +41,7 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
 
   const cancelPayment = (paymentId) => {
     try {
-      const response = ApiGateway.cancelPayment(paymentId);
+      ApiGateway.cancelPayment(paymentId);
       fetchPaymentNotifications();
     } catch (error) {
       console.error("Error canceling payment:", error);
@@ -95,7 +95,6 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
 
 
             <div className="actions">
-                {/* <button className="primary-btn">Đặt lịch hẹn</button> */}
                 <button className="secondary-btn">Liên hệ bác sĩ</button>
             </div>
         </div>
@@ -103,7 +102,6 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
       <div className="apt-container">
         <div className="page-title-actions">
           <h3>Lịch hẹn của tôi</h3>
-          <button className="btn-primary">Đặt lịch mới</button>
         </div>
         <div className="subtitle">
           <p>Quản lý tất cả các cuộc hẹn sắp tới và đã qua</p>
@@ -115,15 +113,17 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
             {paymentNotifications.length > 0 && (
               <>
                 <h4>Xác nhận thanh toán</h4>
-                {paymentNotifications.map((payment) => (
-                  <PaymentNotification
-                    key={payment.id}
-                    payment={payment}
-                    formatDatetimeWithWeekday={formatDatetimeWithWeekday}
-                    formatCurrency={formatCurrency}
-                    cancelPayment={cancelPayment}
-                  />
-                ))}
+                <div className="payment-card-container">
+                  {paymentNotifications.map((payment) => (
+                    <PaymentNotification
+                      key={payment.id}
+                      payment={payment}
+                      formatDatetimeWithWeekday={formatDatetimeWithWeekday}
+                      formatCurrency={formatCurrency}
+                      cancelPayment={cancelPayment}
+                    />
+                  ))}
+                </div>
               </>
             )}
           <h4 style={{marginTop:"1rem"}}>Sắp tới</h4>
@@ -234,7 +234,6 @@ const PaymentNotification = ({ payment, formatDatetimeWithWeekday, formatCurrenc
       className={`notification-card payment ${
         !payment.isRead ? "unread" : "read"
       }`}
-      // onClick={() => markAsRead(payment.id)}
     >
       <div className="notification-icon payment-icon">
         <CalendarIcon size={24} />

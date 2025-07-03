@@ -59,6 +59,43 @@ class ApiGateway {
     }
   }
 
+  static async register(newUser) {
+    try {
+      const newUserData = {
+        name: newUser.name,
+        email: newUser.password,
+        password: newUser.password,
+        medicalHistory: "Chưa có",
+        phone: newUser.phone,
+        gender: newUser.gender,
+        dob: newUser.dob,
+      }
+      const response = await ApiGateway.axiosInstance.post("register/request", newUserData);
+      return response.data;
+    } catch (error) {
+      console.error("Registration error:", error);
+      throw error;
+    }
+  }
+
+  /** 
+   * Send OTP to mail
+   * @param {string} email - user email
+   * @param {string} otp - otp of user 
+  */
+  static async confirmRegister(otp){
+    try {
+      const confirmInfo = {
+        email: otp.email,
+        otp: otp.otp
+      }
+      const response = await ApiGateway.axiosInstance.post(`register/confirm?email=${confirmInfo.email}&otp=${confirmInfo.otp}`)
+    } catch (error) {
+      console.error("Otp error", error);
+      throw error
+    }
+  }
+
     static async getUserRole() {
         try {
             const response = await ApiGateway.axiosInstance.get("login/roles");

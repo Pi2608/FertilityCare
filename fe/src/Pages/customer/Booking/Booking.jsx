@@ -152,44 +152,9 @@ const Booking = () => {
 
   // Generate calendar dates for June 2025
   const generateCalendarDates = () => {
-    const mockData = [
-      {
-        schedule_id: 1,
-        date: "2025-06-30",
-        start_time: "08:00:00",
-        end_time: "09:30:00",
-        status: 0,
-        doctor_id: 3,
-      },
-      {
-        schedule_id: 2,
-        date: "2025-06-30",
-        start_time: "09:30:00",
-        end_time: "11:00:00",
-        status: 0,
-        doctor_id: 3,
-      },
-      {
-        schedule_id: 3,
-        date: "2025-06-30",
-        start_time: "13:30:00",
-        end_time: "14:30:00",
-        status: 0,
-        doctor_id: 3,
-      },
-      {
-        schedule_id: 4,
-        date: "2025-06-30",
-        start_time: "14:30:00",
-        end_time: "16:00:00",
-        status: 0,
-        doctor_id: 3,
-      },
-    ];
     const dates = [];
-    const currentDate = new Date(2025, 5, 1); // June 2025
-    const daysInMonth = new Date(2025, 5 + 1, 0).getDate();
-
+    const currentDate = new Date(); // June 2025
+    const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
 
     // Add empty cells for days before the first day of the month
     const firstDayOfWeek = currentDate.getDay();
@@ -197,16 +162,13 @@ const Booking = () => {
       dates.push(null);
     }
 
-
     // Add all days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       dates.push(day);
     }
 
-
     return dates;
   };
-
 
   const handleStepNext = () => {
     if (currentStep < 4) {
@@ -214,20 +176,17 @@ const Booking = () => {
     }
   };
 
-
   const handleStepBack = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     }
   };
 
-
   const handleDoctorSelect = async (doctor) => {
     setSelectedDoctor({
       ...doctor,
       id: doctor.userId,
     });
-
 
     // Nếu đã có ngày → gọi lại getUnavailableSchedules
     if (selectedDate) {
@@ -237,16 +196,13 @@ const Booking = () => {
           selectedDate
         );
 
-
         const busyTimes = unavailable.map((slot) =>
           slot.startTime?.slice(0, 5)
         );
 
-
         const available = FIXED_TIME_SLOTS.filter(
           (slot) => !busyTimes.includes(slot)
         );
-
 
         setAvailableSchedules(available);
       } catch (err) {
@@ -258,10 +214,7 @@ const Booking = () => {
 
 
   const handleDateSelect = async (date) => {
-    const formatted = `2025-06-${String(date).padStart(2, "0")}`;
     setSelectedDate(formatted);
-    setShowCalendar(false);
-
 
     // Nếu chưa chọn bác sĩ thì vẫn hiển thị toàn bộ FIXED_TIME_SLOTS
     if (!selectedDoctor) {
@@ -522,43 +475,12 @@ const Booking = () => {
       <div className="datetime-selection">
         <div className="date-section">
           <h3>Chọn Ngày</h3>
-          <div
-            className="date-input"
-            onClick={() => setShowCalendar(!showCalendar)}
-          >
-            {selectedDate || "Chọn ngày"}
-          </div>
-
-
-          {showCalendar && (
-            <div className="calendar">
-              <div className="calendar-header">
-                <h4>
-                  {today.getMonth()}-{today.getUTCFullYear()}
-                </h4>
-              </div>
-              <div className="calendar-weekdays">
-                {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day) => (
-                  <div key={day} className="weekday">
-                    {day}
-                  </div>
-                ))}
-              </div>
-              <div className="calendar-dates">
-                {generateCalendarDates().map((date, index) => (
-                  <div
-                    key={index}
-                    className={`calendar-date ${date ? "available" : "empty"} ${
-                      date === today.getDate() ? "today" : ""
-                    }`}
-                    onClick={() => date && handleDateSelect(date)}
-                  >
-                    {date}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          <input type="date"
+            onChange={(e) => {
+            const dateOnly = e.target.value.split('T')[0];
+            handleDateSelect(dateOnly);
+          }}
+          />
         </div>
 
 
@@ -677,12 +599,11 @@ const Booking = () => {
   const renderBookingComplete = () => (
     <div className="step-content booking-complete">
       <div className="success-icon">
-        <Check size={64} />
+        <Check size={48} />
       </div>
       <h2>Đặt Lịch Hẹn Thành Công!</h2>
       <p>
-        Cảm ơn bạn đã đặt lịch hẹn với chúng tôi. Chúng tôi đã gửi xác nhận đến
-        email của bạn.
+        Cảm ơn bạn đã đặt lịch hẹn với chúng tôi
       </p>
 
 
@@ -727,7 +648,7 @@ const Booking = () => {
         <button className="secondary-btn" onClick={() => navigate("/homepage")}>
           Quay Về Trang Chủ
         </button>
-        <button className="primary-btn">Quản Lý Lịch Hẹn</button>
+        <button className="primary-btn" onClick={() => navigate("/patient-dashboard/appointments")}>Quản Lý Lịch Hẹn</button>
       </div>
     </div>
   );

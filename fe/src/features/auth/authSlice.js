@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import apiGateway from '../service/apiGateway';
-import customerApiGateway from '../service/customerApiGateway';
 
 const initialState = {
   userId: null,
@@ -42,7 +41,7 @@ export const registerUser = createAsyncThunk(
   'auth/registerUser',
   async (userData, thunkAPI) => {
     try {
-      await customerApiGateway.register(userData);
+      await apiGateway.register(userData);
       const res = await apiGateway.login(userData.email, userData.password);
       return res.data;
     } catch (err) {
