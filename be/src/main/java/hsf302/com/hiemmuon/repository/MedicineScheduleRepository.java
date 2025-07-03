@@ -27,4 +27,5 @@ public interface MedicineScheduleRepository extends JpaRepository<MedicineSchedu
             LocalDateTime startDate,
             LocalDateTime endDate
     );
+
 }

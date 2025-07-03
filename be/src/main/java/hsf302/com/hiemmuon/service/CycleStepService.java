@@ -1,22 +1,17 @@
 package hsf302.com.hiemmuon.service;
 
-import hsf302.com.hiemmuon.dto.responseDto.AppointmentOverviewDTO;
+import hsf302.com.hiemmuon.dto.responseDto.*;
+import hsf302.com.hiemmuon.dto.testresult.TestResultViewDTO;
 import hsf302.com.hiemmuon.dto.updateDto.NoteMedicineScheduleDTO;
-import hsf302.com.hiemmuon.dto.responseDto.CycleStepDTO;
-import hsf302.com.hiemmuon.dto.responseDto.MedicineDTO;
-import hsf302.com.hiemmuon.dto.responseDto.MedicineScheduleDTO;
-import hsf302.com.hiemmuon.entity.Cycle;
-import hsf302.com.hiemmuon.entity.CycleStep;
-import hsf302.com.hiemmuon.entity.MedicineSchedule;
+import hsf302.com.hiemmuon.entity.*;
 import hsf302.com.hiemmuon.enums.StatusCycle;
 import hsf302.com.hiemmuon.exception.NotFoundException;
-import hsf302.com.hiemmuon.repository.CycleRepository;
-import hsf302.com.hiemmuon.repository.CycleStepRepository;
-import hsf302.com.hiemmuon.repository.MedicineScheduleRepository;
+import hsf302.com.hiemmuon.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import javax.print.Doc;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +26,16 @@ public class CycleStepService {
 
     @Autowired
     private MedicineScheduleRepository medicineScheduleRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private DoctorRepository doctorRepository;
+
+    @Autowired
+    private TestResultRepository testResultRepository;
+
 
     public List<CycleStepDTO> getAllCycleStep(int cycleId) {
 
@@ -182,4 +187,79 @@ public class CycleStepService {
                 appointmentDTOs
         );
     }
+
+    public CycleStepDetailsDTO getCycleStepDetails(int cycleStepId) {
+        // 1. Lấy user hiện tại
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new RuntimeException("Không tìm thấy người dùng");
+        }
+
+        // 2. Lấy bác sĩ tương ứng với user
+        Doctor doctor = doctorRepository.findById(user.getUserId())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy doctor"));
+
+        // 3. Lấy cycleStep
+        CycleStep cycleStep = cycleStepRepository.findById(cycleStepId);
+        if(cycleStep == null) {
+            throw new RuntimeException("Không tìm thấy giai đoạn điều trị");
+
+        }
+        // 4. Kiểm tra quyền truy cập (bác sĩ có nằm trong danh sách các cuộc hẹn không)
+        boolean hasPermission = cycleStep
+                .getAppointments()
+                .stream()
+                .anyMatch(a -> a.getDoctor() != null && a.getDoctor().getDoctorId() == doctor.getDoctorId());
+
+        if (!hasPermission) {
+            throw new RuntimeException("Bạn không có quyền truy cập dữ liệu này");
+        }
+
+        // 5. Lấy test result
+        List<TestResult> testResultList = testResultRepository.findByCycleStep_StepId(cycleStepId);
+        List<TestResultViewDTO> testResults = testResultList.stream()
+                .map(r -> {
+                    TestResultViewDTO dto = new TestResultViewDTO();
+                    dto.setResultId(r.getResultId());
+                    dto.setName(r.getName());
+                    dto.setValue(r.getValue());
+                    dto.setUnit(r.getUnit());
+                    dto.setReferenceRange(r.getReferenceRange());
+                    dto.setTestDate(r.getTestDate());
+                    dto.setNote(r.getNote());
+                    dto.setAppointmentId(r.getAppointment().getAppointmentId());
+                    dto.setCycleStepId(r.getCycleStep().getStepId());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        // 6. Lấy medicine schedule
+        List<MedicineSchedule> medicineList = medicineScheduleRepository.findByCycleStep_StepId(cycleStepId);
+        List<MedicineScheduleDTO> medicines = medicineList.stream()
+                .map(m -> {
+                    MedicineScheduleDTO dto = new MedicineScheduleDTO();
+                    dto.setScheduleId(m.getMedicationId());
+                    dto.setStepOrder(m.getCycleStep().getStepOrder());
+                    dto.setMedicineName(m.getMedicine().getName());
+                    dto.setDose(m.getMedicine().getDose());
+                    dto.setStartDate(m.getStartDate());
+                    dto.setEndDate(m.getEndDate());
+                    dto.setStatus(m.getStatus());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        // 7. Lấy ghi chú từ cycleStep (chỉ là chuỗi)
+        String note = cycleStepRepository.findNoteByStepId(cycleStepId); // hoặc dùng: cycleStepRepository.findNoteByStepId(cycleStepId)
+
+        // 8. Gộp kết quả vào DTO
+        CycleStepDetailsDTO result = new CycleStepDetailsDTO();
+        result.setTestResults(testResults);
+        result.setMedicineSchedules(medicines);
+        result.setNote(note); // chỉ là 1 chuỗi
+
+        return result;
+    }
+
 }
