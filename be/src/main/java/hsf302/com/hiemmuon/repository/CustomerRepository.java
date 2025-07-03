@@ -16,4 +16,11 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
     Customer findByUser(User user);
 
     Customer findByCustomerId(int customerId);
+
+    @Query("SELECT COUNT(c) FROM Customer c")
+    Long countAllCustomers();
+
+    @Query("SELECT COUNT(c) FROM Customer c WHERE c.isActive = true")
+    Long countActiveCustomers();
+
 }

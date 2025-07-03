@@ -1,6 +1,7 @@
 package hsf302.com.hiemmuon.controller;
 
 import hsf302.com.hiemmuon.dto.ApiResponse;
+import hsf302.com.hiemmuon.dto.responseDto.CycleStepDetailsDTO;
 import hsf302.com.hiemmuon.dto.updateDto.NoteMedicineScheduleDTO;
 import hsf302.com.hiemmuon.dto.responseDto.CycleStepDTO;
 import hsf302.com.hiemmuon.enums.StatusCycle;
@@ -93,4 +94,15 @@ public class CycleStepController {
         );
         return ResponseEntity.ok(response);
     }
+
+    @Operation(
+            summary = "lay note, medician, test theo cyclestep_id",
+            description = "....."
+    )
+    @GetMapping("/{cycleStepId}/details(note,test,medician)")
+    public ResponseEntity<CycleStepDetailsDTO> getCycleStepDetails(@PathVariable int cycleStepId) {
+        CycleStepDetailsDTO details = cycleStepService.getCycleStepDetails(cycleStepId);
+        return ResponseEntity.ok(details);
+    }
+
 }

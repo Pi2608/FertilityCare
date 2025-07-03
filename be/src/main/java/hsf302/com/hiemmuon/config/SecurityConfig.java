@@ -149,6 +149,7 @@ public class SecurityConfig {
                                                 .hasAnyRole("CUSTOMER", "DOCTOR")
                                                 .requestMatchers(HttpMethod.PUT, "/api/customer/update")
                                                 .hasRole("CUSTOMER")
+                                                .requestMatchers(HttpMethod.GET, "api/cycle-steps/{cycleStepId}/details(note,test,medician)").hasRole("DOCTOR")
                         // appointment
                         .requestMatchers(HttpMethod.GET, "api/appointment-services/doctors/{doctorId}/available-schedules").hasRole("CUSTOMER")
                         .requestMatchers(HttpMethod.POST, "api/appointment-services/register/appointments").hasRole("CUSTOMER")
@@ -175,6 +176,11 @@ public class SecurityConfig {
                                                 .requestMatchers(HttpMethod.GET, "api/feedback/feedback-by-customer-and-doctor/{customerId}/{doctorId}").hasAnyRole("ADMIN","MANAGER")
                                                 .requestMatchers(HttpMethod.PUT, "api/feedback/{id}").hasAnyRole("ADMIN","MANAGER")
                                                 .requestMatchers(HttpMethod.DELETE, "api/feedback/{id}").hasAnyRole("ADMIN","MANAGER")
+                        // Report
+                                                .requestMatchers(HttpMethod.GET, "api/reports/accounts").hasAnyRole("ADMIN")
+                                                .requestMatchers(HttpMethod.GET, "api/reports/revenue").hasAnyRole("ADMIN")
+                                                .requestMatchers(HttpMethod.GET, "api/reports/users/summary").hasAnyRole("ADMIN")
+
 
 
 
