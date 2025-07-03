@@ -18,8 +18,11 @@ import java.util.List;
 public class CycleDTO {
     private int cycleId;
     private int customerId;
+    private String customerName;
+    private int customerAge;
     private int doctorId;
     private int serviceId;
+    private String serviceName;
     private LocalDate startDate;
     private LocalDate endDate;
     private StatusCycle status;

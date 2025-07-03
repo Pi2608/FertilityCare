@@ -39,7 +39,7 @@ public class TestResultService {
             throw new RuntimeException("Không tìm thấy appointment với ID: " + dto.getAppointmentId());
         }
 
-        CycleStep cycleStep = cycleStepRepository.findById(dto.getCycleStepId());
+        CycleStep cycleStep = cycleStepRepository.findById(dto.getCycleStepId()).orElseThrow(null);
 
         TestResult result = new TestResult(
                 0,

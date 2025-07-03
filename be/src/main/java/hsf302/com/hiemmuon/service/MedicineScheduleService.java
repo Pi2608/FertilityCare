@@ -163,6 +163,10 @@ public class MedicineScheduleService {
                 .toList();
     }
 
+    public List<MedicineScheduleDTO> getSchedulesByCustomer(int customerId) {
+        return medicineScheduleRepository.findAllByCustomerId(customerId);
+    }
+
     private MedicineScheduleDTO convertToDTO(MedicineSchedule schedule) {
         return new MedicineScheduleDTO(
                 schedule.getMedicationId(),
