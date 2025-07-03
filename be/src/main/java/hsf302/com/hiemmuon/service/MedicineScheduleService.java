@@ -83,8 +83,7 @@ public class MedicineScheduleService {
         Medicine medicine = medicineRepository.findById(dto.getMedicineId())
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy thuốc"));
 
-        CycleStep step = cycleStepRepository.findById(dto.getStepId())
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy bước điều trị"));
+        CycleStep step = cycleStepRepository.findById(dto.getStepId());
 
         if (step.getCycle().getCycleId() != dto.getCycleId()) {
             throw new RuntimeException("Bước điều trị không thuộc chu kỳ đã chọn");
