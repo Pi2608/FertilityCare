@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -74,6 +75,18 @@ public class CycleService {
 
         TreatmentService service = treatmentServiceRepository.findById(dto.getServiceId());
 
+        // Tính ngày kết thúc theo logic hệ thống
+        LocalDate endDate = dto.getStartDate().plusMonths(10);
+
+        // Kiểm tra xem customer đã có cycle nào trùng thời gian chưa
+        List<Cycle> overlappingCycles = cycleRepository.findOverlappingCycles(
+                dto.getCustomerId(), dto.getStartDate(), endDate
+        );
+
+        if (!overlappingCycles.isEmpty()) {
+            throw new RuntimeException("Khách hàng này đã có một chu kỳ điều trị trong thời gian này.");
+        }
+
         // Tạo Cycle
         Cycle cycle = new Cycle();
         cycle.setCustomer(customer);
@@ -123,8 +136,11 @@ public class CycleService {
         return new CycleDTO(
                 savedCycle.getCycleId(),
                 savedCycle.getCustomer().getCustomerId(),
+                savedCycle.getCustomer().getUser().getName(),
+                Period.between(savedCycle.getCustomer().getUser().getDob(), LocalDate.now()).getYears(),
                 savedCycle.getDoctor().getDoctorId(),
                 savedCycle.getService().getServiceId(),
+                savedCycle.getService().getName(),
                 savedCycle.getStartdate(),
                 savedCycle.getEndDate(),
                 savedCycle.getStatus(),
@@ -156,8 +172,13 @@ public class CycleService {
         return CycleDTO.builder()
                 .cycleId(cycle.getCycleId())
                 .customerId(cycle.getCustomer().getCustomerId())
+                .customerName(cycle.getCustomer().getUser().getName())
+                .customerAge(Period.between(
+                        cycle.getCustomer().getUser().getDob(),
+                        LocalDate.now()).getYears())
                 .doctorId(cycle.getDoctor().getDoctorId())
                 .serviceId(cycle.getService().getServiceId())
+                .serviceName(cycle.getService().getName())
                 .startDate(cycle.getStartdate())
                 .endDate(cycle.getEndDate())
                 .status(cycle.getStatus())
@@ -180,6 +201,10 @@ public class CycleService {
 
     @Transactional
     public CycleDTO createCycle(CreateCycleDTO dto, Customer customer, Doctor doctor) {
+        boolean isExisted = cycleRepository.existsByCustomer_CustomerIdAndStartdate(customer.getCustomerId(), dto.getStartDate());
+        if (isExisted) {
+            throw new IllegalArgumentException("Khách hàng đã có chu kỳ bắt đầu vào ngày này!");
+        }
 
         TreatmentService service = treatmentServiceRepository.findById(dto.getServiceId());
 
@@ -229,8 +254,11 @@ public class CycleService {
         return new CycleDTO(
                 savedCycle.getCycleId(),
                 savedCycle.getCustomer().getCustomerId(),
+                savedCycle.getCustomer().getUser().getName(),
+                Period.between(savedCycle.getCustomer().getUser().getDob(), LocalDate.now()).getYears(),
                 savedCycle.getDoctor().getDoctorId(),
                 savedCycle.getService().getServiceId(),
+                savedCycle.getService().getName(),
                 savedCycle.getStartdate(),
                 savedCycle.getEndDate(),
                 savedCycle.getStatus(),

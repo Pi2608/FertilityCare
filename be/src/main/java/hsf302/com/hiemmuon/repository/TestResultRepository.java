@@ -24,9 +24,12 @@ public interface TestResultRepository extends JpaRepository<TestResult, Integer>
 """)
     List<TestResultViewDTO> getAllByCustomerId(@Param("customerId") int customerId);
 
+    List<TestResult> findByCycleStep_StepId(int stepId);
 
 
-@Query("""
+
+
+    @Query("""
     SELECT new hsf302.com.hiemmuon.dto.testresult.TestResultViewDTO(
     r.resultId, r.name, r.value, r.unit, r.referenceRange, r.testDate, r.note
     )
