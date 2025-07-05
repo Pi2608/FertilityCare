@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Calendar, Clock, Check, Phone, FileText, BadgeCheck } from "lucide-react";
+import { Calendar, Clock, Check, Phone, FileText } from "lucide-react";
 import "./Booking.css";
 import apiConsultant from "../../../features/service/apiConsultant";
 
@@ -107,7 +107,6 @@ const Booking = () => {
   const [doctors, setDoctors] = useState([]);
   const [availableSchedules, setAvailableSchedules] = useState([]);
   const today = new Date();
-  const minDate = new Date(today.setDate(today.getDate() + 3));
   const FIXED_TIME_SLOTS = [
     "09:00",
     "10:00",
@@ -149,6 +148,27 @@ const Booking = () => {
             doctor.category === selectedCategory ||
             doctor.subcategory === selectedCategory
         );
+
+
+  // Generate calendar dates for June 2025
+  const generateCalendarDates = () => {
+    const dates = [];
+    const currentDate = new Date(); // June 2025
+    const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+
+    // Add empty cells for days before the first day of the month
+    const firstDayOfWeek = currentDate.getDay();
+    for (let i = 0; i < firstDayOfWeek; i++) {
+      dates.push(null);
+    }
+
+    // Add all days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      dates.push(day);
+    }
+
+    return dates;
+  };
 
   const handleStepNext = () => {
     if (currentStep < 4) {
@@ -194,7 +214,7 @@ const Booking = () => {
 
 
   const handleDateSelect = async (date) => {
-    setSelectedDate(date);
+    setSelectedDate(formatted);
 
     // Nếu chưa chọn bác sĩ thì vẫn hiển thị toàn bộ FIXED_TIME_SLOTS
     if (!selectedDoctor) {
@@ -202,35 +222,21 @@ const Booking = () => {
       return;
     }
 
+
     try {
       const unavailable = await apiConsultant.getUnavailableSchedules(
         selectedDoctor.userId,
-        date
+        formatted
       );
 
-      // if (!unavailable || unavailable.length === 0) {
-      //   console.log("Không có lịch bận nào cho ngày này, sử dụng toàn bộ khung giờ cố định.");
-      // }
-      // const busyTimes = unavailable?.map((slot) => slot.startTime?.slice(0, 5));
 
-      // const available = FIXED_TIME_SLOTS.filter(
-      //   (slot) => !busyTimes.includes(slot)
-      // );
+      const busyTimes = unavailable.map((slot) => slot.startTime?.slice(0, 5));
 
-      
-    if (!Array.isArray(unavailable)) {
-      console.log("API không trả về mảng:", unavailable);
-      setAvailableSchedules(FIXED_TIME_SLOTS);
-      return;
-    }
 
-    const busyTimes = unavailable.map((slot) =>
-      slot.startTime?.slice(0, 5)
-    );
+      const available = FIXED_TIME_SLOTS.filter(
+        (slot) => !busyTimes.includes(slot)
+      );
 
-    const available = FIXED_TIME_SLOTS.filter(
-      (slot) => !busyTimes.includes(slot)
-    );
 
       setAvailableSchedules(available);
     } catch (err) {
@@ -388,6 +394,7 @@ const Booking = () => {
       <h2>Chọn Bác Sĩ</h2>
       <p>Vui lòng chọn bác sĩ bạn muốn đặt lịch hẹn</p>
 
+
       <div className="category-filters">
         {categories.map((category) => (
           <button
@@ -406,9 +413,9 @@ const Booking = () => {
       <div className="doctors-list">
         {filteredDoctors.map((doctor) => (
           <div
-            key={doctor.userId}
+            key={doctor.id}
             className={`doctor-card ${
-              selectedDoctor?.userId === doctor.userId ? "selected" : ""
+              selectedDoctor?.id === doctor.id ? "selected" : ""
             }`}
             onClick={() => handleDoctorSelect(doctor)}
           >
@@ -423,18 +430,18 @@ const Booking = () => {
 
 
               <div className="doctor-info">
-                <h3>Bác sĩ {doctor.name}</h3>
-                <p>Chuyên gia {doctor.specification}</p>
+                <h3>{doctor.name}</h3>
+                <p>{doctor.specialty}</p>
               </div>
             </div>
 
 
             <div className="lower">
               <span>
-                <Calendar size={16} /> Bác sĩ còn trống lịch
+                <Calendar size={16} /> Có lịch từ {doctor.availableDate}
               </span>
               <span>
-                <BadgeCheck size={16} /> {doctor.experience} năm kinh nghiệm
+                <Check size={16} /> {doctor.experience}
               </span>
             </div>
           </div>
@@ -468,30 +475,28 @@ const Booking = () => {
       <div className="datetime-selection">
         <div className="date-section">
           <h3>Chọn Ngày</h3>
-          <div className="selected-doctor-info">
-            <div className="doctor-avatar">
-              <div className="avatar-placeholder"></div>
-            </div>
-            <div>
-              <p>
-                <strong>Bác sĩ {selectedDoctor?.name}</strong>
-              </p>
-              <p>Chuyên gia {selectedDoctor?.specification} - {selectedDoctor.experience} kinh nghiệm</p>
-            </div>
-          </div>
           <input type="date"
             onChange={(e) => {
             const dateOnly = e.target.value.split('T')[0];
             handleDateSelect(dateOnly);
-            }}
-            min={minDate.toISOString().split('T')[0]} 
-            style={{boxSizing: "border-box"}}
+          }}
           />
         </div>
 
 
         <div className="time-section">
           <h3>Chọn Giờ</h3>
+          <div className="selected-doctor-info">
+            <div className="doctor-avatar">
+              <div className="avatar-placeholder"></div>
+            </div>
+            <div>
+              <p>
+                <strong>{selectedDoctor?.name}</strong>
+              </p>
+              <p>{selectedDoctor?.specialty}</p>
+            </div>
+          </div>
 
 
           <div className="time-slots">

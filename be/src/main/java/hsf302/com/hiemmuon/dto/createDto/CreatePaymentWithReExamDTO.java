@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class CreatePaymentWithReExamDTO {
+
     private int customerId;
     private int serviceId;
     private BigDecimal total;

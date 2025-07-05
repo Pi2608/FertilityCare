@@ -75,18 +75,10 @@
     position: relative;
 }
 
-.patient-dashboard-main .progress-bar-container,
-.patient-dashboard-main .progress-bar-fill {
-    height: 8px;
-    border-radius: 4px;
-}
-
-.patient-dashboard-main .progress-bar-container{
-    overflow: hidden;
-}
-
 .patient-dashboard-main .progress-bar-fill {
     background: #d6004c;
+    height: 8px;
+    border-radius: 4px 0 0 4px;
 }
 
 .patient-dashboard-main .progress-steps {
@@ -111,13 +103,13 @@
     background: #ccc;
 }
 
-.patient-dashboard-main .step-item.finished .step-icon {
+.patient-dashboard-main .step-item.completed .step-icon {
     background: #4caf50;
 }
-.patient-dashboard-main .step-item.ongoing .step-icon {
+.patient-dashboard-main .step-item.in-progress .step-icon {
     background: #ff9800;
 }
-.patient-dashboard-main .step-item.stopped .step-icon {
+.patient-dashboard-main .step-item.pending .step-icon {
     background: #e0e0e0;
 }
 .patient-dashboard-main .step-label {

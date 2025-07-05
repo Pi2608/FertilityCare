@@ -61,12 +61,6 @@ const TreatmentServiceAPI = {
     );
     return response.data.data;
   },
-
-  // API lấy các bước Treatment Service
-  getServiceStep: async (id) => {
-    const response = await axiosInstance.get(`treatment-services/${id}/steps/all`);
-    return response.data;
-  }
 };
 
 export default TreatmentServiceAPI;

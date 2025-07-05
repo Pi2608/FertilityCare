@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './Overall.css';
 import { useNavigate } from 'react-router-dom';
-import TreatmentServiceAPI from '@features/service/apiTreatmentService';
-import ApiGateway from '@features/service/apiGateway';
+
+
 
 
 const Overall = ({ userName = 'Nguyễn Thị Hoa' }) => {
   const tabs = ['Tổng quan', 'Lịch hẹn', 'Điều trị', 'Hồ sơ'];
   const navigate = useNavigate();
-  const [myTreatment, setMyTreatment] = useState();
-  const [myTreatmentServiceSteps, setMyTreatmentServiceSteps] = useState([]);
+
 
   // Mock data for Tổng quan
   const ivfProgress = {
@@ -97,57 +96,30 @@ const Overall = ({ userName = 'Nguyễn Thị Hoa' }) => {
     },
   ];
 
-  useEffect(() => {
-    fetchMyTreatmentServiceSteps();
-  },[]);
-  
-  const fetchMyTreatmentServiceSteps = async (cycleId) => {
-    try {
-      const myCycles = await ApiGateway.getMyCycle();
-      const response = await TreatmentServiceAPI.getServiceStep(myCycles?.data[0]?.cycleId);
-      setMyTreatment(myCycles?.data[0]);
-      setMyTreatmentServiceSteps(response.data);
-    } catch (error) {
-      console.error('Lỗi khi lấy các bước điều trị:', error);
-    }
-  }
 
   const renderProgressBar = () => {
-    const total = myTreatmentServiceSteps.length;
-    const percent = ((myTreatmentServiceSteps.currentStep - 1) / (total - 1)) * 100;
+    const total = ivfProgress.steps.length;
+    const percent = ((ivfProgress.currentStep - 1) / (total - 1)) * 100;
     return (
         <div className="ivf-progress">
-            <h3>Tiến trình điều trị {myTreatment?.serviceName} {myTreatment&& "-"} {myTreatment?.cycleId}</h3>
+            <h3>Tiến trình điều trị</h3>
             <div className="progress-header">
-              {myTreatment ? (
-                <span>Chu kỳ điều trị hiện tại: #2 - Ngày 8/20</span>
-              ):(
-                <>
-                  <span>Bạn chưa có tiến trình điều trị nào</span>
-                </>
-              )}
+                <span>{ivfProgress.dateInfo}</span>
+                <span>{Math.round(percent)}%</span>
             </div>
 
 
             <div className="progress-bar-wrapper">
                 <div className="progress-bar-bg">
-                    {myTreatment && myTreatment.status !== "stopped" ? 
-                      <div className="progress-bar-container">
-                        <div className="progress-bar-fill" style={{ width: `${percent}%` }} />
-                      </div>
-                     : 
-                      <div className="progress-bar-container">
-                        <div className="progress-bar-fill" style={{ width: '100%', background: 'gray' }} />  
-                      </div>
-                    }
+                    <div className="progress-bar-fill" style={{ width: `${percent}%` }} />
                 </div>
 
 
-                {/* <div className="progress-steps">
-                    {myTreatmentServiceSteps.map((step, index) => {
+                <div className="progress-steps">
+                    {ivfProgress.steps.map((step, idx) => {
                         let className = '';
-                        if (index < ivfProgress.currentStep - 1) className = 'completed';
-                        else if (index === ivfProgress.currentStep - 1) className = 'in-progress';
+                        if (idx < ivfProgress.currentStep - 1) className = 'completed';
+                        else if (idx === ivfProgress.currentStep - 1) className = 'in-progress';
                         else className = 'pending';
                         return (
                             <div key={idx} className={`step-item ${className}`}>
@@ -156,24 +128,13 @@ const Overall = ({ userName = 'Nguyễn Thị Hoa' }) => {
                             </div>
                         );
                     })}
-                </div> */}
-                <div className="progress-steps">
-                    {myTreatmentServiceSteps.map((step, index) => {
-                        return (
-                            <div key={index} className={`step-item ${myTreatmentServiceSteps.statusCycleStep}`}>
-                                <div className="step-icon"></div>
-                                <span className="step-label">{step.label}</span>
-                            </div>
-                        );
-                    })}
                 </div>
             </div>
-                    
-            {myTreatment && 
-              <button className="btn-detail" onClick={() => navigate('/patient-dashboard/treatment-process')}>
-                Xem chi tiết điều trị
-              </button>
-            }        
+
+
+            <button className="btn-detail" onClick={() => navigate('/patient-dashboard/treatment-process')}>
+  Xem chi tiết điều trị
+</button>
 
 
         </div>

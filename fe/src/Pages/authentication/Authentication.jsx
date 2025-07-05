@@ -6,7 +6,6 @@ import { useLocation } from "react-router-dom";
 import { USER_ROLES } from '../../Router';
 import "./Authentication.css";
 import { Eye, EyeOff } from "lucide-react"; // icon đóng hiện mật khẩu
-import OtpInput from 'react-otp-input';
 
 const Authentication = () => {
   const dispatch = useDispatch();
@@ -16,8 +15,6 @@ const Authentication = () => {
   const [showPassword, setShowPassword] = useState(false); // Thêm state này
 
   const [isLogin, setIsLogin] = useState(true);
-  const [registerStep, setRegisterStep] = useState(1); // 1: Thông tin cá nhân, 2: OTP
-  const [otp, setOtp] = useState('');
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     name: '',
@@ -297,155 +294,121 @@ const Authentication = () => {
               </button>
             </div>
           ) : (
-            <>
-            {registerStep === 1 ? (
-              <div>
-                <div className="form-row">
-                  <div className="form-group">
-                    <label htmlFor="email">Email</label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      placeholder="Email"
-                      disabled={loading}
-                    />
-                    {errors.email && <p className="error-text">{errors.email}</p>}
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="phone">Số điện thoại</label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      placeholder="Số điện thoại"
-                      maxLength={10}
-                      disabled={loading}
-                    />
-                    {errors.phone && <p className="error-text">{errors.phone}</p>}
-                  </div>
-                </div>
-
-                  <div className="form-group">
-                      <label htmlFor="name">Họ và tên</label>
-                      <input
-                          type="text"
-                          id="name"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleInputChange}
-                          placeholder="Họ và tên"
-                          disabled={loading}
-                      />
-                      {errors.name && <p className="error-text">{errors.name}</p>}
-                  </div>
-
-                <div className="form-row">
-                  <div className="form-group">
-                    <label htmlFor="gender">Giới tính</label>
-                    <select
-                      id="gender"
-                      name="gender"
-                      value={formData.gender}
-                      onChange={handleInputChange}
-                      disabled={loading}
-                    >
-                      <option value="">Chọn giới tính</option>
-                      <option value="male">Nam</option>
-                      <option value="female">Nữ</option>
-                    </select>
-                    {errors.gender && (
-                      <p className="error-text">{errors.gender}</p>
-                    )}
-                  </div>
-
-                      <div className="form-group">
-                      <label htmlFor="dob">Ngày sinh</label>
-                      <input
-                          type="date"
-                          id="dob"
-                          name="dob"
-                          value={formData.dob}
-                          onChange={handleInputChange}
-                          disabled={loading}
-                      />
-                      {errors.dob && <p className="error-text">{errors.dob}</p>}
-                      </div>
-                  </div>
-
+            <div>
+              <div className="form-row">
                 <div className="form-group">
-                  <label htmlFor="registerPassword">Mật khẩu</label>
+                  <label htmlFor="email">Email</label>
                   <input
-                    type="password"
-                    id="registerPassword"
-                    name="password"
-                    value={formData.password}
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
                     onChange={handleInputChange}
-                    placeholder="Nhập mật khẩu"
+                    placeholder="Email"
                     disabled={loading}
                   />
-                  {errors.password && (
-                    <p className="error-text">{errors.password}</p>
-                  )}
+                  {errors.email && <p className="error-text">{errors.email}</p>}
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="confirmPassword">Xác nhận mật khẩu</label>
+                  <label htmlFor="phone">Số điện thoại</label>
                   <input
-                    type="password"
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
                     onChange={handleInputChange}
-                    placeholder="Nhập lại mật khẩu"
+                    placeholder="Số điện thoại"
+                    maxLength={10}
                     disabled={loading}
                   />
-                  {errors.confirmPassword && (
-                    <p className="error-text">{errors.confirmPassword}</p>
-                  )}
+                  {errors.phone && <p className="error-text">{errors.phone}</p>}
                 </div>
-
-                <button type="submit" className="submit-btn" disabled={loading}>
-                  {loading ? "Đang đăng ký..." : "Đăng ký"}
-                </button>
               </div>
-            )
-            :
-            (
-              <div className="otp-section">
-                <h3>Nhập mã OTP đã gửi đến số email của bạn</h3>
-                <OtpInput
-                  value={otp}
-                  onChange={setOtp}
-                  numInputs={6}
-                  separator={<span>-</span>}
-                  inputStyle="otp-input"
-                  isInputNum={true}
-                  shouldAutoFocus={true}
+
+                <div className="form-group">
+                    <label htmlFor="name">Họ và tên</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        placeholder="Họ và tên"
+                        disabled={loading}
+                    />
+                    {errors.name && <p className="error-text">{errors.name}</p>}
+                </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="gender">Giới tính</label>
+                  <select
+                    id="gender"
+                    name="gender"
+                    value={formData.gender}
+                    onChange={handleInputChange}
+                    disabled={loading}
+                  >
+                    <option value="">Chọn giới tính</option>
+                    <option value="male">Nam</option>
+                    <option value="female">Nữ</option>
+                  </select>
+                  {errors.gender && (
+                    <p className="error-text">{errors.gender}</p>
+                  )}
+                </div>
+
+                    <div className="form-group">
+                    <label htmlFor="dob">Ngày sinh</label>
+                    <input
+                        type="date"
+                        id="dob"
+                        name="dob"
+                        value={formData.dob}
+                        onChange={handleInputChange}
+                        disabled={loading}
+                    />
+                    {errors.dob && <p className="error-text">{errors.dob}</p>}
+                    </div>
+                </div>
+
+              <div className="form-group">
+                <label htmlFor="registerPassword">Mật khẩu</label>
+                <input
+                  type="password"
+                  id="registerPassword"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  placeholder="Nhập mật khẩu"
+                  disabled={loading}
                 />
-                {errors.otp && <p className="error-text">{errors.otp}</p>}
-                <button
-                  type="button"
-                  className="submit-btn"
-                  onClick={() => {
-                    if (otp.length === 6) {
-                      // Xử lý xác thực OTP ở đây
-                      console.log("OTP submitted:", otp);
-                    } else {
-                      setErrors((prev) => ({ ...prev, otp: "Vui lòng nhập mã OTP hợp lệ" }));
-                    }
-                  }}
-                >
-                  Xác nhận OTP
-                </button>
+                {errors.password && (
+                  <p className="error-text">{errors.password}</p>
+                )}
               </div>
-            )}
-            </>
+
+              <div className="form-group">
+                <label htmlFor="confirmPassword">Xác nhận mật khẩu</label>
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  placeholder="Nhập lại mật khẩu"
+                  disabled={loading}
+                />
+                {errors.confirmPassword && (
+                  <p className="error-text">{errors.confirmPassword}</p>
+                )}
+              </div>
+
+              <button type="submit" className="submit-btn" disabled={loading}>
+                {loading ? "Đang đăng ký..." : "Đăng ký"}
+              </button>
+            </div>
           )}
         </form>
       </div>

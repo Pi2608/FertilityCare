@@ -279,13 +279,3 @@
   background-color: #d6004c;
   color: #fff;
 }
-
-.appointment-page .no-appointments {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem;
-  background: #fff;
-  border-radius: 8px;
-  gap: 1rem;
-}

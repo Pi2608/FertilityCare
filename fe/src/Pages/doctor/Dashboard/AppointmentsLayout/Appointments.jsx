@@ -105,17 +105,6 @@ export default function Appointments() {
                         Nhắn tin
                       </a>
                     </>
-                  ) 
-                  : 
-                  item.status === "canceled" ? (
-                    <>
-                      <a className="btn btn-not-ready no-underline">
-                        Bị hủy
-                      </a>
-                      <a href="" className="btn btn-message no-underline">
-                        Nhắn tin
-                      </a>
-                    </>
                   ) : (
                     <>
                       <a href="" className="btn btn-not-ready no-underline">

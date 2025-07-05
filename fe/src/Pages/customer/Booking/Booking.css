@@ -354,6 +354,10 @@
     padding: 10px 5px;
 }
 
+.booking .date-section input[type="date"]::-webkit-calendar-picker-indicator {
+    
+}
+
 .booking .date-input {
     width: 100%;
     padding: 0.75rem;
