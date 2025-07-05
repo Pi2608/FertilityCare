@@ -1,5 +1,6 @@
 package hsf302.com.hiemmuon.repository;
 
+import hsf302.com.hiemmuon.dto.responseDto.MedicineScheduleDTO;
 import hsf302.com.hiemmuon.entity.MedicineSchedule;
 import hsf302.com.hiemmuon.enums.StatusMedicineSchedule;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,4 +28,28 @@ public interface MedicineScheduleRepository extends JpaRepository<MedicineSchedu
             LocalDateTime startDate,
             LocalDateTime endDate
     );
+
+    @Query("""
+    SELECT new hsf302.com.hiemmuon.dto.responseDto.MedicineScheduleDTO(
+        ms.medicationId,
+        cs.stepOrder,
+        m.name,
+        m.discription,
+        m.dose,
+        m.frequency,
+        ms.startDate,
+        ms.endDate,
+        ms.eventDate,
+        ms.status,
+        ms.note
+    )
+    FROM MedicineSchedule ms
+    JOIN ms.medicine m
+    JOIN ms.cycleStep cs
+    JOIN cs.cycle c
+    WHERE c.customer.customerId = :customerId
+    ORDER BY cs.stepOrder ASC, ms.eventDate ASC
+""")
+    List<MedicineScheduleDTO> findAllByCustomerId(@Param("customerId") int customerId);
+
 }

@@ -248,6 +248,8 @@ public class AppointmentService {
     public List<AppointmentOverviewDTO> getAllAppointmentsForManager() {
         List<Appointment> appointments = appointmentRepository.findAll();
 
+
+
         return appointments.stream().map(app -> {
             AppointmentOverviewDTO dto = new AppointmentOverviewDTO();
             dto.setAppointmentId(app.getAppointmentId());
@@ -257,7 +259,12 @@ public class AppointmentService {
             dto.setType(app.getTypeAppointment().name());
             dto.setStatus(app.getStatusAppointment().name());
             dto.setNote(app.getNote());
-            dto.setServiceName(app.getService().getName());
+            if (app.getService() != null) {
+                dto.setServiceName(app.getService().getName());
+            } else {
+                dto.setServiceName("Chưa có dịch vụ");
+            }
+
             return dto;
         }).toList();
     }

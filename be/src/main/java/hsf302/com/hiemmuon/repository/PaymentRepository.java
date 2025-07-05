@@ -16,4 +16,12 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer> {
 
     @Query("SELECT p FROM Payment p WHERE p.customer.customerId = :customerId AND p.status = :status")
     List<Payment> findByCustomerIdAndStatus(@Param("customerId") int customerId, @Param("status") StatusPayment status);
+
+    @Query("""
+    SELECT COALESCE(SUM(p.total), 0) 
+    FROM Payment p 
+    WHERE p.status = 'PAID' 
+""")
+    Long getRevenueThisMonth();
+
 }
