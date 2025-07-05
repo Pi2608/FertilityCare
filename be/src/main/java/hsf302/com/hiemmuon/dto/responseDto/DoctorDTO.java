@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DoctorDTO{
+public class DoctorDTO {
 
     private int userId;
     private String name;
@@ -22,4 +22,9 @@ public class DoctorDTO{
     private int experience;
     private Float ratingAvg;
     private Boolean isActive;
+    private String about;
+    private String approach;
+    private String education;
+    private String certificates;
+    private String workExperience;
 }

@@ -17,7 +17,7 @@ public class CreateTreatmentServiceDTO {
     private String name;
 
     @NotBlank(message = "Mô tả không được để trống")
-    @Size(max = 500, message = "Mô tả không được vượt quá 500 ký tự")
+    @Size(max = 1000, message = "Mô tả không được vượt quá 1000 ký tự")
     private String description;
 
     @NotNull(message = "Tỉ lệ thành công không được để trống")
@@ -29,6 +29,15 @@ public class CreateTreatmentServiceDTO {
     @NotNull(message = "Giá không được để trống")
     private BigDecimal price;
 
-    @Size(max = 255, message = "Thông số kỹ thuật không được vượt quá 255 ký tự")
-    private String specialfications;
+    @Size(max = 1000, message = "Thông số kỹ thuật không được vượt quá 1000 ký tự")
+    private String specifications;
+
+    @Size(max = 2000, message = "Thông tin đối tượng phù hợp không được vượt quá 2000 ký tự")
+    private String targetPatient;
+
+    @Size(max = 5000, message = "FAQ không được vượt quá 5000 ký tự")
+    private String faq;
+
+    @NotNull(message = "Trạng thái hoạt động không được để trống")
+    private Boolean isActive;
 }

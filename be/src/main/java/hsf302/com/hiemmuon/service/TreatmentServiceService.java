@@ -7,6 +7,8 @@ import hsf302.com.hiemmuon.repository.TreatmentServiceRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -20,47 +22,69 @@ public class TreatmentServiceService {
         return treatmentServiceRepository.findAll();
     }
 
-    public TreatmentService createTreatmentService(
-            CreateTreatmentServiceDTO treatmentServiceDTO) {
+    public TreatmentService createTreatmentService(CreateTreatmentServiceDTO treatmentServiceDTO) {
 
-        TreatmentService treatmentService = new TreatmentService();
         if (treatmentServiceRepository.findByName(treatmentServiceDTO.getName()) != null) {
-            throw new IllegalArgumentException("Service with this name already exists");
+            throw new IllegalArgumentException("Dịch vụ với tên này đã tồn tại");
         }
 
+        TreatmentService treatmentService = new TreatmentService();
         treatmentService.setName(treatmentServiceDTO.getName());
         treatmentService.setPrice(treatmentServiceDTO.getPrice());
         treatmentService.setDescription(treatmentServiceDTO.getDescription());
         treatmentService.setSuccessRate(treatmentServiceDTO.getSuccessRate());
-        treatmentService.setSpecifications(treatmentServiceDTO.getSpecialfications());
+        treatmentService.setSpecifications(treatmentServiceDTO.getSpecifications());
+        treatmentService.setTargetPatient(treatmentServiceDTO.getTargetPatient());
+        treatmentService.setFaq(treatmentServiceDTO.getFaq());
         treatmentService.setActive(true);
 
         return treatmentServiceRepository.save(treatmentService);
     }
 
+
     public TreatmentService updateTreatmentService(
-            int id,
-            @Valid UpdateServiceDTO updateServiceDTO) {
+            @RequestParam int id,
+            @Valid @RequestBody UpdateServiceDTO updateServiceDTO) {
 
         TreatmentService service = treatmentServiceRepository.findById(id);
+        if (service == null) {
+            throw new IllegalArgumentException("Không tìm thấy dịch vụ với ID: " + id);
+        }
+
+        if (updateServiceDTO.getName() != null) {
+            service.setName(updateServiceDTO.getName());
+        }
 
         if (updateServiceDTO.getPrice() != null) {
             service.setPrice(updateServiceDTO.getPrice());
         }
-        if (updateServiceDTO.getDescription() != null && !updateServiceDTO.getDescription().trim().isEmpty()) {
+
+        if (updateServiceDTO.getDescription() != null) {
             service.setDescription(updateServiceDTO.getDescription());
         }
+
         if (updateServiceDTO.getSuccessRate() != null) {
             service.setSuccessRate(updateServiceDTO.getSuccessRate());
         }
-        if (updateServiceDTO.getSpecialfications() != null && !updateServiceDTO.getSpecialfications().trim().isEmpty()) {
-            service.setSpecifications(updateServiceDTO.getSpecialfications());
+
+        if (updateServiceDTO.getSpecifications() != null) {
+            service.setSpecifications(updateServiceDTO.getSpecifications());
         }
+
+        if (updateServiceDTO.getTargetPatient() != null) {
+            service.setTargetPatient(updateServiceDTO.getTargetPatient());
+        }
+
+        if (updateServiceDTO.getFaq() != null) {
+            service.setFaq(updateServiceDTO.getFaq());
+        }
+
         return treatmentServiceRepository.save(service);
     }
 
+
     public TreatmentService updateServiceActive(
-            int id,
+            @RequestParam int id,
             boolean active) {
 
         TreatmentService service = treatmentServiceRepository.findById(id);
