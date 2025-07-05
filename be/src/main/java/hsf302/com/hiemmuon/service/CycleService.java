@@ -15,8 +15,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CycleService {
@@ -78,10 +79,12 @@ public class CycleService {
         // Tính ngày kết thúc theo logic hệ thống
         LocalDate endDate = dto.getStartDate().plusMonths(10);
 
-        // Kiểm tra xem customer đã có cycle nào trùng thời gian chưa
         List<Cycle> overlappingCycles = cycleRepository.findOverlappingCycles(
-                dto.getCustomerId(), dto.getStartDate(), endDate
-        );
+                dto.getCustomerId(),
+                dto.getStartDate(),
+                endDate,
+                StatusCycle.ongoing);
+
 
         if (!overlappingCycles.isEmpty()) {
             throw new RuntimeException("Khách hàng này đã có một chu kỳ điều trị trong thời gian này.");
