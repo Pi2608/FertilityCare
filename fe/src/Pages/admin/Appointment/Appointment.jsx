@@ -1,148 +1,67 @@
-"use client"
-
-import { useState } from "react"
-import "./Appointment.css"
+import { useEffect, useState } from "react";
+import apiAppointment1 from "../../../features/service/apiAppointment1";
+import "./Appointment.css";
 
 const Appointment = () => {
-  const [activeTab, setActiveTab] = useState("new")
-  const [searchTerm, setSearchTerm] = useState("")
-  const [selectedDate, setSelectedDate] = useState("")
+  const [activeTab, setActiveTab] = useState("new");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
+  const [appointments, setAppointments] = useState([]);
 
-  const newAppointments = [
-    {
-      time: "9:30 AM",
-      date: "05/12/2022",
-      patient: { name: "Elizabeth Polson", initials: "EP" },
-      age: 32,
-      doctor: "Dr. John",
-      type: "Tái khám",
-    },
-    {
-      time: "9:30 AM",
-      date: "05/12/2022",
-      patient: { name: "John David", initials: "JD" },
-      age: 28,
-      doctor: "Dr. Joel",
-      type: "Tái khám",
-    },
-    {
-      time: "10:30 AM",
-      date: "05/12/2022",
-      patient: { name: "Krishtav Rajan", initials: "KR" },
-      age: 24,
-      doctor: "Dr. Joel",
-      type: "Tư vấn",
-    },
-    {
-      time: "11:00 AM",
-      date: "05/12/2022",
-      patient: { name: "Sumanth Tinson", initials: "ST" },
-      age: 26,
-      doctor: "Dr. John",
-      type: "Tư vấn",
-    },
-    {
-      time: "11:30 AM",
-      date: "05/12/2022",
-      patient: { name: "EG Subramani", initials: "ES" },
-      age: 77,
-      doctor: "Dr. John",
-      type: "Tái khám",
-    },
-    {
-      time: "11:00 AM",
-      date: "05/12/2022",
-      patient: { name: "Ranjan Maari", initials: "RM" },
-      age: 77,
-      doctor: "Dr. John",
-      type: "Tư vấn",
-    },
-    {
-      time: "11:00 AM",
-      date: "05/12/2022",
-      patient: { name: "Philipile Gopal", initials: "PG" },
-      age: 55,
-      doctor: "Dr. John",
-      type: "Tái khám",
-    },
-  ]
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const data = await apiAppointment1.getAllOverviewAppointments();
+        console.log("Lịch hẹn từ API:", data);
 
-  const completedAppointments = [
-    {
-      time: "9:30 AM",
-      date: "05/12/2022",
-      patient: { name: "Elizabeth Polson", initials: "EP" },
-      age: 32,
-      doctor: "Dr. John",
-      feeStatus: "Paid",
-      type: "Tái khám",
-    },
-    {
-      time: "9:30 AM",
-      date: "05/12/2022",
-      patient: { name: "John David", initials: "JD" },
-      age: 28,
-      doctor: "Dr. Joel",
-      feeStatus: "UnPaid",
-      type: "Tái khám",
-    },
-    {
-      time: "10:30 AM",
-      date: "05/12/2022",
-      patient: { name: "Krishtav Rajan", initials: "KR" },
-      age: 24,
-      doctor: "Dr. Joel",
-      feeStatus: "Paid",
-      type: "Tư vấn",
-    },
-    {
-      time: "11:00 AM",
-      date: "05/12/2022",
-      patient: { name: "Sumanth Tinson", initials: "ST" },
-      age: 26,
-      doctor: "Dr. John",
-      feeStatus: "UnPaid",
-      type: "Tư vấn",
-    },
-    {
-      time: "11:30 AM",
-      date: "05/12/2022",
-      patient: { name: "EG Subramani", initials: "ES" },
-      age: 77,
-      doctor: "Dr. John",
-      feeStatus: "UnPaid",
-      type: "Tái khám",
-    },
-    {
-      time: "11:00 AM",
-      date: "05/12/2022",
-      patient: { name: "Ranjan Maari", initials: "RM" },
-      age: 77,
-      doctor: "Dr. John",
-      feeStatus: "UnPaid",
-      type: "Tư vấn",
-    },
-    {
-      time: "11:00 AM",
-      date: "05/12/2022",
-      patient: { name: "Philipile Gopal", initials: "PG" },
-      age: 55,
-      doctor: "Dr. John",
-      feeStatus: "Paid",
-      type: "Tái khám",
-    },
-  ]
+        const mapped = data.map((item) => {
+          const dateObj = new Date(item.date);
+          const formattedDate = dateObj.toLocaleDateString("vi-VN");
+          const formattedTime = dateObj.toLocaleTimeString("vi-VN", {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
 
-  const currentAppointments = activeTab === "new" ? newAppointments : completedAppointments
+          return {
+            time: formattedTime,
+            date: formattedDate,
+            patient: {
+              name: item.customerName,
+              initials: item.customerName
+                .split(" ")
+                .map((part) => part[0])
+                .join("")
+                .toUpperCase(),
+            },
+            age: "--", // vì API không trả tuổi
+            doctor: item.doctorName,
+            type: item.type === "tu_van" ? "Tư vấn" : "Tái khám",
+          };
+        });
+
+        setAppointments(mapped);
+      } catch (err) {
+        console.error("Lỗi khi lấy lịch hẹn:", err);
+      }
+    };
+
+    fetchAppointments();
+  }, []);
+
+  const currentAppointments = appointments;
 
   const filteredAppointments = currentAppointments.filter((appointment) => {
-    const matchesSearch = appointment.patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      appointment.doctor.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesSearch =
+      appointment.patient.name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      appointment.doctor.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesDate = selectedDate === "" || appointment.date === selectedDate
+    const matchesDate =
+      selectedDate === "" || appointment.date === selectedDate;
 
-    return matchesSearch && matchesDate
-  })
+    return matchesSearch && matchesDate;
+  });
 
   return (
     <div className="appointment-page">
@@ -173,7 +92,10 @@ const Appointment = () => {
         {/* Tabs and New Appointment Button */}
         <div className="content-header">
           <div className="tabs-container">
-            <button className={`tab ${activeTab === "new" ? "active" : ""}`} onClick={() => setActiveTab("new")}>
+            <button
+              className={`tab ${activeTab === "new" ? "active" : ""}`}
+              onClick={() => setActiveTab("new")}
+            >
               CUỘC HẸN MỚI
             </button>
             <button
@@ -237,14 +159,22 @@ const Appointment = () => {
                         <td>{appointment.date}</td>
                         <td className="patient-cell">
                           <div className="patient-info">
-                            <div className="patient-avatar">{appointment.patient.initials}</div>
+                            <div className="patient-avatar">
+                              {appointment.patient.initials}
+                            </div>
                             <span>{appointment.patient.name}</span>
                           </div>
                         </td>
                         <td>{appointment.age}</td>
                         <td>{appointment.doctor}</td>
                         <td className="type-cell">
-                          <span className={`appointment-type ${appointment.type === "Tái khám" ? "recheck" : "consultation"}`}>
+                          <span
+                            className={`appointment-type ${
+                              appointment.type === "Tái khám"
+                                ? "recheck"
+                                : "consultation"
+                            }`}
+                          >
                             {appointment.type}
                           </span>
                         </td>
@@ -270,13 +200,16 @@ const Appointment = () => {
             </>
           ) : (
             <div className="empty-state">
-              <p>No {activeTab === "new" ? "new" : "completed"} appointments to display</p>
+              <p>
+                No {activeTab === "new" ? "new" : "completed"} appointments to
+                display
+              </p>
             </div>
           )}
         </div>
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default Appointment
+export default Appointment;
