@@ -308,15 +308,28 @@ class ApiGateway {
    * @returns {Promise} - Callback processing result
    */
   static async processVNPayCallback(callbackParams) {
-      try {
-          const queryString = new URLSearchParams(callbackParams).toString();
-          const response = await ApiGateway.axiosInstance.get(`/payments/vnpay-callback?${queryString}`);
-          return response.data;
-      } catch (error) {
-          console.error('Error processing VNPay callback:', error);
-          throw error;
-      }
+    try {
+        const queryString = new URLSearchParams(callbackParams).toString();
+        const response = await ApiGateway.axiosInstance.get(`/payments/vnpay-callback?${queryString}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error processing VNPay callback:', error);
+        throw error;
+    }
   }
+
+  //Cycle APIs
+
+  static async getMyCycle() {
+    try {
+      const response = await ApiGateway.axiosInstance.get("/cycles/meC/cycle/all");
+      return response.data;
+    } catch (error) {
+      console.error("Create Cycle error:", error);
+      throw error;
+    }
+  }
+  
 }
 
 export default ApiGateway;

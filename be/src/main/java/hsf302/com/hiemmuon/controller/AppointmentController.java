@@ -6,6 +6,7 @@ import hsf302.com.hiemmuon.dto.responseDto.*;
 import hsf302.com.hiemmuon.entity.Customer;
 import hsf302.com.hiemmuon.entity.Doctor;
 import hsf302.com.hiemmuon.entity.User;
+import hsf302.com.hiemmuon.enums.StatusAppointment;
 import hsf302.com.hiemmuon.service.AppointmentService;
 import hsf302.com.hiemmuon.service.CustomerService;
 import hsf302.com.hiemmuon.service.DoctorService;
@@ -84,7 +85,7 @@ public class AppointmentController {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUserByEmail(email);
         Doctor doctor = doctorService.getDoctorById(user.getUserId());
-        appointmentService.scheduleReExam(dto, doctor);
+        appointmentService.scheduleReExam(dto, doctor, StatusAppointment.confirmed);
         return ResponseEntity.ok("Đặt lịch tái khám thành công.");
     }
 

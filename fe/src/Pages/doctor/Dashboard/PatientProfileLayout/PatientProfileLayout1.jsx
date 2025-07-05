@@ -6,67 +6,63 @@ import apiAppointment from "@features/service/apiAppointment";
 
 
 const PatientProfileLayout1 = () => {
-  const [appointmentDetail, setAppointmentDetail] = useState(null);
-  const [activeTab, setActiveTab] = useState("notes");
-  const [showResultForm, setShowResultForm] = useState(false);
-const [newResult, setNewResult] = useState({
-  name: "",
-  value: "",
-  unit: "",
-  referenceRange: "",
-  testDate: new Date().toISOString().slice(0, 10), // yyyy-mm-dd
-  note: "",
-});
-
-
-const handleToggleResultForm = () => {
-  setShowResultForm((prev) => !prev);
-};
-
-
-const handleResultInputChange = (e) => {
-  const { name, value } = e.target;
-  setNewResult((prev) => ({ ...prev, [name]: value }));
-};
-
-
-const handleCreateTestResult = async () => {
-  try {
-    const payload = {
-      ...newResult,
-      value: parseFloat(newResult.value),
-      appointmentId: appointmentDetail.appointmentId,
-    };
-
-
-    await apiAppointment.createTestResult(payload);
-    alert("Tạo kết quả xét nghiệm thành công!");
-    setShowResultForm(false);
-    setNewResult({
-      name: "",
-      value: "",
-      unit: "",
-      referenceRange: "",
-      testDate: "",
-      note: "",
-    });
-
-
-    const updated = await apiAppointment.getAppointmentDetailById(
-      appointmentDetail.appointmentId
-    );
-    setAppointmentDetail(updated);
-  } catch (err) {
-    console.error("Lỗi khi tạo kết quả:", err);
-    alert("Không thể tạo kết quả.");
-  }
-};
-
 
   const location = useLocation();
   const navigate = useNavigate();
   const { appointmentId } = location.state || {};
 
+  const [appointmentDetail, setAppointmentDetail] = useState(null);
+  const [activeTab, setActiveTab] = useState("notes");
+  const [showResultForm, setShowResultForm] = useState(false);
+  const [newResult, setNewResult] = useState({
+    name: "",
+    value: "",
+    unit: "",
+    referenceRange: "",
+    testDate: new Date().toISOString().slice(0, 10), // yyyy-mm-dd
+    note: "",
+  });
+
+  const handleToggleResultForm = () => {
+    setShowResultForm((prev) => !prev);
+  };
+
+  const handleResultInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewResult((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCreateTestResult = async () => {
+    try {
+      const payload = {
+        ...newResult,
+        value: parseFloat(newResult.value),
+        appointmentId: appointmentDetail.appointmentId,
+      };
+
+
+      await apiAppointment.createTestResult(payload);
+      alert("Tạo kết quả xét nghiệm thành công!");
+      setShowResultForm(false);
+      setNewResult({
+        name: "",
+        value: "",
+        unit: "",
+        referenceRange: "",
+        testDate: "",
+        note: "",
+      });
+
+
+      const updated = await apiAppointment.getAppointmentDetailById(
+        appointmentDetail.appointmentId
+      );
+      setAppointmentDetail(updated);
+    } catch (err) {
+      console.error("Lỗi khi tạo kết quả:", err);
+      alert("Không thể tạo kết quả.");
+    }
+  };
 
   const [expandedSections, setExpandedSections] = useState({
     medicalHistory: true,
@@ -889,11 +885,13 @@ export default PatientProfileLayout1;
 
 const ServiceTabContent = () => {
   const today = new Date();
+  const minDate = new Date(today.setDate(today.getDate() + 3));
+  const minHour = new Date(minDate.setHours(8, 0, 0)); 
   const [paymentForm, setPaymentForm] = useState({
     customerId: "",
     serviceId: "",
     appointmentDate: "",
-    note: "",
+    note: "Bệnh nhân bắt đầu chu trình điều trị hiếm muộn.",
     total: 0,
     type: "",
   });
@@ -927,6 +925,16 @@ const ServiceTabContent = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    if(name === "appointmentDate") {
+      const [date, time] = value.split('T');
+      if (time) {
+        // Lấy giờ và đặt phút về 00
+        const hour = time.split(':')[0];
+        const newValue = `${date}T${hour}:00`;
+        setPaymentForm((prev) => ({ ...prev, [name]: newValue }));
+        return;
+      }
+    }
     setPaymentForm((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -942,7 +950,6 @@ const ServiceTabContent = () => {
     }
   };
 
-
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -950,10 +957,7 @@ const ServiceTabContent = () => {
     }).format(amount);
   };
 
-
-  const isFormValid =
-    paymentForm.serviceId && paymentForm.appointmentDate && paymentForm.type;
-
+  const isFormValid = paymentForm.serviceId && paymentForm.appointmentDate && paymentForm.type;
 
   return (
     <div className="patient-profile-tab-content">
@@ -982,8 +986,8 @@ const ServiceTabContent = () => {
           className="form-input"
           name="appointmentDate"
           value={paymentForm.appointmentDate}
-          min={today.toISOString().slice(0, 16)}
-          step={3600}
+          min={minHour.toISOString().slice(0, 16)}
+          step="3600"
           onChange={handleInputChange}
         />
       </div>
@@ -1028,6 +1032,7 @@ const ServiceTabContent = () => {
           className="btn btn-primary"
           onClick={handleSubmit}
           disabled={!isFormValid}
+          style={{minWidth: 'fit-content', padding: '10px 20px', flex: 0}}
         >
           Tạo lịch khám
         </button>

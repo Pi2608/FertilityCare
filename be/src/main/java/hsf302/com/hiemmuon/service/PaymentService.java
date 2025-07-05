@@ -4,8 +4,11 @@ import hsf302.com.hiemmuon.dto.createDto.CreateCycleDTO;
 import hsf302.com.hiemmuon.dto.createDto.ReExamAppointmentDTO;
 import hsf302.com.hiemmuon.dto.createDto.CreatePaymentWithReExamDTO;
 import hsf302.com.hiemmuon.dto.responseDto.AppointmentHistoryDTO;
+import hsf302.com.hiemmuon.dto.responseDto.CycleDTO;
 import hsf302.com.hiemmuon.dto.responseDto.PaymentResponsesDTO;
 import hsf302.com.hiemmuon.entity.*;
+import hsf302.com.hiemmuon.enums.StatusAppointment;
+import hsf302.com.hiemmuon.enums.StatusCycle;
 import hsf302.com.hiemmuon.enums.StatusPayment;
 import hsf302.com.hiemmuon.exception.NotFoundException;
 import hsf302.com.hiemmuon.repository.*;
@@ -40,10 +43,13 @@ public class PaymentService {
     private TreatmentServiceRepository treatmentServiceRepository;
 
     @Autowired
-    private AppointmentService appointmentService;
+    private CycleStepRepository cycleStepRepository;
 
     @Autowired
-    private CycleService cycleService;
+    private  CycleService cycleService;
+
+    @Autowired
+    private AppointmentService appointmentService;
 
     @Autowired
     private JwtService jwtService;
@@ -59,6 +65,8 @@ public class PaymentService {
 
     @Value("${vnpay.returnUrl}")
     private String vnp_Return;
+    @Autowired
+    private CycleStepService cycleStepService;
 
     public PaymentService(PaymentRepository paymentRepository) {
         this.paymentRepository = paymentRepository;
@@ -109,13 +117,22 @@ public class PaymentService {
             throw new IllegalArgumentException("DTO null");
         }
 
+        CreateCycleDTO createNewCycle = new CreateCycleDTO();
+        createNewCycle.setCustomerId(dto.getCustomerId());
+        createNewCycle.setServiceId(dto.getServiceId());
+        createNewCycle.setStartDate(LocalDate.now());
+        createNewCycle.setNote(dto.getNote());
+
+        CycleDTO newCycle = cycleService.createCycle(createNewCycle, request);
+
         ReExamAppointmentDTO reExamDto = new ReExamAppointmentDTO();
         reExamDto.setCustomerId(dto.getCustomerId());
         reExamDto.setDate(dto.getAppointmentDate());
         reExamDto.setServiceId(dto.getServiceId());
         reExamDto.setNote(dto.getNote());
+        reExamDto.setCycleStepId(newCycle.getCycleStep().getFirst().getStepId());
 
-        AppointmentHistoryDTO appointmentHistory = appointmentService.scheduleReExam(reExamDto, doc);
+        AppointmentHistoryDTO appointmentHistory = appointmentService.scheduleReExam(reExamDto, doc, StatusAppointment.pending);
 
         Appointment appointment = appointmentRepository.findById(appointmentHistory.getAppointmentId());
 
@@ -147,12 +164,16 @@ public class PaymentService {
         return PaymentResponsesDTO.fromPayment(savedPayment);
     }
 
-    public void updatePaymentStatus(int paymentId, StatusPayment status) {
+    public void updatePaymentStatus(int paymentId, StatusPayment paymentStatus, StatusAppointment appointmentStatus) {
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy payment với ID: " + paymentId));
 
-        payment.setStatus(status);
-        if (status == StatusPayment.paid) {
+        Appointment appointment = appointmentRepository.findById(payment.getAppointment().getAppointmentId());
+
+        appointment.setStatusAppointment(appointmentStatus);
+
+        payment.setStatus(paymentStatus);
+        if (paymentStatus == StatusPayment.paid) {
             payment.setPaid(LocalDateTime.now());
         }
         paymentRepository.save(payment);
@@ -162,10 +183,16 @@ public class PaymentService {
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy payment với ID: " + paymentId));
 
+        CycleStep cycleStep = cycleStepRepository.findById(payment.getAppointment().getCycleStep().getStepId());
+
         // Only allow cancellation if payment is not already completed
         if (payment.getStatus() == StatusPayment.paid) {
             throw new RuntimeException("Không thể hủy payment đã hoàn thành");
         }
+
+        cycleStepService.updateCycleStepStatus(cycleStep.getCycle().getCycleId(), cycleStep.getStepId(), StatusCycle.stopped);
+
+        updatePaymentStatus(paymentId, StatusPayment.failed, StatusAppointment.canceled);
 
         payment.setStatus(StatusPayment.failed);
         Payment savedPayment = paymentRepository.save(payment);
@@ -221,16 +248,10 @@ public class PaymentService {
                 Doctor doctor = appointment.getDoctor();
 
                 if ("00".equals(vnp_ResponseCode)) {
-                    updatePaymentStatus(paymentId, StatusPayment.paid);
-                    CreateCycleDTO createCycle = new CreateCycleDTO();
-                    createCycle.setCustomerId(payment.getCustomer().getCustomerId());
-                    createCycle.setServiceId(payment.getService().getServiceId());
-                    createCycle.setStartDate(LocalDate.now());
-                    createCycle.setNote("Bệnh nhân bắt đầu chu trình điều trị hiếm muộn tại cơ sở.");
-                    cycleService.createCycle(createCycle, customer, doctor);
+                    updatePaymentStatus(paymentId, StatusPayment.paid, StatusAppointment.confirmed);
                     return "Payment successful";
                 } else {
-                    updatePaymentStatus(paymentId, StatusPayment.failed);
+                    updatePaymentStatus(paymentId, StatusPayment.failed,  StatusAppointment.canceled);
                     return "Payment failed with code: " + vnp_ResponseCode;
                 }
             } catch (NumberFormatException e) {

@@ -110,7 +110,7 @@ public class AppointmentService {
     }
 
 
-    public AppointmentHistoryDTO scheduleReExam(ReExamAppointmentDTO dto, Doctor doctor) {
+    public AppointmentHistoryDTO scheduleReExam(ReExamAppointmentDTO dto, Doctor doctor, StatusAppointment status) {
         // Tìm bác sĩ
         if (doctor == null) {
             throw new RuntimeException("Không tìm thấy bác sĩ");
@@ -155,7 +155,7 @@ public class AppointmentService {
         appointment.setCustomer(customer);
         appointment.setDate(appointmentTime);
         appointment.setTypeAppointment(TypeAppointment.tai_kham);
-        appointment.setStatusAppointment(StatusAppointment.confirmed);
+        appointment.setStatusAppointment(status);
         appointment.setNote(dto.getNote());
         appointment.setService(service);
         appointment.setCycleStep(cycleStep);
@@ -360,5 +360,30 @@ public class AppointmentService {
         }
 
         return convertToDto(appointment);
+    }
+
+    public void cancelAppointmentOnPayment(int appointmentId, int customerId) {
+        Appointment appointment = appointmentRepository
+                .findByAppointmentIdAndCustomer_CustomerId(appointmentId, customerId)
+                .orElseThrow(() -> new RuntimeException("Cuộc hẹn không tồn tại hoặc không thuộc quyền của bạn"));
+
+        // Hủy cuộc hẹn
+        appointment.setStatusAppointment(StatusAppointment.canceled);
+        appointmentRepository.save(appointment);
+
+        // Tìm khung giờ tương ứng trong DoctorSchedule
+        LocalDate date = appointment.getDate().toLocalDate();
+        LocalTime time = appointment.getDate().toLocalTime();
+
+        DoctorSchedule schedule = doctorScheduleRepository.findScheduleByDoctorDateTime(
+                appointment.getDoctor().getDoctorId(),
+                date,
+                time
+        );
+
+        if (schedule != null) {
+            // Xoá khung giờ khỏi bảng doctor_schedule
+            doctorScheduleRepository.delete(schedule);
+        }
     }
 }
