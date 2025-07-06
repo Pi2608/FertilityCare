@@ -3,10 +3,9 @@
   background: #fff;
   padding: 24px;
   border-radius: 12px;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
-  font-family: 'Segoe UI', sans-serif;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+  font-family: "Segoe UI", sans-serif;
 }
-
 
 .schedule-container .schedule-header {
   display: flex;
@@ -17,18 +16,15 @@
   margin-bottom: 20px;
 }
 
-
 .schedule-container .schedule-header h2 {
   margin: 0;
   font-size: 22px;
 }
 
-
 .schedule-container .schedule-header p {
   margin: 0;
   color: #666;
 }
-
 
 .schedule-container .schedule-actions input,
 .schedule-container .schedule-actions select,
@@ -40,7 +36,6 @@
   margin-right: 8px;
 }
 
-
 .schedule-container .btn {
   padding: 8px 12px;
   margin-right: 6px;
@@ -51,18 +46,15 @@
   background: #f3f4f6;
 }
 
-
 .schedule-container .btn.btn-start {
   background: #10b981;
   color: white;
 }
 
-
 .schedule-container .btn.btn-message {
   background: #3b82f6;
   color: white;
 }
-
 
 .schedule-container .btn.btn-not-ready {
   background: #9ca3af;
@@ -70,18 +62,15 @@
   cursor: not-allowed;
 }
 
-
 .schedule-container .btn.btn-not-ready:hover {
   background: #9ca3af;
   cursor: not-allowed;
 }
 
-
 .schedule-container .schedule-table {
   width: 100%;
   border-collapse: collapse;
 }
-
 
 .schedule-container .schedule-table th,
 .schedule-container .schedule-table td {
@@ -91,13 +80,11 @@
   vertical-align: middle;
 }
 
-
 .schedule-container .patient-info {
   display: flex;
   align-items: center;
   gap: 12px;
 }
-
 
 .schedule-container .patient-name {
   font-weight: 600;
@@ -106,18 +93,15 @@
   margin-bottom: 2px;
 }
 
-
 .schedule-container .patient-id {
   color: #888;
   font-size: 13px;
 }
 
-
 .schedule-container .date {
   color: #666;
   font-size: 13px;
 }
-
 
 .schedule-container .treatment-badge {
   padding: 4px 10px;
@@ -128,18 +112,15 @@
   color: #0284c7;
 }
 
-
 .schedule-container .treatment-badge.consultation {
   background: #f0fdf4;
   color: #16a34a;
 }
 
-
 .schedule-container .pagination {
   margin-top: 20px;
   text-align: center;
 }
-
 
 .schedule-container .pagination button {
   padding: 6px 12px;
@@ -149,14 +130,12 @@
   background: #fff;
 }
 
-
 .schedule-container .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 16px;
   margin: 24px 0 40px;
 }
-
 
 .schedule-container .calendar-day {
   position: relative;
@@ -170,23 +149,19 @@
   transition: background 0.2s ease;
 }
 
-
 .schedule-container .calendar-day:hover {
   background: #f3f4f6;
 }
-
 
 .schedule-container .calendar-day.off {
   background: #fef2f2;
   color: #b91c1c;
 }
 
-
 .schedule-container .day-label {
   font-weight: bold;
   white-space: pre-line;
 }
-
 
 .schedule-container .shift-count {
   margin-top: 8px;
@@ -195,13 +170,11 @@
   font-weight: 500;
 }
 
-
 .schedule-container .shift-off {
   margin-top: 8px;
   font-size: 13px;
   color: #999;
 }
-
 
 .schedule-container .tooltip {
   position: absolute;
@@ -210,7 +183,7 @@
   transform: translateX(-50%);
   background: #fff;
   border: 1px solid #e5e7eb;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 10px 14px;
   border-radius: 8px;
   font-size: 13px;
@@ -218,7 +191,6 @@
   z-index: 10;
   margin-bottom: 8px;
 }
-
 
 .no-underline {
   text-decoration: none;

@@ -1,36 +1,56 @@
-import React, { useState } from 'react';
-import './Message.css';
-
+import React, { useState } from "react";
+import "./Message.css";
 
 const patients = [
-  { id: 1, name: 'Nguyễn Thị Hoa', avatar: 'https://i.pravatar.cc/100?img=1', lastMessage: 'Cảm ơn bác sĩ!' },
-  { id: 2, name: 'Trần Văn Linh & Vợ', avatar: 'https://i.pravatar.cc/100?img=2', lastMessage: 'Tôi có câu hỏi về kết quả...' },
-  { id: 3, name: 'Phạm Thị Mai', avatar: 'https://i.pravatar.cc/100?img=3', lastMessage: 'Lịch siêu âm là khi nào?' },
-  { id: 4, name: 'Lê Thị Hương', avatar: 'https://i.pravatar.cc/100?img=4', lastMessage: 'Tôi thấy hơi đau sau khi tiêm.' },
-  { id: 5, name: 'Ngô Thị Lan', avatar: 'https://i.pravatar.cc/100?img=5', lastMessage: 'Bác sĩ cho tôi xin hướng dẫn...' },
+  {
+    id: 1,
+    name: "Nguyễn Thị Hoa",
+    avatar: "https://i.pravatar.cc/100?img=1",
+    lastMessage: "Cảm ơn bác sĩ!",
+  },
+  {
+    id: 2,
+    name: "Trần Văn Linh & Vợ",
+    avatar: "https://i.pravatar.cc/100?img=2",
+    lastMessage: "Tôi có câu hỏi về kết quả...",
+  },
+  {
+    id: 3,
+    name: "Phạm Thị Mai",
+    avatar: "https://i.pravatar.cc/100?img=3",
+    lastMessage: "Lịch siêu âm là khi nào?",
+  },
+  {
+    id: 4,
+    name: "Lê Thị Hương",
+    avatar: "https://i.pravatar.cc/100?img=4",
+    lastMessage: "Tôi thấy hơi đau sau khi tiêm.",
+  },
+  {
+    id: 5,
+    name: "Ngô Thị Lan",
+    avatar: "https://i.pravatar.cc/100?img=5",
+    lastMessage: "Bác sĩ cho tôi xin hướng dẫn...",
+  },
 ];
-
 
 const sampleMessages = [
-  { sender: 'patient', text: 'Chào bác sĩ!', time: '08:30' },
-  { sender: 'doctor', text: 'Chào bạn, bạn cần hỗ trợ gì?', time: '08:31' },
-  { sender: 'patient', text: 'Tôi cần hỏi về kết quả hôm qua.', time: '08:32' },
+  { sender: "patient", text: "Chào bác sĩ!", time: "08:30" },
+  { sender: "doctor", text: "Chào bạn, bạn cần hỗ trợ gì?", time: "08:31" },
+  { sender: "patient", text: "Tôi cần hỏi về kết quả hôm qua.", time: "08:32" },
 ];
-
 
 export default function Message() {
   const [selectedPatient, setSelectedPatient] = useState(patients[0]);
   const [messageList, setMessageList] = useState(sampleMessages);
-  const [newMessage, setNewMessage] = useState('');
-
+  const [newMessage, setNewMessage] = useState("");
 
   const handleSend = () => {
     if (!newMessage.trim()) return;
-    const newMsg = { sender: 'doctor', text: newMessage, time: 'Bây giờ' };
+    const newMsg = { sender: "doctor", text: newMessage, time: "Bây giờ" };
     setMessageList([...messageList, newMsg]);
-    setNewMessage('');
+    setNewMessage("");
   };
-
 
   return (
     <div className="message-wrapper">
@@ -40,7 +60,9 @@ export default function Message() {
           {patients.map((p) => (
             <div
               key={p.id}
-              className={`patient-item ${selectedPatient.id === p.id ? 'active' : ''}`}
+              className={`patient-item ${
+                selectedPatient.id === p.id ? "active" : ""
+              }`}
               onClick={() => setSelectedPatient(p)}
             >
               <img src={p.avatar} alt="avatar" />
@@ -53,13 +75,11 @@ export default function Message() {
         </div>
       </div>
 
-
       <div className="chat-box">
         <div className="chat-header">
           <img src={selectedPatient.avatar} alt="avatar" />
           <h4>{selectedPatient.name}</h4>
         </div>
-
 
         <div className="chat-content">
           {messageList.map((msg, index) => (
@@ -70,14 +90,13 @@ export default function Message() {
           ))}
         </div>
 
-
         <div className="chat-input">
           <input
             type="text"
             placeholder="Nhập tin nhắn..."
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+            onKeyDown={(e) => e.key === "Enter" && handleSend()}
           />
           <button onClick={handleSend}>Gửi</button>
         </div>
@@ -85,6 +104,3 @@ export default function Message() {
     </div>
   );
 }
-
-
-
