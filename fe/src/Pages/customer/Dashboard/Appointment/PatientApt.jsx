@@ -8,11 +8,10 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
   const [appointments, setAppointments] = useState([]);
   const [paymentNotifications, setPaymentNotifications] = useState([]);
 
-  
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND'
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
     }).format(amount);
   };
 
@@ -37,7 +36,7 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
     } catch (error) {
       console.error("Error fetching payment notifications:", error);
     }
-  }
+  };
 
   const cancelPayment = (paymentId) => {
     try {
@@ -47,7 +46,7 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
       console.error("Error canceling payment:", error);
       alert("Có lỗi xảy ra khi hủy thanh toán. Vui lòng thử lại.");
     }
-  }
+  };
 
   const fetchAppointments = async () => {
     try {
@@ -58,32 +57,48 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
     }
   };
 
+  const cancelAppointment = async (appointmentId) => {
+    const isConfirmed = window.confirm(
+      "Bạn có chắc chắn muốn hủy cuộc hẹn này không?"
+    );
+    if (!isConfirmed) return;
+
+    try {
+      await apiAppointment.cancelAppointmentById(appointmentId);
+      alert("Hủy cuộc hẹn thành công.");
+      fetchAppointments(); // load lại danh sách sau khi hủy
+    } catch (error) {
+      console.error("Lỗi khi hủy cuộc hẹn:", error);
+      alert("Hủy cuộc hẹn thất bại. Vui lòng thử lại.");
+    }
+  };
+
   useEffect(() => {
     fetchAppointments();
     fetchPaymentNotifications();
-    
+
     console.log("Fetching payment notifications...");
 
     const interval = setInterval(() => {
       fetchPaymentNotifications();
-    }, 60000); 
+    }, 60000);
 
     return () => clearInterval(interval);
   }, []);
 
-
   const now = new Date();
 
-
   const upcomingAppointments = appointments.filter(
-    (appt) => new Date(`${appt.date}T${appt.startTime}`) >= now
+    (appt) =>
+      new Date(`${appt.date}T${appt.startTime}`) >= now &&
+      appt.status !== "canceled"
   );
-
 
   const completedAppointments = appointments.filter(
-    (appt) => new Date(`${appt.date}T${appt.startTime}`) < now
+    (appt) =>
+      new Date(`${appt.date}T${appt.startTime}`) < now &&
+      appt.status !== "canceled"
   );
-
 
   return (
     <div className="appointment-page">
@@ -93,12 +108,11 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
           <p>Chào mừng quay trở lại với cổng thông tin bệnh nhân</p>
         </div>
 
-
-            <div className="actions">
-                {/* <button className="primary-btn">Đặt lịch hẹn</button> */}
-                <button className="secondary-btn">Liên hệ bác sĩ</button>
-            </div>
+        <div className="actions">
+          {/* <button className="primary-btn">Đặt lịch hẹn</button> */}
+          <button className="secondary-btn">Liên hệ bác sĩ</button>
         </div>
+      </div>
 
       <div className="apt-container">
         <div className="page-title-actions">
@@ -109,24 +123,22 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
           <p>Quản lý tất cả các cuộc hẹn sắp tới và đã qua</p>
         </div>
 
-
         <section className="patient-apt-section">
-          
-            {paymentNotifications.length > 0 && (
-              <>
-                <h4>Xác nhận thanh toán</h4>
-                {paymentNotifications.map((payment) => (
-                  <PaymentNotification
-                    key={payment.id}
-                    payment={payment}
-                    formatDatetimeWithWeekday={formatDatetimeWithWeekday}
-                    formatCurrency={formatCurrency}
-                    cancelPayment={cancelPayment}
-                  />
-                ))}
-              </>
-            )}
-          <h4 style={{marginTop:"1rem"}}>Sắp tới</h4>
+          {paymentNotifications.length > 0 && (
+            <>
+              <h4>Xác nhận thanh toán</h4>
+              {paymentNotifications.map((payment) => (
+                <PaymentNotification
+                  key={payment.id}
+                  payment={payment}
+                  formatDatetimeWithWeekday={formatDatetimeWithWeekday}
+                  formatCurrency={formatCurrency}
+                  cancelPayment={cancelPayment}
+                />
+              ))}
+            </>
+          )}
+          <h4 style={{ marginTop: "1rem" }}>Sắp tới</h4>
           <div className="appointments-list">
             {upcomingAppointments.map((appt) => (
               <div
@@ -137,7 +149,6 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
                   <CalendarIcon size={24} />
                 </div>
 
-
                 <div className="appointment-info">
                   <h5>{appt.type === "tu_van" ? "Tư vấn" : "Tái khám"}</h5>
                   <p>
@@ -147,16 +158,23 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
                   <p className="doctor-name">Bác sĩ {appt.doctorName}</p>
                 </div>
 
-
                 <div className="appointment-actions">
-                  <button className="secondary-btn">Đổi lịch</button>
+                  {appt.type === "tu_van" && appt.status === "confirmed" ? (
+                    <button
+                      className="secondary-btn"
+                      onClick={() => cancelAppointment(appt.appointmentId)}
+                    >
+                      Hủy cuộc hẹn
+                    </button>
+                  ) : (
+                    <button className="secondary-btn"></button>
+                  )}
                   <button className="primary-btn">Chi tiết</button>
                 </div>
               </div>
             ))}
           </div>
         </section>
-
 
         <section className="patient-apt-section">
           <h4>Đã hoàn thành</h4>
@@ -170,7 +188,6 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
                   <CalendarIcon size={24} />
                 </div>
 
-
                 <div className="appointment-info">
                   <h5>{appt.type === "tu_van" ? "Tư vấn" : "Tái khám"}</h5>
                   <p>
@@ -179,7 +196,6 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
                   </p>
                   <p className="doctor-name">Bác sĩ {appt.doctorName}</p>
                 </div>
-
 
                 <div className="appointment-actions">
                   <button className="btn-outline">Xem chi tiết</button>
@@ -193,17 +209,21 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
   );
 };
 
-
 export default PatientApt;
 
-const PaymentNotification = ({ payment, formatDatetimeWithWeekday, formatCurrency, cancelPayment }) => {
+const PaymentNotification = ({
+  payment,
+  formatDatetimeWithWeekday,
+  formatCurrency,
+  cancelPayment,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const confirmPayment = async (paymentId) => {
     try {
       setIsLoading(true);
       const response = await ApiGateway.createVNPayUrl(paymentId);
-      
+
       if (response) {
         window.location.href = response;
       } else {
@@ -243,35 +263,39 @@ const PaymentNotification = ({ payment, formatDatetimeWithWeekday, formatCurrenc
       <div className="notification-info">
         <div className="notification-header">
           <p>
-            <strong>{payment.doctorName}</strong> đã đặt lịch khám vào lúc{" "}
-            <strong>{formatDatetimeWithWeekday(payment?.appointmentDate)}</strong>.
+            đã đặt lịch khám vào lúc{" "}
+            <strong>
+              {formatDatetimeWithWeekday(payment?.appointmentDate)}
+            </strong>
+            .
           </p>
-          <span className="notification-time">
-            {payment.time}
-          </span>
+          <span className="notification-time">{payment.time}</span>
         </div>
         <p className="notification-message">
           Vui lòng hoàn tất thanh toán để xác nhận lịch khám.
         </p>
         <p className="notification-meta payment-amount">
-          <span className="doctor-name">Bác sĩ {payment?.doctorName}</span>
-          {" "}-{" "} 
-          <span className="payment-total">Số tiền: {formatCurrency(payment.total)}</span>
-          {" "}-{" "}
-          <span className="medication-name" style={{fontSize:"0.75rem"}}>{payment?.serviceName}</span>
+          <span className="doctor-name">Bác sĩ {payment?.doctorName}</span> -{" "}
+          <span className="payment-total">
+            Số tiền: {formatCurrency(payment.total)}
+          </span>{" "}
+          -{" "}
+          <span className="medication-name" style={{ fontSize: "0.75rem" }}>
+            {payment?.serviceName}
+          </span>
         </p>
       </div>
 
       <div className="notification-actions">
-        <button 
-          className="action-btn secondary" 
+        <button
+          className="action-btn secondary"
           onClick={handleCancelClick}
           disabled={isLoading}
         >
           Hủy
         </button>
-        <button 
-          className="action-btn primary" 
+        <button
+          className="action-btn primary"
           onClick={handleConfirmClick}
           disabled={isLoading}
         >
