@@ -20,22 +20,28 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
     SELECT m.*
     FROM messages m
     JOIN (
-        SELECT 
-            CASE 
-                WHEN sender_id = :userId THEN receiver_id
-                ELSE sender_id
-            END as other_user_id,
-            MAX(timestamp) as max_time
-        FROM messages
-        WHERE sender_id = :userId OR receiver_id = :userId
+        SELECT other_user_id, MAX(timestamp) as max_time
+        FROM (
+            SELECT 
+                CASE 
+                    WHEN sender_id = ?1 THEN receiver_id 
+                    ELSE sender_id 
+                END as other_user_id,
+                timestamp
+            FROM messages
+            WHERE sender_id = ?1 OR receiver_id = ?1
+        ) as sub
         GROUP BY other_user_id
     ) latest ON (
-        (m.sender_id = :userId AND m.receiver_id = latest.other_user_id OR
-         m.sender_id = latest.other_user_id AND m.receiver_id = :userId)
+        (m.sender_id = ?1 AND m.receiver_id = latest.other_user_id OR
+         m.sender_id = latest.other_user_id AND m.receiver_id = ?1)
         AND m.timestamp = latest.max_time
     )
     ORDER BY m.timestamp DESC
 """, nativeQuery = true)
     List<Message> findLatestMessagesWithEachUser(@Param("userId") int userId);
+
+
+
 
 }
