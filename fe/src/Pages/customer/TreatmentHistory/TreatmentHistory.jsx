@@ -1,65 +1,55 @@
-"use client"
-import "./TreatmentHistory.css"
-import { CalendarIcon } from "lucide-react"
+import "./TreatmentHistory.css";
+import { CalendarIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import apiAppointment from "@features/service/apiAppointment";
 
 const TreatmentHistory = ({ userName = "Nguyễn Thị Hoa" }) => {
-  const ongoingTreatments = [
-    {
-      id: 1,
-      title: "IVF - Chu kỳ #2",
-      date: "Thứ Tư, 22/05/2024",
-      time: "10:30",
-      doctor: "Bác sĩ Nguyễn Lan Anh",
-    },
-  ]
+  const [ongoingTreatments, setOngoingTreatments] = useState([]);
+  const [completedTreatments, setCompletedTreatments] = useState([]);
 
-  const completedTreatments = [
-    {
-      id: 2,
-      title: "IVF - Chu kỳ #1",
-      date: "Thứ Năm, 15/02/2024",
-      time: "09:00",
-      doctor: "Bác sĩ Nguyễn Lan Anh",
-    },
-    {
-      id: 3,
-      title: "IUI - Chu kỳ #3",
-      date: "Chủ Nhật, 10/12/2023",
-      time: "14:00",
-      doctor: "Bác sĩ Phạm Thanh",
-    },
-    {
-      id: 4,
-      title: "IUI - Chu kỳ #2",
-      date: "Chủ Nhật, 15/10/2023",
-      time: "11:30",
-      doctor: "Bác sĩ Phạm Thanh",
-    },
-  ]
+  useEffect(() => {
+    const fetchCycles = async () => {
+      try {
+        const res = await apiAppointment.getAllCyclesOfCustomer();
+        const cycles = res.data || [];
+        const ongoing = cycles.filter((c) => c.status === "ongoing");
+        const completed = cycles.filter((c) => c.status === "completed");
+        setOngoingTreatments(ongoing);
+        setCompletedTreatments(completed);
+      } catch (error) {
+        console.error("Lỗi khi lấy quá trình điều trị:", error);
+      }
+    };
+
+    fetchCycles();
+  }, []);
 
   return (
     <div className="treatment-history-page">
-<h2>Lịch sử điều trị</h2>
-<br></br>
+      <h2>Quá trình điều trị</h2>
+      <br />
       <div className="treatment-container">
-      
+        {/* Đang diễn ra */}
         <section className="treatment-section">
           <h4>Đang diễn ra</h4>
           <div className="treatments-list">
             {ongoingTreatments.map((treatment) => (
-              <div key={treatment.id} className="treatment-card ongoing">
+              <div key={treatment.cycleId} className="treatment-card ongoing">
                 <div className="treatment-icon">
                   <CalendarIcon size={24} />
                 </div>
-
                 <div className="treatment-info">
-                  <h5>{treatment.title}</h5>
+                  <h5>
+                    {treatment.serviceName} - Chu kỳ #{treatment.cycleId}
+                  </h5>
+                  {treatment.cycleStep?.[0]?.description && (
+                    <p>{treatment.cycleStep[0].description}</p>
+                  )}
                   <p>
-                    {treatment.date} - {treatment.time}
+                    {new Date(treatment.startDate).toLocaleDateString("vi-VN")}{" "}
+                    - {new Date(treatment.endDate).toLocaleDateString("vi-VN")}
                   </p>
-                  <p className="doctor-name">{treatment.doctor}</p>
                 </div>
-
                 <div className="treatment-actions">
                   <button className="primary-btn">Xem chi tiết</button>
                 </div>
@@ -68,33 +58,49 @@ const TreatmentHistory = ({ userName = "Nguyễn Thị Hoa" }) => {
           </div>
         </section>
 
+        {/* Đã hoàn thành */}
         <section className="treatment-section">
           <h4>Đã hoàn thành</h4>
-          <div className="treatments-list">
-            {completedTreatments.map((treatment) => (
-              <div key={treatment.id} className="treatment-card completed">
-                <div className="treatment-icon completed-icon">
-                  <CalendarIcon size={24} />
+          {completedTreatments.length === 0 ? (
+            <p style={{ padding: "1rem", fontStyle: "italic" }}>
+              Chưa có dữ liệu
+            </p>
+          ) : (
+            <div className="treatments-list">
+              {completedTreatments.map((treatment) => (
+                <div
+                  key={treatment.cycleId}
+                  className="treatment-card completed"
+                >
+                  <div className="treatment-icon completed-icon">
+                    <CalendarIcon size={24} />
+                  </div>
+                  <div className="treatment-info">
+                    <h5>
+                      {treatment.serviceName} - Chu kỳ #{treatment.cycleId}
+                    </h5>
+                    {treatment.cycleStep?.[0]?.description && (
+                      <p>{treatment.cycleStep[0].description}</p>
+                    )}
+                    <p>
+                      {new Date(treatment.startDate).toLocaleDateString(
+                        "vi-VN"
+                      )}{" "}
+                      →{" "}
+                      {new Date(treatment.endDate).toLocaleDateString("vi-VN")}
+                    </p>
+                  </div>
+                  <div className="treatment-actions">
+                    <button className="btn-outline">Xem chi tiết</button>
+                  </div>
                 </div>
-
-                <div className="treatment-info">
-                  <h5>{treatment.title}</h5>
-                  <p>
-                    {treatment.date} - {treatment.time}
-                  </p>
-                  <p className="doctor-name">{treatment.doctor}</p>
-                </div>
-
-                <div className="treatment-actions">
-                  <button className="btn-outline">Xem chi tiết</button>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </section>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default TreatmentHistory
+export default TreatmentHistory;
