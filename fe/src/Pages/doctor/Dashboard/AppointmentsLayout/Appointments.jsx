@@ -6,6 +6,45 @@ import { useNavigate } from "react-router-dom";
 export default function Appointments() {
   const [appointments, setAppointments] = useState([]);
   const navigate = useNavigate();
+  const [filterType, setFilterType] = useState("all");
+  const [filterTime, setFilterTime] = useState("all");
+
+  const filterAppointments = () => {
+    const today = new Date();
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay() + 1); // Monday
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6); // Sunday
+
+    return appointments
+      .filter((item) => {
+        const itemDate = new Date(item.date);
+
+        // Filter theo loại điều trị
+        if (filterType === "tu_van" && item.type !== "tu_van") return false;
+        if (filterType === "tai_kham" && item.type === "tu_van") return false;
+
+        // Filter theo thời gian
+        if (filterTime === "today") {
+          return itemDate.toDateString() === today.toDateString();
+        }
+        if (filterTime === "tomorrow") {
+          const tomorrow = new Date(today);
+          tomorrow.setDate(today.getDate() + 1);
+          return itemDate.toDateString() === tomorrow.toDateString();
+        }
+        if (filterTime === "week") {
+          return itemDate >= startOfWeek && itemDate <= endOfWeek;
+        }
+
+        return true;
+      })
+      .sort((a, b) => {
+        const dateA = new Date(`${a.date}T${a.startTime}`);
+        const dateB = new Date(`${b.date}T${b.startTime}`);
+        return dateB - dateA; // Sắp xếp mới nhất lên đầu
+      });
+  };
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -30,10 +69,23 @@ export default function Appointments() {
         </div>
         <div className="schedule-actions">
           <input type="text" placeholder="Tìm kiếm bệnh nhân..." />
-          <select>
-            <option>Hôm nay</option>
-            <option>Ngày mai</option>
-            <option>Tuần này</option>
+          <select
+            onChange={(e) => setFilterTime(e.target.value)}
+            value={filterTime}
+          >
+            <option value="all">Tất cả thời gian</option>
+            <option value="today">Hôm nay</option>
+            <option value="tomorrow">Ngày mai</option>
+            <option value="week">Tuần này</option>
+          </select>
+
+          <select
+            onChange={(e) => setFilterType(e.target.value)}
+            value={filterType}
+          >
+            <option value="all">Tất cả loại</option>
+            <option value="tu_van">Tư vấn</option>
+            <option value="tai_kham">Tái khám</option>
           </select>
         </div>
       </div>
@@ -50,13 +102,12 @@ export default function Appointments() {
           </tr>
         </thead>
         <tbody>
-          {appointments.map((item, index) => (
+          {filterAppointments().map((item, index) => (
             <tr key={item.appointmentId}>
               <td>
                 <div className="patient-info">
                   <div>
                     <div className="patient-name">{item.customerName}</div>
-                    <span className="patient-id">ID: {item.appointmentId}</span>
                   </div>
                 </div>
               </td>

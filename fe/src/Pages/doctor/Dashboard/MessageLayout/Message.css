@@ -3,10 +3,10 @@
   height: calc(100vh - 120px);
   width: 90%;
   background: #f8fafc;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .message-wrapper .sidebar {

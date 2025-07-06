@@ -126,7 +126,7 @@ public class AppointmentService {
             throw new RuntimeException("Không tìm thấy dịch vụ");
         }
 
-        CycleStep cycleStep = cycleStepRepository.findById(dto.getCycleStepId()).orElseThrow(null);
+        CycleStep cycleStep = cycleStepRepository.findById(dto.getCycleStepId());
         if(cycleStep == null || cycleStep.getStatusCycleStep() != StatusCycle.ongoing){
                     throw new RuntimeException("bác sĩ chọn sai cycleStep cho bênh nhân hoặc bênh nhân not ongoing - bênh nhân không trong giai đoanaj này ");
                 }
