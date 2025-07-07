@@ -33,19 +33,32 @@ public class ReportService {
     @Autowired
     private ManagerRepository managerRepository;
 
-    public Map<String, Object> getAccountStats() {
+    public Map<String, Object> getAccountStatus() {
+        // Doctor
         long totalDoctors = reportRepository.countTotalDoctors();
         long activeDoctors = reportRepository.countActiveDoctors();
         long newDoctorsThisMonth = reportRepository.countNewActiveDoctorsThisMonth();
 
+        // Customer
         long totalCustomers = reportRepository.countTotalCustomers();
         long activeCustomers = reportRepository.countActiveCustomers();
         long newCustomersThisMonth = reportRepository.countNewActiveCustomersThisMonth();
 
-        long total = totalDoctors + totalCustomers;
-        long active = activeDoctors + activeCustomers;
+        // Manager
+        long totalManagers = reportRepository.countTotalManagers();
+        long activeManagers = reportRepository.countActiveManagers();
+        long newManagersThisMonth = reportRepository.countNewActiveManagersThisMonth(); // nếu chưa có thì đặt = 0
+
+        // Admin
+        long totalAdmins = reportRepository.countTotalAdmins();
+        long activeAdmins = reportRepository.countActiveAdmins();
+        long newAdminsThisMonth = reportRepository.countNewActiveAdminsThisMonth(); // nếu chưa có thì đặt = 0
+
+        // Tổng hợp toàn hệ thống
+        long total = totalDoctors + totalCustomers + totalManagers + totalAdmins;
+        long active = activeDoctors + activeCustomers + activeManagers + activeAdmins;
         long inactive = total - active;
-        long increaseThisMonth = newDoctorsThisMonth + newCustomersThisMonth;
+        long increaseThisMonth = newDoctorsThisMonth + newCustomersThisMonth + newManagersThisMonth + newAdminsThisMonth;
 
         double activePercent = total == 0 ? 0 : ((double) active / total) * 100;
         double inactivePercent = total == 0 ? 0 : ((double) inactive / total) * 100;
@@ -55,8 +68,14 @@ public class ReportService {
         result.put("active", active);
         result.put("inactive", inactive);
         result.put("increaseThisMonth", increaseThisMonth);
-        result.put("activePercent", Math.round(activePercent * 10.0) / 10.0);    // làm tròn 1 chữ số
+        result.put("activePercent", Math.round(activePercent * 10.0) / 10.0);
         result.put("inactivePercent", Math.round(inactivePercent * 10.0) / 10.0);
+
+        // Thêm thống kê riêng cho từng vai trò nếu cần
+        result.put("totalDoctors", totalDoctors);
+        result.put("totalCustomers", totalCustomers);
+        result.put("totalManagers", totalManagers);
+        result.put("totalAdmins", totalAdmins);
 
         return result;
     }

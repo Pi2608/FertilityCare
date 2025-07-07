@@ -59,4 +59,7 @@ public class User {
 
     @Column(name = "update_at")
     private LocalDate updateAt;
+
+    public User(int senderId) {
+    }
 }
