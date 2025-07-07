@@ -196,11 +196,11 @@ const PaymentList = ({ userName = "Nguyễn Thị Hoa" }) => {
                   </div>
 
                   <div className="payment-status">
-                    <span className="paid-date">
+                    {/* <span className="paid-date">
                       <p>
                         {formatDatetimeWithWeekday(payment.paid)}
                       </p>
-                    </span>
+                    </span> */}
                     <span className={`status-badge ${getStatusClass(payment.status)}`}>
                       {getStatusText(payment.status)}
                     </span>
