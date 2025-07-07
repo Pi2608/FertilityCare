@@ -45,4 +45,8 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false, length = 20)
     private TypePayment type;
+
+    @OneToOne
+    @JoinColumn(name = "cycle_id")
+    private Cycle cycle;
 }
