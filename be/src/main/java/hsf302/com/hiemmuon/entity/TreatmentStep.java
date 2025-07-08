@@ -30,4 +30,7 @@ public class TreatmentStep {
     @Nationalized
     @Column(name = "description", columnDefinition = "NVARCHAR(MAX)", nullable = false)
     private String description;
+
+    @Column(name = "expected_duration", columnDefinition = "NVARCHAR(255)")
+    private String expectedDuration;
 }

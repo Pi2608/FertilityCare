@@ -101,7 +101,9 @@ public class DoctorService {
     public DoctorDTO updateDoctorMe(HttpServletRequest request, UpdateDoctorDTO updateDoctorDTO) {
 
         User existingDoctor = userService.getUserByJwt(request);
+        Doctor doctor = existingDoctor.getDoctor();
 
+        //Cập nhật thông tin từ User
         if (updateDoctorDTO.getName() != null) {
             existingDoctor.setName(updateDoctorDTO.getName());
         }
@@ -114,10 +116,29 @@ public class DoctorService {
         if (updateDoctorDTO.getGender() != null) {
             existingDoctor.setGender(updateDoctorDTO.getGender());
         }
-        if (updateDoctorDTO.getDescription() != null) {
-            existingDoctor.getDoctor().setSpecification(updateDoctorDTO.getDescription());
+
+        //Cập nhật thông tin từ Doctor
+        if (updateDoctorDTO.getSpecification() != null) {
+            doctor.setSpecification(updateDoctorDTO.getSpecification());
         }
-        return convertToDoctorDTO(saveDoctor(existingDoctor.getDoctor()));
+        if (updateDoctorDTO.getAbout() != null) {
+            doctor.setAbout(updateDoctorDTO.getAbout());
+        }
+        if (updateDoctorDTO.getApproach() != null) {
+            doctor.setApproach(updateDoctorDTO.getApproach());
+        }
+        if (updateDoctorDTO.getEducation() != null) {
+            doctor.setEducation(updateDoctorDTO.getEducation());
+        }
+        if (updateDoctorDTO.getCertificates() != null) {
+            doctor.setCertificates(updateDoctorDTO.getCertificates());
+        }
+        if (updateDoctorDTO.getWorkExperience() != null) {
+            doctor.setWorkExperience(updateDoctorDTO.getWorkExperience());
+        }
+
+        //Lưu doctor (gồm cả user liên kết)
+        return convertToDoctorDTO(saveDoctor(doctor));
     }
 
     public Doctor updateDoctorActive(int id, boolean active) {
@@ -138,6 +159,11 @@ public class DoctorService {
         dto.setExperience(doctor.getExperience());
         dto.setRatingAvg(doctor.getRatingAvg());
         dto.setIsActive(doctor.getIsActive());
+        dto.setAbout(doctor.getAbout());
+        dto.setApproach(doctor.getApproach());
+        dto.setEducation(doctor.getEducation());
+        dto.setCertificates(doctor.getCertificates());
+        dto.setWorkExperience(doctor.getWorkExperience());
         return dto;
     }
 }

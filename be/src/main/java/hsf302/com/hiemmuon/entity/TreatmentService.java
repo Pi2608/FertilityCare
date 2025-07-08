@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Data
@@ -23,8 +24,14 @@ public class TreatmentService {
     @Column(name = "description", columnDefinition = "NVARCHAR(MAX)")
     private String description;
 
+    @Column(name = "target_patient", columnDefinition = "NVARCHAR(MAX)")
+    private String targetPatient;
+
     @Column(name = "success_rate")
     private Float successRate;
+
+    @Column(name = "faq", columnDefinition = "NVARCHAR(MAX)")
+    private String faq;
 
     @Column(name = "price", precision = 10, scale = 2)
     private BigDecimal price;
