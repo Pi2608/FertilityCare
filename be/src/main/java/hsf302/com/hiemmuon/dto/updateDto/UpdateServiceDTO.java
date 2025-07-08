@@ -1,10 +1,7 @@
 package hsf302.com.hiemmuon.dto.updateDto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,18 +16,25 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class UpdateServiceDTO {
 
-    @NotBlank(message = "Mô tả không được để trống")
+    @Size(max = 100, message = "Tên dịch vụ không được vượt quá 100 ký tự")
+    private String name;
+
+    @Size(max = 1000, message = "Mô tả không được vượt quá 1000 ký tự")
     private String description;
 
-    @NotNull(message = "Tỷ lệ thành công không được để trống")
     @DecimalMin(value = "0.0", inclusive = true, message = "Tỷ lệ thành công phải từ 0% trở lên")
     @DecimalMax(value = "100.0", inclusive = true, message = "Tỷ lệ thành công không được vượt quá 100%")
     private Float successRate;
 
-    @NotNull(message = "Giá tiền không được để trống")
     @DecimalMin(value = "0.0", inclusive = false, message = "Giá tiền phải lớn hơn 0")
     private BigDecimal price;
 
-    @NotBlank(message = "Đặc tả không được để trống")
-    private String specialfications;
+    @Size(max = 1000, message = "Thông số kỹ thuật không được vượt quá 1000 ký tự")
+    private String specifications;
+
+    @Size(max = 2000, message = "Thông tin đối tượng phù hợp không được vượt quá 2000 ký tự")
+    private String targetPatient;
+
+    @Size(max = 5000, message = "FAQ không được vượt quá 5000 ký tự")
+    private String faq;
 }

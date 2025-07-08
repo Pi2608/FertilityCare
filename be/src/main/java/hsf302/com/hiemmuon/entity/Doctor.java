@@ -23,11 +23,31 @@ public class Doctor {
     private User user;
 
     @Nationalized
+    @Column(name = "about", columnDefinition = "NVARCHAR(MAX)")
+    private String about;
+
+    @Nationalized
     @Column(name = "specification", columnDefinition = "NVARCHAR(MAX)")
     private String specification;
 
+    @Nationalized
+    @Column(name = "approach", columnDefinition = "NVARCHAR(MAX)")
+    private String approach;
+
     @Column(name = "experience")
     private int experience;
+
+    @Nationalized
+    @Column(name = "work_experience", columnDefinition = "NVARCHAR(MAX)")
+    private String workExperience;
+
+    @Nationalized
+    @Column(name = "education", columnDefinition = "NVARCHAR(MAX)")
+    private String education;
+
+    @Nationalized
+    @Column(name = "certificates", columnDefinition = "NVARCHAR(MAX)")
+    private String certificates;
 
     @Column(name = "rating_avg")
     private Float ratingAvg;

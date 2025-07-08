@@ -23,8 +23,8 @@ public class UpdateDoctorDTO {
     @Size(min = 2, max = 50, message = "Tên phải từ 2 đến 50 ký tự")
     private String name;
 
-    @NotBlank(message = "Tên không được để trống")
-    @Size(min = 2, max = 50, message = "Tên phải từ 2 đến 50 ký tự")
+    @NotBlank(message = "Số điện thoại không được để trống")
+    @Size(min = 2, max = 50, message = "Số điện thoại phải từ 2 đến 50 ký tự")
     private String phone;
 
     @Past(message = "Ngày sinh phải nằm trong quá khứ")
@@ -32,6 +32,26 @@ public class UpdateDoctorDTO {
 
     private Genders gender;
 
-    @Pattern(regexp = "^(IUI|IVF)$", message = "Description chỉ được phép là IUI hoặc IVF")
-    private String description;
+    @Pattern(regexp = "^(IUI|IVF)$", message = "Specification chỉ được phép là IUI hoặc IVF")
+    private String specification;
+
+    // 💬 Mô tả về bác sĩ
+    @Size(max = 5000, message = "Thông tin về bác sĩ quá dài")
+    private String about;
+
+    // 🧠 Phương pháp tiếp cận điều trị
+    @Size(max = 5000, message = "Thông tin phương pháp tiếp cận quá dài")
+    private String approach;
+
+    // 🎓 Học vấn
+    @Size(max = 3000, message = "Thông tin học vấn quá dài")
+    private String education;
+
+    // 🏅 Chứng chỉ & Giải thưởng
+    @Size(max = 3000, message = "Thông tin chứng chỉ quá dài")
+    private String certificates;
+
+    // 💼 Kinh nghiệm chuyên môn
+    @Size(max = 5000, message = "Thông tin kinh nghiệm quá dài")
+    private String workExperience;
 }
