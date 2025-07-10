@@ -14,20 +14,26 @@ const Dashboard = () => {
         ]);
 
 
+        console.log("👤 userSummary:", userSummary);
+        console.log("💰 revenueData:", revenueData);
+        console.log("📊 accountStats:", accountStats);
+
+
         setDashboardData({
-          totalPatients: userSummary.patients || 0,
-          totalDoctors: userSummary.doctors || 0,
-          totalAppointments: 0, // Chưa có API
-          totalRevenue: revenueData.revenue || 0,
-          newPatientsThisMonth: 0, // Chưa có API
-          completedAppointments: 0, // Chưa có API
-          pendingAppointments: 0, // Chưa có API
-          activeServices: 0, // Chưa có API
-          totalAccounts: accountStats.total || 0,
-          activeAccounts: accountStats.active || 0,
-          inactiveAccounts: accountStats.inactive || 0,
-          newAccountsThisMonth: accountStats.increaseThisMonth || 0,
+          totalPatients: userSummary.data.patients || 0,
+          totalDoctors: userSummary.data.doctors || 0,
+          totalAppointments: 0,
+          totalRevenue: revenueData.data.revenue || 0,
+          newPatientsThisMonth: 0,
+          completedAppointments: 0,
+          pendingAppointments: 0,
+          activeServices: 0,
+          totalAccounts: accountStats.data.total || 0,
+          activeAccounts: accountStats.data.active || 0,
+          inactiveAccounts: accountStats.data.inactive || 0,
+          newAccountsThisMonth: accountStats.data.increaseThisMonth || 0,
         });
+       
       } catch (error) {
         console.error("Lỗi khi tải dữ liệu dashboard:", error);
       }
@@ -53,7 +59,6 @@ const Dashboard = () => {
     inactiveAccounts: 0,
     newAccountsThisMonth: 0,
   });
- 
 
 
   const [monthlyStats, setMonthlyStats] = useState([
@@ -122,9 +127,7 @@ const Dashboard = () => {
               <div className="stat-number">
                 {formatNumber(dashboardData.totalAccounts)}
               </div>
-              <div className="stat-change positive">
-                +{dashboardData.newAccountsThisMonth} tháng này
-              </div>
+             
             </div>
           </div>
 
@@ -136,13 +139,7 @@ const Dashboard = () => {
               <div className="stat-number">
                 {formatNumber(dashboardData.activeAccounts)}
               </div>
-              <div className="stat-change positive">
-                {(
-                  (dashboardData.activeAccounts / dashboardData.totalAccounts) *
-                  100
-                ).toFixed(1)}
-                % tổng số
-              </div>
+             
             </div>
           </div>
 
@@ -154,14 +151,7 @@ const Dashboard = () => {
               <div className="stat-number">
                 {formatNumber(dashboardData.inactiveAccounts)}
               </div>
-              <div className="stat-change negative">
-                {(
-                  (dashboardData.inactiveAccounts /
-                    dashboardData.totalAccounts) *
-                  100
-                ).toFixed(1)}
-                % tổng số
-              </div>
+             
             </div>
           </div>
 
@@ -173,9 +163,7 @@ const Dashboard = () => {
               <div className="stat-number">
                 {formatCurrency(dashboardData.totalRevenue)}
               </div>
-              <div className="stat-change positive">
-                +8.5% so với tháng trước
-              </div>
+             
             </div>
           </div>
         </div>
@@ -233,19 +221,17 @@ const Dashboard = () => {
                 <div className="quick-stat-value">
                   {formatNumber(dashboardData.totalPatients)}
                 </div>
-                <div className="quick-stat-percentage">
-                  97.0% tổng tài khoản
-                </div>
+               
               </div>
               <div className="quick-stat-item">
                 <div className="quick-stat-label">Bác sĩ</div>
                 <div className="quick-stat-value">
                   {dashboardData.totalDoctors}
                 </div>
-                <div className="quick-stat-percentage">1.8% tổng tài khoản</div>
+               
               </div>
               <div className="quick-stat-item">
-                <div className="quick-stat-label">Quản trị viên</div>
+                <div className="quick-stat-label">Quản lý</div>
                 <div className="quick-stat-value">
                   {formatNumber(
                     dashboardData.totalAccounts -
@@ -253,16 +239,7 @@ const Dashboard = () => {
                       dashboardData.totalDoctors
                   )}
                 </div>
-                <div className="quick-stat-percentage">
-                  {(
-                    ((dashboardData.totalAccounts -
-                      dashboardData.totalPatients -
-                      dashboardData.totalDoctors) /
-                      dashboardData.totalAccounts) *
-                    100
-                  ).toFixed(1)}
-                  % tổng tài khoản
-                </div>
+               
               </div>
 
 
@@ -276,9 +253,7 @@ const Dashboard = () => {
                   ).toFixed(1)}
                   %
                 </div>
-                <div className="quick-stat-percentage">
-                  Tỷ lệ tài khoản hoạt động
-                </div>
+               
               </div>
             </div>
           </div>
