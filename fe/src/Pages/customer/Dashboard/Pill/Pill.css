@@ -7,6 +7,14 @@
   min-height: 100vh;
 }
 
+
+.disabled-day {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
+}
+
+
 /* Header Styles - không có background trắng */
 .pill-header {
   display: flex;
@@ -17,6 +25,7 @@
   /* Loại bỏ background, border-radius và box-shadow */
 }
 
+
 .customer-header-content h1 {
   font-size: 28px;
   font-weight: 700;
@@ -24,6 +33,7 @@
   margin: 0 0 8px 0; /* Đảm bảo có khoảng cách giữa 2 dòng */
   line-height: 1.2;
 }
+
 
 .customer-header-content p {
   color: #666;
@@ -33,10 +43,12 @@
   display: block; /* Đảm bảo xuống dòng */
 }
 
+
 .header-actions {
   display: flex;
   gap: 12px;
 }
+
 
 .btn-primary,
 .btn-secondary {
@@ -49,6 +61,7 @@
   transition: all 0.2s ease;
 }
 
+
 .btn-primary {
   background-color: #dc3545;
   color: white;
@@ -59,9 +72,11 @@
   gap: 6px;
 }
 
+
 .btn-primary:hover {
   background-color: #c82333;
 }
+
 
 .btn-secondary {
   background-color: #f8f9fa;
@@ -71,9 +86,11 @@
   align-items: center;       /* Canh giữa theo chiều dọc */  
 }
 
+
 .btn-secondary:hover {
   background-color: #e9ecef;
 }
+
 
 /* Progress Section */
 .progress-section {
@@ -84,6 +101,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+
 .progress-section h2 {
   font-size: 20px;
   font-weight: 600;
@@ -91,16 +109,19 @@
   color: #1a1a1a;
 }
 
+
 .progress-section p {
   color: #666;
   margin: 0 0 24px 0;
   font-size: 14px;
 }
 
+
 .progress-container {
   position: relative;
   margin-bottom: 20px;
 }
+
 
 .progress-bar {
   width: 100%;
@@ -110,11 +131,13 @@
   overflow: hidden;
 }
 
+
 .progress-fill {
   height: 100%;
   background-color: #1a1a1a;
   transition: width 0.3s ease;
 }
+
 
 .progress-labels {
   display: flex;
@@ -122,11 +145,13 @@
   margin-top: 8px;
 }
 
+
 .progress-percentage {
   font-weight: 600;
   font-size: 14px;
   color: #1a1a1a;
 }
+
 
 .progress-percentage-right {
   font-weight: 600;
@@ -134,11 +159,13 @@
   color: #666;
 }
 
+
 .progress-stats {
   display: flex;
   gap: 16px;
   margin-top: 20px;
 }
+
 
 .stat-item {
   display: flex;
@@ -149,13 +176,16 @@
   flex: 1;
 }
 
+
 .stat-success {
   background-color: #d4edda;
 }
 
+
 .stat-missed {
   background-color: #f8d7da;
 }
+
 
 .stat-icon {
   width: 24px;
@@ -167,15 +197,18 @@
   font-size: 14px;
 }
 
+
 .stat-success .stat-icon {
   background-color: #16A34A;
   color: white;
 }
 
+
 .stat-missed .stat-icon {
   background-color: #dc3545;
   color: white;
 }
+
 
 .stat-title {
   font-weight: 600;
@@ -183,10 +216,12 @@
   color: #1a1a1a;
 }
 
+
 .stat-value {
   font-size: 12px;
   color: #666;
 }
+
 
 /* Schedule Section */
 .schedule-section {
@@ -196,9 +231,11 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+
 .schedule-header {
   margin-bottom: 24px;
 }
+
 
 .schedule-header h2 {
   font-size: 20px;
@@ -207,11 +244,13 @@
   color: #1a1a1a;
 }
 
+
 .schedule-header p {
   color: #666;
   margin: 0;
   font-size: 14px;
 }
+
 
 /* Calendar Navigation */
 .calendar-nav {
@@ -220,6 +259,7 @@
   gap: 16px;
   margin-bottom: 32px;
 }
+
 
 .nav-btn {
   width: 40px;
@@ -236,15 +276,18 @@
   transition: all 0.2s ease;
 }
 
+
 .nav-btn:hover {
   background-color: #f8f9fa;
 }
+
 
 .week-days {
   display: flex;
   gap: 8px;
   flex: 1;
 }
+
 
 .day-item {
   flex: 1;
@@ -256,14 +299,17 @@
   border: 1px solid transparent;
 }
 
+
 .day-item:hover {
   background-color: #f8f9fa;
 }
+
 
 .day-item.active {
   background-color: #dc3545;
   color: white;
 }
+
 
 .day-name {
   font-size: 12px;
@@ -271,10 +317,12 @@
   margin-bottom: 4px;
 }
 
+
 .day-date {
   font-size: 18px;
   font-weight: 600;
 }
+
 
 /* Medication List */
 .medication-list {
@@ -282,6 +330,7 @@
   flex-direction: column;
   gap: 16px;
 }
+
 
 .medication-item {
   display: flex;
@@ -293,9 +342,11 @@
   transition: all 0.2s ease;
 }
 
+
 .medication-item:hover {
   background-color: #f1f3f4;
 }
+
 
 .medication-icon {
   font-size: 24px;
@@ -310,9 +361,11 @@
   color: #dc3545;
 }
 
+
 .medication-info {
   flex: 1;
 }
+
 
 .medication-name {
   font-weight: 600;
@@ -321,11 +374,13 @@
   margin-bottom: 4px;
 }
 
+
 .medication-dosage {
   color: #666;
   font-size: 14px;
   margin-bottom: 4px;
 }
+
 
 .medication-time {
   color: #666;
@@ -335,9 +390,11 @@
   gap: 4px;
 }
 
+
 .medication-action {
   margin-left: auto;
 }
+
 
 .action-btn {
   padding: 8px 16px;
@@ -351,14 +408,17 @@
   text-align: center;      /* Thêm dòng này để căn giữa text */
 }
 
+
 .status-pending {
   background-color: #dc3545;
   color: white;
 }
 
+
 .status-pending:hover {
   background-color: #c82333;
 }
+
 
 .status-taken {
   background-color: #d4edda;  /* Xanh nhạt */
@@ -366,15 +426,18 @@
   cursor: default;
 }
 
+
 .status-missed {
   background-color: #f8d7da;  /* Hồng nhạt */
   color: #dc3545;             /* Chữ đỏ */
 }
 
+
 .action-btn:disabled {
   opacity: 0.8;
   cursor: default;
 }
+
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -382,32 +445,39 @@
     padding: 16px;
   }
 
+
   .pill-header {
     flex-direction: column;
     gap: 16px;
     align-items: stretch;
   }
 
+
   .header-actions {
     justify-content: stretch;
   }
+
 
   .header-actions button {
     flex: 1;
   }
 
+
   .progress-stats {
     flex-direction: column;
   }
+
 
   .calendar-nav {
     flex-direction: column;
     gap: 12px;
   }
 
+
   .week-days {
     justify-content: space-between;
   }
+
 
   .medication-item {
     flex-direction: column;
@@ -415,8 +485,11 @@
     text-align: center;
   }
 
+
   .medication-action {
     margin-left: 0;
     margin-top: 12px;
   }
 }
+
+
