@@ -58,6 +58,20 @@ const DoctorAPI = {
     }
   },
 
+  getMyFeedbacks: async () => {
+    try {
+      const res = await axios.get("http://localhost:8080/api/feedbacks/me", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      return res.data.data;
+    } catch (err) {
+      console.error("Lỗi khi lấy feedback:", err);
+      throw err;
+    }
+  },
+
   // Cập nhật thông tin bác sĩ
   updateCurrentDoctor: async (doctorData) => {
     try {
