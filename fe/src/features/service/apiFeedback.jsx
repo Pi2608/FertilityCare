@@ -1,5 +1,6 @@
 import axios from "axios";
 
+
 const API_BASE = "http://localhost:8080/api/";
 const getToken = () => localStorage.getItem("token");
 const axiosInstance = axios.create({
@@ -9,6 +10,7 @@ const axiosInstance = axios.create({
     Authorization: `Bearer ${getToken()}`,
   },
 });
+
 
 const apiFeedback = {
   // Gửi đánh giá bác sĩ
@@ -27,6 +29,7 @@ const apiFeedback = {
     }
   },
 
+
   // Lấy danh sách đánh giá của tôi
   getMyFeedbacks: async () => {
     try {
@@ -37,5 +40,17 @@ const apiFeedback = {
       throw error;
     }
   },
+
+
+  getAllFeedbacks: async () => {
+    try {
+      const response = await axiosInstance.get("feedbacks/feedbacks");
+      return response.data;
+    } catch (error) {
+      console.error("Lỗi khi lấy toàn bộ đánh giá:", error);
+      throw error;
+    }
+  },
+ 
 };
 export default apiFeedback;
