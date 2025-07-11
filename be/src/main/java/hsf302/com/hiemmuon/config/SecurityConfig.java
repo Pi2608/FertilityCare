@@ -174,19 +174,20 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "api/appointment-services/appointments/detail").hasAnyRole("CUSTOMER", "DOCTOR")
 
                                 // Test Result APIs
-                                .requestMatchers(HttpMethod.POST, "api/test-results/create").hasAnyRole("DOCTOR")
                                 .requestMatchers(HttpMethod.GET, "api/test-results/step/{stepId}").hasAnyRole("CUSTOMER", "DOCTOR")
-                                .requestMatchers(HttpMethod.GET, "api/test-results/customer").hasAnyRole("CUSTOMER")
-                                .requestMatchers(HttpMethod.PUT, "api/test-results/update/{id}").hasAnyRole("DOCTOR")
+                                .requestMatchers(HttpMethod.POST, "/api/test-results").hasRole("DOCTOR") // tạo mới
+                                .requestMatchers(HttpMethod.GET, "/api/test-results/me").hasRole("CUSTOMER") // bệnh nhân xem của mình
+                                .requestMatchers(HttpMethod.PUT, "/api/test-results/{id}").hasRole("DOCTOR") // cập nhật
 
-                                        // Feedback
-                                .requestMatchers(HttpMethod.POST, "api/feedback/create").hasAnyRole("CUSTOMER")
-                                .requestMatchers(HttpMethod.GET, "api/feedback/averagi-rating/{doctorId}").hasAnyRole("MANAGER",  "ADMIN")
-                                .requestMatchers(HttpMethod.GET, "api/feedback/feedback-by-doctor/{doctorId}").hasAnyRole("MANAGER",  "ADMIN")
-                                .requestMatchers(HttpMethod.GET, "api/feedback/feedback-by-customer/{customerId}").hasAnyRole("CUSTOMER")
-                                .requestMatchers(HttpMethod.GET, "api/feedback/feedback-by-customer-and-doctor/{customerId}/{doctorId}").hasAnyRole("ADMIN",  "MANAGER")
-                                .requestMatchers(HttpMethod.PUT, "api/feedback/{id}").hasAnyRole("ADMIN",  "MANAGER")
-                                .requestMatchers(HttpMethod.DELETE, "api/feedback/{id}").hasAnyRole("ADMIN",  "MANAGER")
+
+                                // Feedback - phân quyền đồng bộ theo controller thực tế
+                                .requestMatchers(HttpMethod.POST, "/api/feedback/feedback").hasRole("CUSTOMER")
+                                .requestMatchers(HttpMethod.GET, "/api/feedback/average-rating/**").hasAnyRole("MANAGER", "ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/api/feedback/feedbacks").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/feedback/me").hasAnyRole("CUSTOMER", "DOCTOR")
+                                .requestMatchers(HttpMethod.PUT, "/api/feedback/{id}").hasRole("CUSTOMER")
+                                .requestMatchers(HttpMethod.DELETE, "/api/feedback/{id}").hasRole("CUSTOMER")
+
                                 
                                 // Report
                                 .requestMatchers(HttpMethod.GET, "api/reports/accounts").hasAnyRole("ADMIN")

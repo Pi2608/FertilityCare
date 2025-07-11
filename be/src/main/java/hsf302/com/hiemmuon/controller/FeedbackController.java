@@ -26,7 +26,7 @@ import java.util.List;
 
 @Tag(name = "11. Feedback")
 @RestController
-@RequestMapping("/api/feedbacks")
+@RequestMapping("/api/feedback")
 public class FeedbackController {
 
     @Autowired
