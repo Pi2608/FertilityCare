@@ -1,13 +1,88 @@
 .message-wrapper {
+  flex: 1;
   display: flex;
   height: calc(100vh - 120px);
   width: 90%;
   background: #f8fafc;
-  font-family: "Segoe UI", sans-serif;
+  font-family: 'Segoe UI', sans-serif;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
+
+
+.name {
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+
+.text-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+
+.preview {
+  font-size: 13px;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px; /* tuỳ layout */
+}
+
+
+
+
+.patient-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+
+
+
+.avatar-circle {
+width: 52px;
+height: 52px;
+border-radius: 50%;
+background-color: #94a3b8;
+color: white;
+font-weight: bold;
+font-size: 22px;
+display: flex;
+align-items: center;
+justify-content: center;
+flex-shrink: 0;
+}
+
+
+
+
+
+
+.message-bubble.me {
+  background-color: #d1f7d6;
+  text-align: right;
+  align-self: flex-end;
+}
+
+
+.message-bubble.other {
+  background-color: #e3e3e3;
+  text-align: left;
+  align-self: flex-start;
+}
+
+
+
 
 .message-wrapper .sidebar {
   width: 320px;
@@ -17,6 +92,7 @@
   flex-direction: column;
 }
 
+
 .message-wrapper .sidebar h3 {
   margin: 0;
   padding: 20px 16px;
@@ -24,11 +100,13 @@
   flex-shrink: 0;
 }
 
+
 .message-wrapper .patient-list {
   flex: 1;
   overflow-y: auto;
   padding: 0 16px 16px 16px;
 }
+
 
 .message-wrapper .patient-item {
   display: flex;
@@ -40,13 +118,16 @@
   transition: 0.2s;
 }
 
+
 .message-wrapper .patient-item:hover {
   background: #e5e7eb;
 }
 
+
 .message-wrapper .patient-item.active {
   background: #dbeafe;
 }
+
 
 .message-wrapper .patient-item img {
   width: 40px;
@@ -54,14 +135,17 @@
   border-radius: 50%;
 }
 
+
 .message-wrapper .name {
   font-weight: 600;
 }
+
 
 .message-wrapper .preview {
   font-size: 13px;
   color: #666;
 }
+
 
 .message-wrapper .chat-box {
   flex: 1;
@@ -69,6 +153,7 @@
   flex-direction: column;
   background: #fff;
 }
+
 
 .message-wrapper .chat-header {
   padding: 20px 24px;
@@ -80,16 +165,19 @@
   flex-shrink: 0;
 }
 
+
 .message-wrapper .chat-header img {
   width: 40px;
   height: 40px;
   border-radius: 50%;
 }
 
+
 .message-wrapper .chat-header h4 {
   margin: 0;
   font-size: 18px;
 }
+
 
 .message-wrapper .chat-content {
   flex: 1;
@@ -102,6 +190,7 @@
   min-height: 0;
 }
 
+
 .message-wrapper .message-bubble {
   max-width: 70%;
   padding: 10px 14px;
@@ -111,11 +200,13 @@
   position: relative;
 }
 
+
 .message-wrapper .message-bubble.patient {
   background: #e2e8f0;
   align-self: flex-start;
   border-top-left-radius: 0;
 }
+
 
 .message-wrapper .message-bubble.doctor {
   background: #dcfce7;
@@ -123,12 +214,14 @@
   border-top-right-radius: 0;
 }
 
+
 .message-wrapper .message-bubble .time {
   font-size: 11px;
   color: #666;
   margin-top: 4px;
   text-align: right;
 }
+
 
 .message-wrapper .chat-input {
   padding: 20px 24px;
@@ -139,6 +232,7 @@
   flex-shrink: 0;
 }
 
+
 .message-wrapper .chat-input input {
   flex: 1;
   padding: 12px;
@@ -146,6 +240,7 @@
   border-radius: 8px;
   border: 1px solid #ccc;
 }
+
 
 .message-wrapper .chat-input button {
   background: #e11d48;
