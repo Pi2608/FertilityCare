@@ -197,6 +197,9 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "api/messages/all").hasAnyRole("CUSTOMER", "DOCTOR")
                                 .requestMatchers(HttpMethod.POST, "api/messages/send").hasAnyRole("CUSTOMER", "DOCTOR")
                                 .requestMatchers(HttpMethod.GET, "api/messages/latest").hasAnyRole("CUSTOMER", "DOCTOR")
+
+                                // Blog
+                        .requestMatchers("/api/blogs/**").permitAll()
                                 
                                 /// Payment APIs
                                 .requestMatchers(HttpMethod.GET, "/api/payments/all").hasAnyRole("ADMIN", "MANAGER")
