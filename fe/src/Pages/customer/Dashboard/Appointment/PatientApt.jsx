@@ -2,6 +2,7 @@ import { useEffect, useState, React } from "react";
 import { Calendar as CalendarIcon, Clock as ClockIcon } from "lucide-react";
 import apiAppointment from "@features/service/apiAppointment";
 import ApiGateway from "@features/service/apiGateway";
+import apiFeedback from "@features/service/apiFeedback";
 import { useNavigate } from "react-router-dom";
 import "./PatientApt.css";
 
@@ -9,8 +10,55 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
   const navigate = useNavigate();
   const [appointments, setAppointments] = useState([]);
   const [paymentNotifications, setPaymentNotifications] = useState([]);
+  const [myFeedbacks, setMyFeedbacks] = useState([]);
+  const [showFeedbackForm, setShowFeedbackForm] = useState(false);
+  const [selectedDoctor, setSelectedDoctor] = useState({ id: null, name: "" });
+  const [feedbackData, setFeedbackData] = useState({ rating: 5, comment: "" });
 
-  
+  const handleOpenFeedbackForm = (doctorId, doctorName) => {
+    setSelectedDoctor({ id: doctorId, name: doctorName });
+    setShowFeedbackForm(true);
+  };
+
+  const handleSubmitFeedback = async () => {
+    try {
+      await apiFeedback.createFeedback({
+        doctorId: selectedDoctor.id,
+        rating: feedbackData.rating,
+        comment: feedbackData.comment,
+      });
+
+      alert("Gửi đánh giá thành công");
+      setShowFeedbackForm(false);
+      fetchMyFeedbacks(); // reload để ẩn nút
+    } catch (error) {
+      console.error("Lỗi gửi đánh giá:", error);
+      alert("Gửi đánh giá thất bại.");
+    }
+  };
+
+  const fetchMyFeedbacks = async () => {
+    try {
+      const feedbacks = await apiFeedback.getMyFeedbacks();
+      setMyFeedbacks(Array.isArray(feedbacks) ? feedbacks : []);
+    } catch (err) {
+      console.error("Lỗi khi lấy feedbacks:", err);
+      setMyFeedbacks([]); // fallback an toàn
+    }
+  };
+
+  useEffect(() => {
+    fetchAppointments();
+    fetchPaymentNotifications();
+    fetchMyFeedbacks();
+
+    const interval = setInterval(() => {
+      fetchPaymentNotifications();
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
@@ -20,17 +68,14 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
 
   const formatDatetimeWithWeekday = (isoString) => {
     const date = new Date(isoString);
-
     const weekday = date.toLocaleDateString("vi-VN", { weekday: "long" }); // ví dụ: "Thứ Hai"
     const hours = String(date.getHours()).padStart(2, "0");
     const minutes = String(date.getMinutes()).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
-
     return `${weekday}, ${hours}:${minutes} ${day}/${month}/${year}`;
   };
-
   const fetchPaymentNotifications = async () => {
     try {
       const response = await ApiGateway.getPendingPaymentsByCustomerId();
@@ -59,15 +104,27 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
       console.error("Lỗi khi lấy lịch hẹn:", error);
     }
   };
-
+  const cancelAppointment = async (appointmentId) => {
+    const isConfirmed = window.confirm(
+      "Bạn có chắc chắn muốn hủy cuộc hẹn này không?"
+    );
+    if (!isConfirmed) return;
+    try {
+      await apiAppointment.cancelAppointmentById(appointmentId);
+      alert("Hủy cuộc hẹn thành công.");
+      fetchAppointments(); // load lại danh sách sau khi hủy
+    } catch (error) {
+      console.error("Lỗi khi hủy cuộc hẹn:", error);
+      alert("Hủy cuộc hẹn thất bại. Vui lòng thử lại.");
+    }
+  };
   useEffect(() => {
     fetchAppointments();
     fetchPaymentNotifications();
-    
     console.log("Fetching payment notifications...");
-
     const interval = setInterval(() => {
       fetchPaymentNotifications();
+    }, 60000);
     }, 60000); 
 
     return () => clearInterval(interval);
@@ -87,6 +144,16 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
   );
 
 
+  //   (appt) => appt.status === "done"
+  // );
+  // const upcomingAppointments = appointments.filter(
+  //   (appt) => appt.status === "confirmed"
+  // );
+  // const feedbackedDoctorIds = new Set(myFeedbacks.map((fb) => fb.doctorId));
+  // const completedAppointmentsFiltered = completedAppointments.filter((appt) => {
+  //   return !feedbackedDoctorIds.has(appt.doctorId);
+  // });
+  // const displayedDoctors = new Set();
   return (
     <div className="appointment-page">
       <div className="welcome-section">
@@ -154,6 +221,16 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
 
 
                       <div className="appointment-actions">
+                        {/* {appt.type === "tu_van" && appt.status === "confirmed" ? (
+                          <button
+                            className="secondary-btn"
+                            onClick={() => cancelAppointment(appt.appointmentId)}
+                          >
+                            Hủy cuộc hẹn
+                          </button>
+                        ) : (
+                          <button className="secondary-btn"></button>
+                        )} */}
                         <button className="secondary-btn">Đổi lịch</button>
                         <button className="primary-btn">Chi tiết</button>
                       </div>
@@ -204,6 +281,48 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
             )}
         </section>
       </div>
+      {showFeedbackForm && (
+        <div className="feedback-form-overlay">
+          <div className="feedback-form">
+            <h3>Đánh giá bác sĩ {selectedDoctor.name}</h3>
+            <label>Chấm điểm:</label>
+            <select
+              value={feedbackData.rating}
+              onChange={(e) =>
+                setFeedbackData({
+                  ...feedbackData,
+                  rating: parseInt(e.target.value),
+                })
+              }
+            >
+              {[5, 4, 3, 2, 1].map((r) => (
+                <option key={r} value={r}>
+                  {r} sao
+                </option>
+              ))}
+            </select>
+            <label>Nhận xét:</label>
+            <textarea
+              value={feedbackData.comment}
+              onChange={(e) =>
+                setFeedbackData({ ...feedbackData, comment: e.target.value })
+              }
+              placeholder="Nhập đánh giá của bạn..."
+            />
+            <div className="feedback-form-actions">
+              <button
+                className="btn-outline"
+                onClick={() => setShowFeedbackForm(false)}
+              >
+                Hủy
+              </button>
+              <button className="btn-primary" onClick={handleSubmitFeedback}>
+                Gửi đánh giá
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -213,7 +332,6 @@ export default PatientApt;
 
 const PaymentNotification = ({ payment, formatDatetimeWithWeekday, formatCurrency, cancelPayment }) => {
   const [isLoading, setIsLoading] = useState(false);
-
   const confirmPayment = async (paymentId) => {
     try {
       setIsLoading(true);
@@ -232,17 +350,14 @@ const PaymentNotification = ({ payment, formatDatetimeWithWeekday, formatCurrenc
       setIsLoading(false);
     }
   };
-
   const handleConfirmClick = (e) => {
     e.stopPropagation();
     confirmPayment(payment.paymentId);
   };
-
   const handleCancelClick = (e) => {
     e.stopPropagation();
     cancelPayment(payment.paymentId);
   };
-
   return (
     <div
       key={payment.id}
@@ -253,7 +368,6 @@ const PaymentNotification = ({ payment, formatDatetimeWithWeekday, formatCurrenc
       <div className="notification-icon payment-icon">
         <CalendarIcon size={24} />
       </div>
-
       <div className="notification-info">
         <div className="notification-header">
           <p>
@@ -275,7 +389,6 @@ const PaymentNotification = ({ payment, formatDatetimeWithWeekday, formatCurrenc
           <span className="medication-name" style={{fontSize:"0.75rem"}}>{payment?.serviceName}</span>
         </p>
       </div>
-
       <div className="notification-actions">
         <button 
           className="action-btn secondary" 

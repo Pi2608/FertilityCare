@@ -5,12 +5,14 @@
   font-family: Arial, sans-serif;
 }
 
+
 .appointment-page .welcome-section {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
 }
+
 
 .appointment-page .welcome-text h2 {
     margin: 0;
@@ -19,6 +21,7 @@
     margin-left: 0.5rem;
 }
 
+
 .appointment-page .page-title-actions {
   display: flex;
   justify-content: space-between;
@@ -26,10 +29,12 @@
   margin-bottom: 0.5rem;
 }
 
+
 .appointment-page .page-title-actions h3 {
   margin: 0;
   font-size: 1.5rem;
 }
+
 
 .appointment-page .btn-primary {
   background-color: #d6004c;
@@ -40,14 +45,17 @@
   cursor: pointer;
 }
 
+
 .appointment-page .btn-primary:hover {
   opacity: 0.9;
 }
+
 
 .appointment-page .subtitle p {
   margin: 0 0 1.5rem;
   color: #666;
 }
+
 
 .appointment-page .apt-container {
     display: flex;
@@ -58,9 +66,11 @@
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
+
 .appointment-page .patient-apt-section {
   margin-bottom: 2rem;
 }
+
 
 .appointment-page .patient-apt-section h4 {
   margin-bottom: 1rem;
@@ -80,6 +90,7 @@
   gap: 1rem;
 }
 
+
 .appointment-page .appointment-card {
   display: flex;
   align-items: center;
@@ -90,18 +101,22 @@
   position: relative;
 }
 
+
 .appointment-page .appointment-icon {
   margin-right: 0.75rem;
   color: #d6004c;
 }
 
+
 .appointment-page .completed-icon {
   color: #4caf50;
 }
 
+
 .appointment-page .appointment-info {
   flex: 1;
 }
+
 
 .appointment-page .appointment-info h5 {
   margin: 0;
@@ -109,25 +124,30 @@
   color: #333;
 }
 
+
 .appointment-page .appointment-info p {
   margin: 0.25rem 0;
   font-size: 0.875rem;
   color: #555;
 }
 
+
 .appointment-page .doctor-name {
   font-style: italic;
 }
+
 
 .appointment-page .location-text {
   color: #777;
   font-size: 0.85rem;
 }
 
+
 .appointment-page .appointment-actions {
   display: flex;
   gap: 0.5rem;
 }
+
 
 .appointment-page .appointment-actions button {
   padding: 0.5rem 0.75rem;
@@ -137,13 +157,16 @@
   cursor: pointer;
 }
 
+
 .appointment-page .appointment-card.upcoming {
   border-left: 4px solid #d6004c;
 }
 
+
 .appointment-page .appointment-card.completed {
   border-left: 4px solid #4caf50;
 }
+
 
 .appointment-page .notification-card {
   display: flex;
@@ -158,10 +181,12 @@
   border-left: 4px solid #d6004c;
 }
 
+
 .appointment-page .notification-card:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   transform: translateY(-1px);
-} 
+}
+
 
 .appointment-page .notification-card .payment-icon {
   font-size: 24px;
@@ -179,10 +204,12 @@
   color: #1976d2;
 }
 
+
 .appointment-page .notification-info {
   flex: 1;
   min-width: 0;
 }
+
 
 .appointment-page .notification-header {
   display: flex;
@@ -191,12 +218,14 @@
   margin-bottom: 0.5rem;
 }
 
+
 .appointment-page .notification-header h5 {
   margin: 0;
   font-size: 1rem;
   color: #333;
   font-weight: 600;
 }
+
 
 .appointment-page .notification-time {
   font-size: 0.75rem;
@@ -205,6 +234,7 @@
   margin-left: 1rem;
 }
 
+
 .appointment-page .notification-message {
   margin: 0 0 0.5rem 0;
   font-size: 0.875rem;
@@ -212,30 +242,36 @@
   line-height: 1.4;
 }
 
+
 .appointment-page .notification-meta {
   margin: 0.25rem 0;
   font-size: 0.75rem;
   color: #777;
 }
 
+
 .appointment-page .doctor-name {
   font-style: italic;
   color: #d6004c;
 }
+
 
 .appointment-page .medication-name {
   font-weight: 500;
   color: #7b1fa2;
 }
 
+
 .appointment-page .test-type {
   color: #f57c00;
 }
+
 
 .appointment-page .payment-total {
   background: #e8f5e8;
   color: #388e3c;
 }
+
 
 .appointment-page .notification-actions {
   display: flex;
@@ -243,6 +279,8 @@
   margin: auto 0;
   flex-shrink: 0;
 }
+
+
 
 
 .appointment-page .action-btn {
@@ -257,10 +295,14 @@
 }
 
 
+
+
 .appointment-page .action-btn.primary {
   background-color: #d6004c;
   color: #fff;
 }
+
+
 
 
 .appointment-page .action-btn.primary:hover {
@@ -268,11 +310,15 @@
 }
 
 
+
+
 .appointment-page .action-btn.secondary {
   background-color: #fff;
   color: #d6004c;
   border: 1px solid #d6004c;
 }
+
+
 
 
 .appointment-page .action-btn.secondary:hover {
@@ -294,4 +340,114 @@
 
 .appointment-page .no-apt p {
   color: #666;
+}
+
+
+.feedback-form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+
+.feedback-form {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+
+.feedback-form h3 {
+  margin-top: 0;
+  font-size: 1.5rem;
+  margin-bottom: 1.2rem;
+  color: #d6004c;
+  text-align: center;
+}
+
+
+.feedback-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
+  margin-top: 1rem;
+}
+
+
+.feedback-form select,
+.feedback-form textarea {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  resize: vertical;
+}
+
+
+.feedback-form textarea {
+  min-height: 100px;
+  margin-bottom: 1rem;
+}
+
+
+.feedback-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+
+.feedback-form .btn-outline {
+  background-color: white;
+  border: 1px solid #ccc;
+  color: #333;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+
+.feedback-form .btn-outline:hover {
+  background-color: #f3f3f3;
+}
+
+
+.feedback-form .btn-primary {
+  background-color: #d6004c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+
+.feedback-form .btn-primary:hover {
+  background-color: #b8003f;
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

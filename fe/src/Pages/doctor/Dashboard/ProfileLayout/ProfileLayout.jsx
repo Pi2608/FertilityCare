@@ -5,55 +5,83 @@ import "./ProfileLayout.css"
 
 const ProfileLayout = () => {
   const [doctorInfo, setDoctorInfo] = useState({
-    fullName: "Bác sĩ Nguyễn Văn An",
-    gender: "male",
-    birthDate: "1985-03-15",
-    specialty: "Tim mạch",
-    experience: 15,
-  })
+    fullName: "",
+    gender: "",
+    birthDate: "",
+    specialty: "",
+    phone: "",
+  });
 
-  const reviews = [
-    {
-      id: 1,
-      patientName: "Chị Nguyễn Thị Lan",
-      rating: 5,
-      date: "2024-01-15",
-      comment:
-        "Bác sĩ An rất tận tâm và chuyên nghiệp. Giải thích rất kỹ về tình trạng bệnh và cách điều trị. Sau 3 tháng điều trị, tình trạng tim mạch của tôi đã cải thiện rõ rệt.",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    {
-      id: 2,
-      patientName: "Anh Trần Minh Hoàng",
-      rating: 5,
-      date: "2024-01-10",
-      comment:
-        "Bác sĩ có kinh nghiệm và kiến thức chuyên môn cao. Thái độ thân thiện, lắng nghe bệnh nhân. Tôi rất hài lòng với dịch vụ khám và điều trị.",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    {
-      id: 3,
-      patientName: "Cô Lê Thị Mai",
-      rating: 4,
-      date: "2024-01-05",
-      comment:
-        "Bác sĩ khám rất kỹ và chu đáo. Tuy nhiên thời gian chờ hơi lâu một chút. Nhưng nhìn chung tôi rất tin tưởng vào chuyên môn của bác sĩ.",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-  ]
+  useEffect(() => {
+    const fetchDoctor = async () => {
+      try {
+        const data = await DoctorAPI.getCurrentDoctor();
+        setDoctorInfo({
+          fullName: data.name || "",
+          gender: data.gender || "", // Đặt mặc định rõ ràng
+          birthDate: data.dob || "",
+          specialty: data.specification || "", // Đúng tên trường
+          phone: data.phone || "",
+        });
+      } catch (err) {
+        console.error("Lỗi khi lấy thông tin bác sĩ:", err);
+      }
+    };
+
+    fetchDoctor();
+    const averageRating =
+      reviews.length > 0
+        ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+        : 0;
+
+    const fetchFeedbacks = async () => {
+      try {
+        const data = await DoctorAPI.getMyFeedbacks();
+        setReviews(
+          data.map((fb) => ({
+            id: fb.feedbackId,
+            patientName: fb.customerName,
+            rating: fb.rating,
+            date: fb.createAt,
+            comment: fb.comment,
+          }))
+        );
+      } catch (err) {
+        console.error("Lỗi khi lấy feedback:", err);
+      }
+    };
+
+    fetchFeedbacks();
+  }, []);
+
+  const [reviews, setReviews] = useState([]);
 
   const handleInputChange = (field, value) => {
     setDoctorInfo((prev) => ({
       ...prev,
       [field]: value,
-    }))
-  }
+    }));
+  };
 
-  const handleSave = () => {
-    console.log("Đã lưu thông tin bác sĩ:", doctorInfo)
-    alert("Đã lưu thông tin thành công!")
-  }
+  const handleSave = async () => {
+    try {
+      const payload = {
+        name: doctorInfo.fullName?.trim(),
+        phone: doctorInfo.phone?.trim(), // fallback an toàn
+        dob: doctorInfo.birthDate,
+        gender: doctorInfo.gender,
+        description: doctorInfo.specialty,
+      };
+      console.log("Payload gửi lên API:", payload); // Hiện log đầu vào
+      const response = await DoctorAPI.updateCurrentDoctor(payload); // Gán vào biến
+      console.log("Kết quả trả về từ API:", response); // Log kết quả
 
+      alert("Đã lưu thông tin thành công!");
+    } catch (err) {
+      console.error("Lỗi khi cập nhật thông tin bác sĩ:", err);
+      alert("Lưu thất bại!");
+    }
+  };
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, index) => (
       <span key={index} className={`star ${index < rating ? "filled" : ""}`}>
@@ -83,7 +111,7 @@ const ProfileLayout = () => {
       <div className="profile-content">
         {/* Left Column - Doctor Information */}
         <div className="doctor-info-section">
-          <h3>👤 Thông Tin Cá Nhân</h3>
+          <h3>Thông Tin Cá Nhân</h3>
           <div className="doctor-card">
             {/* <div className="doctor-avatar">
               <img src="/placeholder.svg?height=60&width=60" alt="Doctor Avatar" />
@@ -100,7 +128,6 @@ const ProfileLayout = () => {
                     placeholder="Nhập họ và tên"
                   />
                 </div>
-
                 <div className="info-item">
                   <label>Giới Tính</label>
                   <select
@@ -113,7 +140,6 @@ const ProfileLayout = () => {
     
                   </select>
                 </div>
-
                 <div className="info-item">
                   <label>Ngày Sinh</label>
                   <input
@@ -123,7 +149,6 @@ const ProfileLayout = () => {
                     onChange={(e) => handleInputChange("birthDate", e.target.value)}
                   />
                 </div>
-
                 <div className="info-item">
                   <label>Chuyên Môn</label>
                   <select
@@ -136,7 +161,6 @@ const ProfileLayout = () => {
         
                   </select>
                 </div>
-
                 <div className="info-item">
                   <label>Kinh Nghiệm (năm)</label>
                   <input
@@ -150,17 +174,17 @@ const ProfileLayout = () => {
                   />
                 </div>
               </div>
-
               <button className="btn-save" onClick={handleSave}>
                 💾 Lưu Thông Tin
               </button>
             </div>
           </div>
         </div>
+        <br></br>
 
         {/* Right Column - Reviews */}
         <div className="reviews-section">
-          <h3>💬 Đánh Giá Từ Bệnh Nhân</h3>
+          <h3>Đánh Giá Từ Bệnh Nhân</h3>
 
           {/* Rating Summary */}
           <div className="reviews-summary">
@@ -178,7 +202,6 @@ const ProfileLayout = () => {
                 <div className="review-header">
                   <div className="patient-info">
                     <h4>{review.patientName}</h4>
-                    <span className="treatment-type">IVF</span>
                   </div>
                   <div className="review-meta">
                     <div className="rating">
@@ -196,7 +219,6 @@ const ProfileLayout = () => {
         </div>
       </div>
     </div>
-  )
-}
-
-export default ProfileLayout
+  );
+};
+export default ProfileLayout;
