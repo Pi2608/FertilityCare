@@ -125,7 +125,6 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
     const interval = setInterval(() => {
       fetchPaymentNotifications();
     }, 60000);
-    }, 60000); 
 
     return () => clearInterval(interval);
   }, []);
