@@ -49,14 +49,14 @@
 }
 
 /* Progress Card */
-.patient-dashboard-main .progress-card .ivf-progress {
+.patient-dashboard-main .progress-card .my-progress {
     background: #fff;
     padding: 1rem;
     border-radius: 12px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-.patient-dashboard-main .ivf-progress .progress-header {
+.patient-dashboard-main .my-progress .progress-header {
     display: flex;
     justify-content: space-between;
     margin-bottom: 0.5rem;
@@ -73,6 +73,7 @@
     height: 8px;
     border-radius: 4px;
     position: relative;
+    overflow: hidden;
 }
 
 .patient-dashboard-main .progress-bar-fill {
@@ -85,36 +86,46 @@
     display: flex;
     justify-content: space-between;
     margin-top: 0.5rem;
+    gap: .5rem;
 }
 
 .patient-dashboard-main .step-item {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    padding: 0.5rem;
+    font-size: .8rem;
     flex: 1;
-    text-align: center;
+    text-align: left;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 4px;
 }
 
-.patient-dashboard-main .step-icon {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    margin-bottom: 4px;
-    background: #ccc;
+.patient-dashboard-main .step-item.completed {
+    border: 2px solid #4caf50;
+    background: #f0fdf4;
+}
+.patient-dashboard-main .step-item.in-progress {
+    border: 2px solid #ff9800;
+    background: #fff8e1;
+}
+.patient-dashboard-main .step-item.pending {
+    border: 2px solid #e0e0e0;
+    background: #f9fafb;
 }
 
-.patient-dashboard-main .step-item.completed .step-icon {
-    background: #4caf50;
+.patient-dashboard-main .step-no {
+    display: flex;
+    justify-content: space-between;
 }
-.patient-dashboard-main .step-item.in-progress .step-icon {
-    background: #ff9800;
+
+.patient-dashboard-main .step-no p {
+    font-size: .9rem;
 }
-.patient-dashboard-main .step-item.pending .step-icon {
-    background: #e0e0e0;
-}
-.patient-dashboard-main .step-label {
-    font-size: 0.75rem;
-    color: #333;
+
+.patient-dashboard-main .step-status {
+    font-size: 0.8rem;
+    color: #666;
 }
 .patient-dashboard-main .btn-detail {
     width: 100%;
@@ -189,7 +200,7 @@
     margin-right: 0.5rem;
     cursor: pointer;
 }
-.patient-dashboard-main .status-label {
+/* .patient-dashboard-main .status-label {
     position: absolute;
     top: 0.75rem;
     right: 0.75rem;
@@ -197,7 +208,7 @@
     padding: 6px 8px;
     border-radius: 12px;
     text-transform: capitalize;
-}
+} */
 .patient-dashboard-main .status-sắptới, .status-saptopoi { /* nếu có ký tự đặc biệt bỏ dấu */ 
     background: #fff1f2;
     color: #e11d63;

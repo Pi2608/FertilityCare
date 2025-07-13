@@ -41,17 +41,18 @@
 
 .treatment-history-page .secondary-btn {
   background-color: #fff;
-  color: #d6004c;
-  border: 1px solid #d6004c;
+  color: #000;
+  border: 1px solid #000;
   padding: 0.75rem 1rem;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
+  box-sizing: border-box;
 }
 
 .treatment-history-page .secondary-btn:hover {
-  background-color: #d6004c;
-  color: #fff;
+  border-color: #4caf50;
+  color: #4caf50;
 }
 
 .treatment-history-page .page-title-actions {
@@ -117,11 +118,23 @@
 }
 
 .treatment-history-page .treatment-icon {
-  margin-right: 0.75rem;
+  background: #fce4ec;
   color: #d6004c;
+  font-size: 24px;
+  width: 48px;
+  height: 48px;
+  margin-right: 1rem;
+  padding: 0.5rem;
+  border-radius: 50%;
+  border: 1px solid #dee2e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .treatment-history-page .completed-icon {
+  background: #e8f5e8;
   color: #4caf50;
 }
 
@@ -153,7 +166,7 @@
 .treatment-history-page .treatment-actions button {
   padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
-  border: none;
+  /* border: none; */
   border-radius: 4px;
   cursor: pointer;
 }
@@ -174,6 +187,15 @@
 
 .treatment-history-page .btn-outline:hover {
   background-color: #f8f9fa;
+}
+
+.treatment-history-page .empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 2px dashed #ddd;
 }
 
 /* Responsive Design */

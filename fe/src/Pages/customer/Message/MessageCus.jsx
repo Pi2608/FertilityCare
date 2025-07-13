@@ -29,7 +29,7 @@ export default function Message() {
 
 
   return (
-    <div className="message-wrapper">
+    <div className="message-cus-wrapper">
       <div className="sidebar">
         <h3>Bác sĩ</h3>
         <div className="patient-list">

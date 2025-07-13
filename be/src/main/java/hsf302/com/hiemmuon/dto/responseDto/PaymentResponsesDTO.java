@@ -19,6 +19,7 @@ public class PaymentResponsesDTO {
     private int customerId;
     private int appointmentId;
     private int serviceId;
+    private int cycleId;
     private BigDecimal total;
     private LocalDateTime paid;
     private StatusPayment status;
@@ -38,6 +39,7 @@ public class PaymentResponsesDTO {
                 .customerId(payment.getCustomer().getCustomerId())
                 .appointmentId(payment.getAppointment().getAppointmentId())
                 .serviceId(payment.getService().getServiceId())
+                .cycleId(payment.getCycle().getCycleId())
                 .total(payment.getTotal())
                 .paid(payment.getPaid())
                 .status(payment.getStatus())

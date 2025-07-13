@@ -1,10 +1,12 @@
 import { useEffect, useState, React } from "react";
-import "./PatientApt.css";
 import { Calendar as CalendarIcon, Clock as ClockIcon } from "lucide-react";
-import apiAppointment from "../../../../features/service/apiAppointment";
+import apiAppointment from "@features/service/apiAppointment";
 import ApiGateway from "@features/service/apiGateway";
+import { useNavigate } from "react-router-dom";
+import "./PatientApt.css";
 
 const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
+  const navigate = useNavigate();
   const [appointments, setAppointments] = useState([]);
   const [paymentNotifications, setPaymentNotifications] = useState([]);
 
@@ -126,67 +128,80 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
                 </div>
               </>
             )}
-          <h4 style={{marginTop:"1rem"}}>Sắp tới</h4>
-          <div className="appointments-list">
-            {upcomingAppointments.map((appt) => (
-              <div
-                key={appt.appointmentId}
-                className="appointment-card upcoming"
-              >
-                <div className="appointment-icon">
-                  <CalendarIcon size={24} />
+
+            {upcomingAppointments.length > 0 && (
+              <>
+                <div className="appointments-list">
+                  <h4 style={{marginTop:"1rem"}}>Sắp tới</h4>
+                  {upcomingAppointments.map((appt) => (
+                    <div
+                      key={appt.appointmentId}
+                      className="appointment-card upcoming"
+                    >
+                      <div className="appointment-icon">
+                        <CalendarIcon size={24} />
+                      </div>
+
+
+                      <div className="appointment-info">
+                        <h5>{appt.type === "tu_van" ? "Tư vấn" : "Tái khám"}</h5>
+                        <p>
+                          {new Date(appt.date).toLocaleDateString("vi-VN")} -{" "}
+                          {appt.startTime.slice(0, 5)}
+                        </p>
+                        <p className="doctor-name">Bác sĩ {appt.doctorName}</p>
+                      </div>
+
+
+                      <div className="appointment-actions">
+                        <button className="secondary-btn">Đổi lịch</button>
+                        <button className="primary-btn">Chi tiết</button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
+              </>
+            )}
+
+            {completedAppointments.length > 0 && (
+              <>
+                <h4>Đã hoàn thành</h4>
+                <div className="appointments-list">
+                  {completedAppointments.map((appt) => (
+                    <div
+                      key={appt.appointmentId}
+                      className="appointment-card completed"
+                    >
+                      <div className="appointment-icon completed-icon">
+                        <CalendarIcon size={24} />
+                      </div>
 
 
-                <div className="appointment-info">
-                  <h5>{appt.type === "tu_van" ? "Tư vấn" : "Tái khám"}</h5>
-                  <p>
-                    {new Date(appt.date).toLocaleDateString("vi-VN")} -{" "}
-                    {appt.startTime.slice(0, 5)}
-                  </p>
-                  <p className="doctor-name">Bác sĩ {appt.doctorName}</p>
+                      <div className="appointment-info">
+                        <h5>{appt.type === "tu_van" ? "Tư vấn" : "Tái khám"}</h5>
+                        <p>
+                          {new Date(appt.date).toLocaleDateString("vi-VN")} -{" "}
+                          {appt.startTime.slice(0, 5)}
+                        </p>
+                        <p className="doctor-name">Bác sĩ {appt.doctorName}</p>
+                      </div>
+
+
+                      <div className="appointment-actions">
+                        <button className="btn-outline">Xem chi tiết</button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
+              </>
+            )}
 
-
-                <div className="appointment-actions">
-                  <button className="secondary-btn">Đổi lịch</button>
-                  <button className="primary-btn">Chi tiết</button>
-                </div>
+            {paymentNotifications.length === 0 && upcomingAppointments.length == 0 && completedAppointments.length == 0 && (
+              <div className="no-apt">
+                <p>Bạn chưa có cuộc hẹn nào</p>
+                <button className="action-btn primary" onClick={() => navigate('/homepage/book-appointment')}>Đặt lịch hẹn</button>
               </div>
-            ))}
-          </div>
-        </section>
-
-
-        <section className="patient-apt-section">
-          <h4>Đã hoàn thành</h4>
-          <div className="appointments-list">
-            {completedAppointments.map((appt) => (
-              <div
-                key={appt.appointmentId}
-                className="appointment-card completed"
-              >
-                <div className="appointment-icon completed-icon">
-                  <CalendarIcon size={24} />
-                </div>
-
-
-                <div className="appointment-info">
-                  <h5>{appt.type === "tu_van" ? "Tư vấn" : "Tái khám"}</h5>
-                  <p>
-                    {new Date(appt.date).toLocaleDateString("vi-VN")} -{" "}
-                    {appt.startTime.slice(0, 5)}
-                  </p>
-                  <p className="doctor-name">Bác sĩ {appt.doctorName}</p>
-                </div>
-
-
-                <div className="appointment-actions">
-                  <button className="btn-outline">Xem chi tiết</button>
-                </div>
-              </div>
-            ))}
-          </div>
+            )}
         </section>
       </div>
     </div>

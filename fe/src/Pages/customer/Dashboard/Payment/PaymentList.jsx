@@ -103,15 +103,6 @@ const PaymentList = ({ userName = "Nguyễn Thị Hoa" }) => {
           <p>Xem tất cả các giao dịch thanh toán của bạn</p>
         </div>
         <div className="actions">
-          <button className="secondary-btn" onClick={fetchPayments}>
-            Làm mới
-          </button>
-        </div>
-      </div>
-
-      <div className="payment-list-container">
-        <div className="page-title-actions">
-          <h3>Giao dịch của tôi</h3>
           <div className="payment-stats">
             <span className="stat-payment-item success">
               Thành công: {paidPayments.length}
@@ -120,10 +111,13 @@ const PaymentList = ({ userName = "Nguyễn Thị Hoa" }) => {
               Thất bại: {failedPayments.length}
             </span>
           </div>
+          <button className="secondary-btn" onClick={fetchPayments}>
+            Làm mới
+          </button>
         </div>
-        <div className="subtitle">
-          <p>Quản lý và theo dõi tất cả các giao dịch thanh toán</p>
-        </div>
+      </div>
+
+      <div className="payment-list-container">
 
         {/* Thanh toán thành công */}
         <section className="payment-section">

@@ -279,3 +279,19 @@
   background-color: #d6004c;
   color: #fff;
 }
+
+.appointment-page .no-apt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  color: #666;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 2px dashed #ddd;
+  gap: .7rem;
+}
+
+.appointment-page .no-apt p {
+  color: #666;
+}

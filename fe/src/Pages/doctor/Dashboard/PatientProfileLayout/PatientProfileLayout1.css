@@ -1409,62 +1409,14 @@ overflow: hidden;
 
 
 @keyframes slideIn {
-from {
-  transform: scale(0.9);
-  opacity: 0;
-}
-to {
-  transform: scale(1);
-  opacity: 1;
-}
-}
-
-
-.patient-profile-tab-content .modal-header {
-display: flex;
-align-items: center;
-justify-content: space-between;
-padding: 20px;
-border-bottom: 1px solid #e5e5e5;
-}
-
-
-.patient-profile-tab-content .modal-title {
-font-size: 20px;
-font-weight: 600;
-color: #333;
-display: flex;
-align-items: center;
-gap: 8px;
-margin: 0;
-}
-
-
-.patient-profile-tab-content .close-btn {
-background: none;
-border: none;
-font-size: 24px;
-color: #999;
-cursor: pointer;
-padding: 8px;
-border-radius: 4px;
-transition: all 0.2s ease;
-display: flex;
-align-items: center;
-justify-content: center;
-width: 32px;
-height: 32px;
-}
-
-
-.patient-profile-tab-content .close-btn:hover {
-color: #666;
-background-color: #f0f0f0;
-}
-
-
-.patient-profile-tab-content .modal-body {
-padding: 20px;
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 
@@ -1491,28 +1443,23 @@ color: #e74c3c;
 .patient-profile-tab-content .form-input,
 .patient-profile-tab-content .form-select,
 .patient-profile-tab-content .form-textarea {
-width: 100%;
-padding: 10px 12px;
-border: 1px solid #ddd;
-border-radius: 6px;
-font-size: 14px;
-font-family: inherit;
-transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-
-.patient-profile-tab-content .form-input,
-.patient-profile-tab-content .form-textarea {
-width: 95%;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 
 .patient-profile-tab-content .form-input:focus,
 .patient-profile-tab-content .form-select:focus,
 .patient-profile-tab-content .form-textarea:focus {
-outline: none;
-border-color: #3498db;
-box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
 }
 
 

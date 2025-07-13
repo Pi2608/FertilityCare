@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import ApiGateway from "@features/service/apiGateway";
 import "./PatientProfileLayout1.css";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import apiAppointment from "@features/service/apiAppointment";
 
 
@@ -9,14 +9,14 @@ const PatientProfileLayout1 = () => {
   const [appointmentDetail, setAppointmentDetail] = useState(null);
   const [activeTab, setActiveTab] = useState("notes");
   const [showResultForm, setShowResultForm] = useState(false);
-const [newResult, setNewResult] = useState({
-  name: "",
-  value: "",
-  unit: "",
-  referenceRange: "",
-  testDate: new Date().toISOString().slice(0, 10), // yyyy-mm-dd
-  note: "",
-});
+  const [newResult, setNewResult] = useState({
+    name: "",
+    value: "",
+    unit: "",
+    referenceRange: "",
+    testDate: new Date().toISOString().slice(0, 10), // yyyy-mm-dd
+    note: "",
+  });
 
 
 const handleToggleResultForm = () => {
@@ -88,23 +88,40 @@ const handleCreateTestResult = async () => {
 
 
   useEffect(() => {
-    const fetchAppointmentDetail = async () => {
-      try {
-        const data = await apiAppointment.getAppointmentDetailById(
-          appointmentId
-        );
-        console.log("Chi tiết lịch hẹn:", data);
-        setAppointmentDetail(data);
-      } catch (err) {
-        console.error("Lỗi khi lấy chi tiết lịch hẹn:", err);
-      }
-    };
-
 
     if (appointmentId) {
       fetchAppointmentDetail();
     }
   }, [appointmentId]);
+
+  useEffect(() => {
+    if (appointmentDetail) {
+      const runMedicineApis = async () => {
+        const customerId = appointmentDetail.customerId;
+        const cycleId = 1; // Hoặc lấy từ dữ liệu thực tế
+        const stepOrder = 1;
+
+        const allMeds = await fetchAllMedicines();
+        const customerMeds = await fetchMedicinesByCustomer(customerId);
+        await fetchSchedulesByCycleStep(cycleId, stepOrder);
+
+        if (allMeds && allMeds.length > 0) {
+          const created = await createMedicationSchedule({
+            customerId,
+            medicineId: allMeds[0].id,
+            cycleId,
+            stepOrder,
+          });
+
+          if (created?.id) {
+            await updateMedicationStatus(created.id);
+          }
+        }
+      };
+
+      runMedicineApis();
+    }
+  }, [appointmentDetail]);
 
 
   const toggleSection = (section) => {
@@ -112,6 +129,82 @@ const handleCreateTestResult = async () => {
       ...prev,
       [section]: !prev[section],
     }));
+  };
+
+  const fetchAppointmentDetail = async () => {
+    try {
+      const data = await apiAppointment.getAppointmentDetailById(
+        appointmentId
+      );
+      console.log("Chi tiết lịch hẹn:", data);
+      setAppointmentDetail(data);
+    } catch (err) {
+      console.error("Lỗi khi lấy chi tiết lịch hẹn:", err);
+    }
+  };
+
+  //Lấy danh sách tất cả thuốc
+  const fetchAllMedicines = async () => {
+    try {
+      const meds = await ApiGateway.getAllMedicines();
+      console.log("Danh sách tất cả thuốc:", meds);
+      return meds;
+    } catch (error) {
+      console.error("Lỗi khi lấy danh sách thuốc:", error);
+    }
+  };
+
+  //Lấy danh sách thuốc của bệnh nhân theo customerId
+  const fetchMedicinesByCustomer = async (customerId) => {
+    try {
+      const meds = await ApiGateway.getMedicinesByCustomerId(customerId);
+      console.log("Danh sách thuốc của bệnh nhân:", meds);
+      return meds;
+    } catch (error) {
+      console.error("Lỗi khi lấy thuốc bệnh nhân:", error);
+    }
+  };
+
+  //Lấy lịch uống thuốc theo cycleId & stepOrder
+  const fetchSchedulesByCycleStep = async (cycleId, stepOrder) => {
+    try {
+      const schedules = await ApiGateway.getSchedulesByCycleStep(cycleId, stepOrder);
+      console.log("Lịch thuốc theo chu kỳ và bước:", schedules);
+      return schedules;
+    } catch (error) {
+      console.error("Lỗi khi lấy lịch thuốc:", error);
+    }
+  };
+
+  //Tạo lịch uống thuốc mới
+  const createMedicationSchedule = async ({ customerId, medicineId, cycleId, stepOrder }) => {
+    try {
+      const newSchedule = {
+        customerId,
+        medicineId,
+        cycleId,
+        stepOrder,
+        startDate: new Date().toISOString().slice(0, 10),
+        endDate: new Date(Date.now() + 3 * 86400000).toISOString().slice(0, 10), // +3 ngày
+        times: ["08:00", "20:00"],
+      };
+      const result = await ApiGateway.createMedicationSchedule(newSchedule);
+      console.log("Tạo lịch thuốc thành công:", result);
+      return result;
+    } catch (error) {
+      console.error("Lỗi khi tạo lịch thuốc:", error);
+    }
+  };
+
+  //Cập nhật trạng thái thuốc (VD: 'taken')
+  const updateMedicationStatus = async (scheduleId, status = "taken") => {
+    try {
+      const result = await ApiGateway.updateMedicationStatus(scheduleId, { status });
+      console.log(`Cập nhật trạng thái schedule ${scheduleId}:`, result);
+      return result;
+    } catch (error) {
+      console.error("Lỗi khi cập nhật trạng thái thuốc:", error);
+    }
   };
 
 
@@ -888,10 +981,12 @@ export default PatientProfileLayout1;
 
 
 const ServiceTabContent = () => {
-  const today = new Date();
+  const { appointmentId } = useParams();
+  const minDay = new Date(Date.now() + 3 * 1000 * 60 * 60 * 24); // 3 ngày sau
   const [paymentForm, setPaymentForm] = useState({
     customerId: "",
     serviceId: "",
+    appointmentId: appointmentId,
     appointmentDate: "",
     note: "",
     total: 0,
@@ -899,17 +994,16 @@ const ServiceTabContent = () => {
   });
 
 
-  const [services, setServices] = useState([
+  const services = [
     { id: 1, name: "IUI", price: 5000000 },
     { id: 2, name: "IVF", price: 70000000 },
-  ]);
+  ];
 
 
   const typeOptions = [
     { value: "test", label: "Test" },
     { value: "treatment", label: "Điều trị" },
   ];
-
 
   useEffect(() => {
     if (paymentForm.serviceId) {
@@ -922,12 +1016,26 @@ const ServiceTabContent = () => {
     } else {
       setPaymentForm((prev) => ({ ...prev, total: 0 }));
     }
-  }, [paymentForm.serviceId, services]);
+  }, [paymentForm.serviceId]);
 
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setPaymentForm((prev) => ({ ...prev, [name]: value }));
+
+    if (name === "appointmentDate") {
+      if (value) {
+        const [date, time] = value.split('T');
+      
+        if (time) {
+          // Lấy giờ và đặt phút về 00
+          const hour = time.split(':')[0];
+          const newValue = `${date}T${hour}:00`;
+          setPaymentForm((prev) => ({ ...prev, [name]: newValue }));
+        }
+      }
+    } else {
+      setPaymentForm((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
 
@@ -982,7 +1090,7 @@ const ServiceTabContent = () => {
           className="form-input"
           name="appointmentDate"
           value={paymentForm.appointmentDate}
-          min={today.toISOString().slice(0, 16)}
+          min={minDay.toISOString().slice(0, 16)}
           step={3600}
           onChange={handleInputChange}
         />

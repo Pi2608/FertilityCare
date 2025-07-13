@@ -63,13 +63,14 @@ class ApiGateway {
     try {
       const newUserData = {
         name: newUser.name,
-        email: newUser.password,
+        email: newUser.email,
         password: newUser.password,
         medicalHistory: "Chưa có",
         phone: newUser.phone,
         gender: newUser.gender,
         dob: newUser.dob,
       }
+      console.log(newUserData)
       const response = await ApiGateway.axiosInstance.post("register/request", newUserData);
       return response.data;
     } catch (error) {
@@ -96,15 +97,25 @@ class ApiGateway {
     }
   }
 
-    static async getUserRole() {
-        try {
-            const response = await ApiGateway.axiosInstance.get("login/roles");
-            return response.data;
-        } catch (error) {
-            console.error("Get User Role error:", error);
-            throw error;
-        }
-    }
+  static async getUserInfo() {
+      try {
+          const response = await ApiGateway.axiosInstance.get("customer/info");
+          return response.data;
+      } catch (error) {
+          console.error("Get User Role error:", error);
+          throw error;
+      }
+  }
+
+  static async getUserRole() {
+      try {
+          const response = await ApiGateway.axiosInstance.get("login/roles");
+          return response.data;
+      } catch (error) {
+          console.error("Get User Role error:", error);
+          throw error;
+      }
+  }
 
   static async getAllUsers() {
     try {
@@ -255,6 +266,7 @@ class ApiGateway {
           const paymentForm = {
               customerId: payment.customerId || "4",
               serviceId: payment.serviceId || "",
+              appointmentId: payment.appointmentId || "",
               total: payment.total || 0,  
               paidDate: null,
               status: "pending",
@@ -317,6 +329,114 @@ class ApiGateway {
           throw error;
       }
   }
+
+  // Appointment
+  static async getAllAppointments() {
+    try {
+      const response = await ApiGateway.axiosInstance.get("appointment-services/appointments/detail");
+      return response.data;
+    } catch (error) {
+      console.error("Get All Appointments error:", error);
+      throw error;
+    }
+  }
+
+  // Cycle
+  static async getMyCycle() {
+    try {
+      const response = await ApiGateway.axiosInstance.get("cycles/meC/cycle/all");
+      return response.data;
+    } catch (error) {
+      console.error("Get All Cycles error:", error);
+      throw error;
+    }
+  }
+
+  // Cycle Steps
+  static async getCycleStepsByCycleId(cycleId) {
+    try {
+      const response = await ApiGateway.axiosInstance.get(`cycle-steps/cycleId/${cycleId}/step/all`);
+      return response.data;
+    } catch (error) {
+      console.error("Get Cycle Steps by Cycle ID error:", error);
+      throw error;
+    }
+  }
+
+  //Medication
+  static async createMedicationSchedule(schedule) {
+    try {
+      const response = await ApiGateway.axiosInstance.post(
+        "medicine/medication-schedule",
+        schedule
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Create Medication Schedule error:", error);
+      throw error;
+    }
+  }
+
+  static async updateMedicationStatus(scheduleId, statusDto) {
+    try {
+      const response = await ApiGateway.axiosInstance.patch(
+        `medicine/medicine-schedules/${scheduleId}`,
+        statusDto
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Update Medication Status error:", error);
+      throw error;
+    }
+  }
+
+  static async getSchedulesByCycleStep(cycleId, stepOrder) {
+    try {
+      const response = await ApiGateway.axiosInstance.get(
+        `medicine/cycles/${cycleId}/steps/${stepOrder}/medicine-schedules`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Get Schedules by Cycle and Step error:", error);
+      throw error;
+    }
+  }
+
+  static async getSchedulesByDate(cycleId, stepOrder, date) {
+    try {
+      const response = await ApiGateway.axiosInstance.get(
+        `medicine/cycles/${cycleId}/steps/${stepOrder}/medicine-schedules/by-date`,
+        { params: { date } }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Get Schedules by Date error:", error);
+      throw error;
+    }
+  }
+
+  static async getMedicinesByCustomerId(customerId) {
+    try {
+      const response = await ApiGateway.axiosInstance.get(
+        `medicine/customer/${customerId}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Get Medicines by Customer ID error:", error);
+      throw error;
+    }
+  }
+
+  static async getAllMedicines() {
+    try {
+      const response = await ApiGateway.axiosInstance.get("medicine/all");
+      return response.data;
+    } catch (error) {
+      console.error("Get All Medicines error:", error);
+      throw error;
+    }
+  }
+
 }
 
 export default ApiGateway;

@@ -301,7 +301,7 @@ export const router = createBrowserRouter([
     ]
   },
   {
-    path: "doctor-dashboard/appointments/tu_van",
+    path: "doctor-dashboard/appointments/tu_van/:appointmentId",
     element: (
       // <DoctorRoute>
         <PageLayout />
@@ -317,7 +317,7 @@ export const router = createBrowserRouter([
 
 
   {
-    path: "doctor-dashboard/appointments/dieu_tri",
+    path: "doctor-dashboard/appointments/dieu_tri/:appointmentId",
     element: (
       // <DoctorRoute>
         <PageLayout />

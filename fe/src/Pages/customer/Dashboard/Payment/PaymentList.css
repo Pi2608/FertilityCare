@@ -22,6 +22,11 @@
   color: #666;
 }
 
+.payment-page .actions {
+  display: flex;
+  gap: 1rem;
+}
+
 .payment-page .actions button {
   margin-left: 0.5rem;
 }
@@ -257,7 +262,7 @@
 .payment-page .primary-btn:hover {
   background-color: #b8003f;
 }
-
+/* 
 .payment-page .empty-state {
   text-align: center;
   padding: 2rem;
@@ -265,7 +270,7 @@
   background-color: #f9f9f9;
   border-radius: 8px;
   border: 2px dashed #ddd;
-}
+} */
 
 .payment-page .empty-state p {
   margin: 0;

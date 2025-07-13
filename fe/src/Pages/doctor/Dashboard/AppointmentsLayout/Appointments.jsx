@@ -39,94 +39,96 @@ export default function Appointments() {
       </div>
 
       <table className="schedule-table">
-        <thead>
-          <tr>
-            <th>Bệnh nhân</th>
-            <th>Tuổi</th>
-            <th>Thời gian</th>
-            <th>Loại điều trị</th>
-            <th>Giai đoạn điều trị</th>
-            <th>Hành động</th>
-          </tr>
-        </thead>
-        <tbody>
-          {appointments.map((item, index) => (
-            <tr key={item.appointmentId}>
-              <td>
-                <div className="patient-info">
-                  <div>
-                    <div className="patient-name">{item.customerName}</div>
-                    <span className="patient-id">ID: {item.appointmentId}</span>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <span className="patient-age">{item.customerAge}</span>
-              </td>
-              <td>
-                <div className="time-info">
-                  <div>{item.startTime?.slice(0, 5)}</div>
-                  <div className="date">
-                    {new Date(item.date).toLocaleDateString("vi-VN")}
-                  </div>
-                </div>
-              </td>
-              <td>
-                <span
-                  className={`treatment-badge ${
-                    item.type === "tu_van" ? "consultation" : ""
-                  }`}
-                >
-                  {item.type === "tu_van" ? "Tư vấn" : "Tái khám"}
-                </span>
-              </td>
-              <td>
-                <span className="treatment-stage">Đang cập nhật</span>
-              </td>
-              <td>
-                <div className="actions">
-                  {item.status === "confirmed" ? (
-                    <>
-                      <button
-                        className="btn btn-start"
-                        onClick={() =>
-                          navigate(
-                            item.type === "tu_van"
-                              ? "/doctor-dashboard/appointments/tu_van"
-                              : "/doctor-dashboard/appointments/dieu_tri",
-                            { state: { appointmentId: item.appointmentId } }
-                          )
-                        }
-                      >
-                        Bắt đầu
-                      </button>
+        {appointments.length === 0 ? (
+          <div  className="empty-state" style={{ textAlign: "center", marginTop: "20px" }}>
+            <p>Bạn không có cuộc hẹn nào</p>
+          </div>
+        ):(
+          <>
+            <thead>
+              <tr>
+                <th>Bệnh nhân</th>
+                <th>Tuổi</th>
+                <th>Thời gian</th>
+                <th>Loại điều trị</th>
+                <th>Giai đoạn điều trị</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody>
+              {appointments.map((item, index) => (
+                <tr key={item.appointmentId}>
+                  <td>
+                    <div className="patient-info">
+                      <div>
+                        <div className="patient-name">{item.customerName}</div>
+                        <span className="patient-id">ID: {item.appointmentId}</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span className="patient-age">{item.customerAge}</span>
+                  </td>
+                  <td>
+                    <div className="time-info">
+                      <div>{item.startTime?.slice(0, 5)}</div>
+                      <div className="date">
+                        {new Date(item.date).toLocaleDateString("vi-VN")}
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span
+                      className={`treatment-badge ${
+                        item.type === "tu_van" ? "consultation" : ""
+                      }`}
+                    >
+                      {item.type === "tu_van" ? "Tư vấn" : "Tái khám"}
+                    </span>
+                  </td>
+                  <td>
+                    <span className="treatment-stage">Đang cập nhật</span>
+                  </td>
+                  <td>
+                    <div className="actions">
+                      {item.status === "confirmed" ? (
+                        <>
+                          <button
+                            className="btn btn-start"
+                            onClick={() =>
+                              navigate(
+                                item.type === "tu_van"
+                                  ? `/doctor-dashboard/appointments/tu_van/${item.appointmentId}`
+                                  : `/doctor-dashboard/appointments/dieu_tri/${item.appointmentId}`,
+                                { state: { appointmentId: item.appointmentId } }
+                              )
+                            }
+                          >
+                            Bắt đầu
+                          </button>
 
-                      <a href="" className="btn btn-message no-underline">
-                        Nhắn tin
-                      </a>
-                    </>
-                  ) : (
-                    <>
-                      <a href="" className="btn btn-not-ready no-underline">
-                        Chưa mở
-                      </a>
-                      <a href="" className="btn btn-message no-underline">
-                        Nhắn tin
-                      </a>
-                    </>
-                  )}
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
+                          <a href="" className="btn btn-message no-underline">
+                            Nhắn tin
+                          </a>
+                        </>
+                      ) : (
+                        <>
+                          <a href="" className="btn btn-not-ready no-underline">
+                            Chưa mở
+                          </a>
+                          <a href="" className="btn btn-message no-underline">
+                            Nhắn tin
+                          </a>
+                        </>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </>
+        )}
       </table>
-
-      <div className="pagination">
-        <button>Trước</button>
-        <span>Trang 1 / 3</span>
-        <button>Tiếp</button>
-      </div>
     </div>
   );
 }
