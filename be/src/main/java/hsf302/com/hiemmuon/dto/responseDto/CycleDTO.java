@@ -21,6 +21,7 @@ public class CycleDTO {
     private String customerName;
     private int customerAge;
     private int doctorId;
+    private String doctorName;
     private int serviceId;
     private String serviceName;
     private LocalDate startDate;

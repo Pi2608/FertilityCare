@@ -64,6 +64,15 @@
   margin-top: 1.5rem;
 }
 
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 2px dashed #ddd;
+}
+
 @keyframes appear {
   from {
     opacity: 0;

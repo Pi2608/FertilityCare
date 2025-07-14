@@ -1,11 +1,13 @@
 import { useEffect, useState, React } from "react";
-import "./PatientApt.css";
 import { Calendar as CalendarIcon, Clock as ClockIcon } from "lucide-react";
-import apiAppointment from "../../../../features/service/apiAppointment";
+import apiAppointment from "@features/service/apiAppointment";
 import ApiGateway from "@features/service/apiGateway";
 import apiFeedback from "@features/service/apiFeedback";
+import { useNavigate } from "react-router-dom";
+import "./PatientApt.css";
 
 const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
+  const navigate = useNavigate();
   const [appointments, setAppointments] = useState([]);
   const [paymentNotifications, setPaymentNotifications] = useState([]);
   const [myFeedbacks, setMyFeedbacks] = useState([]);
@@ -58,9 +60,9 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
   }, []);
 
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
     }).format(amount);
   };
 
@@ -82,17 +84,18 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
     } catch (error) {
       console.error("Error fetching payment notifications:", error);
     }
-  };
+  }
 
   const cancelPayment = (paymentId) => {
     try {
-      const response = ApiGateway.cancelPayment(paymentId);
+      ApiGateway.cancelPayment(paymentId);
       fetchPaymentNotifications();
     } catch (error) {
       console.error("Error canceling payment:", error);
       alert("Có lỗi xảy ra khi hủy thanh toán. Vui lòng thử lại.");
     }
-  };
+  }
+
   const fetchAppointments = async () => {
     try {
       const data = await apiAppointment.getAllAppointments();
@@ -122,20 +125,34 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
     const interval = setInterval(() => {
       fetchPaymentNotifications();
     }, 60000);
+
     return () => clearInterval(interval);
   }, []);
+
+
   const now = new Date();
-  const completedAppointments = appointments.filter(
-    (appt) => appt.status === "done"
-  );
+
+
   const upcomingAppointments = appointments.filter(
-    (appt) => appt.status === "confirmed"
+    (appt) => new Date(`${appt.date}T${appt.startTime}`) >= now
   );
-  const feedbackedDoctorIds = new Set(myFeedbacks.map((fb) => fb.doctorId));
-  const completedAppointmentsFiltered = completedAppointments.filter((appt) => {
-    return !feedbackedDoctorIds.has(appt.doctorId);
-  });
-  const displayedDoctors = new Set();
+
+
+  const completedAppointments = appointments.filter(
+    (appt) => new Date(`${appt.date}T${appt.startTime}`) < now
+  );
+
+
+  //   (appt) => appt.status === "done"
+  // );
+  // const upcomingAppointments = appointments.filter(
+  //   (appt) => appt.status === "confirmed"
+  // );
+  // const feedbackedDoctorIds = new Set(myFeedbacks.map((fb) => fb.doctorId));
+  // const completedAppointmentsFiltered = completedAppointments.filter((appt) => {
+  //   return !feedbackedDoctorIds.has(appt.doctorId);
+  // });
+  // const displayedDoctors = new Set();
   return (
     <div className="appointment-page">
       <div className="welcome-section">
@@ -144,111 +161,123 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
           <p>Chào mừng quay trở lại với cổng thông tin bệnh nhân</p>
         </div>
 
-        <div className="actions">
-          {/* <button className="primary-btn">Đặt lịch hẹn</button> */}
-          <button className="secondary-btn">Liên hệ bác sĩ</button>
+
+            <div className="actions">
+                <button className="secondary-btn">Liên hệ bác sĩ</button>
+            </div>
         </div>
-      </div>
+
       <div className="apt-container">
         <div className="page-title-actions">
           <h3>Lịch hẹn của tôi</h3>
-          <button className="btn-primary">Đặt lịch mới</button>
         </div>
         <div className="subtitle">
           <p>Quản lý tất cả các cuộc hẹn sắp tới và đã qua</p>
         </div>
+
+
         <section className="patient-apt-section">
-          {paymentNotifications.length > 0 && (
-            <>
-              <h4>Xác nhận thanh toán</h4>
-              {paymentNotifications.map((payment) => (
-                <PaymentNotification
-                  key={payment.id}
-                  payment={payment}
-                  formatDatetimeWithWeekday={formatDatetimeWithWeekday}
-                  formatCurrency={formatCurrency}
-                  cancelPayment={cancelPayment}
-                />
-              ))}
-            </>
-          )}
-          <h4 style={{ marginTop: "1rem" }}>Sắp tới</h4>
-          <div className="appointments-list">
-            {upcomingAppointments.map((appt) => (
-              <div
-                key={appt.appointmentId}
-                className="appointment-card upcoming"
-              >
-                <div className="appointment-icon">
-                  <CalendarIcon size={24} />
+          
+            {paymentNotifications.length > 0 && (
+              <>
+                <h4>Xác nhận thanh toán</h4>
+                <div className="payment-card-container">
+                  {paymentNotifications.map((payment) => (
+                    <PaymentNotification
+                      key={payment.id}
+                      payment={payment}
+                      formatDatetimeWithWeekday={formatDatetimeWithWeekday}
+                      formatCurrency={formatCurrency}
+                      cancelPayment={cancelPayment}
+                    />
+                  ))}
                 </div>
-                <div className="appointment-info">
-                  <h5>{appt.type === "tu_van" ? "Tư vấn" : "Tái khám"}</h5>
-                  <p>
-                    {new Date(appt.date).toLocaleDateString("vi-VN")} -{" "}
-                    {appt.startTime.slice(0, 5)}
-                  </p>
-                  <p className="doctor-name">Bác sĩ {appt.doctorName}</p>
-                </div>
-                <div className="appointment-actions">
-                  {appt.type === "tu_van" && appt.status === "confirmed" ? (
-                    <button
-                      className="secondary-btn"
-                      onClick={() => cancelAppointment(appt.appointmentId)}
+              </>
+            )}
+
+            {upcomingAppointments.length > 0 && (
+              <>
+                <div className="appointments-list">
+                  <h4 style={{marginTop:"1rem"}}>Sắp tới</h4>
+                  {upcomingAppointments.map((appt) => (
+                    <div
+                      key={appt.appointmentId}
+                      className="appointment-card upcoming"
                     >
-                      Hủy cuộc hẹn
-                    </button>
-                  ) : (
-                    <button className="secondary-btn"></button>
-                  )}
-                  <button className="primary-btn">Chi tiết</button>
+                      <div className="appointment-icon">
+                        <CalendarIcon size={24} />
+                      </div>
+
+
+                      <div className="appointment-info">
+                        <h5>{appt.type === "tu_van" ? "Tư vấn" : "Tái khám"}</h5>
+                        <p>
+                          {new Date(appt.date).toLocaleDateString("vi-VN")} -{" "}
+                          {appt.startTime.slice(0, 5)}
+                        </p>
+                        <p className="doctor-name">Bác sĩ {appt.doctorName}</p>
+                      </div>
+
+
+                      <div className="appointment-actions">
+                        {/* {appt.type === "tu_van" && appt.status === "confirmed" ? (
+                          <button
+                            className="secondary-btn"
+                            onClick={() => cancelAppointment(appt.appointmentId)}
+                          >
+                            Hủy cuộc hẹn
+                          </button>
+                        ) : (
+                          <button className="secondary-btn"></button>
+                        )} */}
+                        <button className="secondary-btn">Đổi lịch</button>
+                        <button className="primary-btn">Chi tiết</button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
+              </>
+            )}
+
+            {completedAppointments.length > 0 && (
+              <>
+                <h4>Đã hoàn thành</h4>
+                <div className="appointments-list">
+                  {completedAppointments.map((appt) => (
+                    <div
+                      key={appt.appointmentId}
+                      className="appointment-card completed"
+                    >
+                      <div className="appointment-icon completed-icon">
+                        <CalendarIcon size={24} />
+                      </div>
+
+
+                      <div className="appointment-info">
+                        <h5>{appt.type === "tu_van" ? "Tư vấn" : "Tái khám"}</h5>
+                        <p>
+                          {new Date(appt.date).toLocaleDateString("vi-VN")} -{" "}
+                          {appt.startTime.slice(0, 5)}
+                        </p>
+                        <p className="doctor-name">Bác sĩ {appt.doctorName}</p>
+                      </div>
+
+
+                      <div className="appointment-actions">
+                        <button className="btn-outline">Xem chi tiết</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {paymentNotifications.length === 0 && upcomingAppointments.length == 0 && completedAppointments.length == 0 && (
+              <div className="no-apt">
+                <p>Bạn chưa có cuộc hẹn nào</p>
+                <button className="action-btn primary" onClick={() => navigate('/homepage/book-appointment')}>Đặt lịch hẹn</button>
               </div>
-            ))}
-          </div>
-        </section>
-        <section className="patient-apt-section">
-          <h4>Đã hoàn thành</h4>
-          <div className="appointments-list">
-            {completedAppointmentsFiltered.map((appt) => {
-              const alreadyDisplayed = displayedDoctors.has(appt.doctorId);
-              const showFeedbackButton = !alreadyDisplayed;
-              if (showFeedbackButton) {
-                displayedDoctors.add(appt.doctorId);
-              }
-              return (
-                <div
-                  key={appt.appointmentId}
-                  className="appointment-card completed"
-                >
-                  <div className="appointment-icon completed-icon">
-                    <CalendarIcon size={24} />
-                  </div>
-                  <div className="appointment-info">
-                    <h5>{appt.type === "tu_van" ? "Tư vấn" : "Tái khám"}</h5>
-                    <p>
-                      {new Date(appt.date).toLocaleDateString("vi-VN")} -{" "}
-                      {appt.startTime.slice(0, 5)}
-                    </p>
-                    <p className="doctor-name">Bác sĩ {appt.doctorName}</p>
-                  </div>
-                  <div className="appointment-actions">
-                    <button className="btn-outline">Xem chi tiết</button>
-                    {showFeedbackButton && (
-                      <button
-                        className="btn-primary"
-                        onClick={() =>
-                          handleOpenFeedbackForm(appt.doctorId, appt.doctorName)
-                        }
-                      >
-                        Gửi đánh giá
-                      </button>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+            )}
         </section>
       </div>
       {showFeedbackForm && (
@@ -296,19 +325,17 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
     </div>
   );
 };
+
+
 export default PatientApt;
 
-const PaymentNotification = ({
-  payment,
-  formatDatetimeWithWeekday,
-  formatCurrency,
-  cancelPayment,
-}) => {
+const PaymentNotification = ({ payment, formatDatetimeWithWeekday, formatCurrency, cancelPayment }) => {
   const [isLoading, setIsLoading] = useState(false);
   const confirmPayment = async (paymentId) => {
     try {
       setIsLoading(true);
       const response = await ApiGateway.createVNPayUrl(paymentId);
+      
       if (response) {
         window.location.href = response;
       } else {
@@ -333,9 +360,9 @@ const PaymentNotification = ({
   return (
     <div
       key={payment.id}
-      className={`notification-card payment ${!payment.isRead ? "unread" : "read"
-        }`}
-    // onClick={() => markAsRead(payment.id)}
+      className={`notification-card payment ${
+        !payment.isRead ? "unread" : "read"
+      }`}
     >
       <div className="notification-icon payment-icon">
         <CalendarIcon size={24} />
@@ -343,38 +370,34 @@ const PaymentNotification = ({
       <div className="notification-info">
         <div className="notification-header">
           <p>
-            đã đặt lịch khám vào lúc{" "}
-            <strong>
-              {formatDatetimeWithWeekday(payment?.appointmentDate)}
-            </strong>
-            .
+            <strong>{payment.doctorName}</strong> đã đặt lịch khám vào lúc{" "}
+            <strong>{formatDatetimeWithWeekday(payment?.appointmentDate)}</strong>.
           </p>
-          <span className="notification-time">{payment.time}</span>
+          <span className="notification-time">
+            {payment.time}
+          </span>
         </div>
         <p className="notification-message">
           Vui lòng hoàn tất thanh toán để xác nhận lịch khám.
         </p>
         <p className="notification-meta payment-amount">
-          <span className="doctor-name">Bác sĩ {payment?.doctorName}</span> -{" "}
-          <span className="payment-total">
-            Số tiền: {formatCurrency(payment.total)}
-          </span>{" "}
-          -{" "}
-          <span className="medication-name" style={{ fontSize: "0.75rem" }}>
-            {payment?.serviceName}
-          </span>
+          <span className="doctor-name">Bác sĩ {payment?.doctorName}</span>
+          {" "}-{" "} 
+          <span className="payment-total">Số tiền: {formatCurrency(payment.total)}</span>
+          {" "}-{" "}
+          <span className="medication-name" style={{fontSize:"0.75rem"}}>{payment?.serviceName}</span>
         </p>
       </div>
       <div className="notification-actions">
-        <button
-          className="action-btn secondary"
+        <button 
+          className="action-btn secondary" 
           onClick={handleCancelClick}
           disabled={isLoading}
         >
           Hủy
         </button>
-        <button
-          className="action-btn primary"
+        <button 
+          className="action-btn primary" 
           onClick={handleConfirmClick}
           disabled={isLoading}
         >

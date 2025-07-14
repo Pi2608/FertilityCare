@@ -1,7 +1,12 @@
 .cus_layout .content {
     display: flex;
+    height: 100vh;
 }
 
+.cus_layout .content {
+    height: 100%;
+    overflow-y: auto;
+}
 
 .cus_layout .content > div:last-child {
     flex: 1;

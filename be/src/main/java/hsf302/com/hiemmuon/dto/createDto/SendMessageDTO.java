@@ -28,4 +28,6 @@ public class SendMessageDTO {
     public void setMessage(String message) {
         this.message = message;
     }
+
+
 }

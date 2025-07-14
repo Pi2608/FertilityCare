@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/api/login/**").permitAll()
 
-
+                                /// Doctor APIs
                                 .requestMatchers(HttpMethod.GET,
                                         "/api/doctors/id/**",
                                         "/api/doctors/name/**",
@@ -65,11 +65,6 @@ public class SecurityConfig {
                                         "/api/medicine/all"
                                 ).hasRole("DOCTOR")
 
-                                .requestMatchers(HttpMethod.GET,
-                                        "/api/doctors/all",
-                                        "/api/treatment-services/all",
-                                        "api/appointment-services/appointments/overview")
-                                .hasAnyRole("MANAGER", "ADMIN")
                                 .requestMatchers(HttpMethod.GET,
                                         "/api/doctors/all",
                                         "/api/treatment-services/all",
@@ -111,13 +106,12 @@ public class SecurityConfig {
 
                                 .requestMatchers(HttpMethod.POST,
                                         "/api/doctors",
-                                        "/api/treatment-services"
-                                ).hasAnyRole("MANAGER", "ADMIN")
+                                        "/api/treatment-services")
+                                .hasAnyRole("MANAGER", "ADMIN")
 
                                 .requestMatchers(HttpMethod.POST,
                                         "/api/register/request",
-                                        "/api/register/confirm"
-                                ).permitAll()
+                                        "/api/register/confirm").permitAll()
 
 
                                 .requestMatchers(HttpMethod.PUT,
@@ -130,8 +124,8 @@ public class SecurityConfig {
                                 ).hasRole("DOCTOR")
 
                                 .requestMatchers(HttpMethod.PUT,
-                                        "/api/treatment-services/**"
-                                ).hasAnyRole("MANAGER", "ADMIN")
+                                        "/api/treatment-services/**")
+                                .hasAnyRole("MANAGER", "ADMIN")
 
                                 .requestMatchers(HttpMethod.PATCH,
                                         "/api/appointment-services/appointments/cancel/{appointmentId}",
@@ -146,14 +140,14 @@ public class SecurityConfig {
                                         "api/appointment-services/appointments/{appointmentId}/update-service"
                                 ).hasRole("DOCTOR")
 
-                                                .requestMatchers(HttpMethod.PATCH,
-                                                                "/api/doctors/status/**",
-                                                                "/api/treatment-services/status/**")
-                                        .hasAnyRole("MANAGER","ADMIN")
-
+                                .requestMatchers(HttpMethod.PATCH,
+                                        "/api/doctors/status/**",
+                                        "/api/treatment-services/status/**")
+                                .hasAnyRole("MANAGER", "ADMIN")
+///
                                 .requestMatchers(HttpMethod.GET,
-                                        "/api/treatment-services/**"
-                                ).permitAll()
+                                        "/api/treatment-services/**")
+                                .permitAll()
 
                                 .requestMatchers(HttpMethod.GET, "/api/admin/customers")
                                 .hasRole("ADMIN")
@@ -179,7 +173,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "api/test-results/customer").hasAnyRole("CUSTOMER")
                                 .requestMatchers(HttpMethod.PUT, "api/test-results/update/{id}").hasAnyRole("DOCTOR")
 
-                                        // Feedback
+                                // Feedback
                                 .requestMatchers(HttpMethod.POST, "api/feedback/create").hasAnyRole("CUSTOMER")
                                 .requestMatchers(HttpMethod.GET, "api/feedback/averagi-rating/{doctorId}").hasAnyRole("MANAGER",  "ADMIN")
                                 .requestMatchers(HttpMethod.GET, "api/feedback/feedback-by-doctor/{doctorId}").hasAnyRole("MANAGER",  "ADMIN")
@@ -197,6 +191,9 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "api/messages/all").hasAnyRole("CUSTOMER", "DOCTOR")
                                 .requestMatchers(HttpMethod.POST, "api/messages/send").hasAnyRole("CUSTOMER", "DOCTOR")
                                 .requestMatchers(HttpMethod.GET, "api/messages/latest").hasAnyRole("CUSTOMER", "DOCTOR")
+
+                                // Blog
+                                .requestMatchers("/api/blogs/**").permitAll()
                                 
                                 /// Payment APIs
                                 .requestMatchers(HttpMethod.GET, "/api/payments/all").hasAnyRole("ADMIN", "MANAGER")

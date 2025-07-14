@@ -1,8 +1,7 @@
-"use client";
+"use client"
 
-import DoctorAPI from "../../../../features/service/apiDoctor";
-import { useState, useEffect } from "react";
-import "./ProfileLayout.css";
+import { useState } from "react"
+import "./ProfileLayout.css"
 
 const ProfileLayout = () => {
   const [doctorInfo, setDoctorInfo] = useState({
@@ -88,16 +87,15 @@ const ProfileLayout = () => {
       <span key={index} className={`star ${index < rating ? "filled" : ""}`}>
         ⭐
       </span>
-    ));
-  };
+    ))
+  }
 
-  const averageRating =
-    reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
+  const averageRating = reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
 
   const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("vi-VN");
-  };
+    const date = new Date(dateString)
+    return date.toLocaleDateString("vi-VN")
+  }
 
   return (
     <div className="profile-container">
@@ -115,6 +113,9 @@ const ProfileLayout = () => {
         <div className="doctor-info-section">
           <h3>Thông Tin Cá Nhân</h3>
           <div className="doctor-card">
+            {/* <div className="doctor-avatar">
+              <img src="/placeholder.svg?height=60&width=60" alt="Doctor Avatar" />
+            </div> */}
             <div className="doctor-details">
               <div className="info-grid">
                 <div className="info-item">
@@ -123,9 +124,7 @@ const ProfileLayout = () => {
                     type="text"
                     className="edit-input"
                     value={doctorInfo.fullName}
-                    onChange={(e) =>
-                      handleInputChange("fullName", e.target.value)
-                    }
+                    onChange={(e) => handleInputChange("fullName", e.target.value)}
                     placeholder="Nhập họ và tên"
                   />
                 </div>
@@ -134,12 +133,11 @@ const ProfileLayout = () => {
                   <select
                     className="edit-select"
                     value={doctorInfo.gender}
-                    onChange={(e) =>
-                      handleInputChange("gender", e.target.value)
-                    }
+                    onChange={(e) => handleInputChange("gender", e.target.value)}
                   >
                     <option value="male">Nam</option>
                     <option value="female">Nữ</option>
+    
                   </select>
                 </div>
                 <div className="info-item">
@@ -148,9 +146,7 @@ const ProfileLayout = () => {
                     type="date"
                     className="edit-input"
                     value={doctorInfo.birthDate}
-                    onChange={(e) =>
-                      handleInputChange("birthDate", e.target.value)
-                    }
+                    onChange={(e) => handleInputChange("birthDate", e.target.value)}
                   />
                 </div>
                 <div className="info-item">
@@ -158,22 +154,23 @@ const ProfileLayout = () => {
                   <select
                     className="edit-select"
                     value={doctorInfo.specialty}
-                    onChange={(e) =>
-                      handleInputChange("specialty", e.target.value)
-                    }
+                    onChange={(e) => handleInputChange("specialty", e.target.value)}
                   >
                     <option value="IVF">IVF</option>
                     <option value="IUI">IUI</option>
+        
                   </select>
                 </div>
                 <div className="info-item">
-                  <label>Số điện thoại</label>
+                  <label>Kinh Nghiệm (năm)</label>
                   <input
-                    type="text"
+                    type="number"
                     className="edit-input"
-                    value={doctorInfo.phone}
-                    onChange={(e) => handleInputChange("phone", e.target.value)}
-                    placeholder="Nhập số điện thoại"
+                    value={doctorInfo.experience}
+                    onChange={(e) => handleInputChange("experience", Number.parseInt(e.target.value) || 0)}
+                    placeholder="Nhập số năm kinh nghiệm"
+                    min="0"
+                    max="50"
                   />
                 </div>
               </div>
@@ -207,7 +204,9 @@ const ProfileLayout = () => {
                     <h4>{review.patientName}</h4>
                   </div>
                   <div className="review-meta">
-                    <div className="rating">{renderStars(review.rating)}</div>
+                    <div className="rating">
+                      {renderStars(review.rating)}
+                    </div>
                     <div className="review-date">{formatDate(review.date)}</div>
                   </div>
                 </div>

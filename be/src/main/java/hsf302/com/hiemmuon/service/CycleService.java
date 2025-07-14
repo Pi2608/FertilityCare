@@ -142,6 +142,7 @@ public class CycleService {
                 savedCycle.getCustomer().getUser().getName(),
                 Period.between(savedCycle.getCustomer().getUser().getDob(), LocalDate.now()).getYears(),
                 savedCycle.getDoctor().getDoctorId(),
+                savedCycle.getDoctor().getUser().getName(),
                 savedCycle.getService().getServiceId(),
                 savedCycle.getService().getName(),
                 savedCycle.getStartdate(),
@@ -180,6 +181,7 @@ public class CycleService {
                         cycle.getCustomer().getUser().getDob(),
                         LocalDate.now()).getYears())
                 .doctorId(cycle.getDoctor().getDoctorId())
+                .doctorName(cycle.getDoctor().getUser().getName())
                 .serviceId(cycle.getService().getServiceId())
                 .serviceName(cycle.getService().getName())
                 .startDate(cycle.getStartdate())
@@ -260,6 +262,7 @@ public class CycleService {
                 savedCycle.getCustomer().getUser().getName(),
                 Period.between(savedCycle.getCustomer().getUser().getDob(), LocalDate.now()).getYears(),
                 savedCycle.getDoctor().getDoctorId(),
+                savedCycle.getDoctor().getUser().getName(),
                 savedCycle.getService().getServiceId(),
                 savedCycle.getService().getName(),
                 savedCycle.getStartdate(),

@@ -1,23 +1,21 @@
-"use client";
-
-import { useState } from "react";
-import "./PatientAppointment.css";
+import { useState } from "react"
+import "./PatientAppointment.css"
 
 const PatientAppointment = () => {
-  const [activeTab, setActiveTab] = useState("notes");
-  const [notes, setNotes] = useState("");
-  const [diagnosis, setDiagnosis] = useState("");
-  const [prescriptionText, setPrescriptionText] = useState("");
-  const [medications, setMedications] = useState([]);
-  const [showMedicationModal, setShowMedicationModal] = useState(false);
-  const [selectedMedication, setSelectedMedication] = useState(null);
-  const [customMedicationName, setCustomMedicationName] = useState("");
+  const [activeTab, setActiveTab] = useState("notes")
+  const [notes, setNotes] = useState("")
+  const [diagnosis, setDiagnosis] = useState("")
+  const [prescriptionText, setPrescriptionText] = useState("")
+  const [medications, setMedications] = useState([])
+  const [showMedicationModal, setShowMedicationModal] = useState(false)
+  const [selectedMedication, setSelectedMedication] = useState(null)
+  const [customMedicationName, setCustomMedicationName] = useState("")
   const [medicationForm, setMedicationForm] = useState({
     dosage: "",
     frequency: "",
     duration: "",
     instructions: "",
-  });
+  })
 
   // Danh sách thuốc có sẵn trong hệ thống
   const predefinedMedications = [
@@ -51,7 +49,7 @@ const PatientAppointment = () => {
       commonDosages: ["2mg"],
       category: "Estrogen",
     },
-  ];
+  ]
 
   const patientData = {
     name: "Nguyễn Thị Hoa",
@@ -61,33 +59,32 @@ const PatientAppointment = () => {
     cycle: "IVF Chu kỳ #2",
     date: "20/05/2024",
     time: "09:00 - 09:30",
-    medicalHistory:
-      "Đã hoàn thành 1 chu kỳ IVF không thành công. Hiện đang trong chu kỳ thứ 2.",
+    medicalHistory: "Đã hoàn thành 1 chu kỳ IVF không thành công. Hiện đang trong chu kỳ thứ 2.",
     lastVisit: "05/05/2024",
     currentMedications: ["Gonal-F 150 IU", "Cetrotide 0.25mg"],
-  };
+  }
 
   const tabs = [
     { id: "notes", label: "Ghi chú" },
     { id: "diagnosis", label: "Chẩn đoán" },
     { id: "prescription", label: "Đơn thuốc" },
-  ];
+  ]
 
   const handleSaveNotes = () => {
-    console.log("Saving notes:", notes);
-    alert("Đã lưu ghi chú!");
-  };
+    console.log("Saving notes:", notes)
+    alert("Đã lưu ghi chú!")
+  }
 
   const handleSaveDiagnosis = () => {
-    console.log("Saving diagnosis:", diagnosis);
-    alert("Đã lưu chẩn đoán!");
-  };
+    console.log("Saving diagnosis:", diagnosis)
+    alert("Đã lưu chẩn đoán!")
+  }
 
   const handleSavePrescription = () => {
-    console.log("Saving prescription:", prescriptionText);
-    console.log("Medications:", medications);
-    alert("Đã lưu đơn thuốc!");
-  };
+    console.log("Saving prescription:", prescriptionText)
+    console.log("Medications:", medications)
+    alert("Đã lưu đơn thuốc!")
+  }
 
   const handleAddMedication = () => {
     const newMedication = {
@@ -97,30 +94,30 @@ const PatientAppointment = () => {
       frequency: medicationForm.frequency,
       duration: medicationForm.duration,
       instructions: medicationForm.instructions,
-    };
+    }
 
-    setMedications([...medications, newMedication]);
-    setShowMedicationModal(false);
-    setSelectedMedication(null);
-    setCustomMedicationName("");
+    setMedications([...medications, newMedication])
+    setShowMedicationModal(false)
+    setSelectedMedication(null)
+    setCustomMedicationName("")
     setMedicationForm({
       dosage: "",
       frequency: "",
       duration: "",
       instructions: "",
-    });
-  };
+    })
+  }
 
   const handleRemoveMedication = (id) => {
-    setMedications(medications.filter((med) => med.id !== id));
-  };
+    setMedications(medications.filter((med) => med.id !== id))
+  }
 
   const handleFinishAppointment = () => {
     if (window.confirm("Bạn có chắc chắn muốn kết thúc cuộc hẹn?")) {
-      alert("Cuộc hẹn đã được kết thúc!");
+      alert("Cuộc hẹn đã được kết thúc!")
       // Redirect logic here
     }
-  };
+  }
 
   const renderNotesTab = () => (
     <div className="patient-appointment-tab-content">
@@ -140,15 +137,12 @@ const PatientAppointment = () => {
       </div>
 
       <div className="patient-appointment-tab-actions">
-        <button
-          className="patient-appointment-btn-save"
-          onClick={handleSaveNotes}
-        >
+        <button className="patient-appointment-btn-save" onClick={handleSaveNotes}>
           Lưu ghi chú
         </button>
       </div>
     </div>
-  );
+  )
 
   const renderDiagnosisTab = () => (
     <div className="patient-appointment-tab-content">
@@ -168,15 +162,12 @@ const PatientAppointment = () => {
       </div>
 
       <div className="patient-appointment-tab-actions">
-        <button
-          className="patient-appointment-btn-save"
-          onClick={handleSaveDiagnosis}
-        >
+        <button className="patient-appointment-btn-save" onClick={handleSaveDiagnosis}>
           Lưu chẩn đoán
         </button>
       </div>
     </div>
-  );
+  )
 
   const renderPrescriptionTab = () => (
     <div className="patient-appointment-tab-content">
@@ -208,10 +199,7 @@ const PatientAppointment = () => {
                   </p>
                 )}
               </div>
-              <button
-                className="patient-appointment-btn-remove"
-                onClick={() => handleRemoveMedication(med.id)}
-              >
+              <button className="patient-appointment-btn-remove" onClick={() => handleRemoveMedication(med.id)}>
                 ✕
               </button>
             </div>
@@ -220,10 +208,7 @@ const PatientAppointment = () => {
       )}
 
       <div className="patient-appointment-add-medication-section">
-        <button
-          className="patient-appointment-btn-add-medication"
-          onClick={() => setShowMedicationModal(true)}
-        >
+        <button className="patient-appointment-btn-add-medication" onClick={() => setShowMedicationModal(true)}>
           ➕ Thêm thuốc
         </button>
       </div>
@@ -240,28 +225,25 @@ const PatientAppointment = () => {
       </div>
 
       <div className="patient-appointment-tab-actions">
-        <button
-          className="patient-appointment-btn-save"
-          onClick={handleSavePrescription}
-        >
+        <button className="patient-appointment-btn-save" onClick={handleSavePrescription}>
           Lưu đơn thuốc
         </button>
       </div>
     </div>
-  );
+  )
 
   const renderTabContent = () => {
     switch (activeTab) {
       case "notes":
-        return renderNotesTab();
+        return renderNotesTab()
       case "diagnosis":
-        return renderDiagnosisTab();
+        return renderDiagnosisTab()
       case "prescription":
-        return renderPrescriptionTab();
+        return renderPrescriptionTab()
       default:
-        return renderNotesTab();
+        return renderNotesTab()
     }
-  };
+  }
 
   return (
     <div className="patient-appointment">
@@ -272,13 +254,8 @@ const PatientAppointment = () => {
           <h1>Cuộc hẹn với {patientData.name}</h1>
         </div>
         <div className="patient-appointment-header-right">
-          <span className="patient-appointment-time">
-            🕘 {patientData.time}
-          </span>
-          <button
-            className="patient-appointment-btn-finish"
-            onClick={handleFinishAppointment}
-          >
+          <span className="patient-appointment-time">🕘 {patientData.time}</span>
+          <button className="patient-appointment-btn-finish" onClick={handleFinishAppointment}>
             Kết thúc cuộc hẹn
           </button>
         </div>
@@ -289,9 +266,7 @@ const PatientAppointment = () => {
         <div className="patient-appointment-sidebar">
           <div className="patient-appointment-patient-info">
             <div className="patient-appointment-patient-avatar">
-              <div className="patient-appointment-avatar-placeholder">
-                {patientData.name.charAt(0)}
-              </div>
+              <div className="patient-appointment-avatar-placeholder">{patientData.name.charAt(0)}</div>
             </div>
             <div className="patient-appointment-patient-details">
               <h2>{patientData.name}</h2>
@@ -304,27 +279,19 @@ const PatientAppointment = () => {
             <h3>Chi tiết cuộc hẹn</h3>
             <div className="patient-appointment-detail-row">
               <span className="patient-appointment-label">Loại cuộc hẹn:</span>
-              <span className="patient-appointment-value">
-                {patientData.appointmentType}
-              </span>
+              <span className="patient-appointment-value">{patientData.appointmentType}</span>
             </div>
             <div className="patient-appointment-detail-row">
               <span className="patient-appointment-label">Chi tiết:</span>
-              <span className="patient-appointment-value">
-                {patientData.cycle}
-              </span>
+              <span className="patient-appointment-value">{patientData.cycle}</span>
             </div>
             <div className="patient-appointment-detail-row">
               <span className="patient-appointment-label">Ngày:</span>
-              <span className="patient-appointment-value">
-                {patientData.date}
-              </span>
+              <span className="patient-appointment-value">{patientData.date}</span>
             </div>
             <div className="patient-appointment-detail-row">
               <span className="patient-appointment-label">Thời gian:</span>
-              <span className="patient-appointment-value">
-                {patientData.time}
-              </span>
+              <span className="patient-appointment-value">{patientData.time}</span>
             </div>
           </div>
 
@@ -332,12 +299,8 @@ const PatientAppointment = () => {
             <h3>Lịch sử y tế</h3>
             <p>{patientData.medicalHistory}</p>
             <div className="patient-appointment-detail-row">
-              <span className="patient-appointment-label">
-                Lần khám gần nhất:
-              </span>
-              <span className="patient-appointment-value">
-                {patientData.lastVisit}
-              </span>
+              <span className="patient-appointment-label">Lần khám gần nhất:</span>
+              <span className="patient-appointment-value">{patientData.lastVisit}</span>
             </div>
           </div>
 
@@ -351,12 +314,8 @@ const PatientAppointment = () => {
           </div>
 
           <div className="patient-appointment-sidebar-actions">
-            <button className="patient-appointment-btn-outline">
-              📋 Xem hồ sơ đầy đủ
-            </button>
-            <button className="patient-appointment-btn-outline">
-              💬 Liên hệ
-            </button>
+            <button className="patient-appointment-btn-outline">📋 Xem hồ sơ đầy đủ</button>
+            <button className="patient-appointment-btn-outline">💬 Liên hệ</button>
           </div>
         </div>
 
@@ -373,9 +332,7 @@ const PatientAppointment = () => {
             {tabs.map((tab) => (
               <button
                 key={tab.id}
-                className={`patient-appointment-tab ${
-                  activeTab === tab.id ? "patient-appointment-active" : ""
-                }`}
+                className={`patient-appointment-tab ${activeTab === tab.id ? "patient-appointment-active" : ""}`}
                 onClick={() => setActiveTab(tab.id)}
               >
                 {tab.label}
@@ -393,10 +350,7 @@ const PatientAppointment = () => {
           <div className="patient-appointment-medication-modal">
             <div className="patient-appointment-modal-header">
               <h3>Thêm thuốc</h3>
-              <button
-                className="patient-appointment-modal-close"
-                onClick={() => setShowMedicationModal(false)}
-              >
+              <button className="patient-appointment-modal-close" onClick={() => setShowMedicationModal(false)}>
                 ✕
               </button>
             </div>
@@ -408,14 +362,10 @@ const PatientAppointment = () => {
                   {predefinedMedications.map((med) => (
                     <div
                       key={med.id}
-                      className={`patient-appointment-medication-option ${
-                        selectedMedication?.id === med.id
-                          ? "patient-appointment-selected"
-                          : ""
-                      }`}
+                      className={`patient-appointment-medication-option ${selectedMedication?.id === med.id ? "patient-appointment-selected" : ""}`}
                       onClick={() => {
-                        setSelectedMedication(med);
-                        setCustomMedicationName("");
+                        setSelectedMedication(med)
+                        setCustomMedicationName("")
                       }}
                     >
                       <h5>{med.name}</h5>
@@ -431,8 +381,8 @@ const PatientAppointment = () => {
                     placeholder="Nhập tên thuốc..."
                     value={customMedicationName}
                     onChange={(e) => {
-                      setCustomMedicationName(e.target.value);
-                      setSelectedMedication(null);
+                      setCustomMedicationName(e.target.value)
+                      setSelectedMedication(null)
                     }}
                   />
                 </div>
@@ -444,12 +394,7 @@ const PatientAppointment = () => {
                   {selectedMedication ? (
                     <select
                       value={medicationForm.dosage}
-                      onChange={(e) =>
-                        setMedicationForm({
-                          ...medicationForm,
-                          dosage: e.target.value,
-                        })
-                      }
+                      onChange={(e) => setMedicationForm({ ...medicationForm, dosage: e.target.value })}
                     >
                       <option value="">Chọn liều lượng</option>
                       {selectedMedication.commonDosages.map((dosage) => (
@@ -463,12 +408,7 @@ const PatientAppointment = () => {
                       type="text"
                       placeholder="Nhập liều lượng..."
                       value={medicationForm.dosage}
-                      onChange={(e) =>
-                        setMedicationForm({
-                          ...medicationForm,
-                          dosage: e.target.value,
-                        })
-                      }
+                      onChange={(e) => setMedicationForm({ ...medicationForm, dosage: e.target.value })}
                     />
                   )}
                 </div>
@@ -477,12 +417,7 @@ const PatientAppointment = () => {
                   <label>Tần suất:</label>
                   <select
                     value={medicationForm.frequency}
-                    onChange={(e) =>
-                      setMedicationForm({
-                        ...medicationForm,
-                        frequency: e.target.value,
-                      })
-                    }
+                    onChange={(e) => setMedicationForm({ ...medicationForm, frequency: e.target.value })}
                   >
                     <option value="">Chọn tần suất</option>
                     <option value="Ngày 1 lần">Ngày 1 lần</option>
@@ -499,12 +434,7 @@ const PatientAppointment = () => {
                     type="text"
                     placeholder="VD: 7 ngày, 2 tuần..."
                     value={medicationForm.duration}
-                    onChange={(e) =>
-                      setMedicationForm({
-                        ...medicationForm,
-                        duration: e.target.value,
-                      })
-                    }
+                    onChange={(e) => setMedicationForm({ ...medicationForm, duration: e.target.value })}
                   />
                 </div>
 
@@ -513,12 +443,7 @@ const PatientAppointment = () => {
                   <textarea
                     placeholder="Nhập hướng dẫn sử dụng..."
                     value={medicationForm.instructions}
-                    onChange={(e) =>
-                      setMedicationForm({
-                        ...medicationForm,
-                        instructions: e.target.value,
-                      })
-                    }
+                    onChange={(e) => setMedicationForm({ ...medicationForm, instructions: e.target.value })}
                     rows={3}
                   />
                 </div>
@@ -526,10 +451,7 @@ const PatientAppointment = () => {
             </div>
 
             <div className="patient-appointment-modal-actions">
-              <button
-                className="patient-appointment-btn-cancel"
-                onClick={() => setShowMedicationModal(false)}
-              >
+              <button className="patient-appointment-btn-cancel" onClick={() => setShowMedicationModal(false)}>
                 Hủy
               </button>
               <button
@@ -549,7 +471,7 @@ const PatientAppointment = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default PatientAppointment;
+export default PatientAppointment

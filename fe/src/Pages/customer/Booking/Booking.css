@@ -348,6 +348,16 @@
     margin-bottom: 1rem;
 }
 
+.booking .date-section input {
+    width: 100%;
+    border-radius: 5px;
+    padding: 10px 5px;
+}
+
+.booking .date-section input[type="date"]::-webkit-calendar-picker-indicator {
+    
+}
+
 .booking .date-input {
     width: 100%;
     padding: 0.75rem;
@@ -601,12 +611,12 @@
 .booking .booking-complete {
     text-align: center;
     max-width: 600px;
-    margin: 0 auto;
+    margin: 0 auto 5rem;
 }
 
 .booking .success-icon {
-    width: 80px;
-    height: 80px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
     background: #48bb78;
     color: white;
@@ -614,7 +624,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 2rem;
+    margin: 0 auto 1rem;
 }
 
 .booking .booking-complete h2 {
@@ -707,7 +717,7 @@
 }
 
 .booking .primary-btn {
-    background: #e53e3e;
+    background: #e11d48;
     color: white;
     border: none;
     padding: 0.75rem 1.5rem;
@@ -718,7 +728,7 @@
 }
 
 .booking .primary-btn:hover {
-    background: #c53030;
+    background: #c41a3b;
 }
 
 /* Responsive Design */

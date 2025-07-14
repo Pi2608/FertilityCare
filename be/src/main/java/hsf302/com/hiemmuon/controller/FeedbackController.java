@@ -1,6 +1,5 @@
 package hsf302.com.hiemmuon.controller;
 
-import hsf302.com.hiemmuon.dto.ApiResponse;
 import hsf302.com.hiemmuon.dto.createDto.CreateFeedbackDTO;
 import hsf302.com.hiemmuon.dto.createDto.UpdateFeedbackDTO;
 import hsf302.com.hiemmuon.dto.responseDto.CustomerDTO;
@@ -14,17 +13,13 @@ import hsf302.com.hiemmuon.service.DoctorService;
 import hsf302.com.hiemmuon.service.FeedbackService;
 import hsf302.com.hiemmuon.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 
-@Tag(name = "11. Feedback")
 @RestController
 @RequestMapping("/api/feedbacks")
 public class FeedbackController {
@@ -42,132 +37,77 @@ public class FeedbackController {
             summary = "Customer feedback cho doctor",
             description = "..."
     )
-
-    @PostMapping("/feedback")
-    public ResponseEntity<ApiResponse<Void>> createFeedback(@RequestBody CreateFeedbackDTO dto) {
-        // Lấy email từ token đăng nhập
+    @PostMapping
+    public ResponseEntity<?> createFeedback(@RequestBody CreateFeedbackDTO dto) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        // Lấy thông tin customer theo email
         CustomerDTO customer = customerService.getMyInfo(email);
 
-        // Tạo feedback
         feedbackService.createFeedback(customer.getId(), dto);
+        return ResponseEntity.ok("Gui danh gia thanh cong");
 
-        // Tạo response chuẩn hóa
-        ApiResponse<Void> response = new ApiResponse<>(
-                200,
-                "Gửi đánh giá thành công",
-                null
-        );
-
-        return ResponseEntity.ok(response);
     }
 
     @Operation(
             summary = "Hien danh gia trung binh cua doctor",
             description = "...."
     )
-    @GetMapping("/average-rating/{doctorId}")
-    public ResponseEntity<ApiResponse<Double>> getAverageRating(@PathVariable Integer doctorId) {
+    @GetMapping("/averagi-rating/{doctorId}")
+    public ResponseEntity<Double> getAveragiRating(@PathVariable Integer doctorId) {
         Double averageRating = feedbackService.getAverageRatingForDoctorId(doctorId);
-
-        ApiResponse<Double> response = new ApiResponse<>(
-                200,
-                "Lấy điểm đánh giá trung bình của bác sĩ thành công",
-                averageRating
-        );
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(averageRating);
     }
-
     @Operation(
             summary = "Lấy tất cả feedback",
             description = "...."
     )
     // Lấy tất cả feedback
-    @GetMapping("/feedbacks")
-    public ResponseEntity<ApiResponse<List<FeedbackViewDTO>>> getAllFeedbacks() {
-        List<FeedbackViewDTO> feedbacks = feedbackService.getAllFeedbacks();
-
-        ApiResponse<List<FeedbackViewDTO>> response = new ApiResponse<>(
-                200,
-                "Lấy danh sách đánh giá thành công",
-                feedbacks
-        );
-
-        return ResponseEntity.ok(response);
+    @GetMapping
+    public ResponseEntity<List<FeedbackViewDTO>> getAll() {
+        return ResponseEntity.ok(feedbackService.getAllFeedbacks());
     }
-
-    @SneakyThrows
     @Operation(
-            summary = "Lấy feedback theo người đăng nhập (doctor hoặc customer)",
-            description = "Trả về danh sách đánh giá tương ứng với vai trò: DOCTOR hoặc CUSTOMER"
+            summary = "Lấy theo doctor",
+            description = "...."
     )
-    @GetMapping("/me")
-    public ResponseEntity<ApiResponse<List<FeedbackViewDTO>>> getMyFeedbacks() {
+    // Lấy theo doctor
+    @GetMapping("/doctor/{doctorId}")
+    public ResponseEntity<List<FeedbackViewDTO>> getByDoctor() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUserByEmail(email);
-        String role = user.getRole().getRoleName(); // Giả sử roleName là "DOCTOR", "CUSTOMER"
-
-        List<FeedbackViewDTO> feedbacks;
-
-        switch (role.toUpperCase()) {
-            case "DOCTOR":
-                feedbacks = feedbackService.getFeedbacksByDoctor(user.getUserId());
-                break;
-            case "CUSTOMER":
-                feedbacks = feedbackService.getFeedbacksByCustomer(user.getUserId());
-                break;
-            default:
-                throw new AccessDeniedException("Bạn không có quyền truy cập đánh giá.");
-        }
-
-        ApiResponse<List<FeedbackViewDTO>> response = new ApiResponse<>(
-                200,
-                "Lấy đánh giá thành công",
-                feedbacks
-        );
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(feedbackService.getFeedbacksByDoctor(user.getUserId()));
+    }
+    @Operation(
+            summary = "Lấy theo customer",
+            description = "...."
+    )
+    // Lấy theo customer
+    @GetMapping("/customer/{customerId}")
+    public ResponseEntity<List<FeedbackViewDTO>> getByCustomer() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUserByEmail(email);
+        return ResponseEntity.ok(feedbackService.getFeedbacksByCustomer(user.getUserId()));
     }
 
-
-
     @Operation(
-            summary = "Khách hàng cập nhật feedback",
-            description = "Cho phép khách hàng đã gửi đánh giá trước đó chỉnh sửa nội dung hoặc điểm đánh giá."
+            summary = "customer cap nhat feedback",
+            description = "...."
     )
+    // Cập nhật feedback
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> updateFeedback(@PathVariable int id, @RequestBody UpdateFeedbackDTO dto) {
+    public ResponseEntity<String> updateFeedback(@PathVariable int id, @RequestBody UpdateFeedbackDTO dto) {
         feedbackService.updateFeedback(id, dto);
-
-        ApiResponse<Void> response = new ApiResponse<>(
-                200,
-                "Cập nhật đánh giá thành công!",
-                null
-        );
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok("Cập nhật thành công!");
     }
-
 
     @Operation(
-            summary = "Khách hàng xoá feedback",
-            description = "Cho phép khách hàng xoá đánh giá mà họ đã gửi trước đó."
+            summary = "customer xoa feedback",
+            description = "...."
     )
+    // Xoá feedback
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteFeedback(@PathVariable int id) {
+    public ResponseEntity<String> deleteFeedback(@PathVariable int id) {
         feedbackService.deleteFeedback(id);
-
-        ApiResponse<Void> response = new ApiResponse<>(
-                200,
-                "Xoá đánh giá thành công!",
-                null
-        );
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok("Xoá thành công!");
     }
-
 
 }

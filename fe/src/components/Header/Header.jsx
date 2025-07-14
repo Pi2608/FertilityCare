@@ -55,7 +55,7 @@ const Header = () => {
 
   const handleMyAppointments = () => {
     setShowUserMenu(false);
-    navigate('/my-appointments');
+    navigate('/patient-dashboard/appointments');
   };
 
 

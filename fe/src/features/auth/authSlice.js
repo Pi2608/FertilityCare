@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import apiGateway from '../service/apiGateway';
-import customerApiGateway from '../service/customerApiGateway';
 
 const initialState = {
   userId: null,
@@ -12,9 +11,8 @@ const initialState = {
 };
 
 // Helper function to save auth data to localStorage
-const saveAuthToStorage = (token, userId) => {
+const saveAuthToStorage = (token) => {
   if (token) localStorage.setItem("token", token);
-  if (userId) localStorage.setItem("userId", userId.toString());
 };
 
 // Helper function to clear auth data from localStorage
@@ -42,9 +40,8 @@ export const registerUser = createAsyncThunk(
   'auth/registerUser',
   async (userData, thunkAPI) => {
     try {
-      await customerApiGateway.register(userData);
-      const res = await apiGateway.login(userData.email, userData.password);
-      return res.data;
+      await apiGateway.register(userData);
+      return { success: true, email: userData.email };
     } catch (err) {
       return thunkAPI.rejectWithValue(
         err.response?.data?.message || 'Đăng ký thất bại'
@@ -53,12 +50,38 @@ export const registerUser = createAsyncThunk(
   }
 );
 
+export const confirmRegister = createAsyncThunk(
+  'auth/confirmRegister',
+  async ({ email, otp, password }, thunkAPI) => {
+    try {
+      // Gọi API xác thực OTP
+      await apiGateway.confirmRegister({ email, otp });
+
+      // OTP hợp lệ → đăng nhập
+      const loginResult = await thunkAPI.dispatch(loginUser({ email, password }));
+
+      // Nếu login thành công → trả kết quả login về
+      if (loginUser.fulfilled.match(loginResult)) {
+        return loginResult.payload;
+      } else {
+        return thunkAPI.rejectWithValue("Xác thực OTP thành công nhưng đăng nhập thất bại");
+      }
+
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data?.message || 'Xác thực OTP thất bại'
+      );
+    }
+  }
+);
+
+
 export const checkAuthStatus = createAsyncThunk(
   'auth/checkAuthStatus',
   async (_, thunkAPI) => {
     try {
       const token = localStorage.getItem("token");
-      const userId = localStorage.getItem("userId");
+      var userName = "";
       
       if (!token) {
         return thunkAPI.rejectWithValue('No token found');
@@ -66,14 +89,24 @@ export const checkAuthStatus = createAsyncThunk(
 
       // Set token for API calls
       apiGateway.setAuthToken(token);
-      
+
       // Get user role - now with proper await
-      const res = await apiGateway.getUserRole();
+      const res1 = await apiGateway.getUserRole();
+      
+      if (!res1.data) {
+        return thunkAPI.rejectWithValue('No user role found');
+      }
+
+      if (res1.data?.roleName !== "doctor" && res1.data?.roleName !== "admin" && res1.data?.roleName !== "manager") {
+        //Get user info
+        const res2 = await apiGateway.getUserInfo();
+        userName = res2.data?.name || "";
+      }
       
       return {
         token,
-        userId: userId ? parseInt(userId) : null,
-        role: res.data?.roleName || null,
+        role: res1.data?.roleName || null,
+        userName: userName || null,
       };
     } catch (err) {
       // Token is invalid, clear from localStorage
@@ -133,7 +166,7 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.error = null;
         
-        saveAuthToStorage(data, actualUserId);
+        saveAuthToStorage(data);
         
         console.log("Login successful:", action.payload);
       })
@@ -153,18 +186,8 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false;
-        const { userId, user, data } = action.payload;
-        const actualUserId = userId || user?.id;
-        
-        state.userId = actualUserId;
-        state.token = data;
-        state.isAuthenticated = true;
-        state.error = null;
-        
-        // Save to localStorage
-        saveAuthToStorage(data, actualUserId);
-        
-        console.log("Register successful:", action.payload);
+        state.error = null;        
+        console.log("Register request sent, waiting for OTP:", action.payload);
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
@@ -174,6 +197,33 @@ const authSlice = createSlice({
         state.token = null;
         state.role = null;
       })
+      .addCase(confirmRegister.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(confirmRegister.fulfilled, (state, action) => {
+        state.loading = false;
+        const { userId, data, user } = action.payload;
+        const actualUserId = userId || user?.id;
+
+        state.userId = actualUserId;
+        state.token = data;
+        state.isAuthenticated = true;
+        state.error = null;
+
+        saveAuthToStorage(data);
+
+        console.log("Xác thực OTP + Đăng nhập thành công:", action.payload);
+      })
+      .addCase(confirmRegister.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.isAuthenticated = false;
+        state.userId = null;
+        state.token = null;
+        state.role = null;
+      })
+
       
       // Check auth status cases
       .addCase(checkAuthStatus.pending, (state) => {
@@ -182,14 +232,15 @@ const authSlice = createSlice({
       })
       .addCase(checkAuthStatus.fulfilled, (state, action) => {
         state.loading = false;
-        const { role, token, userId } = action.payload;
+        const { role, token, userName } = action.payload;
         state.role = role;
         state.token = token;
-        state.userId = userId;
+        state.userName = userName;
         state.isAuthenticated = true;
         state.error = null;
 
         localStorage.setItem("role", role);
+        localStorage.setItem("userName", userName);
       })
       .addCase(checkAuthStatus.rejected, (state, action) => {
         state.loading = false;

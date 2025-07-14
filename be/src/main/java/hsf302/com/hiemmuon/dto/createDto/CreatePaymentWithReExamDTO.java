@@ -16,6 +16,7 @@ public class CreatePaymentWithReExamDTO {
 
     private int customerId;
     private int serviceId;
+    private int appointmentId;
     private BigDecimal total;
     private LocalDateTime paidDate;
     private StatusPayment status;

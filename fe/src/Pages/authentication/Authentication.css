@@ -234,3 +234,18 @@
 .auth-container .error-message {
     text-align: center;
 }
+
+.otp-container {
+  justify-content: center;
+  gap: 8px;
+  margin-top: 1rem;
+}
+
+.otp-slot {
+  width: 44px;
+  height: 48px;
+  font-size: 20px;
+  border: 2px solid #f3f4f6;
+  border-radius: 8px;
+  text-align: center;
+}

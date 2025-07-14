@@ -1,6 +1,6 @@
 #sidebar {
   width: 200px;
-  height: 100vh;
+  height: 100%;
   border-right: 1px solid #eee;
   padding: 20px 10px;
   font-family: Arial, sans-serif;

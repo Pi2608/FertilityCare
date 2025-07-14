@@ -49,4 +49,5 @@ public class LastMessageDTO {
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
+
 }

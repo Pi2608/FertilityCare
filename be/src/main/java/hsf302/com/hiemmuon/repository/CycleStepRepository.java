@@ -34,6 +34,11 @@ public interface CycleStepRepository extends JpaRepository<CycleStep, Integer> {
     );
 
     CycleStep findById(int cycleStepId);
+
+
     @Query("SELECT c.note FROM CycleStep c WHERE c.stepId = :stepId")
     String findNoteByStepId(@Param("stepId") int stepId);
+
+    @Query("SELECT cs.stepId FROM CycleStep cs WHERE cs.cycle.cycleId = :cycleId ORDER BY cs.stepOrder ASC")
+    int findFirstByCycleIdOrderByStepOrder(@Param("cycleId") int cycleId);
 }
