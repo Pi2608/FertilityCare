@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { Outlet, useLocation, useNavigate, Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Outlet } from "react-router-dom";
 import Header from "@components/Header/Header";
 import Footer from "@components/Footer/Footer";
+import Sidebar from "@components/Sidebar/Sidebar";
 import "./CusLayout.css";
 
 const CusLayout = () => {
@@ -28,6 +29,9 @@ const CusLayout = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     const lastPath = localStorage.getItem("patientLastVisited");
     if (
       location.pathname === "/patient-dashboard" &&
@@ -39,76 +43,16 @@ const CusLayout = () => {
     setIsLoading(false);
   }, [navigate, location.pathname]);
 
-  if (isLoading) {
-    return (
-      <div className="loading">
-        <div className="spinner"></div>
-      </div>
-    );
-  }
-
   return (
     <div className="cus_layout">
       <Header />
       <main className="content">
-        <aside className="sidebar">
-          <div className="sidebar-header">
-            <h2 className="sidebar-title">Trung tâm IVF</h2>
-            <p className="sidebar-subtitle">Cổng thông tin Bệnh nhân</p>
-          </div>
-          <nav className="sidebar-nav">
-            {list.map((item, index) => (
-              <Link
-                key={index}
-                to={item.path}
-                onClick={() =>
-                  localStorage.setItem("patientLastVisited", item.path)
-                }
-                className={`sidebar-nav-item ${
-                  isActive(item.path) ? "active" : ""
-                }`}
-              >
-                <div className="sidebar-nav-icon">{item.icon}</div>
-                <span className="sidebar-nav-text">{item.name}</span>
-              </Link>
-            ))}
-          </nav>
-          <div className="sidebar-footer">
-            <Link to="/logout" className="sidebar-logout">
-              <div className="sidebar-logout-icon">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M5 21q-.825 0-1.413-.588T3 19V5q0-.825.588-1.413T5 3h7v2H5v14h7v2H5zm11-4l-1.375-1.45l2.55-2.55H9v-2h8.175l-2.55-2.55L16 7l5 5l-5 5z"
-                  />
-                </svg>
-              </div>
-              <span>Đăng xuất</span>
-            </Link>
-          </div>
-        </aside>
+        <Sidebar role={userType} list={list} />
         <Outlet />
       </main>
       <Footer />
     </div>
   );
 };
-
-    return (
-        <div className="cus_layout">
-            <Header />
-            <main className="content">
-                <Sidebar role={userType} list={list}/>
-                <Outlet />
-            </main>
-            <Footer />
-        </div>
-    )
-}
 
 export default CusLayout
