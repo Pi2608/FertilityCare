@@ -170,9 +170,7 @@ public class SendMailService {
             helper.setText(content);
 
             mailSender.send(message);
-            System.out.println("✅ Sent reminder to " + to);
         } catch (Exception e) {
-            System.err.println("❌ Lỗi gửi mail đến " + to);
             e.printStackTrace();
         }
     }

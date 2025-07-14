@@ -196,10 +196,6 @@ public class MedicineScheduleService {
         List<MedicineSchedule> schedules = medicineScheduleRepository
                 .findByStatusAndEventDateBetween(StatusMedicineSchedule.dang_dien_ra, start, end);
 
-        System.out.println("🕒 Giờ hiện tại: " + now);
-        System.out.println("📅 Tìm lịch có eventDate từ " + start + " đến " + end);
-        System.out.println("🔍 Số lượng lịch thuốc tìm được: " + schedules.size());
-
         for (MedicineSchedule schedule : schedules) {
             if (schedule.getIsReminded()) continue;
             String email = schedule.getCycleStep().getCycle().getCustomer().getUser().getEmail();

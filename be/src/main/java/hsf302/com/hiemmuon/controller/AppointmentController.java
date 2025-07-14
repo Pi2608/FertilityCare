@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -197,5 +198,11 @@ public class AppointmentController {
     public ResponseEntity<AppointmentDetailDTO> getAppointmentDetailById(@PathVariable int appointmentId) {
         AppointmentDetailDTO dto = appointmentService.getAppointmentDetailById(appointmentId);
         return ResponseEntity.ok(dto);
+    }
+
+    @Scheduled(fixedRate = 60 * 1000) // Mỗi phút
+    public void runAppointmentReminder() {
+        appointmentService.sendAppointmentReminders();
+        System.err.println("🔔 Appointment reminder emails sent.");
     }
 }
