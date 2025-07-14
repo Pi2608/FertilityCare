@@ -144,7 +144,7 @@ public class SecurityConfig {
                                         "/api/doctors/status/**",
                                         "/api/treatment-services/status/**")
                                 .hasAnyRole("MANAGER", "ADMIN")
-///
+
                                 .requestMatchers(HttpMethod.GET,
                                         "/api/treatment-services/**")
                                 .permitAll()
@@ -173,19 +173,28 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "api/test-results/customer").hasAnyRole("CUSTOMER")
                                 .requestMatchers(HttpMethod.PUT, "api/test-results/update/{id}").hasAnyRole("DOCTOR")
 
-                                // Feedback
-                                                .requestMatchers(HttpMethod.POST, "api/feedback/create").hasAnyRole("CUSTOMER")
-                                                .requestMatchers(HttpMethod.GET, "api/feedback/averagi-rating/{doctorId}").hasAnyRole("MANAGER", "ADMIN")
-                                                .requestMatchers(HttpMethod.GET, "api/feedback/feedback-by-doctor/{doctorId}").hasAnyRole("MANAGER", "ADMIN")
-                                                .requestMatchers(HttpMethod.GET, "api/feedback/feedback-by-customer/{customerId}").hasAnyRole("CUSTOMER")
-                                                .requestMatchers(HttpMethod.GET, "api/feedback/feedback-by-customer-and-doctor/{customerId}/{doctorId}").hasAnyRole("ADMIN", "MANAGER")
-                                                .requestMatchers(HttpMethod.PUT, "api/feedback/{id}").hasAnyRole("ADMIN", "MANAGER")
-                                                .requestMatchers(HttpMethod.DELETE, "api/feedback/{id}").hasAnyRole("ADMIN", "MANAGER")
-                        // Report
-                                                .requestMatchers(HttpMethod.GET, "api/reports/accounts").hasAnyRole("ADMIN")
-                                                .requestMatchers(HttpMethod.GET, "api/reports/revenue").hasAnyRole("ADMIN")
-                                                .requestMatchers(HttpMethod.GET, "api/reports/users/summary").hasAnyRole("ADMIN")
 
+                                // Feedback
+                                .requestMatchers(HttpMethod.POST, "api/feedback/create").hasAnyRole("CUSTOMER")
+                                .requestMatchers(HttpMethod.GET, "api/feedback/averagi-rating/{doctorId}").hasAnyRole("MANAGER",  "ADMIN")
+                                .requestMatchers(HttpMethod.GET, "api/feedback/feedback-by-doctor/{doctorId}").hasAnyRole("MANAGER",  "ADMIN")
+                                .requestMatchers(HttpMethod.GET, "api/feedback/feedback-by-customer/{customerId}").hasAnyRole("CUSTOMER")
+                                .requestMatchers(HttpMethod.GET, "api/feedback/feedback-by-customer-and-doctor/{customerId}/{doctorId}").hasAnyRole("ADMIN",  "MANAGER")
+                                .requestMatchers(HttpMethod.PUT, "api/feedback/{id}").hasAnyRole("ADMIN",  "MANAGER")
+                                .requestMatchers(HttpMethod.DELETE, "api/feedback/{id}").hasAnyRole("ADMIN",  "MANAGER")
+                                
+                                // Report
+                                .requestMatchers(HttpMethod.GET, "api/reports/accounts").hasAnyRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "api/reports/revenue").hasAnyRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "api/reports/users/summary").hasAnyRole("ADMIN")
+                                
+                                // Message
+                                .requestMatchers(HttpMethod.GET, "api/messages/all").hasAnyRole("CUSTOMER", "DOCTOR")
+                                .requestMatchers(HttpMethod.POST, "api/messages/send").hasAnyRole("CUSTOMER", "DOCTOR")
+                                .requestMatchers(HttpMethod.GET, "api/messages/latest").hasAnyRole("CUSTOMER", "DOCTOR")
+
+                                // Blog
+                                .requestMatchers("/api/blogs/**").permitAll()
 
                                 /// Payment APIs
                                 .requestMatchers(HttpMethod.GET, "/api/payments/all").hasAnyRole("ADMIN", "MANAGER")

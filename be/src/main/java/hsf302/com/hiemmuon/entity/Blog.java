@@ -21,11 +21,12 @@ public class Blog {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "title", length = 255, nullable = false)
+    @Column(name = "title", length = 255, columnDefinition = "NVARCHAR(255)", nullable = false)
     private String title;
 
     @Column(name = "content", columnDefinition = "NVARCHAR(MAX)", nullable = false)
     private String content;
+
 
     @Column(name = "tags", length = 255)
     private String tags;
