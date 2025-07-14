@@ -137,4 +137,10 @@ public class MedicineController {
     public void autoUpdateExpired() {
         medicineScheduleService.updateExpiredSchedules();
     }
+
+    @Scheduled(fixedRate = 60 * 1000) // mỗi 1 phút
+    public void runReminder() {
+        medicineScheduleService.sendReminderEmails();
+        System.err.println("Reminder emails sent successfully.");
+    }
 }

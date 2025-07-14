@@ -46,4 +46,7 @@ public class MedicineSchedule {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private StatusMedicineSchedule status;
+
+    @Column(name = "is_reminded")
+    private Boolean isReminded = false;
 }

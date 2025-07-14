@@ -37,6 +37,9 @@ public class MedicineScheduleService {
     @Autowired
     private MedicineRepository medicineRepository;
 
+    @Autowired
+    private SendMailService sendMailService;
+
     @Transactional
     public StatusMedicineDTO updateMedicineStatus(
             int scheduleId,
@@ -121,6 +124,7 @@ public class MedicineScheduleService {
             schedule.setEndDate(dto.getEndDate());
             schedule.setEventDate(eventDateTime);
             schedule.setStatus(StatusMedicineSchedule.dang_dien_ra);
+            schedule.setIsReminded(false);
 
             medicineScheduleRepository.save(schedule);
 
@@ -181,5 +185,42 @@ public class MedicineScheduleService {
                 schedule.getStatus(),
                 schedule.getNote()
         );
+    }
+
+    @Transactional
+    public void sendReminderEmails() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime start = now;
+        LocalDateTime end = now.plusHours(24);
+
+        List<MedicineSchedule> schedules = medicineScheduleRepository
+                .findByStatusAndEventDateBetween(StatusMedicineSchedule.dang_dien_ra, start, end);
+
+        System.out.println("🕒 Giờ hiện tại: " + now);
+        System.out.println("📅 Tìm lịch có eventDate từ " + start + " đến " + end);
+        System.out.println("🔍 Số lượng lịch thuốc tìm được: " + schedules.size());
+
+        for (MedicineSchedule schedule : schedules) {
+            if (schedule.getIsReminded()) continue;
+            String email = schedule.getCycleStep().getCycle().getCustomer().getUser().getEmail();
+            String customerName = schedule.getCycleStep().getCycle().getCustomer().getUser().getName();
+            String medicineName = schedule.getMedicine().getName();
+            LocalDateTime eventTime = schedule.getEventDate();
+
+            String subject = "Nhắc nhở uống thuốc: " + medicineName;
+            String content = String.format("""
+                Chào %s,
+
+                Đây là nhắc nhở rằng bạn cần uống thuốc "%s" vào lúc %s.
+
+                Vui lòng không quên thực hiện đúng giờ để đảm bảo hiệu quả điều trị.
+
+                Trân trọng,
+                Hệ thống hỗ trợ điều trị HiemMuon.
+                """, customerName, medicineName, eventTime.format(DateTimeFormatter.ofPattern("HH:mm dd-MM-yyyy")));
+
+            sendMailService.sendEmail(email, subject, content);
+            schedule.setIsReminded(true);
+        }
     }
 }

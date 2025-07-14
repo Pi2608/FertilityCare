@@ -52,4 +52,9 @@ public interface MedicineScheduleRepository extends JpaRepository<MedicineSchedu
 """)
     List<MedicineScheduleDTO> findAllByCustomerId(@Param("customerId") int customerId);
 
+    List<MedicineSchedule> findByStatusAndEventDateBetween(
+            StatusMedicineSchedule status,
+            LocalDateTime startDate,
+            LocalDateTime endDate
+    );
 }
