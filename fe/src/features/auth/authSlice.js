@@ -97,7 +97,7 @@ export const checkAuthStatus = createAsyncThunk(
         return thunkAPI.rejectWithValue('No user role found');
       }
 
-      if (res1.data?.roleName !== "doctor") {
+      if (res1.data?.roleName === "customer") {
         //Get user info
         const res2 = await apiGateway.getUserInfo();
         userName = res2.data?.name || "";
