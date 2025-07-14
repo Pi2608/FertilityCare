@@ -1,6 +1,6 @@
 package hsf302.com.hiemmuon.repository;
 
-import hsf302.com.hiemmuon.dto.responseDto.FeedbackViewDTO;
+import hsf302.com.hiemmuon.dto.feedback.FeedbackViewDTO;
 import hsf302.com.hiemmuon.entity.Feedback;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

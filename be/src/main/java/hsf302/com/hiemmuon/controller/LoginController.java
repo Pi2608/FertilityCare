@@ -1,7 +1,7 @@
 package hsf302.com.hiemmuon.controller;
 
-import hsf302.com.hiemmuon.dto.ApiResponse;
-import hsf302.com.hiemmuon.dto.LoginRequest;
+import hsf302.com.hiemmuon.dto.common.ApiResponse;
+import hsf302.com.hiemmuon.dto.common.LoginRequest;
 import hsf302.com.hiemmuon.entity.Role;
 import hsf302.com.hiemmuon.entity.User;
 import hsf302.com.hiemmuon.service.JwtService;

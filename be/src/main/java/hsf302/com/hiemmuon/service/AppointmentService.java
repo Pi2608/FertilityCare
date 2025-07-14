@@ -1,8 +1,6 @@
 package hsf302.com.hiemmuon.service;
 
-import hsf302.com.hiemmuon.dto.createDto.CreateAppointmentDTO;
-import hsf302.com.hiemmuon.dto.createDto.ReExamAppointmentDTO;
-import hsf302.com.hiemmuon.dto.responseDto.*;
+import hsf302.com.hiemmuon.dto.appointment.*;
 import hsf302.com.hiemmuon.dto.testresult.TestResultViewDTO;
 import hsf302.com.hiemmuon.entity.*;
 import hsf302.com.hiemmuon.enums.StatusAppointment;

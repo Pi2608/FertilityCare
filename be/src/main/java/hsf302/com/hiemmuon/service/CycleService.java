@@ -1,9 +1,9 @@
 package hsf302.com.hiemmuon.service;
 
-import hsf302.com.hiemmuon.dto.createDto.CreateCycleDTO;
-import hsf302.com.hiemmuon.dto.responseDto.CycleDTO;
-import hsf302.com.hiemmuon.dto.responseDto.CycleNoteDTO;
-import hsf302.com.hiemmuon.dto.responseDto.CycleStepDTO;
+import hsf302.com.hiemmuon.dto.cycle.CreateCycleDTO;
+import hsf302.com.hiemmuon.dto.cycle.CycleDTO;
+import hsf302.com.hiemmuon.dto.cycle.CycleNoteDTO;
+import hsf302.com.hiemmuon.dto.cycle.CycleStepDTO;
 import hsf302.com.hiemmuon.entity.*;
 import hsf302.com.hiemmuon.enums.StatusCycle;
 import hsf302.com.hiemmuon.repository.*;
@@ -15,8 +15,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Service

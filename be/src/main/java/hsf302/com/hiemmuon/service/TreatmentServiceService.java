@@ -1,7 +1,7 @@
 package hsf302.com.hiemmuon.service;
 
-import hsf302.com.hiemmuon.dto.createDto.CreateTreatmentServiceDTO;
-import hsf302.com.hiemmuon.dto.updateDto.UpdateServiceDTO;
+import hsf302.com.hiemmuon.dto.service.CreateTreatmentServiceDTO;
+import hsf302.com.hiemmuon.dto.service.UpdateServiceDTO;
 import hsf302.com.hiemmuon.entity.TreatmentService;
 import hsf302.com.hiemmuon.repository.TreatmentServiceRepository;
 import jakarta.validation.Valid;

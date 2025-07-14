@@ -1,10 +1,10 @@
 package hsf302.com.hiemmuon.service;
 
-import hsf302.com.hiemmuon.dto.createDto.CreateCycleDTO;
-import hsf302.com.hiemmuon.dto.createDto.ReExamAppointmentDTO;
-import hsf302.com.hiemmuon.dto.createDto.CreatePaymentWithReExamDTO;
-import hsf302.com.hiemmuon.dto.responseDto.AppointmentHistoryDTO;
-import hsf302.com.hiemmuon.dto.responseDto.PaymentResponsesDTO;
+import hsf302.com.hiemmuon.dto.cycle.CreateCycleDTO;
+import hsf302.com.hiemmuon.dto.appointment.ReExamAppointmentDTO;
+import hsf302.com.hiemmuon.dto.payment.CreatePaymentWithReExamDTO;
+import hsf302.com.hiemmuon.dto.appointment.AppointmentHistoryDTO;
+import hsf302.com.hiemmuon.dto.payment.PaymentResponsesDTO;
 import hsf302.com.hiemmuon.entity.*;
 import hsf302.com.hiemmuon.enums.StatusPayment;
 import hsf302.com.hiemmuon.exception.NotFoundException;

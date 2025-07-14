@@ -1,10 +1,10 @@
 package hsf302.com.hiemmuon.service;
 
-import hsf302.com.hiemmuon.dto.responseDto.AppointmentOverviewDTO;
-import hsf302.com.hiemmuon.dto.updateDto.NoteMedicineScheduleDTO;
-import hsf302.com.hiemmuon.dto.responseDto.CycleStepDTO;
-import hsf302.com.hiemmuon.dto.responseDto.MedicineDTO;
-import hsf302.com.hiemmuon.dto.responseDto.MedicineScheduleDTO;
+import hsf302.com.hiemmuon.dto.appointment.AppointmentOverviewDTO;
+import hsf302.com.hiemmuon.dto.medicine.NoteMedicineScheduleDTO;
+import hsf302.com.hiemmuon.dto.cycle.CycleStepDTO;
+import hsf302.com.hiemmuon.dto.medicine.MedicineDTO;
+import hsf302.com.hiemmuon.dto.medicine.MedicineScheduleDTO;
 import hsf302.com.hiemmuon.entity.Cycle;
 import hsf302.com.hiemmuon.entity.CycleStep;
 import hsf302.com.hiemmuon.entity.MedicineSchedule;

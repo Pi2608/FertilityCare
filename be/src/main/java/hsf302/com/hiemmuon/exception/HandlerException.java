@@ -1,6 +1,6 @@
 package hsf302.com.hiemmuon.exception;
 
-import hsf302.com.hiemmuon.dto.ApiResponse;
+import hsf302.com.hiemmuon.dto.common.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

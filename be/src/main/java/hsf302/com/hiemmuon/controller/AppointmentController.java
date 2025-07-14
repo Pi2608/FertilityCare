@@ -1,8 +1,6 @@
 package hsf302.com.hiemmuon.controller;
 
-import hsf302.com.hiemmuon.dto.createDto.CreateAppointmentDTO;
-import hsf302.com.hiemmuon.dto.createDto.ReExamAppointmentDTO;
-import hsf302.com.hiemmuon.dto.responseDto.*;
+import hsf302.com.hiemmuon.dto.appointment.*;
 import hsf302.com.hiemmuon.entity.Customer;
 import hsf302.com.hiemmuon.entity.Doctor;
 import hsf302.com.hiemmuon.entity.User;

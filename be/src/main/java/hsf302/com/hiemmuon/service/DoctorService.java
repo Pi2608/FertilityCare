@@ -1,8 +1,8 @@
 package hsf302.com.hiemmuon.service;
 
-import hsf302.com.hiemmuon.dto.createDto.CreateDoctorDTO;
-import hsf302.com.hiemmuon.dto.responseDto.DoctorDTO;
-import hsf302.com.hiemmuon.dto.updateDto.UpdateDoctorDTO;
+import hsf302.com.hiemmuon.dto.doctor.CreateDoctorDTO;
+import hsf302.com.hiemmuon.dto.doctor.DoctorDTO;
+import hsf302.com.hiemmuon.dto.doctor.UpdateDoctorDTO;
 import hsf302.com.hiemmuon.entity.Doctor;
 import hsf302.com.hiemmuon.entity.User;
 import hsf302.com.hiemmuon.exception.NotFoundException;

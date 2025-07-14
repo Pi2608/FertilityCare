@@ -1,16 +1,15 @@
 package hsf302.com.hiemmuon.controller;
 
-import hsf302.com.hiemmuon.dto.ApiResponse;
-import hsf302.com.hiemmuon.dto.createDto.RegisterCustomerDTO;
-import hsf302.com.hiemmuon.dto.responseDto.CustomerDTO;
-import hsf302.com.hiemmuon.dto.updateDto.UpdateCustomerDTO;
+import hsf302.com.hiemmuon.dto.common.ApiResponse;
+import hsf302.com.hiemmuon.dto.customer.RegisterCustomerDTO;
+import hsf302.com.hiemmuon.dto.customer.CustomerDTO;
+import hsf302.com.hiemmuon.dto.customer.UpdateCustomerDTO;
 import hsf302.com.hiemmuon.service.CustomerService;
 import hsf302.com.hiemmuon.service.SendMailService;
 import hsf302.com.hiemmuon.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

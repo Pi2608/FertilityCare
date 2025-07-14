@@ -1,8 +1,8 @@
 package hsf302.com.hiemmuon.service;
 
-import hsf302.com.hiemmuon.dto.createDto.CreateFeedbackDTO;
-import hsf302.com.hiemmuon.dto.createDto.UpdateFeedbackDTO;
-import hsf302.com.hiemmuon.dto.responseDto.FeedbackViewDTO;
+import hsf302.com.hiemmuon.dto.feedback.CreateFeedbackDTO;
+import hsf302.com.hiemmuon.dto.feedback.UpdateFeedbackDTO;
+import hsf302.com.hiemmuon.dto.feedback.FeedbackViewDTO;
 import hsf302.com.hiemmuon.entity.Customer;
 import hsf302.com.hiemmuon.entity.Doctor;
 import hsf302.com.hiemmuon.entity.Feedback;

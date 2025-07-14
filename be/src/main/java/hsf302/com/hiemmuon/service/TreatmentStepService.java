@@ -1,6 +1,6 @@
 package hsf302.com.hiemmuon.service;
 
-import hsf302.com.hiemmuon.dto.responseDto.TreatmentStepDTO;
+import hsf302.com.hiemmuon.dto.service.TreatmentStepDTO;
 import hsf302.com.hiemmuon.entity.TreatmentStep;
 import hsf302.com.hiemmuon.repository.TreatmentStepRepository;
 import org.springframework.beans.factory.annotation.Autowired;

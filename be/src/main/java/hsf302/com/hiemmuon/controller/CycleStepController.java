@@ -1,8 +1,8 @@
 package hsf302.com.hiemmuon.controller;
 
-import hsf302.com.hiemmuon.dto.ApiResponse;
-import hsf302.com.hiemmuon.dto.updateDto.NoteMedicineScheduleDTO;
-import hsf302.com.hiemmuon.dto.responseDto.CycleStepDTO;
+import hsf302.com.hiemmuon.dto.common.ApiResponse;
+import hsf302.com.hiemmuon.dto.medicine.NoteMedicineScheduleDTO;
+import hsf302.com.hiemmuon.dto.cycle.CycleStepDTO;
 import hsf302.com.hiemmuon.enums.StatusCycle;
 import hsf302.com.hiemmuon.service.CycleStepService;
 import io.swagger.v3.oas.annotations.Operation;

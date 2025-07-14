@@ -1,15 +1,11 @@
 package hsf302.com.hiemmuon.controller;
 
-import hsf302.com.hiemmuon.dto.createDto.CreateFeedbackDTO;
-import hsf302.com.hiemmuon.dto.createDto.UpdateFeedbackDTO;
-import hsf302.com.hiemmuon.dto.responseDto.CustomerDTO;
-import hsf302.com.hiemmuon.dto.responseDto.DoctorDTO;
-import hsf302.com.hiemmuon.dto.responseDto.FeedbackViewDTO;
-import hsf302.com.hiemmuon.entity.Customer;
-import hsf302.com.hiemmuon.entity.Feedback;
+import hsf302.com.hiemmuon.dto.feedback.CreateFeedbackDTO;
+import hsf302.com.hiemmuon.dto.feedback.UpdateFeedbackDTO;
+import hsf302.com.hiemmuon.dto.customer.CustomerDTO;
+import hsf302.com.hiemmuon.dto.feedback.FeedbackViewDTO;
 import hsf302.com.hiemmuon.entity.User;
 import hsf302.com.hiemmuon.service.CustomerService;
-import hsf302.com.hiemmuon.service.DoctorService;
 import hsf302.com.hiemmuon.service.FeedbackService;
 import hsf302.com.hiemmuon.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;

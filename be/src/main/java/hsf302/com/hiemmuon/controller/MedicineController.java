@@ -1,9 +1,9 @@
 package hsf302.com.hiemmuon.controller;
 
-import hsf302.com.hiemmuon.dto.ApiResponse;
-import hsf302.com.hiemmuon.dto.createDto.CreateMedicationScheduleDTO;
-import hsf302.com.hiemmuon.dto.responseDto.MedicineScheduleDTO;
-import hsf302.com.hiemmuon.dto.responseDto.StatusMedicineDTO;
+import hsf302.com.hiemmuon.dto.common.ApiResponse;
+import hsf302.com.hiemmuon.dto.medicine.CreateMedicationScheduleDTO;
+import hsf302.com.hiemmuon.dto.medicine.MedicineScheduleDTO;
+import hsf302.com.hiemmuon.dto.medicine.StatusMedicineDTO;
 import hsf302.com.hiemmuon.entity.Medicine;
 import hsf302.com.hiemmuon.enums.StatusMedicineSchedule;
 import hsf302.com.hiemmuon.service.MedicineScheduleService;

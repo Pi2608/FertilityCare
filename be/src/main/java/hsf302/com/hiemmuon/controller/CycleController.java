@@ -1,9 +1,9 @@
 package hsf302.com.hiemmuon.controller;
 
-import hsf302.com.hiemmuon.dto.ApiResponse;
-import hsf302.com.hiemmuon.dto.createDto.CreateCycleDTO;
-import hsf302.com.hiemmuon.dto.responseDto.CycleDTO;
-import hsf302.com.hiemmuon.dto.responseDto.CycleNoteDTO;
+import hsf302.com.hiemmuon.dto.common.ApiResponse;
+import hsf302.com.hiemmuon.dto.cycle.CreateCycleDTO;
+import hsf302.com.hiemmuon.dto.cycle.CycleDTO;
+import hsf302.com.hiemmuon.dto.cycle.CycleNoteDTO;
 import hsf302.com.hiemmuon.service.CycleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

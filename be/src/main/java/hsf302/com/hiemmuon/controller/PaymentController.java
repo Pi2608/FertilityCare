@@ -1,8 +1,7 @@
 package hsf302.com.hiemmuon.controller;
 
-import hsf302.com.hiemmuon.dto.createDto.CreatePaymentWithReExamDTO;
-import hsf302.com.hiemmuon.dto.responseDto.PaymentResponsesDTO;
-import hsf302.com.hiemmuon.entity.Payment;
+import hsf302.com.hiemmuon.dto.payment.CreatePaymentWithReExamDTO;
+import hsf302.com.hiemmuon.dto.payment.PaymentResponsesDTO;
 import hsf302.com.hiemmuon.service.PaymentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

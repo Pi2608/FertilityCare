@@ -1,6 +1,5 @@
 package hsf302.com.hiemmuon.entity;
 
-import hsf302.com.hiemmuon.dto.responseDto.MedicineDTO;
 import hsf302.com.hiemmuon.utils.TimeListConverter;
 import jakarta.persistence.*;
 import lombok.*;

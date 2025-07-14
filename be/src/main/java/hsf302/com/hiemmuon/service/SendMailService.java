@@ -1,6 +1,6 @@
 package hsf302.com.hiemmuon.service;
 
-import hsf302.com.hiemmuon.dto.createDto.RegisterCustomerDTO;
+import hsf302.com.hiemmuon.dto.customer.RegisterCustomerDTO;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,8 +1,8 @@
 package hsf302.com.hiemmuon.service;
 
-import hsf302.com.hiemmuon.dto.createDto.CreateMedicationScheduleDTO;
-import hsf302.com.hiemmuon.dto.responseDto.MedicineScheduleDTO;
-import hsf302.com.hiemmuon.dto.responseDto.StatusMedicineDTO;
+import hsf302.com.hiemmuon.dto.medicine.CreateMedicationScheduleDTO;
+import hsf302.com.hiemmuon.dto.medicine.MedicineScheduleDTO;
+import hsf302.com.hiemmuon.dto.medicine.StatusMedicineDTO;
 import hsf302.com.hiemmuon.entity.CycleStep;
 import hsf302.com.hiemmuon.entity.Medicine;
 import hsf302.com.hiemmuon.entity.MedicineSchedule;
@@ -19,7 +19,6 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
