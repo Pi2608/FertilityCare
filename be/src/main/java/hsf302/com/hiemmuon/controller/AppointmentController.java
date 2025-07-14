@@ -203,6 +203,5 @@ public class AppointmentController {
     @Scheduled(fixedRate = 60 * 1000) // Mỗi phút
     public void runAppointmentReminder() {
         appointmentService.sendAppointmentReminders();
-        System.err.println("🔔 Appointment reminder emails sent.");
     }
 }

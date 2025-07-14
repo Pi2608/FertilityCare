@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -105,4 +106,8 @@ public class CycleStepController {
         return ResponseEntity.ok(details);
     }
 
+    @Scheduled(fixedRate = 60 * 1000) // mỗi 1 phút
+    public void runReminder() {
+        cycleStepService.sendCycleStepReminders();
+    }
 }

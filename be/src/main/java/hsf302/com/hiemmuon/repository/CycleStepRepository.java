@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -41,4 +42,6 @@ public interface CycleStepRepository extends JpaRepository<CycleStep, Integer> {
 
     @Query("SELECT cs.stepId FROM CycleStep cs WHERE cs.cycle.cycleId = :cycleId ORDER BY cs.stepOrder ASC")
     int findFirstByCycleIdOrderByStepOrder(@Param("cycleId") int cycleId);
+
+    List<CycleStep> findByEventdateBetween(LocalDateTime from, LocalDateTime to);
 }
