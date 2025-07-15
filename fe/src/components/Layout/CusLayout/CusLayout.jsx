@@ -99,16 +99,4 @@ const CusLayout = () => {
   );
 };
 
-    return (
-        <div className="cus_layout">
-            <Header />
-            <main className="content">
-                <Sidebar role={userType} list={list}/>
-                <Outlet />
-            </main>
-            <Footer />
-        </div>
-    )
-}
-
 export default CusLayout

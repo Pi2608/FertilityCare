@@ -7,11 +7,6 @@ import DoctorAPI from "../../../features/service/apiDoctor";
 import "./DoctorList.css";
 import apiFeedback from "../../../features/service/apiFeedback";
 
-
-
-
-
-
 const DoctorList = () => {
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const navigate = useNavigate();
@@ -19,13 +14,7 @@ const DoctorList = () => {
   const [selectedSpecialty, setSelectedSpecialty] = useState("Tất cả");
   const [doctors, setDoctors] = useState([]);
 
-
-
-
   const [specialties, setSpecialties] = useState(["Tất cả"]);
-
-
-
 
   const fetchAllDoctors = async () => {
     try {
@@ -33,10 +22,11 @@ const DoctorList = () => {
         DoctorAPI.getActiveDoctors(),
         apiFeedback.getAllFeedbacks(),
       ]);
- 
+
+      console.log(feedbackRes);
       const doctorList = doctorRes.data;
-      const feedbackList = feedbackRes.data;
- 
+      const feedbackList = feedbackRes;
+
       if (Array.isArray(doctorList)) {
         const fetchedDoctors = doctorList.map((doctor) => {
           const doctorFeedbacks = feedbackList.filter(
@@ -45,7 +35,7 @@ const DoctorList = () => {
           const avgRating =
             doctorFeedbacks.reduce((sum, fb) => sum + fb.rating, 0) /
               doctorFeedbacks.length || 0;
- 
+
           return {
             id: doctor.userId,
             name: doctor.name || "Chưa có tên",
@@ -58,9 +48,9 @@ const DoctorList = () => {
             image: doctor.gender === "male" ? MaleDoc : FemaleDoc,
           };
         });
- 
+
         setDoctors(fetchedDoctors);
- 
+
         const uniqueSpecs = [
           "Tất cả",
           ...new Set(
@@ -73,17 +63,10 @@ const DoctorList = () => {
       console.error("Lỗi khi fetch danh sách bác sĩ hoặc đánh giá:", error);
     }
   };
- 
-
-
-
 
   useEffect(() => {
     fetchAllDoctors();
   }, []);
-
-
-
 
   const filteredDoctors = doctors.filter((doctor) => {
     const matchesSearch =
@@ -91,20 +74,11 @@ const DoctorList = () => {
       doctor.specialty.toLowerCase().includes(searchTerm.toLowerCase()) ||
       doctor.description.toLowerCase().includes(searchTerm.toLowerCase());
 
-
-
-
     const matchesSpecialty =
       selectedSpecialty === "Tất cả" || doctor.specialty === selectedSpecialty;
 
-
-
-
     return matchesSearch && matchesSpecialty;
   });
-
-
-
 
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -117,9 +91,6 @@ const DoctorList = () => {
     ));
   };
 
-
-
-
   return (
     <div className="doctor-list">
       <div className="container">
@@ -130,9 +101,6 @@ const DoctorList = () => {
             hàng nghìn cặp vợ chồng thực hiện ước mơ làm cha mẹ.
           </p>
         </div>
-
-
-
 
         <div className="search-filter-doctor-section">
           <div className="search-bar">
@@ -158,9 +126,6 @@ const DoctorList = () => {
             </button>
           </div>
 
-
-
-
           <div className="specialty-filter">
             <div className="filter-title">Chuyên khoa:</div>
             <div className="specialty-tabs">
@@ -179,9 +144,6 @@ const DoctorList = () => {
           </div>
         </div>
 
-
-
-
         <div className="results-info">
           <p>
             Hiển thị {filteredDoctors.length} bác sĩ
@@ -189,24 +151,13 @@ const DoctorList = () => {
           </p>
         </div>
 
-
-
-
         <div className="doctors-grid">
           {filteredDoctors.length > 0 ? (
             filteredDoctors.map((doctor) => (
               <div key={doctor.id} className="doctor-card">
-           
-
-
-
-
                 <div className="doctor-info">
                   <h3 className="doctor-name">{doctor.name}</h3>
                   <p className="doctor-specialty">{doctor.specialty}</p>
-
-
-
 
                   <div className="doctor-rating">
                     <div className="stars">{renderStars(doctor.rating)}</div>
@@ -215,15 +166,6 @@ const DoctorList = () => {
                     </span>
                   </div>
 
-
-
-
-                 
-
-
-
-
-                 
                   <div className="doctor-actions">
                     <button
                       className="view-profile-btn"
@@ -260,9 +202,6 @@ const DoctorList = () => {
           )}
         </div>
 
-
-
-
         <div className="page-footer-text">
           <p>
             Đội ngũ bác sĩ của chúng tôi luôn sẵn sàng hỗ trợ bạn trong hành
@@ -274,8 +213,5 @@ const DoctorList = () => {
     </div>
   );
 };
-
-
-
 
 export default DoctorList;

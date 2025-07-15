@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import ApiGateway from "@features/service/apiGateway";
 import "./PatientProfileLayout1.css";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import apiAppointment from "@features/service/apiAppointment";
+
+
 
 
 const PatientProfileLayout1 = () => {
@@ -19,48 +21,48 @@ const PatientProfileLayout1 = () => {
   });
 
 
-const handleToggleResultForm = () => {
-  setShowResultForm((prev) => !prev);
-};
+  const handleToggleResultForm = () => {
+    setShowResultForm((prev) => !prev);
+  };
 
 
-const handleResultInputChange = (e) => {
-  const { name, value } = e.target;
-  setNewResult((prev) => ({ ...prev, [name]: value }));
-};
+  const handleResultInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewResult((prev) => ({ ...prev, [name]: value }));
+  };
 
 
-const handleCreateTestResult = async () => {
-  try {
-    const payload = {
-      ...newResult,
-      value: parseFloat(newResult.value),
-      appointmentId: appointmentDetail.appointmentId,
-    };
+  const handleCreateTestResult = async () => {
+    try {
+      const payload = {
+        ...newResult,
+        value: parseFloat(newResult.value),
+        appointmentId: appointmentDetail.appointmentId,
+      };
 
 
-    await apiAppointment.createTestResult(payload);
-    alert("Tạo kết quả xét nghiệm thành công!");
-    setShowResultForm(false);
-    setNewResult({
-      name: "",
-      value: "",
-      unit: "",
-      referenceRange: "",
-      testDate: "",
-      note: "",
-    });
+      await apiAppointment.createTestResult(payload);
+      alert("Tạo kết quả xét nghiệm thành công!");
+      setShowResultForm(false);
+      setNewResult({
+        name: "",
+        value: "",
+        unit: "",
+        referenceRange: "",
+        testDate: "",
+        note: "",
+      });
 
 
-    const updated = await apiAppointment.getAppointmentDetailById(
-      appointmentDetail.appointmentId
-    );
-    setAppointmentDetail(updated);
-  } catch (err) {
-    console.error("Lỗi khi tạo kết quả:", err);
-    alert("Không thể tạo kết quả.");
-  }
-};
+      const updated = await apiAppointment.getAppointmentDetailById(
+        appointmentDetail.appointmentId
+      );
+      setAppointmentDetail(updated);
+    } catch (err) {
+      console.error("Lỗi khi tạo kết quả:", err);
+      alert("Không thể tạo kết quả.");
+    }
+  };
 
 
   const location = useLocation();
@@ -88,40 +90,23 @@ const handleCreateTestResult = async () => {
 
 
   useEffect(() => {
+    const fetchAppointmentDetail = async () => {
+      try {
+        const data = await apiAppointment.getAppointmentDetailById(
+          appointmentId
+        );
+        console.log("Chi tiết lịch hẹn:", data);
+        setAppointmentDetail(data);
+      } catch (err) {
+        console.error("Lỗi khi lấy chi tiết lịch hẹn:", err);
+      }
+    };
+
 
     if (appointmentId) {
       fetchAppointmentDetail();
     }
   }, [appointmentId]);
-
-  useEffect(() => {
-    if (appointmentDetail) {
-      const runMedicineApis = async () => {
-        const customerId = appointmentDetail.customerId;
-        const cycleId = 1; // Hoặc lấy từ dữ liệu thực tế
-        const stepOrder = 1;
-
-        const allMeds = await fetchAllMedicines();
-        const customerMeds = await fetchMedicinesByCustomer(customerId);
-        await fetchSchedulesByCycleStep(cycleId, stepOrder);
-
-        if (allMeds && allMeds.length > 0) {
-          const created = await createMedicationSchedule({
-            customerId,
-            medicineId: allMeds[0].id,
-            cycleId,
-            stepOrder,
-          });
-
-          if (created?.id) {
-            await updateMedicationStatus(created.id);
-          }
-        }
-      };
-
-      runMedicineApis();
-    }
-  }, [appointmentDetail]);
 
 
   const toggleSection = (section) => {
@@ -129,82 +114,6 @@ const handleCreateTestResult = async () => {
       ...prev,
       [section]: !prev[section],
     }));
-  };
-
-  const fetchAppointmentDetail = async () => {
-    try {
-      const data = await apiAppointment.getAppointmentDetailById(
-        appointmentId
-      );
-      console.log("Chi tiết lịch hẹn:", data);
-      setAppointmentDetail(data);
-    } catch (err) {
-      console.error("Lỗi khi lấy chi tiết lịch hẹn:", err);
-    }
-  };
-
-  //Lấy danh sách tất cả thuốc
-  const fetchAllMedicines = async () => {
-    try {
-      const meds = await ApiGateway.getAllMedicines();
-      console.log("Danh sách tất cả thuốc:", meds);
-      return meds;
-    } catch (error) {
-      console.error("Lỗi khi lấy danh sách thuốc:", error);
-    }
-  };
-
-  //Lấy danh sách thuốc của bệnh nhân theo customerId
-  const fetchMedicinesByCustomer = async (customerId) => {
-    try {
-      const meds = await ApiGateway.getMedicinesByCustomerId(customerId);
-      console.log("Danh sách thuốc của bệnh nhân:", meds);
-      return meds;
-    } catch (error) {
-      console.error("Lỗi khi lấy thuốc bệnh nhân:", error);
-    }
-  };
-
-  //Lấy lịch uống thuốc theo cycleId & stepOrder
-  const fetchSchedulesByCycleStep = async (cycleId, stepOrder) => {
-    try {
-      const schedules = await ApiGateway.getSchedulesByCycleStep(cycleId, stepOrder);
-      console.log("Lịch thuốc theo chu kỳ và bước:", schedules);
-      return schedules;
-    } catch (error) {
-      console.error("Lỗi khi lấy lịch thuốc:", error);
-    }
-  };
-
-  //Tạo lịch uống thuốc mới
-  const createMedicationSchedule = async ({ customerId, medicineId, cycleId, stepOrder }) => {
-    try {
-      const newSchedule = {
-        customerId,
-        medicineId,
-        cycleId,
-        stepOrder,
-        startDate: new Date().toISOString().slice(0, 10),
-        endDate: new Date(Date.now() + 3 * 86400000).toISOString().slice(0, 10), // +3 ngày
-        times: ["08:00", "20:00"],
-      };
-      const result = await ApiGateway.createMedicationSchedule(newSchedule);
-      console.log("Tạo lịch thuốc thành công:", result);
-      return result;
-    } catch (error) {
-      console.error("Lỗi khi tạo lịch thuốc:", error);
-    }
-  };
-
-  //Cập nhật trạng thái thuốc (VD: 'taken')
-  const updateMedicationStatus = async (scheduleId, status = "taken") => {
-    try {
-      const result = await ApiGateway.updateMedicationStatus(scheduleId, { status });
-      console.log(`Cập nhật trạng thái schedule ${scheduleId}:`, result);
-      return result;
-    } catch (error) {
-      console.error("Lỗi khi cập nhật trạng thái thuốc:", error);
-    }
   };
 
 
@@ -371,8 +280,6 @@ const handleCreateTestResult = async () => {
       </div>
       <div className="patient-profile-notes-section">
         <div className="patient-profile-notes-list">
-
-
           <div className="patient-profile-notes-section">
             <h4>Ghi chú từ cuộc hẹn</h4>
             {appointmentDetail?.note &&
@@ -477,10 +384,12 @@ const handleCreateTestResult = async () => {
   //     </div>
   //   );
   // };
- 
+
+
   const renderResultsTab = () => {
     const testResults = appointmentDetail?.testResultViewDTOList || [];
- 
+
+
     return (
       <div className="patient-profile-tab-content">
         <div className="patient-profile-results-header">
@@ -488,11 +397,15 @@ const handleCreateTestResult = async () => {
             <h3>Kết quả xét nghiệm</h3>
             <p>Lịch sử các xét nghiệm và kết quả</p>
           </div>
-          <button className="patient-profile-btn-primary" onClick={handleToggleResultForm}>
+          <button
+            className="patient-profile-btn-primary"
+            onClick={handleToggleResultForm}
+          >
             ➕ Thêm kết quả mới
           </button>
         </div>
- 
+
+
         {showResultForm && (
           <div className="patient-profile-result-form">
             <div className="form-group">
@@ -556,16 +469,23 @@ const handleCreateTestResult = async () => {
               />
             </div>
             <div className="button-group">
-              <button className="btn btn-primary" onClick={handleCreateTestResult}>
+              <button
+                className="btn btn-primary"
+                onClick={handleCreateTestResult}
+              >
                 Lưu kết quả
               </button>
-              <button className="btn btn-outline" onClick={handleToggleResultForm}>
+              <button
+                className="btn btn-outline"
+                onClick={handleToggleResultForm}
+              >
                 Hủy
               </button>
             </div>
           </div>
         )}
- 
+
+
         <div className="patient-profile-results-by-phase">
           {testResults.filter((r) => !isNaN(Number(r.value))).length > 0 ? (
             <div className="patient-profile-phase-results-container">
@@ -579,16 +499,25 @@ const handleCreateTestResult = async () => {
                 {testResults
                   .filter((result) => !isNaN(Number(result.value)))
                   .map((result) => (
-                    <div key={result.resultId} className="patient-profile-result-item">
+                    <div
+                      key={result.resultId}
+                      className="patient-profile-result-item"
+                    >
                       <div className="patient-profile-result-icon">
                         <span className="patient-profile-icon-purple">📋</span>
                       </div>
                       <div className="patient-profile-result-details">
-                        <h4>{decodeURIComponent(escape(result.name || "Không rõ tên"))}</h4>
+                        <h4>
+                          {decodeURIComponent(
+                            escape(result.name || "Không rõ tên")
+                          )}
+                        </h4>
                         <p>
                           Ngày:{" "}
                           {result.testDate
-                            ? new Date(result.testDate).toLocaleDateString("vi-VN")
+                            ? new Date(result.testDate).toLocaleDateString(
+                                "vi-VN"
+                              )
                             : "Không rõ"}
                         </p>
                         <p>
@@ -609,7 +538,6 @@ const handleCreateTestResult = async () => {
   };
 
 
- 
   const renderMedicationsTab = () => (
     <div className="patient-profile-tab-content">
       <div className="patient-profile-medications-header">
@@ -777,7 +705,7 @@ const handleCreateTestResult = async () => {
               <span className="patient-profile-label">Tuổi:</span>
               <span className="patient-profile-value">{patientData.age}</span>
             </div>
-            <div className="patient-profile-info-row">
+            {/* <div className="patient-profile-info-row">
               <span className="patient-profile-label">Ngày sinh:</span>
               <span className="patient-profile-value">
                 {patientData.birthDate}
@@ -794,7 +722,7 @@ const handleCreateTestResult = async () => {
               <span className="patient-profile-value">
                 {patientData.treatment}
               </span>
-            </div>
+            </div> */}
             <div className="patient-profile-info-row">
               <span className="patient-profile-label">Ngày bắt đầu:</span>
               <span className="patient-profile-value">
@@ -806,144 +734,6 @@ const handleCreateTestResult = async () => {
               <span className="patient-profile-value">
                 {patientData.doctor}
               </span>
-            </div>
-          </div>
-
-
-          <div className="patient-profile-collapsible-sections">
-            <div className="patient-profile-section">
-              <button
-                className="patient-profile-section-header"
-                onClick={() => toggleSection("medicalHistory")}
-              >
-                <span>Tiền sử bệnh</span>
-                <span>{expandedSections.medicalHistory ? "▲" : "▼"}</span>
-              </button>
-              {expandedSections.medicalHistory && (
-                <div className="patient-profile-section-content">
-                  <ul>
-                    {patientData.medicalHistory.map((item, index) => (
-                      <li key={index}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-
-
-            <div className="patient-profile-section">
-              <button
-                className="patient-profile-section-header"
-                onClick={() => toggleSection("familyHistory")}
-              >
-                <span>Tiền sử gia đình</span>
-                <span>{expandedSections.familyHistory ? "▲" : "▼"}</span>
-              </button>
-              {expandedSections.familyHistory && (
-                <div className="patient-profile-section-content">
-                  <ul>
-                    {patientData.familyHistory.map((item, index) => (
-                      <li key={index}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-
-
-            <div className="patient-profile-section">
-              <button
-                className="patient-profile-section-header"
-                onClick={() => toggleSection("allergies")}
-              >
-                <span>Dị ứng</span>
-                <span>{expandedSections.allergies ? "▲" : "▼"}</span>
-              </button>
-              {expandedSections.allergies && (
-                <div className="patient-profile-section-content">
-                  <ul>
-                    {patientData.allergies.map((item, index) => (
-                      <li key={index}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-
-
-            <div className="patient-profile-section">
-              <button
-                className="patient-profile-section-header"
-                onClick={() => toggleSection("medicalRecords")}
-              >
-                <span>Lịch sử y tế</span>
-                <span>{expandedSections.medicalRecords ? "▲" : "▼"}</span>
-              </button>
-              {expandedSections.medicalRecords && (
-                <div className="patient-profile-section-content">
-                  <div className="patient-profile-medical-record">
-                    <div className="patient-profile-record-date">
-                      15/05/2024
-                    </div>
-                    <div className="patient-profile-record-content">
-                      Siêu âm theo dõi - Phát triển nang trứng tốt
-                    </div>
-                  </div>
-                  <div className="patient-profile-medical-record">
-                    <div className="patient-profile-record-date">
-                      10/05/2024
-                    </div>
-                    <div className="patient-profile-record-content">
-                      Xét nghiệm hormone - Kết quả trong giới hạn bình thường
-                    </div>
-                  </div>
-                  <div className="patient-profile-medical-record">
-                    <div className="patient-profile-record-date">
-                      05/05/2024
-                    </div>
-                    <div className="patient-profile-record-content">
-                      Tư vấn khởi đầu chu kỳ IVF #2
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
-
-            <div className="patient-profile-section">
-              <button
-                className="patient-profile-section-header"
-                onClick={() => toggleSection("prescribedMeds")}
-              >
-                <span>Thuốc đã kê</span>
-                <span>{expandedSections.prescribedMeds ? "▲" : "▼"}</span>
-              </button>
-              {expandedSections.prescribedMeds && (
-                <div className="patient-profile-section-content">
-                  <div className="patient-profile-prescribed-med">
-                    <div className="patient-profile-med-name">
-                      Gonal-F 450 IU
-                    </div>
-                    <div className="patient-profile-med-usage">
-                      Tiêm dưới da, 1 lần/ngày, buổi tối
-                    </div>
-                    <div className="patient-profile-med-period">
-                      01/05/2024 - 15/05/2024
-                    </div>
-                  </div>
-                  <div className="patient-profile-prescribed-med">
-                    <div className="patient-profile-med-name">
-                      Cetrotide 0.25mg
-                    </div>
-                    <div className="patient-profile-med-usage">
-                      Tiêm dưới da, 1 lần/ngày, buổi sáng
-                    </div>
-                    <div className="patient-profile-med-period">
-                      10/05/2024 - 18/05/2024
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
 
@@ -981,12 +771,10 @@ export default PatientProfileLayout1;
 
 
 const ServiceTabContent = () => {
-  const { appointmentId } = useParams();
-  const minDay = new Date(Date.now() + 3 * 1000 * 60 * 60 * 24); // 3 ngày sau
+  const today = new Date();
   const [paymentForm, setPaymentForm] = useState({
     customerId: "",
     serviceId: "",
-    appointmentId: appointmentId,
     appointmentDate: "",
     note: "",
     total: 0,
@@ -994,16 +782,17 @@ const ServiceTabContent = () => {
   });
 
 
-  const services = [
+  const [services, setServices] = useState([
     { id: 1, name: "IUI", price: 5000000 },
     { id: 2, name: "IVF", price: 70000000 },
-  ];
+  ]);
 
 
   const typeOptions = [
     { value: "test", label: "Test" },
     { value: "treatment", label: "Điều trị" },
   ];
+
 
   useEffect(() => {
     if (paymentForm.serviceId) {
@@ -1016,26 +805,12 @@ const ServiceTabContent = () => {
     } else {
       setPaymentForm((prev) => ({ ...prev, total: 0 }));
     }
-  }, [paymentForm.serviceId]);
+  }, [paymentForm.serviceId, services]);
 
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
-    if (name === "appointmentDate") {
-      if (value) {
-        const [date, time] = value.split('T');
-      
-        if (time) {
-          // Lấy giờ và đặt phút về 00
-          const hour = time.split(':')[0];
-          const newValue = `${date}T${hour}:00`;
-          setPaymentForm((prev) => ({ ...prev, [name]: newValue }));
-        }
-      }
-    } else {
-      setPaymentForm((prev) => ({ ...prev, [name]: value }));
-    }
+    setPaymentForm((prev) => ({ ...prev, [name]: value }));
   };
 
 
@@ -1090,7 +865,7 @@ const ServiceTabContent = () => {
           className="form-input"
           name="appointmentDate"
           value={paymentForm.appointmentDate}
-          min={minDay.toISOString().slice(0, 16)}
+          min={today.toISOString().slice(0, 16)}
           step={3600}
           onChange={handleInputChange}
         />

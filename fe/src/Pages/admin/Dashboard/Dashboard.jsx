@@ -1,7 +1,6 @@
-"use client"
-
-import { useState } from "react"
-import "./Dashboard.css"
+import { useState, useEffect } from "react";
+import "./Dashboard.css";
+import apiDashboard from "@features/service/apiDashboard";
 
 const Dashboard = () => {
   useEffect(() => {
@@ -13,36 +12,32 @@ const Dashboard = () => {
           apiDashboard.getAccountStats(),
         ]);
 
-
         console.log("👤 userSummary:", userSummary);
         console.log("💰 revenueData:", revenueData);
         console.log("📊 accountStats:", accountStats);
 
-
         setDashboardData({
-          totalPatients: userSummary.data.patients || 0,
-          totalDoctors: userSummary.data.doctors || 0,
+          totalPatients: userSummary.patients || 0,
+          totalDoctors: userSummary.doctors || 0,
+          totalManagers: userSummary.managers || 0,
           totalAppointments: 0,
-          totalRevenue: revenueData.data.revenue || 0,
+          totalRevenue: revenueData.revenue || 0,
           newPatientsThisMonth: 0,
           completedAppointments: 0,
           pendingAppointments: 0,
           activeServices: 0,
-          totalAccounts: accountStats.data.total || 0,
-          activeAccounts: accountStats.data.active || 0,
-          inactiveAccounts: accountStats.data.inactive || 0,
-          newAccountsThisMonth: accountStats.data.increaseThisMonth || 0,
+          totalAccounts: userSummary.total || 0,
+          activeAccounts: userSummary.total || 0,
+          inactiveAccounts: accountStats.inactive || 0,
+          newAccountsThisMonth: accountStats.increaseThisMonth || 0,
         });
-       
       } catch (error) {
         console.error("Lỗi khi tải dữ liệu dashboard:", error);
       }
     };
 
-
     fetchDashboardData();
   }, []);
-
 
   const [timeRange, setTimeRange] = useState("thisMonth"); // thisMonth, lastMonth, thisYear
   const [dashboardData, setDashboardData] = useState({
@@ -60,7 +55,6 @@ const Dashboard = () => {
     newAccountsThisMonth: 0,
   });
 
-
   const [monthlyStats, setMonthlyStats] = useState([
     { month: "T1", appointments: 65, revenue: 180 },
     { month: "T2", appointments: 78, revenue: 220 },
@@ -68,18 +62,18 @@ const Dashboard = () => {
     { month: "T4", appointments: 91, revenue: 280 },
     { month: "T5", appointments: 87, revenue: 265 },
     { month: "T6", appointments: 95, revenue: 310 },
-  ])
+  ]);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
       currency: "VND",
-    }).format(amount)
-  }
+    }).format(amount);
+  };
 
   const formatNumber = (number) => {
-    return new Intl.NumberFormat("vi-VN").format(number)
-  }
+    return new Intl.NumberFormat("vi-VN").format(number);
+  };
 
   return (
     <div className="admin-dashboard">
@@ -88,7 +82,11 @@ const Dashboard = () => {
         <div className="header-content">
           <h1 className="page-title">Báo cáo thống kê</h1>
           <div className="header-actions">
-            <select value={timeRange} onChange={(e) => setTimeRange(e.target.value)} className="time-range-select">
+            <select
+              value={timeRange}
+              onChange={(e) => setTimeRange(e.target.value)}
+              className="time-range-select"
+            >
               <option value="thisMonth">Tháng này</option>
               <option value="lastMonth">Tháng trước</option>
               <option value="thisYear">Năm này</option>
@@ -118,7 +116,6 @@ const Dashboard = () => {
               <div className="stat-number">
                 {formatNumber(dashboardData.totalAccounts)}
               </div>
-             
             </div>
           </div>
 
@@ -129,7 +126,6 @@ const Dashboard = () => {
               <div className="stat-number">
                 {formatNumber(dashboardData.activeAccounts)}
               </div>
-             
             </div>
           </div>
 
@@ -140,7 +136,6 @@ const Dashboard = () => {
               <div className="stat-number">
                 {formatNumber(dashboardData.inactiveAccounts)}
               </div>
-             
             </div>
           </div>
 
@@ -151,7 +146,6 @@ const Dashboard = () => {
               <div className="stat-number">
                 {formatCurrency(dashboardData.totalRevenue)}
               </div>
-             
             </div>
           </div>
         </div>
@@ -180,9 +174,14 @@ const Dashboard = () => {
                     <div className="chart-bars">
                       <div
                         className="chart-bar appointments"
-                        style={{ height: `${(stat.appointments / 100) * 100}%` }}
+                        style={{
+                          height: `${(stat.appointments / 100) * 100}%`,
+                        }}
                       ></div>
-                      <div className="chart-bar revenue" style={{ height: `${(stat.revenue / 350) * 100}%` }}></div>
+                      <div
+                        className="chart-bar revenue"
+                        style={{ height: `${(stat.revenue / 350) * 100}%` }}
+                      ></div>
                     </div>
                     <div className="chart-label">{stat.month}</div>
                   </div>
@@ -202,89 +201,37 @@ const Dashboard = () => {
                 <div className="quick-stat-value">
                   {formatNumber(dashboardData.totalPatients)}
                 </div>
-               
               </div>
               <div className="quick-stat-item">
                 <div className="quick-stat-label">Bác sĩ</div>
                 <div className="quick-stat-value">
                   {dashboardData.totalDoctors}
                 </div>
-               
               </div>
               <div className="quick-stat-item">
                 <div className="quick-stat-label">Quản lý</div>
                 <div className="quick-stat-value">
-                  {formatNumber(
-                    dashboardData.totalAccounts -
-                      dashboardData.totalPatients -
-                      dashboardData.totalDoctors
-                  )}
+                  {formatNumber(dashboardData.totalManagers)}
                 </div>
-               
               </div>
+
               <div className="quick-stat-item">
                 <div className="quick-stat-label">Tỷ lệ hoạt động</div>
                 <div className="quick-stat-value">
-                  {((dashboardData.activeAccounts / dashboardData.totalAccounts) * 100).toFixed(1)}%
+                  {(
+                    (dashboardData.activeAccounts /
+                      dashboardData.totalAccounts) *
+                    100
+                  ).toFixed(1)}
+                  %
                 </div>
-                <div className="quick-stat-percentage">Tỷ lệ tài khoản active</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Recent Activities */}
-          <div className="dashboard-card activities-card">
-            <div className="card-header">
-              <h3>Hoạt động gần đây</h3>
-              <button className="view-all-btn">Xem tất cả</button>
-            </div>
-            <div className="activities-list">
-              {recentActivities.map((activity) => (
-                <div key={activity.id} className="activity-item">
-                  <div className="activity-icon">{activity.icon}</div>
-                  <div className="activity-content">
-                    <div className="activity-message">{activity.message}</div>
-                    <div className="activity-time">{activity.time}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* System Status */}
-          <div className="dashboard-card system-status">
-            <div className="card-header">
-              <h3>Trạng thái hệ thống</h3>
-            </div>
-            <div className="status-list">
-              <div className="status-item">
-                <div className="status-indicator online"></div>
-                <div className="status-content">
-                  <div className="status-label">Server chính</div>
-                  <div className="status-value">Hoạt động bình thường</div>
-                </div>
-              </div>
-              <div className="status-item">
-                <div className="status-indicator online"></div>
-                <div className="status-content">
-                  <div className="status-label">Cơ sở dữ liệu</div>
-                  <div className="status-value">Kết nối ổn định</div>
-                </div>
-              </div>
-              <div className="status-item">
-                <div className="status-indicator warning"></div>
-                <div className="status-content">
-                  <div className="status-label">Backup tự động</div>
-                  <div className="status-value">Cần kiểm tra</div>
-                </div>
-               
               </div>
             </div>
           </div>
         </div>
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;

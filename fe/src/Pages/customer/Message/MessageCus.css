@@ -10,54 +10,54 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   }
   
-  
+  .name {
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
 
-.name {
-  font-weight: 600;
-  margin-bottom: 2px;
-}
-
-.text-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  overflow: hidden;
-}
+  .text-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+  }
 
 
-.preview {
-  font-size: 13px;
-  color: #666;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 200px; /* tuỳ layout */
-}
+  .preview {
+    font-size: 13px;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px; /* tuỳ layout */
+  }
 
 
 
-.patient-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px;
-  border-radius: 8px;
-  cursor: pointer;
-}
+  .patient-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
 
-.avatar-circle {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background-color: #94a3b8;
-  color: white;
-  font-weight: bold;
-  font-size: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
+
+
+  .avatar-circle {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background-color: #94a3b8;
+    color: white;
+    font-weight: bold;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
 
   .message-bubble.me {
     background-color: #d1f7d6;
@@ -70,8 +70,7 @@
     text-align: left;
     align-self: flex-start;
   }
-
-
+  
   .message-cus-wrapper .sidebar {
     width: 320px;
     border-right: 1px solid #e5e7eb;
