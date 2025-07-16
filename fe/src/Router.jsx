@@ -301,7 +301,7 @@ export const router = createBrowserRouter([
     ]
   },
   {
-    path: "doctor-dashboard/appointments/tu_van/:appointmentId",
+    path: "doctor-dashboard/appointments/tu_van/:appointmentId/:customerId",
     element: (
       // <DoctorRoute>
         <PageLayout />

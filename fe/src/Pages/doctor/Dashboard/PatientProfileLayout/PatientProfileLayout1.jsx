@@ -3,14 +3,15 @@ import ApiGateway from "@features/service/apiGateway";
 import "./PatientProfileLayout1.css";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import apiAppointment from "@features/service/apiAppointment";
-
-
-
+import apiNote from "@features/service/apiNote";
 
 const PatientProfileLayout1 = () => {
   const [appointmentDetail, setAppointmentDetail] = useState(null);
   const [activeTab, setActiveTab] = useState("notes");
   const [showResultForm, setShowResultForm] = useState(false);
+  const [isAddingNote, setIsAddingNote] = useState(false);
+  const [newNote, setNewNote] = useState("");
+
   const [newResult, setNewResult] = useState({
     name: "",
     value: "",
@@ -20,17 +21,14 @@ const PatientProfileLayout1 = () => {
     note: "",
   });
 
-
   const handleToggleResultForm = () => {
     setShowResultForm((prev) => !prev);
   };
-
 
   const handleResultInputChange = (e) => {
     const { name, value } = e.target;
     setNewResult((prev) => ({ ...prev, [name]: value }));
   };
-
 
   const handleCreateTestResult = async () => {
     try {
@@ -39,7 +37,6 @@ const PatientProfileLayout1 = () => {
         value: parseFloat(newResult.value),
         appointmentId: appointmentDetail.appointmentId,
       };
-
 
       await apiAppointment.createTestResult(payload);
       alert("Tạo kết quả xét nghiệm thành công!");
@@ -53,7 +50,6 @@ const PatientProfileLayout1 = () => {
         note: "",
       });
 
-
       const updated = await apiAppointment.getAppointmentDetailById(
         appointmentDetail.appointmentId
       );
@@ -64,11 +60,39 @@ const PatientProfileLayout1 = () => {
     }
   };
 
+  const handleAddNote = async () => {
+    try {
+      if (!newNote.trim()) {
+        alert("Vui lòng nhập ghi chú.");
+        return;
+      }
+  
+      const payload = {
+        note: newNote,
+        status: "confirmed" // Gán cứng giá trị status là "confirmed"
+      };
+      console.log("Payload gửi đi:", payload); // Log payload
+      console.log("Appointment ID:", appointmentDetail.appointmentId); // Log appointmentId
+  
+      const response = await apiNote.updateNoteForAppointment(appointmentDetail.appointmentId, payload);
+      console.log("Response từ server:", response); // Log phản hồi từ server
+  
+      alert("Cập nhật ghi chú thành công!");
+  
+      const updated = await apiAppointment.getAppointmentDetailById(appointmentDetail.appointmentId);
+      setAppointmentDetail(updated);
+      setIsAddingNote(false);
+      setNewNote("");
+    } catch (err) {
+      console.error("Lỗi khi cập nhật ghi chú:", err);
+      console.error("Chi tiết lỗi:", err.response ? err.response.data : err.message); // Log chi tiết lỗi
+      alert("Không thể cập nhật ghi chú.");
+    }
+  };
 
   const location = useLocation();
   const navigate = useNavigate();
   const { appointmentId } = location.state || {};
-
 
   const [expandedSections, setExpandedSections] = useState({
     medicalHistory: true,
@@ -78,7 +102,6 @@ const PatientProfileLayout1 = () => {
     prescribedMeds: false,
   });
 
-
   useEffect(() => {
     if (!appointmentId) {
       alert(
@@ -87,7 +110,6 @@ const PatientProfileLayout1 = () => {
       navigate("/doctor-dashboard/appointments");
     }
   }, [appointmentId, navigate]);
-
 
   useEffect(() => {
     const fetchAppointmentDetail = async () => {
@@ -102,12 +124,10 @@ const PatientProfileLayout1 = () => {
       }
     };
 
-
     if (appointmentId) {
       fetchAppointmentDetail();
     }
   }, [appointmentId]);
-
 
   const toggleSection = (section) => {
     setExpandedSections((prev) => ({
@@ -115,7 +135,6 @@ const PatientProfileLayout1 = () => {
       [section]: !prev[section],
     }));
   };
-
 
   const patientData = appointmentDetail
     ? {
@@ -134,7 +153,6 @@ const PatientProfileLayout1 = () => {
           ? new Date(appointmentDetail.date).toLocaleDateString("vi-VN")
           : "",
 
-
         doctor: appointmentDetail.doctorName,
         medicalHistory: [],
         familyHistory: [],
@@ -149,123 +167,12 @@ const PatientProfileLayout1 = () => {
       }
     : null;
 
-
   const tabs = [
     { id: "notes", label: "Ghi chú khám", icon: "📝" },
-    { id: "results", label: "Kết quả xét nghiệm", icon: "📋" },
     { id: "service", label: "Chỉ định dịch vụ", icon: "🧪" },
   ];
 
-
-  // Data for timeline - linked to other tabs
-  const treatmentPhases = [
-    {
-      id: 1,
-      title: "Giai đoạn 1: Chuẩn bị",
-      period: "01/04 - 30/04/2024",
-      status: "completed",
-      notes: [
-        {
-          date: "30/04/2024",
-          content:
-            "Bệnh nhân đã hoàn thành tất cả xét nghiệm cần thiết. Kết quả tốt, sẵn sàng cho chu kỳ điều trị IVF.",
-          doctor: "BS. Nguyễn Lan Anh",
-        },
-      ],
-      results: [
-        {
-          name: "AMH",
-          value: "2.8 ng/ml",
-          status: "Bình thường",
-          date: "25/04/2024",
-        },
-        { name: "FSH", value: "6.2 mIU/ml", status: "Tốt", date: "25/04/2024" },
-        {
-          name: "Siêu âm buồng trứng",
-          value: "12 nang trứng",
-          status: "Tốt",
-          date: "28/04/2024",
-        },
-      ],
-      medications: [
-        {
-          name: "Folic Acid 5mg",
-          usage: "Uống 1 viên/ngày, sau ăn",
-          period: "01/04 - 30/04/2024",
-        },
-        {
-          name: "Vitamin D3 1000IU",
-          usage: "Uống 1 viên/ngày, buổi sáng",
-          period: "01/04 - 30/04/2024",
-        },
-      ],
-    },
-    {
-      id: 2,
-      title: "Giai đoạn 2: Kích thích buồng trứng",
-      period: "01/05 - 20/05/2024",
-      status: "active",
-      notes: [
-        {
-          date: "20/05/2024",
-          content:
-            "Phản ứng tốt với thuốc kích thích. Nang trứng phát triển đều, kích thước phù hợp. Chuẩn bị trigger shot.",
-          doctor: "BS. Nguyễn Lan Anh",
-        },
-        {
-          date: "15/05/2024",
-          content:
-            "Theo dõi phản ứng kích thích. E2 tăng tốt, nang trứng phát triển đồng đều. Tiếp tục protocol.",
-          doctor: "BS. Nguyễn Lan Anh",
-        },
-      ],
-      results: [
-        { name: "E2", value: "1200 pg/ml", status: "Tốt", date: "18/05/2024" },
-        {
-          name: "Siêu âm theo dõi",
-          value: "8 nang trứng >14mm",
-          status: "Đạt yêu cầu",
-          date: "18/05/2024",
-        },
-        {
-          name: "LH",
-          value: "2.1 mIU/ml",
-          status: "Ổn định",
-          date: "18/05/2024",
-        },
-      ],
-      medications: [
-        {
-          name: "Gonal-F 450 IU",
-          usage: "Tiêm dưới da, buổi tối (21:00)",
-          period: "01/05 - 18/05/2024",
-        },
-        {
-          name: "Cetrotide 0.25mg",
-          usage: "Tiêm dưới da, buổi sáng (08:00)",
-          period: "10/05 - 18/05/2024",
-        },
-        {
-          name: "Ovitrelle 250mcg",
-          usage: "Tiêm dưới da, trigger shot",
-          period: "20/05/2024",
-        },
-      ],
-    },
-    {
-      id: 3,
-      title: "Giai đoạn 3: Lấy trứng",
-      period: "",
-      status: "upcoming",
-      notes: [],
-      results: [],
-      medications: [],
-    },
-  ];
-
-
   const renderServiceTab = () => <ServiceTabContent />;
-
 
   const renderNotesTab = () => (
     <div className="patient-profile-tab-content">
@@ -274,9 +181,38 @@ const PatientProfileLayout1 = () => {
           <h3>Ghi chú khám bệnh</h3>
           <p>Ghi chú và theo dõi quá trình điều trị</p>
         </div>
-        <button className="patient-profile-btn-primary">
+        <button
+          className="patient-profile-btn-primary"
+          onClick={() => setIsAddingNote((prev) => !prev)}
+        >
           📝 Thêm ghi chú mới
         </button>
+
+        {isAddingNote && (
+          <div style={{ marginTop: "1rem" }}>
+            <textarea
+              className="form-textarea"
+              rows={3}
+              placeholder="Nhập ghi chú..."
+              value={newNote}
+              onChange={(e) => setNewNote(e.target.value)}
+            />
+            <div className="button-group">
+              <button className="btn btn-primary" onClick={handleAddNote}>
+                Lưu ghi chú
+              </button>
+              <button
+                className="btn btn-outline"
+                onClick={() => {
+                  setIsAddingNote(false);
+                  setNewNote("");
+                }}
+              >
+                Hủy
+              </button>
+            </div>
+          </div>
+        )}
       </div>
       <div className="patient-profile-notes-section">
         <div className="patient-profile-notes-list">
@@ -318,77 +254,8 @@ const PatientProfileLayout1 = () => {
     </div>
   );
 
-
-  // const renderResultsTab = () => {
-  //   // Lấy testResults từ API
-  //   const testResults = appointmentDetail?.testResultViewDTOList || [];
-
-
-  //   return (
-  //     <div className="patient-profile-tab-content">
-  //       <div className="patient-profile-results-header">
-  //         <div>
-  //           <h3>Kết quả xét nghiệm</h3>
-  //           <p>Lịch sử các xét nghiệm và kết quả</p>
-  //         </div>
-  //         <button className="patient-profile-btn-primary">
-  //           ➕ Thêm kết quả mới
-  //         </button>
-  //       </div>
-  //       <div className="patient-profile-results-by-phase">
-  //         {/* Hiển thị testResult từ API chi tiết lịch hẹn */}
-  //         {testResults.length > 0 ? (
-  //           <div className="patient-profile-phase-results-container">
-  //             <div className="patient-profile-phase-results-header">
-  //               <h4>Kết quả từ cuộc hẹn</h4>
-  //               <span className="patient-profile-phase-period">
-  //                 {new Date(appointmentDetail.date).toLocaleDateString("vi-VN")}
-  //               </span>
-  //             </div>
-  //             <div className="patient-profile-results-list">
-  //               {testResults.map((result) => (
-  //                 <div
-  //                   key={result.resultId}
-  //                   className="patient-profile-result-item"
-  //                 >
-  //                   <div className="patient-profile-result-icon">
-  //                     <span className="patient-profile-icon-purple">📋</span>
-  //                   </div>
-  //                   <div className="patient-profile-result-details">
-  //                     <h4>
-  //                       {decodeURIComponent(
-  //                         escape(result.name || "Không rõ tên")
-  //                       )}
-  //                     </h4>
-  //                     <p>
-  //                       Ngày:{" "}
-  //                       {result.testDate
-  //                         ? new Date(result.testDate).toLocaleDateString(
-  //                             "vi-VN"
-  //                           )
-  //                         : "Không rõ"}
-  //                     </p>
-  //                     <p>
-  //                       Kết quả: {result.value} {result.unit || ""}
-  //                     </p>
-  //                     <p>Ghi chú: {result.note || "Không có ghi chú"}</p>
-  //                   </div>
-  //                 </div>
-  //               ))}
-  //             </div>
-  //           </div>
-  //         ) : (
-  //           <div>Chưa có kết quả xét nghiệm nào.</div>
-  //         )}
-  //       </div>
-  //     </div>
-  //   );
-  // };
-
-
   const renderResultsTab = () => {
     const testResults = appointmentDetail?.testResultViewDTOList || [];
-
 
     return (
       <div className="patient-profile-tab-content">
@@ -404,7 +271,6 @@ const PatientProfileLayout1 = () => {
             ➕ Thêm kết quả mới
           </button>
         </div>
-
 
         {showResultForm && (
           <div className="patient-profile-result-form">
@@ -485,7 +351,6 @@ const PatientProfileLayout1 = () => {
           </div>
         )}
 
-
         <div className="patient-profile-results-by-phase">
           {testResults.filter((r) => !isNaN(Number(r.value))).length > 0 ? (
             <div className="patient-profile-phase-results-container">
@@ -536,7 +401,6 @@ const PatientProfileLayout1 = () => {
       </div>
     );
   };
-
 
   const renderMedicationsTab = () => (
     <div className="patient-profile-tab-content">
@@ -623,7 +487,6 @@ const PatientProfileLayout1 = () => {
     </div>
   );
 
-
   const renderTabContent = () => {
     switch (activeTab) {
       case "notes":
@@ -639,9 +502,7 @@ const PatientProfileLayout1 = () => {
     }
   };
 
-
   if (!appointmentDetail) return <div>Đang tải dữ liệu cuộc hẹn...</div>;
-
 
   return (
     <div className="patient-profile">
@@ -671,9 +532,6 @@ const PatientProfileLayout1 = () => {
                 {patientData.currentAppointment.status}
               </span>
             </div>
-            {/* <p className="patient-profile-appointment-details">
-              {patientData.currentAppointment.details}
-            </p> */}
           </div>
         </div>
         <div className="patient-profile-header-actions">
@@ -682,7 +540,6 @@ const PatientProfileLayout1 = () => {
           </button>
         </div>
       </div>
-
 
       <div className="patient-profile-container">
         <div className="patient-profile-sidebar">
@@ -699,30 +556,12 @@ const PatientProfileLayout1 = () => {
             </div>
           </div>
 
-
           <div className="patient-profile-patient-basic-info">
             <div className="patient-profile-info-row">
               <span className="patient-profile-label">Tuổi:</span>
               <span className="patient-profile-value">{patientData.age}</span>
             </div>
-            {/* <div className="patient-profile-info-row">
-              <span className="patient-profile-label">Ngày sinh:</span>
-              <span className="patient-profile-value">
-                {patientData.birthDate}
-              </span>
-            </div>
-            <div className="patient-profile-info-row">
-              <span className="patient-profile-label">Giới tính:</span>
-              <span className="patient-profile-value patient-profile-gender-female">
-                {patientData.gender}
-              </span>
-            </div>
-            <div className="patient-profile-info-row">
-              <span className="patient-profile-label">Điều trị:</span>
-              <span className="patient-profile-value">
-                {patientData.treatment}
-              </span>
-            </div> */}
+
             <div className="patient-profile-info-row">
               <span className="patient-profile-label">Ngày bắt đầu:</span>
               <span className="patient-profile-value">
@@ -737,12 +576,10 @@ const PatientProfileLayout1 = () => {
             </div>
           </div>
 
-
           <div className="patient-profile-sidebar-actions">
             <button className="patient-profile-btn-outline">💬 Nhắn tin</button>
           </div>
         </div>
-
 
         <div className="patient-profile-main-content">
           <div className="patient-profile-tabs">
@@ -766,9 +603,7 @@ const PatientProfileLayout1 = () => {
   );
 };
 
-
 export default PatientProfileLayout1;
-
 
 const ServiceTabContent = () => {
   const navigate = useNavigate();
@@ -784,18 +619,15 @@ const ServiceTabContent = () => {
     type: "",
   });
 
-
   const [services, setServices] = useState([
     { id: 1, name: "IUI", price: 5000000 },
     { id: 2, name: "IVF", price: 70000000 },
   ]);
 
-
   const typeOptions = [
     { value: "test", label: "Test" },
     { value: "treatment", label: "Điều trị" },
   ];
-
 
   useEffect(() => {
     if (paymentForm.serviceId) {
@@ -810,12 +642,10 @@ const ServiceTabContent = () => {
     }
   }, [paymentForm.serviceId, services]);
 
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setPaymentForm((prev) => ({ ...prev, [name]: value }));
   };
-
 
   const handleSubmit = async () => {
     try {
@@ -828,7 +658,6 @@ const ServiceTabContent = () => {
     }
   };
 
-
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -836,10 +665,8 @@ const ServiceTabContent = () => {
     }).format(amount);
   };
 
-
   const isFormValid =
     paymentForm.serviceId && paymentForm.appointmentDate && paymentForm.type;
-
 
   return (
     <div className="patient-profile-tab-content">
