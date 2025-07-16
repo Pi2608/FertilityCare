@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import "./MessageCus.css";
 import MessageAPI from "@features/service/apiMessage";
 
-
 export default function Message() {
   const [userList, setUserList] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -12,7 +11,6 @@ export default function Message() {
   const getInitial = (name) => {
     return name?.charAt(0).toUpperCase() || "?";
   };
-
 
   // 1. Lấy danh sách tin nhắn cuối với từng người
   useEffect(() => {
@@ -28,10 +26,8 @@ export default function Message() {
       }
     };
 
-
     fetchLatestUsers();
   }, []);
-
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -44,10 +40,8 @@ export default function Message() {
       }
     };
 
-
     fetchUserId();
   }, []);
-
 
   // 2. Khi chọn user → lấy tin nhắn chi tiết
   useEffect(() => {
@@ -61,15 +55,12 @@ export default function Message() {
       }
     };
 
-
     fetchMessages();
   }, [selectedUser]);
-
 
   // 3. Gửi tin nhắn
   const handleSend = async () => {
     if (!newMessage.trim() || !selectedUser) return;
-
 
     try {
       const sent = await MessageAPI.sendMessage({
@@ -83,9 +74,8 @@ export default function Message() {
     }
   };
 
-
   return (
-    <div className="message-cus-wrapper">
+    <div className="message-wrapper">
       <div className="sidebar">
         <h3>Danh sách người nhắn</h3>
         <div className="patient-list">
@@ -113,14 +103,12 @@ export default function Message() {
         </div>
       </div>
 
-
       <div className="chat-box">
         {selectedUser ? (
           <>
             <div className="chat-header">
               <h4>{selectedUser.userName}</h4>
             </div>
-
 
             <div className="chat-content">
               {messageList.length === 0 ? (
@@ -144,7 +132,6 @@ export default function Message() {
                 ))
               )}
             </div>
-
 
             <div className="chat-input">
               <input

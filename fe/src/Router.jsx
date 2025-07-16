@@ -29,6 +29,7 @@ import TreatmentHistory from '@customerpages/TreatmentHistory/TreatmentHistory';
 import Pill from '@customerpages/Dashboard/Pill/Pill';
 import Payment from '@customerpages/Payment/Payment';
 import PaymentList from '@customerpages/Dashboard/Payment/PaymentList';
+import AppointmentsTuVan from '@customerpages/Appointments/AppointmentsTuVan';
 
 // Manager components
 import DocDashboard from '@doctorpages/Dashboard/DocDashboard';
@@ -301,7 +302,7 @@ export const router = createBrowserRouter([
     ]
   },
   {
-    path: "doctor-dashboard/appointments/tu_van/:appointmentId",
+    path: "doctor-dashboard/appointments/tu_van/:appointmentId/:customerId",
     element: (
       // <DoctorRoute>
         <PageLayout />
@@ -341,6 +342,20 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <PatientRecord />,
+      },
+    ]
+  },
+  {
+    path: "/patient-dashboard/appointments/tu_van/:appointmentId/:customerId",
+    element: (
+      // <DoctorRoute>
+        <PageLayout />
+      // </DoctorRoute>
+    ),
+    children: [
+      {
+        index: true,
+        element: <AppointmentsTuVan />,
       },
     ]
   },
