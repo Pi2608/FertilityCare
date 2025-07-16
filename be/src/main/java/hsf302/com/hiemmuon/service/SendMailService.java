@@ -158,4 +158,20 @@ public class SendMailService {
         public String getOtp() { return otp; }
         public Instant getCreatedAt() { return createdAt; }
     }
+
+    public void sendEmail(String to, String subject, String content) {
+        MimeMessage message = mailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom(mailFrom);
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(content);
+
+            mailSender.send(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

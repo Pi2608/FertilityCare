@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import IUI from '@asset/iui.jpg';
 import IVF from '@asset/ivf.jpg';
 import './TreatmentMethod.css';
-import TreatmentAPI from '../../../features/service/apiTreatment';
+import ApiGateway from '../../../features/service/apiGateway';
 import React, { useEffect, useState } from 'react';
 
 
@@ -20,7 +20,7 @@ function TreatmentMethod() {
    
     const fetchTreatmentData = async () => {
         try {
-            const response = await TreatmentAPI.getActiveTreatments();
+            const response = await ApiGateway.getActiveTreatments();
             const data = response.data;
    
             const imageMap = {
@@ -34,12 +34,12 @@ function TreatmentMethod() {
                 info: [
                     // `Giá: ${service.price.toLocaleString()} VNĐ`,
                     // `Tỷ lệ thành công: ${service.successRate}%`,
-                    service.specialfications
+                    service.specifications
                 ],
                 miniTitle: `${service.name} - Giải pháp điều trị`,
                 image: imageMap[service.name] || IVF // fallback nếu không khớp
             }));
-   
+            console.log("Formatted Treatment Data:", formatted);
             setTreatmentData(formatted);
         } catch (error) {
             console.error("Lỗi khi lấy danh sách phương pháp điều trị:", error);
@@ -68,10 +68,10 @@ function TreatmentMethod() {
                 {treatmentData.map((item, index) => (
                     <TreatmentCard
                         key={index}
+                        treatmentId={1}
                         title={item.title}
                         content={item.content}
                         image={item.image}
-                        info={item.info}
                         miniTitle={item.miniTitle}
                     />
                 ))}

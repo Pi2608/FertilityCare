@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,6 +57,31 @@ public class CycleService {
         }
         List<Cycle> cycles = cycleRepository.findByDoctor_DoctorId(user.getDoctor().getDoctorId());
         return cycles.stream().map(this::convertToCycleDTO).toList();
+    }
+
+    public CycleDTO getCurrentCycleByCustomerId(HttpServletRequest request, int customerId) {
+        User user = userService.getUserByJwt(request);
+        if (user.getDoctor() == null) {
+            throw new RuntimeException("Bạn không phải là bác sĩ.");
+        }
+        // Lấy tất cả các cycle của customer, status ongoing, sắp xếp theo startdate giảm dần
+        List<Cycle> cycles = cycleRepository.findByCustomer_CustomerId(customerId)
+                .stream()
+                .filter(c -> c.getStatus() == StatusCycle.ongoing)
+                .sorted((c1, c2) -> c2.getStartdate().compareTo(c1.getStartdate()))
+                .toList();
+
+        if (cycles.isEmpty()) {
+            throw new RuntimeException("Không tìm thấy chu kỳ điều trị nào cho khách hàng này.");
+        }
+
+        Cycle latestCycle = cycles.get(0);
+
+        if (latestCycle.getDoctor() == null || latestCycle.getDoctor().getDoctorId() != user.getDoctor().getDoctorId()) {
+            throw new RuntimeException("Bạn không có quyền xem chu kỳ điều trị này.");
+        }
+
+        return convertToCycleDTO(latestCycle);
     }
 
     public CycleNoteDTO updateCycleNote(int cycleId, String note) {
@@ -107,7 +133,7 @@ public class CycleService {
 
         List<CycleStepDTO> listStep = new ArrayList<>();
 
-        LocalDate eventDate = dto.getStartDate().plusMonths(2); // ngày đầu tiên
+        LocalDateTime eventDate = dto.getStartDate().plusMonths(2).atStartOfDay(); // ngày đầu tiên
         for (int i = 0; i < treatmentSteps.size(); i++) {
             TreatmentStep step = treatmentSteps.get(i);
 
@@ -231,7 +257,7 @@ public class CycleService {
 
         List<CycleStepDTO> listStep = new ArrayList<>();
 
-        LocalDate eventDate = dto.getStartDate().plusMonths(2);
+        LocalDateTime eventDate = dto.getStartDate().plusMonths(2).atTime(8, 0);;
         CycleStep cycleStep = null;
         for (TreatmentStep step : treatmentSteps) {
             cycleStep = new CycleStep();

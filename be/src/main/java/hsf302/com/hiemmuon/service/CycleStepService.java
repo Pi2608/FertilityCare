@@ -7,12 +7,14 @@ import hsf302.com.hiemmuon.entity.*;
 import hsf302.com.hiemmuon.enums.StatusCycle;
 import hsf302.com.hiemmuon.exception.NotFoundException;
 import hsf302.com.hiemmuon.repository.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.print.Doc;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +38,9 @@ public class CycleStepService {
 
     @Autowired
     private TestResultRepository testResultRepository;
+
+    @Autowired
+    private SendMailService sendMailService;
 
 
     public List<CycleStepDTO> getAllCycleStep(int cycleId) {
@@ -90,7 +95,7 @@ public class CycleStepService {
                     cycleId, step.getStepOrder() + 1);
 
             if (nextStep != null && nextStep.getEventdate() == null) {
-                LocalDate nextEventDate = step.getEventdate().plusDays(1);
+                LocalDateTime nextEventDate = step.getEventdate().plusDays(1);
                 nextStep.setEventdate(nextEventDate);
                 cycleStepRepository.save(nextStep);
             }
@@ -203,7 +208,7 @@ public class CycleStepService {
 
         // 3. Lấy cycleStep
         CycleStep cycleStep = cycleStepRepository.findById(cycleStepId);
-        if(cycleStep == null) {
+        if (cycleStep == null) {
             throw new RuntimeException("Không tìm thấy giai đoạn điều trị");
 
         }
@@ -263,4 +268,39 @@ public class CycleStepService {
         return result;
     }
 
+    @Transactional
+    public void sendCycleStepReminders() {
+        LocalDateTime from = LocalDate.now().plusDays(1).atStartOfDay();
+        LocalDateTime to = from.plusDays(2);
+
+        List<CycleStep> steps = cycleStepRepository.findByEventdateBetween(from, to);
+
+        if(steps.isEmpty()) {
+            System.err.println("bug");
+        }
+
+        for (CycleStep step : steps) {
+            String toEmail = step.getCycle().getCustomer().getUser().getEmail();
+            String name = step.getCycle().getCustomer().getUser().getName();
+            String service = step.getCycle().getService().getName();
+            String treatmentStep = step.getCycle().getService().getName();
+            LocalDateTime eventTime = step.getEventdate();
+
+            String subject = "⏰ Nhắc lịch bước điều trị sắp tới";
+            String text = String.format("""
+                    Chào %s,
+                    
+                    Đây là lời nhắc rằng bạn sẽ có bước điều trị "%s" (thuộc dịch vụ "%s") 
+                    diễn ra vào lúc %s.
+                    
+                    Chúc bạn một ngày an lành và luôn khỏe mạnh!
+                    
+                    — Fertility Care System
+                    """, name, treatmentStep, service, eventTime.toString());
+
+            sendMailService.sendEmail(toEmail, subject, text);
+
+            step.setIsReminded(true);
+        }
+    }
 }

@@ -266,6 +266,7 @@ public class PaymentService {
                     newApt.setDate(LocalDateTime.of(payment.getCycle().getStartdate(), LocalTime.of(8, 0)));
                     newApt.setNote("");
                     newApt.setCycleStepId(cycleStepRepository.findFirstByCycleIdOrderByStepOrder(payment.getCycle().getCycleId()));
+                    appointmentService.scheduleReExam(newApt, doctor);
                     return "Payment successful";
                 } else {
                     updatePaymentStatus(paymentId, StatusPayment.failed);

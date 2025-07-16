@@ -9,6 +9,7 @@ import hsf302.com.hiemmuon.enums.StatusAppointment;
 import hsf302.com.hiemmuon.enums.TypeAppointment;
 import hsf302.com.hiemmuon.exception.NotFoundException;
 import hsf302.com.hiemmuon.repository.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import hsf302.com.hiemmuon.enums.StatusCycle;
@@ -16,6 +17,7 @@ import hsf302.com.hiemmuon.enums.StatusCycle;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,6 +44,9 @@ public class AppointmentService {
 
     @Autowired
     private CycleStepRepository cycleStepRepository;
+
+    @Autowired
+    private SendMailService sendMailService;
 
     public List<AvailableScheduleDTO> getAvailableSchedules(int doctorId, LocalDate date) {
         List<DoctorSchedule> schedules = doctorScheduleRepository
@@ -360,5 +365,40 @@ public class AppointmentService {
         }
 
         return convertToDto(appointment);
+    }
+
+    @Transactional
+    public void sendAppointmentReminders() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime from = now.plusMinutes(10);
+        LocalDateTime to = now.plusMinutes(1460);
+
+        List<Appointment> appointments = appointmentRepository.findByStatusAppointmentAndDateBetweenAndIsReminded(
+                StatusAppointment.confirmed, from, to, false
+        );
+
+        for (Appointment appt : appointments) {
+            String email = appt.getCustomer().getUser().getEmail();
+            String name = appt.getCustomer().getUser().getName();
+            String doctor = appt.getDoctor().getUser().getName();
+            String time = appt.getDate().format(DateTimeFormatter.ofPattern("HH:mm dd-MM-yyyy"));
+
+            String subject = "⏰ Nhắc nhở lịch hẹn với bác sĩ " + doctor;
+            String content = String.format("""
+                Chào %s,
+
+                Bạn có lịch hẹn với bác sĩ %s vào lúc %s.
+
+                Vui lòng đến đúng giờ và chuẩn bị các giấy tờ cần thiết nếu có.
+
+                Trân trọng,
+                Hệ thống hỗ trợ điều trị HiemMuon.
+                """, name, doctor, time);
+
+            sendMailService.sendEmail(email, subject, content);
+
+            appt.setIsReminded(true);
+            appointmentRepository.save(appt);
+        }
     }
 }

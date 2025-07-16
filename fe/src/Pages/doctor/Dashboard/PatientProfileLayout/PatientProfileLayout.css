@@ -157,6 +157,7 @@
   font-weight: 500;
 }
 
+.patient-profile-status-badge.patient-profile-ongoing,
 .patient-profile-status-badge.patient-profile-active {
   background-color: #dcfce7;
   color: #166534;
@@ -347,6 +348,7 @@
   color: #1e293b;
 }
 
+.patient-profile-tab.patient-profile-ongoing,
 .patient-profile-tab.patient-profile-active {
   color: #1e293b;
   border-bottom-color: #1e293b;
@@ -1040,6 +1042,7 @@
 }
 
 
+.patient-profile-timeline-item.patient-profile-ongoing,
 .patient-profile-timeline-item.patient-profile-active {
   border-left: 4px solid #3b82f6;
   background: #f8fafc;
@@ -1075,7 +1078,7 @@
   border-color: #10b981;
 }
 
-
+.patient-profile-timeline-item.patient-profile-ongoing  .patient-profile-timeline-marker,
 .patient-profile-timeline-item.patient-profile-active .patient-profile-timeline-marker {
   background: #3b82f6;
   color: white;

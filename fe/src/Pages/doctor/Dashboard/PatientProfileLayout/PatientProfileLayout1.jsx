@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import ApiGateway from "@features/service/apiGateway";
 import "./PatientProfileLayout1.css";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import apiAppointment from "@features/service/apiAppointment";
 
 
@@ -771,10 +771,13 @@ export default PatientProfileLayout1;
 
 
 const ServiceTabContent = () => {
+  const navigate = useNavigate();
+  const { appointmentId } = useParams();
   const today = new Date();
   const [paymentForm, setPaymentForm] = useState({
     customerId: "",
     serviceId: "",
+    appointmentId: appointmentId,
     appointmentDate: "",
     note: "",
     total: 0,

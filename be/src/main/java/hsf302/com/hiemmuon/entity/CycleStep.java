@@ -1,11 +1,10 @@
 package hsf302.com.hiemmuon.entity;
 
-import hsf302.com.hiemmuon.dto.responseDto.CycleStepDTO;
 import hsf302.com.hiemmuon.enums.StatusCycle;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -39,11 +38,14 @@ public class CycleStep{
     private String description;
 
     @Column(name = "eventdate", nullable = true)
-    private LocalDate eventdate;
+    private LocalDateTime eventdate;
 
     @Column(name = "note", columnDefinition = "NVARCHAR(MAX)")
     private String note;
 
     @OneToMany(mappedBy = "cycleStep", fetch = FetchType.LAZY)
     private List<Appointment> appointments;
+
+    @Column(name = "is_reminded")
+    private Boolean isReminded = false;
 }

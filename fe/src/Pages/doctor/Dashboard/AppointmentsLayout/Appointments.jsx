@@ -155,8 +155,8 @@ export default function Appointments() {
                         onClick={() =>
                           navigate(
                             item.type === "tu_van"
-                            ? `/doctor-dashboard/appointments/tu_van/${item.appointmentId}`
-                            : `/doctor-dashboard/appointments/dieu_tri/${item.appointmentId}`,
+                            ? `/doctor-dashboard/appointments/tu_van/${item.appointmentId}/${item.customerId}`
+                            : `/doctor-dashboard/appointments/dieu_tri/${item.appointmentId}/${item.customerId}`,
                             { state: { appointmentId: item.appointmentId } }
                           )
                         }

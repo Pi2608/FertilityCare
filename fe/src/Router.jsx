@@ -236,7 +236,7 @@ export const router = createBrowserRouter([
           },
           {
             index: false,
-            path: "ivf",
+            path: "detail/:treatmentId",
             element: <IvfDetail />,
           }
         ]
@@ -317,7 +317,7 @@ export const router = createBrowserRouter([
 
 
   {
-    path: "doctor-dashboard/appointments/dieu_tri/:appointmentId",
+    path: "doctor-dashboard/appointments/dieu_tri/:appointmentId/:customerId",
     element: (
       // <DoctorRoute>
         <PageLayout />

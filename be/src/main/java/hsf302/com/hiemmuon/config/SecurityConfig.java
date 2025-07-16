@@ -62,7 +62,8 @@ public class SecurityConfig {
                                         "/api/doctors/me",
                                         "api/appointment-services/appointments/history",
                                         "/api/cycles/meD",
-                                        "/api/medicine/all"
+                                        "/api/medicine/all",
+                                        "/api/cycles/current-cycle/{customerId}"
                                 ).hasRole("DOCTOR")
 
                                 .requestMatchers(HttpMethod.GET,
@@ -171,6 +172,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "api/test-results/create").hasAnyRole("DOCTOR")
                                 .requestMatchers(HttpMethod.GET, "api/test-results/step/{stepId}").hasAnyRole("CUSTOMER", "DOCTOR")
                                 .requestMatchers(HttpMethod.GET, "api/test-results/customer").hasAnyRole("CUSTOMER")
+                                .requestMatchers(HttpMethod.GET, "api/test-results/customerId").hasAnyRole("DOCTOR")
                                 .requestMatchers(HttpMethod.PUT, "api/test-results/update/{id}").hasAnyRole("DOCTOR")
 
 

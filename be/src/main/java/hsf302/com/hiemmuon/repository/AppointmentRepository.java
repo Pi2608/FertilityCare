@@ -1,6 +1,7 @@
 package hsf302.com.hiemmuon.repository;
 
 import hsf302.com.hiemmuon.entity.Appointment;
+import hsf302.com.hiemmuon.enums.StatusAppointment;
 import hsf302.com.hiemmuon.enums.TypeAppointment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -30,4 +31,11 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
     List<Appointment> findByDoctor_DoctorId(int doctorId);
 
     List<Appointment> findByCustomer_CustomerId(int customerId);
+
+    List<Appointment> findByStatusAppointmentAndDateBetweenAndIsReminded(
+            StatusAppointment status,
+            LocalDateTime start,
+            LocalDateTime end,
+            Boolean isReminded
+    );
 }

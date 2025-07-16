@@ -48,4 +48,7 @@ public class Appointment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "step_id", nullable = true)
     private CycleStep cycleStep;
+
+    @Column(name = "is_reminded", nullable = false)
+    private Boolean isReminded = false;
 }
