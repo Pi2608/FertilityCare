@@ -4,6 +4,7 @@ import "./PatientProfileLayout1.css";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import apiAppointment from "@features/service/apiAppointment";
 import apiNote from "@features/service/apiNote";
+import apiMessage from "@features/service/apiMessage";
 
 const PatientProfileLayout1 = () => {
   const [appointmentDetail, setAppointmentDetail] = useState(null);
@@ -12,6 +13,8 @@ const PatientProfileLayout1 = () => {
   const [showConfirmPopup, setShowConfirmPopup] = useState(false);
   const [isAddingNote, setIsAddingNote] = useState(false);
   const [newNote, setNewNote] = useState("");
+  const [showMessagePopup, setShowMessagePopup] = useState(false);
+  const [messageContent, setMessageContent] = useState("");
 
   const [newResult, setNewResult] = useState({
     name: "",
@@ -96,6 +99,28 @@ const PatientProfileLayout1 = () => {
         err.response ? err.response.data : err.message
       ); // Log chi tiết lỗi
       alert("Không thể cập nhật ghi chú.");
+    }
+  };
+
+  const handleSendMessage = async () => {
+    try {
+      if (!messageContent.trim()) {
+        alert("Vui lòng nhập nội dung tin nhắn.");
+        return;
+      }
+  
+      const payload = {
+        receiverId: appointmentDetail.customerId, // Lấy customerId từ appointmentDetail
+        message: messageContent,
+      };
+  
+      await apiMessage.sendMessage(payload);
+      alert("Gửi tin nhắn thành công!");
+      setMessageContent("");
+      setShowMessagePopup(false);
+    } catch (err) {
+      console.error("Lỗi khi gửi tin nhắn:", err);
+      alert("Không thể gửi tin nhắn.");
     }
   };
 
@@ -604,6 +629,41 @@ const PatientProfileLayout1 = () => {
           </div>
         </div>
       )}
+
+{showMessagePopup && (
+      <div className="patient-profile-popup">
+        <div className="patient-profile-popup-content">
+          <h3>Gửi tin nhắn</h3>
+          <p>Nhập tin nhắn cho {patientData.name}</p>
+          <div className="form-group">
+            <textarea
+              className="form-textarea"
+              rows={4}
+              placeholder="Nhập nội dung tin nhắn..."
+              value={messageContent}
+              onChange={(e) => setMessageContent(e.target.value)}
+            />
+          </div>
+          <div className="button-group">
+            <button
+              className="btn btn-primary"
+              onClick={handleSendMessage}
+            >
+              Gửi
+            </button>
+            <button
+              className="btn btn-outline"
+              onClick={() => {
+                setShowMessagePopup(false);
+                setMessageContent("");
+              }}
+            >
+              Hủy
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
   
       <div className="patient-profile-container">
         <div className="patient-profile-sidebar">
@@ -636,8 +696,13 @@ const PatientProfileLayout1 = () => {
           </div>
   
           <div className="patient-profile-sidebar-actions">
-            <button className="patient-profile-btn-outline">💬 Nhắn tin</button>
-          </div>
+  <button
+    className="patient-profile-btn-outline"
+    onClick={() => setShowMessagePopup(true)}
+  >
+    💬 Nhắn tin
+  </button>
+</div>
         </div>
   
         <div className="patient-profile-main-content">
