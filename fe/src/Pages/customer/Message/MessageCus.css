@@ -1,221 +1,253 @@
-.message-cus-wrapper {
-    flex: 1;
-    display: flex;
-    height: 100%;
-    width: 90%;
-    background: #f8fafc;
-    font-family: 'Segoe UI', sans-serif;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  }
-  
-  .name {
-    font-weight: 600;
-    margin-bottom: 2px;
-  }
-
-  .text-info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    overflow: hidden;
-  }
+.message-wrapper {
+  flex: 1;
+  display: flex;
+  height: calc(100vh - 120px);
+  width: 90%;
+  background: #f8fafc;
+  font-family: 'Segoe UI', sans-serif;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
 
 
-  .preview {
-    font-size: 13px;
-    color: #666;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 200px; /* tuỳ layout */
-  }
+.name {
+  font-weight: 600;
+  margin-bottom: 2px;
+}
 
 
+.text-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
 
-  .patient-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px;
-    border-radius: 8px;
-    cursor: pointer;
-  }
+
+.preview {
+  font-size: 13px;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px; /* tuỳ layout */
+}
 
 
 
-  .avatar-circle {
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    background-color: #94a3b8;
-    color: white;
-    font-weight: bold;
-    font-size: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
 
-  .message-bubble.me {
-    background-color: #d1f7d6;
-    text-align: right;
-    align-self: flex-end;
-  }
+.patient-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
 
-  .message-bubble.other {
-    background-color: #e3e3e3;
-    text-align: left;
-    align-self: flex-start;
-  }
-  
-  .message-cus-wrapper .sidebar {
-    width: 320px;
-    border-right: 1px solid #e5e7eb;
-    background: #f8fafc;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .message-cus-wrapper .sidebar h3 {
-    margin: 0;
-    padding: 20px 16px;
-    background: #f8fafc;
-    flex-shrink: 0;
-  }
-  
-  .message-cus-wrapper .patient-list {
-    flex: 1;
-    overflow-y: auto;
-    padding: 0 16px;
-  }
-  
-  .message-cus-wrapper .patient-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-  
-  .message-cus-wrapper .patient-item:hover {
-    background: #e5e7eb;
-  }
-  
-  .message-cus-wrapper .patient-item.active {
-    background: #dbeafe;
-  }
-  
-  .message-cus-wrapper .patient-item img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-  }
-  
-  .message-cus-wrapper .name {
-    font-weight: 600;
-  }
-  
-  .message-cus-wrapper .preview {
-    font-size: 13px;
-    color: #666;
-  }
-  
-  .message-cus-wrapper .chat-box {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    background: #fff;
-  }
-  
-  .message-cus-wrapper .chat-header {
-    padding: 20px 24px;
-    border-bottom: 1px solid #e5e7eb;
-    background: #f8fafc;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-shrink: 0;
-  }
-  
-  .message-cus-wrapper .chat-header img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-  }
-  
-  .message-cus-wrapper .chat-header h4 {
-    margin: 0;
-    font-size: 18px;
-  }
-  
-  .message-cus-wrapper .chat-content {
-    flex: 1;
-    padding: 0 24px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    background: #fff;
-    min-height: 0;
-  }
-  
-  .message-cus-wrapper .message-bubble {
-    max-width: 70%;
-    padding: 10px 14px;
-    border-radius: 12px;
-    font-size: 14px;
-    line-height: 1.5;
-    position: relative;
-  }
-  
-  .message-cus-wrapper .message-bubble.patient {
-    background: #e2e8f0;
-    align-self: flex-start;
-    border-top-left-radius: 0;
-  }
-  
-  .message-cus-wrapper .message-bubble.doctor {
-    background: #dcfce7;
-    align-self: flex-end;
-    border-top-right-radius: 0;
-  }
-  
-  .message-cus-wrapper .message-bubble .time {
-    font-size: 11px;
-    color: #666;
-    margin-top: 4px;
-    text-align: right;
-  }
-  
-  .message-cus-wrapper .chat-input {
-    padding: 20px 24px;
-    background: #f8fafc;
-    border-top: 1px solid #e5e7eb;
-    display: flex;
-    gap: 12px;
-    flex-shrink: 0;
-  }
-  
-  .message-cus-wrapper .chat-input input {
-    flex: 1;
-    padding: 12px;
-    font-size: 14px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-  }
-  
-  .message-cus-wrapper .chat-input button {
-    background: #e11d48;
-    color: white;
-    border: none;
-    padding: 10px 18px;
-    font-size: 14px;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-  
+
+
+
+.avatar-circle {
+width: 52px;
+height: 52px;
+border-radius: 50%;
+background-color: #94a3b8;
+color: white;
+font-weight: bold;
+font-size: 22px;
+display: flex;
+align-items: center;
+justify-content: center;
+flex-shrink: 0;
+}
+
+
+
+
+
+
+.message-bubble.me {
+  background-color: #d1f7d6;
+  text-align: right;
+  align-self: flex-end;
+}
+
+
+.message-bubble.other {
+  background-color: #e3e3e3;
+  text-align: left;
+  align-self: flex-start;
+}
+
+
+
+
+.message-wrapper .sidebar {
+  width: 320px;
+  border-right: 1px solid #e5e7eb;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.message-wrapper .sidebar h3 {
+  margin: 0;
+  padding: 20px 16px;
+  background: #f8fafc;
+  flex-shrink: 0;
+}
+
+
+.message-wrapper .patient-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 16px 16px 16px;
+}
+
+
+.message-wrapper .patient-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+
+.message-wrapper .patient-item:hover {
+  background: #e5e7eb;
+}
+
+
+.message-wrapper .patient-item.active {
+  background: #dbeafe;
+}
+
+
+.message-wrapper .patient-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+
+.message-wrapper .name {
+  font-weight: 600;
+}
+
+
+.message-wrapper .preview {
+  font-size: 13px;
+  color: #666;
+}
+
+
+.message-wrapper .chat-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+
+.message-wrapper .chat-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+
+.message-wrapper .chat-header img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+
+.message-wrapper .chat-header h4 {
+  margin: 0;
+  font-size: 18px;
+}
+
+
+.message-wrapper .chat-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #fff;
+  min-height: 0;
+}
+
+
+.message-wrapper .message-bubble {
+  max-width: 70%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  position: relative;
+}
+
+
+.message-wrapper .message-bubble.patient {
+  background: #e2e8f0;
+  align-self: flex-start;
+  border-top-left-radius: 0;
+}
+
+
+.message-wrapper .message-bubble.doctor {
+  background: #dcfce7;
+  align-self: flex-end;
+  border-top-right-radius: 0;
+}
+
+
+.message-wrapper .message-bubble .time {
+  font-size: 11px;
+  color: #666;
+  margin-top: 4px;
+  text-align: right;
+}
+
+
+.message-wrapper .chat-input {
+  padding: 20px 24px;
+  background: #f8fafc;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+
+.message-wrapper .chat-input input {
+  flex: 1;
+  padding: 12px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+
+.message-wrapper .chat-input button {
+  background: #e11d48;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  font-size: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
