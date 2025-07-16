@@ -9,6 +9,7 @@ const PatientProfileLayout1 = () => {
   const [appointmentDetail, setAppointmentDetail] = useState(null);
   const [activeTab, setActiveTab] = useState("notes");
   const [showResultForm, setShowResultForm] = useState(false);
+  const [showConfirmPopup, setShowConfirmPopup] = useState(false);
   const [isAddingNote, setIsAddingNote] = useState(false);
   const [newNote, setNewNote] = useState("");
 
@@ -66,27 +67,58 @@ const PatientProfileLayout1 = () => {
         alert("Vui lòng nhập ghi chú.");
         return;
       }
-  
+
       const payload = {
         note: newNote,
-        status: "confirmed" // Gán cứng giá trị status là "confirmed"
+        status: "confirmed", // Gán cứng giá trị status là "confirmed"
       };
       console.log("Payload gửi đi:", payload); // Log payload
       console.log("Appointment ID:", appointmentDetail.appointmentId); // Log appointmentId
-  
-      const response = await apiNote.updateNoteForAppointment(appointmentDetail.appointmentId, payload);
+
+      const response = await apiNote.updateNoteForAppointment(
+        appointmentDetail.appointmentId,
+        payload
+      );
       console.log("Response từ server:", response); // Log phản hồi từ server
-  
+
       alert("Cập nhật ghi chú thành công!");
-  
-      const updated = await apiAppointment.getAppointmentDetailById(appointmentDetail.appointmentId);
+
+      const updated = await apiAppointment.getAppointmentDetailById(
+        appointmentDetail.appointmentId
+      );
       setAppointmentDetail(updated);
       setIsAddingNote(false);
       setNewNote("");
     } catch (err) {
       console.error("Lỗi khi cập nhật ghi chú:", err);
-      console.error("Chi tiết lỗi:", err.response ? err.response.data : err.message); // Log chi tiết lỗi
+      console.error(
+        "Chi tiết lỗi:",
+        err.response ? err.response.data : err.message
+      ); // Log chi tiết lỗi
       alert("Không thể cập nhật ghi chú.");
+    }
+  };
+
+  const handleEndAppointment = async (status) => {
+    try {
+      const payload = { status };
+      await apiNote.updateNoteForAppointment(
+        appointmentDetail.appointmentId,
+        payload
+      );
+      alert(
+        `Cập nhật thành công: ${
+          status === "done" ? "Hoàn thành" : "Thất bại"
+        }!`
+      );
+      const updated = await apiAppointment.getAppointmentDetailById(
+        appointmentDetail.appointmentId
+      );
+      setAppointmentDetail(updated);
+      setShowConfirmPopup(false);
+    } catch (err) {
+      console.error("Lỗi khi cập nhật trạng thái cuộc hẹn:", err);
+      alert("Không thể cập nhật trạng thái cuộc hẹn.");
     }
   };
 
@@ -256,7 +288,7 @@ const PatientProfileLayout1 = () => {
 
   const renderResultsTab = () => {
     const testResults = appointmentDetail?.testResultViewDTOList || [];
-
+  
     return (
       <div className="patient-profile-tab-content">
         <div className="patient-profile-results-header">
@@ -271,7 +303,7 @@ const PatientProfileLayout1 = () => {
             ➕ Thêm kết quả mới
           </button>
         </div>
-
+  
         {showResultForm && (
           <div className="patient-profile-result-form">
             <div className="form-group">
@@ -350,7 +382,7 @@ const PatientProfileLayout1 = () => {
             </div>
           </div>
         )}
-
+  
         <div className="patient-profile-results-by-phase">
           {testResults.filter((r) => !isNaN(Number(r.value))).length > 0 ? (
             <div className="patient-profile-phase-results-container">
@@ -535,12 +567,44 @@ const PatientProfileLayout1 = () => {
           </div>
         </div>
         <div className="patient-profile-header-actions">
-          <button className="patient-profile-btn-danger">
+          <button
+            className="patient-profile-btn-danger"
+            onClick={() => setShowConfirmPopup(true)}
+          >
             Kết thúc cuộc hẹn
           </button>
         </div>
       </div>
-
+  
+      {showConfirmPopup && (
+        <div className="patient-profile-popup">
+          <div className="patient-profile-popup-content">
+            <h3>Xác nhận cuộc hẹn</h3>
+            <p>Bạn có chắc chắn muốn kết thúc cuộc hẹn này?</p>
+            <div className="button-group">
+              <button
+                className="btn btn-danger"
+                onClick={() => handleEndAppointment("canceled")}
+              >
+                Đánh dấu Thất bại
+              </button>
+              <button
+                className="btn btn-outline"
+                onClick={() => setShowConfirmPopup(false)}
+              >
+                Hủy
+              </button>
+              <button
+                className="btn btn-primary"
+                onClick={() => handleEndAppointment("done")}
+              >
+                Xác nhận
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+  
       <div className="patient-profile-container">
         <div className="patient-profile-sidebar">
           <div className="patient-profile-patient-info">
@@ -555,32 +619,27 @@ const PatientProfileLayout1 = () => {
               </span>
             </div>
           </div>
-
+  
           <div className="patient-profile-patient-basic-info">
             <div className="patient-profile-info-row">
               <span className="patient-profile-label">Tuổi:</span>
               <span className="patient-profile-value">{patientData.age}</span>
             </div>
-
             <div className="patient-profile-info-row">
               <span className="patient-profile-label">Ngày bắt đầu:</span>
-              <span className="patient-profile-value">
-                {patientData.startDate}
-              </span>
+              <span className="patient-profile-value">{patientData.startDate}</span>
             </div>
             <div className="patient-profile-info-row">
               <span className="patient-profile-label">Bác sĩ phụ trách:</span>
-              <span className="patient-profile-value">
-                {patientData.doctor}
-              </span>
+              <span className="patient-profile-value">{patientData.doctor}</span>
             </div>
           </div>
-
+  
           <div className="patient-profile-sidebar-actions">
             <button className="patient-profile-btn-outline">💬 Nhắn tin</button>
           </div>
         </div>
-
+  
         <div className="patient-profile-main-content">
           <div className="patient-profile-tabs">
             {tabs.map((tab) => (
