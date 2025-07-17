@@ -32,6 +32,9 @@ public class UpdateServiceDTO {
     @Size(max = 1000, message = "Thông số kỹ thuật không được vượt quá 1000 ký tự")
     private String specifications;
 
+    @NotBlank(message = "Lợi ích không được để trống")
+    private String benefit;
+
     @Size(max = 2000, message = "Thông tin đối tượng phù hợp không được vượt quá 2000 ký tự")
     private String targetPatient;
 
