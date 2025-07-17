@@ -47,16 +47,6 @@
   border-radius: 50%;
 }
 
-/* Content */
-.treatment-service-content {
-  flex: 1;
-  padding: 24px;
-  background-color: white;
-  margin: 24px;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
 /* Content Header */
 .content-header {
   display: flex;

@@ -82,15 +82,6 @@ const Dashboard = () => {
         <h1 className="page-title">Báo cáo thống kê</h1>
         <div className="header-content">
           <div className="header-actions">
-            <div className="user-profile">
-              <div className="avatar">
-                <span>JC</span>
-              </div>
-              <div className="user-info">
-                <div className="user-name">Jonitha Cathrine</div>
-                <div className="user-role">Admin</div>
-              </div>
-            </div>
           </div>
         </div>
       </header>

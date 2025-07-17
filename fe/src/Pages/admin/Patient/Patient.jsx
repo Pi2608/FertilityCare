@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import "./Patient.css";
+import { Search } from "lucide-react";
 import CustomerAPI from "../../../features/service/apiCustomer1";
 
 const Patient = () => {
@@ -52,15 +53,6 @@ const Patient = () => {
       <header className="patient-header">
         <h1 className="page-title">Thông tin bệnh nhân</h1>
         <div className="header-actions">
-          <div className="user-profile">
-            <div className="avatar">
-              <img src="/placeholder.svg?height=40&width=40" alt="Admin" />
-            </div>
-            <div className="user-info">
-              <div className="user-name">Jonitha Cathrine</div>
-              <div className="user-role">Admin</div>
-            </div>
-          </div>
         </div>
       </header>
 
@@ -69,10 +61,10 @@ const Patient = () => {
         {/* Search */}
         <div className="search-section">
           <div className="search-box">
-            <span className="search-icon">🔍</span>
+            <Search className="search-icon" size={20} />
             <input
               type="text"
-              placeholder="Tìm kiếm'"
+              placeholder="Tìm kiếm"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
