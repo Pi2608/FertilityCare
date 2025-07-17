@@ -287,10 +287,13 @@ public class AppointmentService {
         if(!"confirmed".equalsIgnoreCase(String.valueOf(appointment.getStatusAppointment()))){
             throw new RuntimeException("Chỉ có thể cap nhật dịch vụ khi cuộc hẹn là confirmed");
         }
-
-        appointment.setService(treatmentServiceRepository.findById(dto.getServiceId()));
-        appointment.setNote(dto.getNote());
-        appointment.setStatusAppointment(StatusAppointment.valueOf(dto.getStatus()));
+        if(appointment.getTypeAppointment().equals(TypeAppointment.tu_van)){
+            appointment.setService(treatmentServiceRepository.findById(dto.getServiceId()));
+        }
+        if (dto.getNote() != null && !dto.getNote().trim().isEmpty()) {
+            appointment.setNote(dto.getNote());
+        }
+        appointment.setStatusAppointment(StatusAppointment.done);
 
         // ✅ Liên kết với testResult nếu bạn muốn
         if (dto.getTestResultId() != null) {
