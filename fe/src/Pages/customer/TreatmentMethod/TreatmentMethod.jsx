@@ -21,7 +21,7 @@ function TreatmentMethod() {
     const fetchTreatmentData = async () => {
         try {
             const response = await ApiGateway.getActiveTreatments();
-            const data = response.data;
+            const data = response;
    
             const imageMap = {
                 'IVF': IVF,

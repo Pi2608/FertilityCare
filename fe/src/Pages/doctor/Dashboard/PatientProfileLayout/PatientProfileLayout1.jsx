@@ -4,13 +4,11 @@ import "./PatientProfileLayout1.css";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import apiAppointment from "@features/service/apiAppointment";
 
-
-
-
 const PatientProfileLayout1 = () => {
   const [appointmentDetail, setAppointmentDetail] = useState(null);
   const [activeTab, setActiveTab] = useState("notes");
   const [showResultForm, setShowResultForm] = useState(false);
+  const [services, setServices] = useState([]);
   const [newResult, setNewResult] = useState({
     name: "",
     value: "",
@@ -20,17 +18,14 @@ const PatientProfileLayout1 = () => {
     note: "",
   });
 
-
   const handleToggleResultForm = () => {
     setShowResultForm((prev) => !prev);
   };
-
 
   const handleResultInputChange = (e) => {
     const { name, value } = e.target;
     setNewResult((prev) => ({ ...prev, [name]: value }));
   };
-
 
   const handleCreateTestResult = async () => {
     try {
@@ -39,7 +34,6 @@ const PatientProfileLayout1 = () => {
         value: parseFloat(newResult.value),
         appointmentId: appointmentDetail.appointmentId,
       };
-
 
       await apiAppointment.createTestResult(payload);
       alert("Tạo kết quả xét nghiệm thành công!");
@@ -78,6 +72,9 @@ const PatientProfileLayout1 = () => {
     prescribedMeds: false,
   });
 
+  useEffect(() => {
+    getService();
+  }, []);
 
   useEffect(() => {
     if (!appointmentId) {
@@ -108,6 +105,16 @@ const PatientProfileLayout1 = () => {
     }
   }, [appointmentId]);
 
+  
+  const getService = async () => {
+    try {
+      const res = await ApiGateway.getActiveTreatments();
+      console.log("Dịch vụ:", res);
+      setServices(res);
+    } catch (error) {
+      console.error("Lỗi khi lấy danh sách dịch vụ:", error);
+    }
+  }
 
   const toggleSection = (section) => {
     setExpandedSections((prev) => ({
@@ -264,7 +271,7 @@ const PatientProfileLayout1 = () => {
   ];
 
 
-  const renderServiceTab = () => <ServiceTabContent />;
+  const renderServiceTab = () => <ServiceTabContent services={services} />;
 
 
   const renderNotesTab = () => (
@@ -770,12 +777,12 @@ const PatientProfileLayout1 = () => {
 export default PatientProfileLayout1;
 
 
-const ServiceTabContent = () => {
+const ServiceTabContent = ({services}) => {
   const navigate = useNavigate();
-  const { appointmentId } = useParams();
+  const { appointmentId, customerId } = useParams();
   const today = new Date();
   const [paymentForm, setPaymentForm] = useState({
-    customerId: "",
+    customerId: customerId,
     serviceId: "",
     appointmentId: appointmentId,
     appointmentDate: "",
@@ -784,23 +791,15 @@ const ServiceTabContent = () => {
     type: "",
   });
 
-
-  const [services, setServices] = useState([
-    { id: 1, name: "IUI", price: 5000000 },
-    { id: 2, name: "IVF", price: 70000000 },
-  ]);
-
-
   const typeOptions = [
     { value: "test", label: "Test" },
     { value: "treatment", label: "Điều trị" },
   ];
 
-
   useEffect(() => {
     if (paymentForm.serviceId) {
       const selectedService = services.find(
-        (service) => service.id.toString() === paymentForm.serviceId
+        (service) => service.serviceId.toString() === paymentForm.serviceId
       );
       if (selectedService) {
         setPaymentForm((prev) => ({ ...prev, total: selectedService.price }));
@@ -809,7 +808,6 @@ const ServiceTabContent = () => {
       setPaymentForm((prev) => ({ ...prev, total: 0 }));
     }
   }, [paymentForm.serviceId, services]);
-
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -820,6 +818,7 @@ const ServiceTabContent = () => {
   const handleSubmit = async () => {
     try {
       const res = await ApiGateway.createPayment(paymentForm);
+      console.log(paymentForm)
       console.log("Tạo chỉ định thành công:", res);
       alert("Tạo chỉ định thành công!");
     } catch (error) {
@@ -854,8 +853,8 @@ const ServiceTabContent = () => {
           onChange={handleInputChange}
         >
           <option value="">Chọn phương pháp</option>
-          {services.map((service) => (
-            <option key={service.id} value={service.id}>
+          {services?.map((service) => (
+            <option key={service.serviceId} value={service.serviceId}>
               {service.name}
             </option>
           ))}

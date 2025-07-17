@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect,  useCallback, memo } from "react"
 import ApiGateway from "../../../../features/service/apiGateway"
 import { useParams } from "react-router-dom"
+import { HashLoader, BeatLoader } from "react-spinners";
 import { showSuccess, showFail, confirmToast } from "@lib/toast/toast"
 import "./PatientProfileLayout.css"
 
-
 const PatientProfileLayout = () => {
-  const { customerId } = useParams();
+  const { appointmentId, customerId } = useParams();
   const [activeTab, setActiveTab] = useState("overview")
   const [expandedSections, setExpandedSections] = useState({
     medicalHistory: true,
@@ -26,58 +26,26 @@ const PatientProfileLayout = () => {
   const [testResults, setTestResults] = useState([]); // Kết quả xét nghiệm
   const [loading, setLoading] = useState(false); // Loading chung cho các thao tác async
 
-  const [createReExamAppointmentForm, setCreateReExamAppointmentForm] = useState(
-    {
-      customerId: "",
-      serviceId: "",
-      date: "",
-      note: "",
-      cycleStepId: ""
-    }
-  ); // Form tạo lịch hẹn
+  const [createMedicationScheduleForm, setCreateMedicationScheduleForm] = useState({
+    cycleId: "",
+    stepId: ""
+  })
 
-  const [createMedicationScheduleForm, setCreateMedicationScheduleForm] = useState(
-    {
-      medicineId: "",
-      cycleId: "",
-      stepId: "",
-      startDate: "",
-      endDate: ""
-    }
-  ) // Form tạo lịch uống thuốc
+  const [updateCycleStepNoteForm, setUpdateCycleStepNoteForm] = useState({
+    cycleId: "",
+    stepOrder: "",
+    note: ""
+  });
 
-  const [createTestResultForm, setCreateTestResultForm] = useState(
-    {
-      appointmentId: "",
-      name: "",
-      value: "",
-      unit: "",
-      referenceRange: "",
-      testDate: "",
-      note: "",
-      cycleStepId: ""
-    }
-  ) // Form tạo kết quả xét nghiệm
-
-  const [updateCycleStepNoteForm, setUpdateCycleStepNoteForm] = useState(
-    {
-      cycleId: "",
-      stepOrder: "",
-      note: ""
-    }
-  ); // Form cập nhật ghi chú chu kỳ điều trị
-
-  const [updateTestResultForm, setUpdateTestResultForm] = useState(
-    {
-      id: "",
-      name: "",
-      value: "",
-      unit: "",
-      referenceRange: "",
-      note: "",
-      testDate: ""
-    }
-  ) // Form cập nhật kết quả xét nghiệm
+  const [updateTestResultForm, setUpdateTestResultForm] = useState({
+    id: "",
+    name: "",
+    value: "",
+    unit: "",
+    referenceRange: "",
+    note: "",
+    testDate: ""
+  });
 
   const [isOpenCreateReExamModal, setIsOpenCreateReExamModal] = useState(false); // Modal tạo lịch hẹn tái khám
   const [isOpenCreateMedicationModal, setIsOpenCreateMedicationModal] = useState(false); // Modal tạo lịch uống thuốc
@@ -133,164 +101,47 @@ const PatientProfileLayout = () => {
     { id: "medications", label: "Thuốc", icon: "💊" },
   ]
 
+  //Open handlers
+  const handleOpenCreateReExamAppointmentModal = useCallback(() => {
+    setIsOpenCreateReExamModal(true);
+  }, []);
 
-  // Data for timeline - linked to other tabs
-  const treatmentPhases = [
-    {
-      id: 1,
-      title: "Giai đoạn 1: Chuẩn bị",
-      period: "01/04 - 30/04/2024",
-      status: "completed",
-      notes: [
-        {
-          date: "30/04/2024",
-          content: "Bệnh nhân đã hoàn thành tất cả xét nghiệm cần thiết. Kết quả tốt, sẵn sàng cho chu kỳ điều trị IVF.",
-          doctor: "BS. Nguyễn Lan Anh"
-        }
-      ],
-      results: [
-        { name: "AMH", value: "2.8 ng/ml", status: "Bình thường", date: "25/04/2024" },
-        { name: "FSH", value: "6.2 mIU/ml", status: "Tốt", date: "25/04/2024" },
-        { name: "Siêu âm buồng trứng", value: "12 nang trứng", status: "Tốt", date: "28/04/2024" }
-      ],
-      medications: [
-        { name: "Folic Acid 5mg", usage: "Uống 1 viên/ngày, sau ăn", period: "01/04 - 30/04/2024" },
-        { name: "Vitamin D3 1000IU", usage: "Uống 1 viên/ngày, buổi sáng", period: "01/04 - 30/04/2024" }
-      ]
-    },
-    {
-      id: 2,
-      title: "Giai đoạn 2: Kích thích buồng trứng",
-      period: "01/05 - 20/05/2024",
-      status: "active",
-      notes: [
-        {
-          date: "20/05/2024",
-          content: "Phản ứng tốt với thuốc kích thích. Nang trứng phát triển đều, kích thước phù hợp. Chuẩn bị trigger shot.",
-          doctor: "BS. Nguyễn Lan Anh"
-        },
-        {
-          date: "15/05/2024",
-          content: "Theo dõi phản ứng kích thích. E2 tăng tốt, nang trứng phát triển đồng đều. Tiếp tục protocol.",
-          doctor: "BS. Nguyễn Lan Anh"
-        }
-      ],
-      results: [
-        { name: "E2", value: "1200 pg/ml", status: "Tốt", date: "18/05/2024" },
-        { name: "Siêu âm theo dõi", value: "8 nang trứng >14mm", status: "Đạt yêu cầu", date: "18/05/2024" },
-        { name: "LH", value: "2.1 mIU/ml", status: "Ổn định", date: "18/05/2024" }
-      ],
-      medications: [
-        { name: "Gonal-F 450 IU", usage: "Tiêm dưới da, buổi tối (21:00)", period: "01/05 - 18/05/2024" },
-        { name: "Cetrotide 0.25mg", usage: "Tiêm dưới da, buổi sáng (08:00)", period: "10/05 - 18/05/2024" },
-        { name: "Ovitrelle 250mcg", usage: "Tiêm dưới da, trigger shot", period: "20/05/2024" }
-      ]
-    },
-    {
-      id: 3,
-      title: "Giai đoạn 3: Lấy trứng",
-      period: "",
-      status: "upcoming",
-      notes: [
-       
-      ],
-      results: [],
-      medications: []
-    }
-  ]
+  const handleOpenCreateMedicationModal = useCallback(() => {
+    setIsOpenCreateMedicationModal(true);
+  }, []);
 
-  const handleReExamChange = (field, value) => {
-    setCreateReExamAppointmentForm(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  }; 
+  const handleOpenCreateTestResultModal = useCallback(() => {
+    setIsOpenCreateTestResultModal(true);
+  }, []);
 
-  const handleCreateReExamAppointment = async (e) => {
-    e.preventDefault();
-    try {
-      await createReExamAppointment(createReExamAppointmentForm);
-      showSuccess("Đặt lịch tái khám thành công");
-      setIsOpenCreateReExamModal(false);
-    } catch {
-      showFail("Đặt lịch thất bại");
-    }
+  const handleOpenUpdateCycleStepNoteModal = useCallback(() => {
+    setIsOpenUpdateCycleStepNoteModal(true);
+  }, []);
+
+  const handleOpenUpdateTestResultModal = useCallback(() => {
+    setIsOpenUpdateTestResultModal(true);
+  }, []);
+
+  // Close handlers
+  const handleCloseCreateReExamAppointmentModal = () => {
+    setIsOpenCreateReExamModal(false);
   };
 
-  const handleMedicationChange = (field, value) => {
-    setCreateMedicationScheduleForm(prev => ({
-      ...prev,
-      [field]: value
-    }));
+  const handleCloseCreateMedicationModal = () => {
+    setIsOpenCreateMedicationModal(false);
   };
 
-  const handleCreateMedicationSchedule = async (e) => {
-    e.preventDefault();
-    try {
-      await createMedicationSchedule(createMedicationScheduleForm);
-      showSuccess("Tạo lịch uống thuốc thành công");
-      setIsOpenCreateMedicationModal(false);
-    } catch {
-      showFail("Tạo lịch uống thuốc thất bại");
-    }
+  const handleCloseCreateTestResultModal = () => {
+    setIsOpenCreateTestResultModal(false);
   };
 
-  const handleTestResultChange = (field, value) => {
-    setCreateTestResultForm(prev => ({
-      ...prev,
-      [field]: value
-    }));
+  const handleCloseUpdateCycleStepNoteModal = () => {
+    setIsOpenUpdateCycleStepNoteModal(false);
   };
 
-  const handleCreateTestResult = async (e) => {
-    e.preventDefault();
-    try {
-      await createTestResult(createTestResultForm);
-      showSuccess("Tạo kết quả xét nghiệm thành công");
-      setIsOpenCreateTestResultModal(false);
-    } catch {
-      showFail("Tạo kết quả xét nghiệm thất bại");
-    }
-  };
-
-  const handleUpdateCycleNoteChange = (field, value) => {
-    setUpdateCycleStepNoteForm(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const handleUpdateCycleStepNote = async (e) => {
-    e.preventDefault();
-    try {
-      const { cycleId, stepOrder, note } = updateCycleStepNoteForm;
-      await updateCycleStepNote(cycleId, stepOrder, note);
-      showSuccess("Cập nhật ghi chú thành công");
-      setIsOpenUpdateCycleStepNoteModal(false);
-    } catch {
-      showFail("Cập nhật ghi chú thất bại");
-    }
-  };
-
-  const handleUpdateTestResultChange = (field, value) => {
-    setUpdateTestResultForm(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const handleUpdateTestResult = async (e) => {
-    e.preventDefault();
-    try {
-      const { id, ...dto } = updateTestResultForm;
-      await updateTestResult(id, dto);
-      showSuccess("Cập nhật kết quả xét nghiệm thành công");
-      setIsOpenUpdateTestResultModal(false);
-    } catch {
-      showFail("Cập nhật kết quả xét nghiệm thất bại");
-    }
-  };
-
+  const handleCloseUpdateTestResultModal = () => {
+    setIsOpenUpdateTestResultModal(false);
+  };  
 
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
@@ -316,21 +167,10 @@ const PatientProfileLayout = () => {
   }
 
   const collectNotesFromAppointments = (cycleStepData) => {
-    console.log("Cycle Step Data:", cycleStepData);
     if (!cycleStepData?.appointment || !Array.isArray(cycleStepData.appointment)) {
       return [];
     }
 
-    let abc = cycleStepData.appointment
-      .filter(app => app.note?.trim())      
-      .map(app => ({
-        note: app.note.trim(),
-        date: app.date.split('T')[0],
-        doctor: app.doctorName
-      }));
-
-    console.log("Filtered Notes:", abc);
-    // Lọc và lấy note nếu có nội dung
     return cycleStepData.appointment
       .filter(app => app.note?.trim())      
       .map(app => ({
@@ -340,57 +180,49 @@ const PatientProfileLayout = () => {
       }));
   }
 
-  useEffect(() => {
-    fetchData();
-  }, [])
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      // Reset các state lưu mảng chi tiết trước khi fetch mới
+      setCycleStepDetails([]);
+      setPastAndCurrentSteps([]);
+      setMedicationSchedules([]);
+      
+      let crtCycle = await getCurrentCyclesOfPatient(customerId);
 
-  const fetchData = async () => {
-      setLoading(true);
-      try {
-        // 1. Lấy chu kỳ điều trị hiện tại của bệnh nhân
-        let crtCycle = await getCurrentCyclesOfPatient(customerId);
-        
+      await Promise.all([
+        getAppointmentHistoryByCustomer(customerId),
+        getTestResultsByCustomer(customerId),
+        getAllMedicines(),
+      ]);
+
+      if (crtCycle?.data?.cycleId) {
         await Promise.all([
-          
-          // 2. Lấy lịch sử cuộc hẹn
-          getAppointmentHistoryByCustomer(customerId),
-
-          // 3. Lấy kết quả xét nghiệm
-          getTestResultsByCustomer(customerId),
-
-          // 4. Lấy danh sách thuốc
-          getAllMedicines(),
-          
-        ])
-
-        // 5. Nếu có chu kỳ, lấy chi tiết bước điều trị
-        if (crtCycle?.data?.cycleId) {
-          await Promise.all([
-            getCycleStepNames(crtCycle.data.cycleId),
-            getCycleStepsByCycle(crtCycle.data.cycleId),
-            ...crtCycle.data.cycleStep.map(element =>
-              getCycleStepsDetails(element.stepId)
-            ),
-            ...crtCycle.data.cycleStep.map(element =>
-              getCycleStepDetails(crtCycle.data.cycleId, element.stepOrder)
-            ),
-            ...crtCycle.data.cycleStep.map(element =>
-              getSchedulesByCycleStep(crtCycle.data.cycleId, element.stepOrder)
-            )
-          ]);
-        }
-      } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu:", error);
-      } finally {
-        setLoading(false);
+          getCycleStepNames(crtCycle.data.cycleId),
+          getCycleStepsByCycle(crtCycle.data.cycleId),
+          ...crtCycle.data.cycleStep.map(element =>
+            getCycleStepsDetails(element.stepId)
+          ),
+          ...crtCycle.data.cycleStep.map(element =>
+            getCycleStepDetails(crtCycle.data.cycleId, element.stepOrder)
+          ),
+          ...crtCycle.data.cycleStep.map(element =>
+            getSchedulesByCycleStep(crtCycle.data.cycleId, element.stepOrder)
+          )
+        ]);
       }
-    };
+    } catch (error) {
+      console.error("Lỗi khi lấy dữ liệu:", error);
+    } finally {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      setLoading(false);
+    }
+  }, [customerId]);
 
   // 1. Lấy chu kỳ điều trị hiện tại của bệnh nhân (bác sĩ)
   const getCurrentCyclesOfPatient = async (customerId) => {
     try {
       const res = await ApiGateway.getCurrentCyclesOfPatient(customerId);
-      console.log("Current Cycle:", res.data);
       setCurrentCycle(res.data);
       return res;
     } catch (error) {
@@ -436,7 +268,6 @@ const PatientProfileLayout = () => {
   const getAppointmentHistoryByCustomer = async (customerId) => {
     try {
       const res = await ApiGateway.getAppointmentHistoryByCustomer(customerId);
-      console.log("Appointment History:", res);
       setAppointmentHistory(res);
       return res;
     } catch (error) {
@@ -449,7 +280,6 @@ const PatientProfileLayout = () => {
   const getCycleStepsByCycle = async (cycleId) => {
     try {
       const res = await ApiGateway.getCycleStepsByCycleId(cycleId);
-      console.log("Cycle Steps:", res.data);
       setCycleSteps(res.data);
       return res;
     } catch (error) {
@@ -484,7 +314,6 @@ const PatientProfileLayout = () => {
   const getCycleStepsDetails = async (cycleStepId) => {
     try {
       const res = await ApiGateway.getCycleStepDetails(cycleStepId);
-      console.log("Cycle Step Details:", res);
       setCycleStepDetails(prev => [...prev, res]);
       return res;
     } catch (error) {
@@ -508,7 +337,6 @@ const PatientProfileLayout = () => {
   const getSchedulesByCycleStep = async (cycleId, stepOrder) => {
     try {
       const res = await ApiGateway.getSchedulesByCycleStep(cycleId, stepOrder);
-      console.log("Medication Schedules:", res.data);
       setMedicationSchedules(res.data);
       return res.data;
     } catch (error) {
@@ -521,7 +349,6 @@ const PatientProfileLayout = () => {
   const getAllMedicines = async () => {
     try {
       const res = await ApiGateway.getAllMedicines();
-      console.log("All Medicines:", res.data);
       setAllMedicines(res.data);
       return res.data;
     } catch (error) {
@@ -534,7 +361,6 @@ const PatientProfileLayout = () => {
   const getTestResultsByCustomer = async (customerId) => {
     try {
       const res = await ApiGateway.getCustomerTestResults(customerId);
-      console.log("Test Results:", res.data);
       setTestResults(res.data);
       return res.data;
     } catch (error) {
@@ -569,7 +395,6 @@ const PatientProfileLayout = () => {
   const getCycleStepNames = async (cycleId) => {
     try {
       const res = await ApiGateway.getTreatmentSteps(cycleId);
-      console.log("Cycle Step Names:", res.data);
       setCycleStepNames(res.data);
       return res.data;
     } catch (error) {
@@ -582,7 +407,6 @@ const PatientProfileLayout = () => {
   const getCycleStepDetails = async (cycleId, stepOrder) => {
     try {
       const res = await ApiGateway.getCycleStep(cycleId, stepOrder);
-      console.log("Cycle Step Details:", res.data);
       setPastAndCurrentSteps(prev => [...prev, res.data]);
       return res.data;
     } catch (error) {
@@ -592,11 +416,9 @@ const PatientProfileLayout = () => {
   }
 
   //18. Cập nhật ghi chú cho chu kỳ điều trị
-  const updateCycleNote = async (cyleStepId, note) => {
+  const updateCycleNote = async (cycleStepId, note) => {
     try {
       const res = await ApiGateway.updateCycleNote(cycleStepId, note);
-      console.log("Updated Cycle Step Note:", res.data);
-      // Cập nhật lại chu kỳ điều trị
       setCurrentCycle(prev => ({
         ...prev,
         cycleStep: prev.cycleStep.map(step =>
@@ -609,6 +431,12 @@ const PatientProfileLayout = () => {
       throw error;
     }
   };
+  
+  useEffect(() => {
+    if (customerId) {
+      fetchData();
+    }
+  }, [customerId, fetchData]);
 
   const renderOverviewTab = () => (
     <div className="patient-profile-tab-content">
@@ -644,8 +472,8 @@ const PatientProfileLayout = () => {
         <div className="patient-profile-treatment-timeline">
           <h3>Toàn bộ giai đoạn điều trị</h3>
           <div className="patient-profile-timeline">
-            {pastAndCurrentSteps?.map((phase) => (
-              <div key={phase.stepId} className={`patient-profile-timeline-item patient-profile-${phase.statusCycleStep}`}>
+            {pastAndCurrentSteps?.map((phase, idx) => (
+              <div key={`key-${phase.stepId}-${idx}`} className={`patient-profile-timeline-item patient-profile-${phase.statusCycleStep}`}>
                 <div className="patient-profile-timeline-marker">
                   {phase.statusCycleStep === 'completed' ? '✓' : phase.statusCycleStep === 'ongoing' ? '⏳' : '📅'}
                 </div>
@@ -719,9 +547,21 @@ const PatientProfileLayout = () => {
                       {phase.statusCycleStep === 'ongoing' && (
                         <div className="patient-profile-phase-actions">
                           <div className="patient-profile-quick-actions">
-                            <button className="patient-profile-btn-outline-small" onClick={() => setIsOpenUpdateCycleStepNoteModal(true)}>📝 Ghi chú</button>
-                            <button className="patient-profile-btn-outline-small" onClick={() => setIsOpenCreateTestResultModal(true)}>📋 Kết quả XN</button>
-                            <button className="patient-profile-btn-outline-small" onClick={() => setIsOpenCreateMedicationModal(true)}>💊 Thuốc</button>
+                            <button className="patient-profile-btn-outline-small" 
+                              onClick={() => {
+                                setUpdateCycleStepNoteForm({
+                                  cycleId: currentCycle?.cycleId,
+                                  stepOrder: phase?.stepOrder,
+                                  note: pastAndCurrentSteps?.[pastAndCurrentSteps.length - 1]?.note || ''
+                                }),
+                                handleOpenUpdateCycleStepNoteModal()
+                              }}
+                            >📝 Ghi chú</button>
+                            <button className="patient-profile-btn-outline-small" 
+                              onClick={() => handleOpenCreateTestResultModal()}
+                            >📋 Kết quả XN</button>
+                            <button className="patient-profile-btn-outline-small" 
+                              onClick={() => handleOpenCreateMedicationModal()}>💊 Thuốc</button>
                           </div>
                         </div>
                       )}
@@ -729,7 +569,7 @@ const PatientProfileLayout = () => {
                         <div className="patient-profile-phase-actions">
                          
                           <div className="patient-profile-quick-actions">
-                            <button className="patient-profile-btn-primary-small" onClick={() => setIsOpenCreateReExamModal(true)}>📅 Đặt lịch hẹn</button>
+                            <button className="patient-profile-btn-primary-small" onClick={() => {console.log("hey"),handleOpenCreateReExamAppointmentModal()}}>📅 Đặt lịch hẹn</button>
                           </div>
                         </div>
                       )}
@@ -759,7 +599,7 @@ const PatientProfileLayout = () => {
                 <div className="patient-profile-timeline-actions">
                   <div className="patient-profile-phase-actions">
                     <div className="patient-profile-quick-actions">
-                      <button className="patient-profile-btn-primary-small">📅 Đặt lịch hẹn</button>
+                      <button className="patient-profile-btn-primary-small" onClick={() => handleOpenCreateReExamAppointmentModal()}>📅 Đặt lịch hẹn</button>
                     </div>
                   </div>
                 </div>
@@ -834,7 +674,7 @@ const PatientProfileLayout = () => {
           <h3>Ghi chú khám bệnh</h3>
           <p>Ghi chú và theo dõi quá trình điều trị</p>
         </div>
-        {cycleStepDetails.length === 0 && 
+        {cycleStepDetails?.length === 0 && 
           <button className="patient-profile-btn-primary">📝 Thêm ghi chú</button>
         }
       </div>
@@ -844,33 +684,36 @@ const PatientProfileLayout = () => {
         <h4>Ghi chú theo giai đoạn điều trị</h4>
         <div className="patient-profile-notes-list">
           {pastAndCurrentSteps.map((phase) =>
-              <div key={`${phase.id}`} className="patient-profile-note-item">
-                <div className="patient-profile-note-header">
-                  <div className="patient-profile-note-date">
-                    <span className="patient-profile-date-icon">📅</span>
-                    <span>{formatDate(phase.eventdate)}</span>
-                  </div>
-                  <span className="patient-profile-note-type">Giai đoạn {phase.stepOrder}: {mappingStepsName(phase.stepOrder)}</span>
+            phase.note && (
+              <>
+                <div key={`${phase.id}`} className="patient-profile-note-item" onClick={() => console.log(phase.note)}>
+                    <div className="patient-profile-note-header">
+                      <div className="patient-profile-note-date">
+                        <span className="patient-profile-date-icon">📅</span>
+                        <span>{formatDate(phase.eventdate)}</span>
+                      </div>
+                      <span className="patient-profile-note-type">Giai đoạn {phase.stepOrder}: {mappingStepsName(phase.stepOrder)}</span>
+                    </div>
+                    <div className="patient-profile-note-content">
+                      <h5>Ghi chú khám:</h5>
+                      <p>{phase.note}</p>
+                    </div>
+                    <div className="patient-profile-note-footer">
+                      <span className="patient-profile-doctor-name">{phase.appointment[0]?.doctorName}</span>
+                      <button className="patient-profile-btn-outline-blue" onClick={() => 
+                        {
+                          setUpdateCycleStepNoteForm({
+                            cycleId: currentCycle?.cycleId,
+                            stepOrder: phase.stepOrder,
+                            note: phase.note || ''
+                          }),
+                          handleOpenUpdateCycleStepNoteModal()
+                        }}
+                        >Thêm ghi chú</button>
+                    </div>
                 </div>
-                <div className="patient-profile-note-content">
-                  <h5>Ghi chú khám:</h5>
-                  <p>{phase.note}</p>
-                </div>
-                <div className="patient-profile-note-footer">
-                  <span className="patient-profile-doctor-name">{phase.appointment[0].doctorName}</span>
-                  <button className="patient-profile-btn-outline-blue" onClick={() => 
-                    {
-                      setUpdateCycleStepNoteForm({
-                        cycleId: currentCycle?.cycleId,
-                        stepOrder: phase.stepOrder,
-                        note: phase.note || ''
-                      }),
-                      setIsOpenUpdateCycleStepNoteModal(true)
-                    }}
-                  >Thêm ghi chú</button>
-                </div>
-                {/* <UpdateCycleStepNoteModal/> */}
-              </div>
+              </>
+            )
           )}
         </div>
       </div>
@@ -885,12 +728,11 @@ const PatientProfileLayout = () => {
           <h3>Kết quả xét nghiệm</h3>
           <p>Lịch sử các xét nghiệm và kết quả</p>
         </div>
-        <button className="patient-profile-btn-primary" onClick={() => setIsOpenCreateTestResultModal(true)}>➕ Thêm kết quả mới</button>
+        <button className="patient-profile-btn-primary" onClick={() => handleOpenCreateTestResultModal()}>➕ Thêm kết quả mới</button>
       </div>
 
 
       <div className="patient-profile-results-by-phase">
-        {/* {treatmentPhases.map((phase) => { */}
         {pastAndCurrentSteps.map((phase) => {
 
           return (
@@ -901,7 +743,7 @@ const PatientProfileLayout = () => {
               </div>
 
               <div className="patient-profile-results-list">
-                {cycleStepDetails[phase.stepOrder - 1].testResults.map((result, resultIndex) => (
+                {cycleStepDetails?.[phase.stepOrder - 1]?.testResults?.map((result, resultIndex) => (
                   <div key={`${phase.id}-${resultIndex}`} className="patient-profile-result-item">
                     <div className="patient-profile-result-icon">
                       <span className="patient-profile-icon-purple">📋</span>
@@ -914,7 +756,7 @@ const PatientProfileLayout = () => {
                       <button className="patient-profile-btn-outline" 
                         onClick={() => {
                           setUpdateTestResultForm({
-                          id: result.id,
+                          id: result.resultId,
                           name: result.name,
                           value: result.value,
                           unit: result.unit,
@@ -922,7 +764,7 @@ const PatientProfileLayout = () => {
                           note: result.note || '',
                           testDate: result.testDate
                         })
-                        setIsOpenUpdateTestResultModal(true)}}
+                        handleOpenUpdateTestResultModal()}}
                       >Chỉnh sửa</button>
                     </div>
                     <span className="patient-profile-status-badge patient-profile-completed">Hoàn thành</span>
@@ -943,7 +785,7 @@ const PatientProfileLayout = () => {
           <h3>Thuốc</h3>
           <p>Thuốc hiện tại và lịch sử thuốc</p>
         </div>
-        <button className="patient-profile-btn-primary" onClick={() => setIsOpenCreateMedicationModal(true)}>➕ Thêm thuốc mới</button>
+        <button className="patient-profile-btn-primary" onClick={() => handleOpenCreateMedicationModal()}>➕ Thêm thuốc mới</button>
       </div>
 
 
@@ -1010,7 +852,6 @@ const PatientProfileLayout = () => {
     </div>
   )
 
-
   const renderTabContent = () => {
     switch (activeTab) {
       case "overview":
@@ -1028,30 +869,66 @@ const PatientProfileLayout = () => {
     }
   }
 
-  const CreateReExamAppointmentModal = ({ isOpen, onClose, form, onChange, onSubmit }) => {
-    return isOpen && (
+  const CreateReExamAppointmentModal = memo(({ isOpen, onClose }) => {
+
+    const [isLoading, setIsLoading] = useState(false)
+
+    const [formData, setFormData] = useState({
+      customerId: currentCycle?.customerId || "",
+      serviceId: currentCycle?.serviceId || "",
+      date: "",
+      note: "",
+      cycleStepId: currentCycle?.cycleStep[currentCycle.cycleStep.length - 1].stepId || ""
+    });
+
+    if (!isOpen) return null;
+
+    const handleCreateReExamAppointment = useCallback(async (e) => {
+      e.preventDefault();
+      setIsLoading(true)
+      try {
+        await createReExamAppointment(formData);
+        await fetchData();
+        await new Promise(resolve => setTimeout(resolve, 500));
+        showSuccess("Đặt lịch tái khám thành công");
+        onClose();
+      } catch {
+        showFail("Đặt lịch thất bại");
+      } finally {
+        setIsLoading(false);
+      }
+    }, [formData, fetchData, onClose]);
+    
+    const handleChange = useCallback((field, value) => {
+      setFormData(prev => ({
+        ...prev,
+        [field]: value
+      }));
+    }, [formData]);
+    
+    return (
       <div className="patient-profile-modal">
         <div className="patient-profile-modal-content">
           <h3>Đặt lịch tái khám</h3>
-          <form onSubmit={onSubmit}>
+          <form onSubmit={handleCreateReExamAppointment}>
             <label>
               Ngày tái khám:
               <input
-                type="date"
-                value={form.date}
-                onChange={(e) => onChange('date', e.target.value)}
+                type="datetime-local"
+                value={formData.date}
+                onChange={(e) => handleChange('date', e.target.value)}
                 required
               />
             </label>
             <label>
               Ghi chú:
               <textarea
-                value={form.note}
-                onChange={(e) => onChange('note', e.target.value)}
+                value={formData.note}
+                onChange={(e) => handleChange('note', e.target.value)}
                 placeholder="Ghi chú (nếu có)"
               />
             </label>
-            <button type="submit" className="patient-profile-btn-primary">Đặt lịch</button>
+            <button type="submit" className="patient-profile-btn-primary">{isLoading ? <BeatLoader /> : "Đặt lịch"}</button>
           </form>
           <button
             className="patient-profile-btn-outline"
@@ -1059,25 +936,61 @@ const PatientProfileLayout = () => {
           >Đóng</button>
         </div>
       </div>
-    )
-  }
+    );
+  });
 
-  const CreateMedicationScheduleModal = ({ isOpen, onClose, form, onChange, onSubmit }) => {
-    return isOpen && (
+  const CreateMedicationScheduleModal = memo(({ isOpen, onClose, allMedicines }) => {
+
+    const [isLoading, setIsLoading] = useState(false)
+
+    const [formData, setFormData] = useState({
+      medicineId: "",
+      cycleId: currentCycle?.cycleId || "",
+      stepId: currentCycle?.cycleStep?.[currentCycle?.cycleStep?.length - 1]?.stepId || "",
+      startDate: "",
+      endDate: ""
+    });
+    
+    if (!isOpen) return null;
+
+    const handleCreateMedicationSchedule = useCallback(async (e) => {
+      e.preventDefault();
+      setIsLoading(true)
+      try {
+        await createMedicationSchedule(formData);
+        await fetchData();
+        await new Promise(resolve => setTimeout(resolve, 500));
+        showSuccess("Tạo lịch uống thuốc thành công");
+        onClose();
+      } catch {
+        showFail("Tạo lịch uống thuốc thất bại");
+      } finally {
+        setIsLoading(false);
+      }
+    }, [formData, fetchData, onClose]);
+    
+    const handleChange = useCallback((field, value) => {
+      setFormData(prev => ({
+        ...prev,
+        [field]: value
+      }));
+    }, [formData]);
+    
+    return (
       <div className="patient-profile-modal">
         <div className="patient-profile-modal-content">
           <h3>Tạo lịch uống thuốc</h3>
-          <form onSubmit={onSubmit}>
+          <form onSubmit={handleCreateMedicationSchedule}>
             <label>
               Tên thuốc:
               <select
-                value={form.medicineId}
-                onChange={(e) => onChange('medicineId', e.target.value)}
+                value={formData.medicineId}
+                onChange={(e) => handleChange('medicineId', e.target.value)}
                 required
               >
                 <option value="">Chọn thuốc</option>
                 {allMedicines.map(med => (
-                  <option key={med.id} value={med.id}>{med.name}</option>
+                  <option key={med.medicinId} value={med.medicinId}>{med.name}</option>
                 ))}
               </select>
             </label>
@@ -1085,21 +998,23 @@ const PatientProfileLayout = () => {
               Ngày bắt đầu:
               <input
                 type="date"
-                value={form.startDate}
-                onChange={(e) => onChange('startDate', e.target.value)}
+                value={formData.startDate}
+                onChange={(e) => handleChange('startDate', e.target.value)}
                 required
+                min={new Date(Date.now()).toISOString().split('T')}
               />
             </label>
             <label>
               Ngày kết thúc:
               <input
                 type="date"
-                value={form.endDate}
-                onChange={(e) => onChange('endDate', e.target.value)}
+                value={formData.endDate}
+                onChange={(e) => handleChange('endDate', e.target.value)}
                 required
+                min={new Date(Date.now()).toISOString().split('T')}
               />
             </label>
-            <button type="submit" className="patient-profile-btn-primary">Lưu</button>
+            <button type="submit" className="patient-profile-btn-primary">{isLoading ? <BeatLoader /> : "Lưu"}</button>
           </form>
           <button
             className="patient-profile-btn-outline"
@@ -1107,30 +1022,71 @@ const PatientProfileLayout = () => {
           >Đóng</button>
         </div>
       </div>
-    )
-  }
+    );
+  });
 
-  const CreateTestResultModal = ({ isOpen, onClose, form, onChange, onSubmit }) => {
-    return isOpen && (
+  const CreateTestResultModal = memo(({ isOpen, onClose }) => {
+
+    const [isLoading, setIsLoading] = useState(false)
+
+    const [formData, setFormData] = useState({
+      appointmentId: appointmentId || "",
+      name: "",
+      value: null,
+      unit: "",
+      referenceRange: "",
+      testDate: new Date(Date.now()).toISOString().split("T")[0],
+      note: "",
+      cycleStepId: currentCycle?.cycleStep?.[currentCycle?.cycleStep?.length - 1]?.stepId || ""
+    });
+    
+    if (!isOpen) return null;
+
+    const handleCreateTestResult = useCallback(async (e) => {
+      e.preventDefault();
+      setIsLoading(true)
+      try {
+        console.log("Tạo test rù súc: ", formData)
+        await createTestResult(formData);
+        await fetchData();
+        await new Promise(resolve => setTimeout(resolve, 500));
+        showSuccess("Tạo kết quả xét nghiệm thành công");
+        onClose();
+      } catch {
+        showFail("Tạo kết quả xét nghiệm thất bại");
+      } finally {
+        setIsLoading(false);
+      }
+    }, [formData, fetchData, onClose]);
+    
+    const handleChange = useCallback((field, value) => {
+      setFormData(prev => ({
+        ...prev,
+        [field]: value
+      }));
+    }, [formData]);
+    
+    return (
       <div className="patient-profile-modal">
         <div className="patient-profile-modal-content">
           <h3>Tạo kết quả xét nghiệm</h3>
-          <form onSubmit={onSubmit}>
+          <form onSubmit={handleCreateTestResult}>
             <label>
               Tên xét nghiệm:
               <input
                 type="text"
-                value={form.name}
-                onChange={(e) => onChange('name', e.target.value)}
+                value={formData.name}
+                onChange={(e) => handleChange('name', e.target.value)}
                 required
               />
             </label>
             <label>
               Kết quả:
               <input
-                type="text"
-                value={form.value}
-                onChange={(e) => onChange('value', e.target.value)}
+                type="number"
+                step="any"
+                value={formData.value}
+                onChange={(e) => handleChange('value', e.target.value === "" ? "" : parseFloat(e.target.value))}
                 required
               />
             </label>
@@ -1138,8 +1094,8 @@ const PatientProfileLayout = () => {
               Đơn vị:
               <input
                 type="text"
-                value={form.unit}
-                onChange={(e) => onChange('unit', e.target.value)}
+                value={formData.unit}
+                onChange={(e) => handleChange('unit', e.target.value)}
                 required
               />
             </label>
@@ -1147,27 +1103,18 @@ const PatientProfileLayout = () => {
               Khoảng tham chiếu:
               <input
                 type="text"
-                value={form.referenceRange}
-                onChange={(e) => onChange('referenceRange', e.target.value)}
+                value={formData.referenceRange}
+                onChange={(e) => handleChange('referenceRange', e.target.value)}
               />
             </label>
             <label>
               Ghi chú:
               <textarea
-                value={form.note}
-                onChange={(e) => onChange('note', e.target.value)}
+                value={formData.note}
+                onChange={(e) => handleChange('note', e.target.value)}
               />
             </label>
-            <label>
-              Ngày xét nghiệm:
-              <input
-                type="date"
-                value={form.testDate}
-                onChange={(e) => onChange('testDate', e.target.value)}
-                required
-              />
-            </label>
-            <button type="submit" className="patient-profile-btn-primary">Tạo</button>
+            <button type="submit" className="patient-profile-btn-primary">{isLoading ? <BeatLoader /> : "Tạo"}</button>
           </form>
           <button
             className="patient-profile-btn-outline"
@@ -1175,24 +1122,59 @@ const PatientProfileLayout = () => {
           >Đóng</button>
         </div>
       </div>
-    )
-  }
+    );
+  });
 
-  const UpdateCycleStepNoteModal = ({ isOpen, onClose, form, onChange, onSubmit }) => {
-    return isOpen && (
+  const UpdateCycleStepNoteModal = memo(({ isOpen, onClose, form }) => {
+
+    const [isLoading, setIsLoading] = useState(false)
+
+    const [formData, setFormData] = useState({
+      cycleId: form.cycleId || "",
+      stepOrder: form.stepOrder || "",
+      note: form.note || ""
+    });
+
+    if (!isOpen) return null;
+
+    const handleUpdateCycleStepNote = useCallback(async (e) => {
+      e.preventDefault();
+      setIsLoading(true)
+      try {
+        const { cycleId, stepOrder, note } = formData;
+        await updateCycleStepNote(cycleId, stepOrder, note);
+        await fetchData();
+        await new Promise(resolve => setTimeout(resolve, 500));
+        showSuccess("Cập nhật ghi chú thành công");
+        onClose();
+      } catch {
+        showFail("Cập nhật ghi chú thất bại");
+      } finally {
+        setIsLoading(false);
+      }
+    }, [formData, fetchData, onClose]);
+    
+    const handleChange = useCallback((field, value) => {
+      setFormData(prev => ({
+        ...prev,
+        [field]: value
+      }));
+    }, [formData]);
+    
+    return (
       <div className="patient-profile-modal">
         <div className="patient-profile-modal-content">
           <h3>Cập nhật ghi chú bước điều trị</h3>
-          <form onSubmit={onSubmit}>
+          <form onSubmit={handleUpdateCycleStepNote}>
             <label>
               Ghi chú:
               <textarea
-                value={form.note}
-                onChange={(e) => onChange('note', e.target.value)}
+                value={formData.note}
+                onChange={(e) => handleChange('note', e.target.value)}
                 required
               />
             </label>
-            <button type="submit" className="patient-profile-btn-primary">Cập nhật</button>
+            <button type="submit" className="patient-profile-btn-primary">{isLoading ? <BeatLoader /> : "Cập nhật"}</button>
           </form>
           <button
             className="patient-profile-btn-outline"
@@ -1200,21 +1182,60 @@ const PatientProfileLayout = () => {
           >Đóng</button>
         </div>
       </div>
-    )
-  }
+    );
+  });
 
-  const UpdateTestResultModal = ({ isOpen, onClose, form, onChange, onSubmit }) => {
-    return isOpen && (
+  const UpdateTestResultModal = memo(({ isOpen, onClose, form }) => {
+
+    const [isLoading, setIsLoading] = useState(false)
+
+    const [formData, setFormData] = useState({
+      id: form.id || "",
+      name: form.name || "",
+      value: form.value || "",
+      unit: form.unit || "",
+      referenceRange: form.referenceRange || "",
+      note: form.note || "",
+      testDate: form.testDate || ""
+    });
+    
+    if (!isOpen) return null;
+
+    const handleUpdateTestResult = useCallback(async (e) => {
+      e.preventDefault();
+      setIsLoading(true);
+      try {
+        const { id, ...dto } = formData;
+        await updateTestResult(id, dto);
+        await fetchData();
+        await new Promise(resolve => setTimeout(resolve, 500));
+        showSuccess("Cập nhật kết quả xét nghiệm thành công");
+        onClose();
+      } catch {
+        showFail("Cập nhật kết quả xét nghiệm thất bại");
+      } finally {
+        setIsLoading(false);
+      }
+    }, [formData, fetchData, onClose]);
+    
+    const handleChange = useCallback((field, value) => {
+      setFormData(prev => ({
+        ...prev,
+        [field]: value
+      }));
+    }, [formData]);
+    
+    return (
       <div className="patient-profile-modal">
         <div className="patient-profile-modal-content">
           <h3>Cập nhật kết quả xét nghiệm</h3>
-          <form onSubmit={onSubmit}>
+          <form onSubmit={handleUpdateTestResult}>
             <label>
               Tên xét nghiệm:
               <input
                 type="text"
-                value={form.name}
-                onChange={(e) => onChange('name', e.target.value)}
+                value={formData.name}
+                onChange={(e) => handleChange('name', e.target.value)}
                 required
               />
             </label>
@@ -1222,8 +1243,8 @@ const PatientProfileLayout = () => {
               Kết quả:
               <input
                 type="text"
-                value={form.value}
-                onChange={(e) => onChange('value', e.target.value)}
+                value={formData.value}
+                onChange={(e) => handleChange('value', e.target.value)}
                 required
               />
             </label>
@@ -1231,8 +1252,8 @@ const PatientProfileLayout = () => {
               Đơn vị:
               <input
                 type="text"
-                value={form.unit}
-                onChange={(e) => onChange('unit', e.target.value)}
+                value={formData.unit}
+                onChange={(e) => handleChange('unit', e.target.value)}
                 required
               />
             </label>
@@ -1240,27 +1261,27 @@ const PatientProfileLayout = () => {
               Khoảng tham chiếu:
               <input
                 type="text"
-                value={form.referenceRange}
-                onChange={(e) => onChange('referenceRange', e.target.value)}
+                value={formData.referenceRange}
+                onChange={(e) => handleChange('referenceRange', e.target.value)}
               />
             </label>
             <label>
               Ghi chú:
               <textarea
-                value={form.note}
-                onChange={(e) => onChange('note', e.target.value)}
+                value={formData.note}
+                onChange={(e) => handleChange('note', e.target.value)}
               />
             </label>
             <label>
               Ngày xét nghiệm:
               <input
                 type="date"
-                value={form.testDate}
-                onChange={(e) => onChange('testDate', e.target.value)}
+                value={formData.testDate}
+                onChange={(e) => handleChange('testDate', e.target.value)}
                 required
               />
             </label>
-            <button type="submit" className="patient-profile-btn-primary">Cập nhật</button>
+            <button type="submit" className="patient-profile-btn-primary">{isLoading ? <BeatLoader /> : "Cập nhật"}</button>
           </form>
           <button
             className="patient-profile-btn-outline"
@@ -1268,8 +1289,8 @@ const PatientProfileLayout = () => {
           >Đóng</button>
         </div>
       </div>
-    )
-  }
+    );
+  });
 
   return (
     <div className="patient-profile">
@@ -1454,51 +1475,46 @@ const PatientProfileLayout = () => {
               </button>
             ))}
           </div>
-
-
-          {renderTabContent()}
+          
+          { loading ? 
+            (
+              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "60vh" }}>
+                <HashLoader size={80} color="#36d7b7" />
+              </div>
+            ) : (renderTabContent())
+          }
         </div>
       </div>
+        
       <CreateReExamAppointmentModal
-        isOpen={isOpenCreateTestResultModal}
-        onClose={() => setIsOpenCreateTestResultModal(false)}
-        form={createTestResultForm}
-        onChange={handleTestResultChange}
-        onSubmit={handleCreateTestResult}
+        isOpen={isOpenCreateReExamModal}
+        onClose={handleCloseCreateReExamAppointmentModal}
       />
+      
       <CreateMedicationScheduleModal
         isOpen={isOpenCreateMedicationModal}
-        onClose={() => setIsOpenCreateMedicationModal(false)}
-        form={createMedicationScheduleForm}
-        onChange={handleMedicationChange}
-        onSubmit={handleCreateMedicationSchedule}
+        onClose={handleCloseCreateMedicationModal}
+        allMedicines={allMedicines}
       />
+      
       <CreateTestResultModal
         isOpen={isOpenCreateTestResultModal}
-        onClose={() => setIsOpenCreateTestResultModal(false)}
-        form={createTestResultForm}
-        onChange={handleTestResultChange}
-        onSubmit={handleCreateTestResult}
+        onClose={handleCloseCreateTestResultModal}
       />
+      
       <UpdateCycleStepNoteModal
         isOpen={isOpenUpdateCycleStepNoteModal}
-        onClose={() => setIsOpenUpdateCycleStepNoteModal(false)}
+        onClose={handleCloseUpdateCycleStepNoteModal}
         form={updateCycleStepNoteForm}
-        onChange={handleUpdateCycleNoteChange}
-        onSubmit={handleUpdateCycleStepNote}
       />
+      
       <UpdateTestResultModal
         isOpen={isOpenUpdateTestResultModal}
-        onClose={() => setIsOpenUpdateTestResultModal(false)}
+        onClose={handleCloseUpdateTestResultModal}
         form={updateTestResultForm}
-        onChange={handleUpdateTestResultChange}
-        onSubmit={handleUpdateTestResult}
       />
     </div>
   )
 }
 
-
 export default PatientProfileLayout
-
-

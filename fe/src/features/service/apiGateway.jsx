@@ -340,11 +340,11 @@ export default class ApiGateway {
   static async createReExamAppointment(dto) {
     try {
       const apiDto = {
-        customerId: dto.customerId,
-        serviceId: dto.serviceId,
+        customerId: parseInt(dto.customerId),
+        serviceId: parseInt(dto.serviceId),
         date: dto.date,
         note: dto.note,
-        cycleId: dto.cycleId,
+        cycleStepId: parseInt(dto.cycleStepId),
       }
       console.log(`Re-exam Appointment DTO:`, apiDto);
       const response = await ApiGateway.axiosInstance.post(
@@ -587,6 +587,7 @@ export default class ApiGateway {
    */
   static async updateCycleStepNote(cycleId, stepOrder, note) {
     try {
+      console.log(cycleId, ", ", stepOrder, ",", note)
       const response = await ApiGateway.axiosInstance.patch(
         `cycle-steps/cycleId/${cycleId}/step/${stepOrder}/note?note=${encodeURIComponent(
           note
@@ -623,9 +624,17 @@ export default class ApiGateway {
    */
   static async createMedicationSchedule(schedule) {
     try {
+      const scheduleDto = {
+        medicineId: parseInt(schedule.medicineId),
+        cycleId: parseInt(schedule.cycleId),
+        stepId: parseInt(schedule.stepId),
+        startDate: schedule.startDate,
+        endDate: schedule.endDate
+      }
+      console.log("Tạo lịch uống thuốc", scheduleDto)
       const response = await ApiGateway.axiosInstance.post(
         `medicine/medication-schedule`,
-        schedule
+        scheduleDto
       );
       return response.data;
     } catch (error) {
@@ -776,15 +785,15 @@ export default class ApiGateway {
   static async createTestResult(dto) {
     try {
       const reqDto = {
-      appointmentId: dto.appointmentId,
-      name: dto.name,
-      value: dto.value,
-      unit: dto.unit,
-      referenceRange: dto,
-      testDate: dto.testDate,
-      note: dto,
-      cycleStepId: dto.cycleStepId,
-    }
+        appointmentId: parseInt(dto.appointmentId),
+        name: dto.name,
+        value: parseFloat(dto.value),
+        unit: dto.unit,
+        referenceRange: dto.referenceRange,
+        testDate: dto.testDate,
+        note: dto.note,
+        cycleStepId: parseInt(dto.cycleStepId),
+      }
       const response = await ApiGateway.axiosInstance.post(
         `test-results/create`,
         reqDto
@@ -833,6 +842,14 @@ export default class ApiGateway {
    */
   static async updateTestResult(id, dto) {
     try {
+      const rpDto = {
+        name: dto.name,
+        value: parseFloat(dto.value),
+        unit: dto.unit,
+        referenceRange: dto.referenceRange,
+        note: dto.note,
+        testDate: dto.testDate
+      }
       const response = await ApiGateway.axiosInstance.put(
         `test-results/update/${id}`,
         dto
