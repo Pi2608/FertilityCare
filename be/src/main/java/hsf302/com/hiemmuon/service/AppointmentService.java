@@ -285,7 +285,9 @@ public class AppointmentService {
         if(appointment.getTypeAppointment().equals(TypeAppointment.tu_van)){
             appointment.setService(treatmentServiceRepository.findById(dto.getServiceId()));
         }
-        appointment.setNote(dto.getNote());
+        if (dto.getNote() != null && !dto.getNote().trim().isEmpty()) {
+            appointment.setNote(dto.getNote());
+        }
         appointment.setStatusAppointment(StatusAppointment.done);
 
         // ✅ Liên kết với testResult nếu bạn muốn
