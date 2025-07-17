@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Users, UserRoundCheck, UserRoundX, HandCoins } from "lucide-react";
 import "./Dashboard.css";
 import apiDashboard from "@features/service/apiDashboard";
 
@@ -11,10 +12,6 @@ const Dashboard = () => {
           apiDashboard.getRevenue(),
           apiDashboard.getAccountStats(),
         ]);
-
-        console.log("👤 userSummary:", userSummary);
-        console.log("💰 revenueData:", revenueData);
-        console.log("📊 accountStats:", accountStats);
 
         setDashboardData({
           totalPatients: userSummary.patients || 0,
@@ -81,8 +78,7 @@ const Dashboard = () => {
       <header className="dashboard-header">
         <h1 className="page-title">Báo cáo thống kê</h1>
         <div className="header-content">
-          <div className="header-actions">
-          </div>
+          <div className="header-actions"></div>
         </div>
       </header>
 
@@ -91,7 +87,9 @@ const Dashboard = () => {
         {/* Stats Cards */}
         <div className="stats-grid">
           <div className="stat-card primary">
-            <div className="stat-icon">📊</div>
+            <div className="stat-icon">
+              <Users size={24} color="#4b5563" />
+            </div>
             <div className="stat-content">
               <h3>Tổng tài khoản</h3>
               <div className="stat-number">
@@ -101,7 +99,9 @@ const Dashboard = () => {
           </div>
 
           <div className="stat-card success">
-            <div className="stat-icon">✅</div>
+            <div className="stat-icon">
+              <UserRoundCheck size={24} color="#4b5563" />
+            </div>
             <div className="stat-content">
               <h3>Tài khoản hoạt động</h3>
               <div className="stat-number">
@@ -111,7 +111,9 @@ const Dashboard = () => {
           </div>
 
           <div className="stat-card warning">
-            <div className="stat-icon">⏸️</div>
+            <div className="stat-icon">
+              <UserRoundX size={24} color="#4b5563" />
+            </div>
             <div className="stat-content">
               <h3>Tài khoản không hoạt động</h3>
               <div className="stat-number">
@@ -121,7 +123,9 @@ const Dashboard = () => {
           </div>
 
           <div className="stat-card info">
-            <div className="stat-icon">💰</div>
+            <div className="stat-icon">
+              <HandCoins size={24} color="#4b5563" />
+            </div>
             <div className="stat-content">
               <h3>Doanh thu</h3>
               <div className="stat-number">

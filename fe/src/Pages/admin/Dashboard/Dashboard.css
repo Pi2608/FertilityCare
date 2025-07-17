@@ -132,7 +132,7 @@
 }
 
 .stat-card.primary .stat-icon {
-  background-color: #dbeafe;
+  background-color: #DBE9FE;
 }
 
 .stat-card.success .stat-icon {
@@ -140,11 +140,11 @@
 }
 
 .stat-card.warning .stat-icon {
-  background-color: #fef3c7;
+  background-color: #FEE2E1;
 }
 
 .stat-card.info .stat-icon {
-  background-color: #e0e7ff;
+  background-color: #fef3c7;
 }
 
 .stat-content {
