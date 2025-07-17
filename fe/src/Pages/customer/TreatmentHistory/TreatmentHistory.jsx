@@ -97,10 +97,6 @@ const TreatmentHistory = () => {
                     </p>
                     <p className="doctor-name">Bác sĩ {treatment.doctorName}</p>
                   </div>
-
-                  <div className="treatment-actions">
-                    <button className="primary-btn">Xem chi tiết</button>
-                  </div>
                 </div>
               ))}
             </div>
