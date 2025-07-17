@@ -79,19 +79,9 @@ const Dashboard = () => {
     <div className="admin-dashboard">
       {/* Header */}
       <header className="dashboard-header">
+        <h1 className="page-title">Báo cáo thống kê</h1>
         <div className="header-content">
-          <h1 className="page-title">Báo cáo thống kê</h1>
           <div className="header-actions">
-            <select
-              value={timeRange}
-              onChange={(e) => setTimeRange(e.target.value)}
-              className="time-range-select"
-            >
-              <option value="thisMonth">Tháng này</option>
-              <option value="lastMonth">Tháng trước</option>
-              <option value="thisYear">Năm này</option>
-            </select>
-
             <div className="user-profile">
               <div className="avatar">
                 <span>JC</span>

@@ -69,14 +69,8 @@ const Appointment = () => {
     <div className="appointment-page">
       {/* Header */}
       <header className="appointment-header">
-        <h1 className="page-title">Thông tin cuộc hẹn</h1>
-
+        <h1 className="page-title">Thông tin cuộc hẹn</h1>s
         <div className="header-actions">
-          <div className="notification-bell">
-            <span>🔔</span>
-            <div className="notification-dot"></div>
-          </div>
-
           <div className="user-profile">
             <div className="avatar">
               <span>JC</span>

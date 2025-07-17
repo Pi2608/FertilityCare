@@ -47,42 +47,6 @@
   border-radius: 50%;
 }
 
-.user-profile {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.avatar {
-  width: 40px;
-  height: 40px;
-  background-color: #e2e8f0;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  color: #64748b;
-  font-size: 14px;
-}
-
-.user-info {
-  text-align: left;
-}
-
-.user-name {
-  font-weight: 500;
-  color: #1e293b;
-  font-size: 14px;
-  margin: 0;
-}
-
-.user-role {
-  font-size: 12px;
-  color: #64748b;
-  margin: 0;
-}
-
 /* Content */
 .treatment-service-content {
   flex: 1;
@@ -91,7 +55,6 @@
   margin: 24px;
   border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border: 2px solid #3b82f6;
 }
 
 /* Content Header */
