@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import ApiGateway from '../../../features/service/apiGateway';
 import './IvfDetail.css';
 
 const IvfDetail = () => {
+  const { treatmentId } = useParams();
   const [activeTab, setActiveTab] = useState('overview');
+  const [briefDescription, setBriefDescription] = useState("");
+  const [treatmentSteps, setTreatmentSteps] = useState([]);
 
   const pageData = {
     title: "Thụ Tinh Trong Ống Nghiệm (IVF)",
@@ -215,20 +220,86 @@ const IvfDetail = () => {
     }
   };
 
+  const Content = ({ content }) => {
+    return (
+      <div dangerouslySetInnerHTML={{ __html: content }} />
+    );
+  };
+
+  const formatNumber = (number) => {
+    return new Intl.NumberFormat("vi-VN").format(number);
+  };
+
+  const descMapping = (name) =>{
+    switch(name) {
+      case "IVF":
+        return "IVF - Thụ Tinh Trong Ống Nghiệm";
+      case "IUI":
+        return "IUI - Bơm Tinh Trùng Vào Buồng Tử Cung";
+      default:
+        return "Phương Pháp Điều Trị Hiếm Muộn";
+    }
+  }
+
+  const subDescMapping = (name) => {
+    switch(name) {
+      case "IVF":
+        return "IVF - In vitro fertilization - là một phương pháp điều trị hiếm muộn tiên tiến, giúp các cặp vợ chồng có con theo ý muốn.";
+      case "IUI":
+        return "IUI - Intrauterine Insemination - là một phương pháp thụ tinh nhân tạo hỗ trợ sinh sản hiện đại để giúp các cặp vợ chồng có con theo ý muốn.";
+      default:
+        return "Khám phá các phương pháp điều trị hiếm muộn tối ưu, thiết kế để giúc bạn xây dựng gia đình mơ ước.";
+    }
+  }
+
+  const splitContent = (splitter, content) => {
+    if (!content) return [];
+    return content.split(`${splitter}`).map(item => item.trim()).filter(item => item !== '');
+  }
+
+  useEffect(() => {
+    Promise.all([
+      getBriefDescription(),
+      getTreatmentSteps()
+    ])
+  }, []);
+
+  const getBriefDescription = async () => {
+    try {
+      const res = await ApiGateway.getTreatmentById(treatmentId);
+      setBriefDescription(res);
+      console.log("Brief Description:", res);
+      return res;
+    } catch (error) {
+      console.error("Error fetching treatment data:", error);
+    }
+  }
+
+  const getTreatmentSteps = async () => {
+    try {
+      const res = await ApiGateway.getTreatmentSteps(treatmentId);
+      setTreatmentSteps(res);
+      console.log("Treatment Steps:", res);
+      return res;
+    } catch (error) {
+      console.error("Error fetching treatment steps:", error);
+    }
+  }
+
   const renderOverview = () => (
     <div className="content-section">
       <div className="content">
         <div className="definition-section">
-          <h2>{pageData.overview.definition.title}</h2>
-          <p>{pageData.overview.definition.content}</p>
+          <h2>Phương Pháp điều trị {briefDescription?.name}</h2>
+          <p><Content content={briefDescription?.description}/></p>
           <div className="suitable">
-            <h4>IVF Phù Hợp Với Ai?</h4>
+            <h4>{briefDescription?.name} Phù Hợp Với Ai?</h4>
             <ul>
-              { pageData.suitable.map((item, index) => (
-                <li key={index}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 48 48"><g fill="none" stroke="#e11d48" stroke-linejoin="round" stroke-width="4"><path d="M24 44a19.94 19.94 0 0 0 14.142-5.858A19.94 19.94 0 0 0 44 24a19.94 19.94 0 0 0-5.858-14.142A19.94 19.94 0 0 0 24 4A19.94 19.94 0 0 0 9.858 9.858A19.94 19.94 0 0 0 4 24a19.94 19.94 0 0 0 5.858 14.142A19.94 19.94 0 0 0 24 44Z"/><path stroke-linecap="round" d="m16 24l6 6l12-12"/></g></svg>
-                  <p>{item}</p>
-                </li>
+              {splitContent('<br>',briefDescription?.targetPatient).map((item, index) => (
+                  <li key={index}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 48 48"><g fill="none" stroke="#e11d48" strokeLinejoin="round" strokeWidth="4"><path d="M24 44a19.94 19.94 0 0 0 14.142-5.858A19.94 19.94 0 0 0 44 24a19.94 19.94 0 0 0-5.858-14.142A19.94 19.94 0 0 0 24 4A19.94 19.94 0 0 0 9.858 9.858A19.94 19.94 0 0 0 4 24a19.94 19.94 0 0 0 5.858 14.142A19.94 19.94 0 0 0 24 44Z"/><path strokeLinecap="round" d="m16 24l6 6l12-12"/></g></svg>
+                    <p>{item}</p>
+                  </li>
               ))}
             </ul>
           </div>
@@ -252,19 +323,21 @@ const IvfDetail = () => {
         </div>
       </div>
 
-      <div className="advantages-section">
-        <h2>{pageData.overview.advantages.title}</h2>
-        <div className="advantages-grid">
-          {pageData.overview.advantages.items.map((item, index) => (
-            <div key={index} className="advantage-card">
+      <div className="treatment-protocol-section">
+        <h2>Phát đồ {briefDescription?.name} của chúng tôi có {splitContent('<br><br>', briefDescription.specifications).length} bước</h2>
+        <div className="protocol-grid">
+          {splitContent('<br><br>', briefDescription?.specifications).map((item, index) => (
+            <div key={index} className="protocol-step">
               <div>
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill="none" stroke="#e11d48" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m10.5 20.5l10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7m-2-12l7 7"/></svg>
-                <h3>{item.title}</h3>
+                <h3><Content content={splitContent('<br>', item)[0]}/></h3>
               </div>
-              <p>{item.desc}</p>
+              <p>
+                {splitContent('<br>', item).slice(1).map((text, idx) => (
+                  <Content key={idx} content={text} />
+                ))}</p>
             </div>
           ))}
-          <button className='primary-btn'>Tìm hiểu các bước tiếp theo</button>
         </div>
       </div>
     </div>
@@ -367,17 +440,22 @@ const IvfDetail = () => {
     <div className="ivf-detail-container">
 
       <div className="breadcrumb">
-        <span>Phương Pháp Điều Trị</span> / <span>Thụ Tinh Trong Ống Nghiệm (IVF)</span> - <span>Phác Đồ 1</span>
+        <span>Phương Pháp Điều Trị</span> / <span>{briefDescription?.name}</span>
       </div>
 
       <div className="page-title-section">
-        <h1>{pageData.title}</h1>
-        <p className="subtitle">{pageData.subtitle}</p>
+        <h1>{descMapping(briefDescription?.name)}</h1>
+        <div className="subtitle-section">
+          <p className="subtitle">
+            <span>Chi phí</span>
+            <span>{formatNumber(briefDescription?.price)} VND</span>
+          </p>
+        </div>
       </div>
 
       <div className="brief-description">
         <h2>Giải Pháp Hiệu Quả Cho Hiếm Muộn</h2>
-        <p>{pageData.description}</p>
+        <p>{subDescMapping(briefDescription?.name)}</p>
         <div className="action-buttons">
           <button className="primary-btn">Đặt Lịch Tư Vấn</button>
           <button className="secondary-btn">Gặp gỡ đội ngũ bác sĩ</button>

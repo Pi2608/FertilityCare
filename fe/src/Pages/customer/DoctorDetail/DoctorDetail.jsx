@@ -7,20 +7,16 @@ import MaleDoc from "@asset/male-fertility-specialist.png";
 import FemaleDoc from "@asset/asian-female-doctor.png";
 import apiFeedback from "../../../features/service/apiFeedback";
 
-
 const DoctorDetail = () => {
   const [activeTab, setActiveTab] = useState("introduce");
-
 
   const [doctorData, setDoctorData] = useState(null);
   const { doctorId } = useParams();
   console.log("🆔 doctorId từ URL:", doctorId);
 
-
   useEffect(() => {
     fetchDoctorDetail();
   }, []);
-
 
   useEffect(() => {
     if (doctorData) {
@@ -28,24 +24,20 @@ const DoctorDetail = () => {
     }
   }, [doctorData]);
 
-
   const fetchDoctorDetail = async () => {
     try {
       const response = await DoctorAPI.getDoctorById(doctorId);
       console.log("📦 Dữ liệu raw từ API:", response);
 
-
       const doctor = response.data;
 
-
       const allFeedbackRes = await apiFeedback.getAllFeedbacks();
-      const feedbacks = allFeedbackRes.data.filter(
+      const feedbacks = allFeedbackRes.filter(
         (fb) => fb.doctorId === parseInt(doctorId)
       );
       const avgRating =
         feedbacks.reduce((sum, fb) => sum + fb.rating, 0) / feedbacks.length ||
         0;
-
 
       // Giả lập các trường còn thiếu nếu API chưa trả về
       const mapped = {
@@ -106,20 +98,18 @@ const DoctorDetail = () => {
         activities: [], // có thể cập nhật sau
         ratingBreakdown: [],
         reviews: feedbacks.map((fb) => ({
-            comment: fb.comment,
-            rating: fb.rating,
-            customerName: fb.customerName,
-            date: fb.createAt,
-          })),
+          comment: fb.comment,
+          rating: fb.rating,
+          customerName: fb.customerName,
+          date: fb.createAt,
+        })),
       };
-
 
       setDoctorData(mapped);
     } catch (error) {
       console.error("Lỗi khi fetch bác sĩ theo ID:", error);
     }
   };
-
 
   const DoctorCard = ({ doctor }) => {
     return (
@@ -128,11 +118,9 @@ const DoctorDetail = () => {
                     <img src={doctor.avatar} alt={doctor.name} className="doctor-avatar" />
                 </div> */}
 
-
         <div className="doctor-info">
           <h3 className="doctor-name">Bác sĩ {doctor.name}</h3>
           <p className="doctor-specialty">{doctor.specialty}</p>
-
 
           <div className="doctor-rating">
             <span className="stars">
@@ -144,13 +132,11 @@ const DoctorDetail = () => {
             </span>
           </div>
 
-
           <button className="appointment-button">Đặt Lịch Hẹn</button>
         </div>
       </div>
     );
   };
-
 
   const SpecialtiesList = ({ specialties }) => {
     return (
@@ -168,7 +154,6 @@ const DoctorDetail = () => {
     );
   };
 
-
   const WorkingHours = ({ workingHours }) => {
     return (
       <div className="working-hours-grid">
@@ -182,7 +167,6 @@ const DoctorDetail = () => {
     );
   };
 
-
   const renderRatingBar = (value) => {
     const percentage = (value / 5) * 100;
     return (
@@ -195,7 +179,6 @@ const DoctorDetail = () => {
     );
   };
 
-
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
@@ -207,14 +190,12 @@ const DoctorDetail = () => {
     ));
   };
 
-
   const navItems = [
     { key: "introduce", label: "Giới thiệu" },
     { key: "certifications", label: "Học vấn" },
     { key: "experience", label: "Kinh nghiệm" },
     { key: "feedback", label: "Đánh giá" },
   ];
-
 
   const renderIntroduce = () => (
     <div className="intro">
@@ -235,7 +216,6 @@ const DoctorDetail = () => {
       <div className="schedule">
         <h1>Lịch làm việc</h1>
 
-
         <div className="working-hours-text">
           <p>
             Bác sĩ hiện có lịch khám từ <strong>Thứ 2 đến Thứ 6</strong>, từ{" "}
@@ -246,7 +226,6 @@ const DoctorDetail = () => {
       </div>
     </div>
   );
-
 
   const renderCertifications = () => (
     <div className="edu-cert">
@@ -281,7 +260,6 @@ const DoctorDetail = () => {
       <div className="schedule">
         <h1>Lịch làm việc</h1>
 
-
         <div className="working-hours-text">
           <p>
             Bác sĩ hiện có lịch khám từ <strong>Thứ 2 đến Thứ 6</strong>, từ{" "}
@@ -292,7 +270,6 @@ const DoctorDetail = () => {
       </div>
     </div>
   );
-
 
   const renderExperience = () => (
     <div className="exp">
@@ -316,10 +293,8 @@ const DoctorDetail = () => {
         </div>
       </div>
 
-
       <div className="schedule">
         <h1>Lịch làm việc</h1>
-
 
         <div className="working-hours-text">
           <p>
@@ -331,7 +306,6 @@ const DoctorDetail = () => {
       </div>
     </div>
   );
-
 
   const renderReviews = () => (
     <div className="reviews">
@@ -341,7 +315,7 @@ const DoctorDetail = () => {
           Dựa trên {doctorData.totalReviews} đánh giá từ bệnh nhân đã điều trị
           với Bác sĩ {doctorData.name}
         </p>
- 
+
         <div className="overall-rating">
           <span className="rating-number">{doctorData.overallRating}</span>
           <div className="stars-container">
@@ -351,7 +325,7 @@ const DoctorDetail = () => {
             {doctorData.totalReviews} đánh giá
           </span>
         </div>
- 
+
         {doctorData.ratingBreakdown.map((rating, index) => (
           <div key={index} className="rating-item">
             <span className="rating-label">{rating.label}</span>
@@ -360,29 +334,28 @@ const DoctorDetail = () => {
           </div>
         ))}
       </div>
- 
+
       {/* ✅ Thêm đoạn này vào bên trong renderReviews */}
       <div className="reviews-list">
         {doctorData.reviews.map((review, idx) => (
           <div key={idx} className="review-card">
             <div className="review-header">
-              <strong>{review.customerName}</strong> {" "}
+              <strong>{review.customerName}</strong>{" "}
               {new Date(review.date).toLocaleDateString()}
             </div>
-         
+
             {review.comment && (
               <p className="review-comment">{review.comment}</p>
             )}
 
-
-<div className="review-rating">
+            <div className="review-rating">
               {renderStars(review.rating)}{" "}
               {/* <span className="rating-number">{review.rating}</span> */}
             </div>
           </div>
         ))}
       </div>
- 
+
       <div className="schedule">
         <h1>Lịch làm việc</h1>
         <div className="working-hours-text">
@@ -395,8 +368,6 @@ const DoctorDetail = () => {
       </div>
     </div>
   );
- 
-
 
   const renderContent = () => {
     switch (activeTab) {
@@ -413,9 +384,7 @@ const DoctorDetail = () => {
     }
   };
 
-
   if (!doctorData) return <div>Đang tải thông tin bác sĩ...</div>;
-
 
   return (
     <div className="doctor-detail">
@@ -440,16 +409,10 @@ const DoctorDetail = () => {
           ))}
         </div>
 
-
         <div className="detail-content">{renderContent()}</div>
       </div>
     </div>
   );
 };
-
-
-
-
-
 
 export default DoctorDetail;

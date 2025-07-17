@@ -8,6 +8,8 @@ import hsf302.com.hiemmuon.repository.AppointmentRepository;
 import hsf302.com.hiemmuon.repository.CustomerRepository;
 import hsf302.com.hiemmuon.repository.CycleStepRepository;
 import hsf302.com.hiemmuon.repository.TestResultRepository;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,9 @@ public class TestResultService {
     @Autowired
     private CycleStepRepository cycleStepRepository;
 
+    @Autowired
+    private JwtService jwtService;
+
     public void createTestResult(CreateTestResultDTO dto) {
         Appointment appointment = appointmentRepository.findById(dto.getAppointmentId());
         if (appointment == null) {
@@ -57,21 +62,16 @@ public class TestResultService {
     }
 
 
-    public List<TestResultViewDTO> getResultsForCustomer() {
-        // Lấy email từ security context
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    public List<TestResultViewDTO> getResultsForCustomer(HttpServletRequest request) {
+        final String authHeader = request.getHeader("Authorization");
+        final String token = authHeader.substring(7);
+        Claims claims = jwtService.extractAllClaims(token);
 
-        // Tìm user theo email
-        User user = userService.getUserByEmail(email);
-        if (user == null) {
-            System.out.println("Không tìm thấy người dùng với email: " + email);
-            return Collections.emptyList(); // hoặc throw exception nếu cần
-        }
-
-        // Tìm customer từ user
-        Customer customer = customerRepository.findByUser(user);
+        Object customerIdObj = claims.get("userId");
+        Integer customerId = Integer.parseInt(customerIdObj.toString());
+        Customer customer = customerRepository.findById(customerId).orElse(null);
         if (customer == null) {
-            System.out.println("Không tìm thấy thông tin khách hàng cho user: " + user.getUserId());
+            System.out.println("Không tìm thấy thông tin khách hàng cho user: " + customerId);
             return Collections.emptyList(); // hoặc throw exception nếu cần
         }
 

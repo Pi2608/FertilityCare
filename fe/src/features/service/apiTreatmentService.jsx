@@ -46,19 +46,18 @@ const TreatmentServiceAPI = {
   createService: async (data) => {
     const defaultData = {
       successRate: 100,
-      specialfications: "string",
+      "specifications": "string",
       ...data,
     };
 
     const response = await axiosInstance.post(
       "treatment-services",
-      JSON.stringify(defaultData), // ép JSON rõ ràng
+      defaultData,
       {
-        headers: {
-          "Content-Type": "application/json", // đảm bảo content-type chính xác
-        },
+        headers: { "Content-Type": "application/json" },
       }
     );
+    
     return response.data.data;
   },
 };

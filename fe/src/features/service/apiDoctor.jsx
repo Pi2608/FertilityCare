@@ -2,38 +2,36 @@ import axios from "axios";
 
 
 const API_BASE = "http://localhost:8080/api/";
-
-
+const getToken = () => localStorage.getItem("token");
 const axiosInstance = axios.create({
-    baseURL: API_BASE,
-    headers: { "Content-Type": "application/json" },
+  baseURL: API_BASE,
+  headers: { "Content-Type": "application/json" },
 });
 
 
 const DoctorAPI = {
-    // Lấy tất cả bác sĩ active
-    getActiveDoctors: async () => {
-        try {
-            const response = await axiosInstance.get("doctors/active");
-            return response.data;
-        } catch (error) {
-            console.error("Get Active Doctors error:", error);
-            throw error;
-        }
-    },
+  // Lấy tất cả bác sĩ active
+  getActiveDoctors: async () => {
+    try {
+      const response = await axiosInstance.get("doctors/active");
+      return response.data;
+    } catch (error) {
+      console.error("Get Active Doctors error:", error);
+      throw error;
+    }
+  },
 
 
-    // Lấy chi tiết bác sĩ theo ID
-    getDoctorById: async (id) => {
-        try {
-            const response = await axiosInstance.get(`doctors/id/${id}`);
-            return response.data;
-        } catch (error) {
-            console.error("Get Doctor by ID error:", error);
-            throw error;
-        }
-    },
-   
+  // Lấy chi tiết bác sĩ theo ID
+  getDoctorById: async (id) => {
+    try {
+      const response = await axiosInstance.get(`doctors/id/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error("Get Doctor by ID error:", error);
+      throw error;
+    }
+  },
 
 
   // Lấy danh sách bác sĩ theo phương pháp điều trị
@@ -48,6 +46,7 @@ const DoctorAPI = {
       throw error;
     }
   },
+
 
   // Lấy danh sách bác sĩ theo tên
   getCurrentDoctor: async () => {
@@ -64,19 +63,22 @@ const DoctorAPI = {
     }
   },
 
+
   getMyFeedbacks: async () => {
     try {
-      const res = await axios.get("http://localhost:8080/api/feedbacks/me", {
+      const res = await axios.get("http://localhost:8080/api/feedback", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      return res.data.data;
+      return res.data;
     } catch (err) {
       console.error("Lỗi khi lấy feedback:", err);
       throw err;
     }
   },
+ 
+
 
   // Cập nhật thông tin bác sĩ
   updateCurrentDoctor: async (doctorData) => {
@@ -93,7 +95,5 @@ const DoctorAPI = {
     }
   },
 };
+
 export default DoctorAPI;
-
-
-

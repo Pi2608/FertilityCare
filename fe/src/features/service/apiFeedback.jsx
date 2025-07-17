@@ -21,7 +21,7 @@ const apiFeedback = {
         rating,
         comment: comment || null,
       };
-      const response = await axiosInstance.post("feedbacks/feedback", payload);
+      const response = await axiosInstance.post("feedback", payload);
       return response.data;
     } catch (error) {
       console.error("Lỗi khi gửi đánh giá:", error);
@@ -33,7 +33,7 @@ const apiFeedback = {
   // Lấy danh sách đánh giá của tôi
   getMyFeedbacks: async () => {
     try {
-      const response = await axiosInstance.get("feedbacks/me");
+      const response = await axiosInstance.get("feedback/me");
       return response.data;
     } catch (error) {
       console.error("Lỗi khi lấy đánh giá của tôi:", error);
@@ -44,7 +44,7 @@ const apiFeedback = {
 
   getAllFeedbacks: async () => {
     try {
-      const response = await axiosInstance.get("feedbacks/feedbacks");
+      const response = await axiosInstance.get("feedback");
       return response.data;
     } catch (error) {
       console.error("Lỗi khi lấy toàn bộ đánh giá:", error);

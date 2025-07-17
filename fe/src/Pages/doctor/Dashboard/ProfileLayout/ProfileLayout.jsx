@@ -1,16 +1,17 @@
-"use client"
+import DoctorAPI from "../../../../features/service/apiDoctor";
+import { useState, useEffect } from "react";
+import "./ProfileLayout.css";
 
-import { useState } from "react"
-import "./ProfileLayout.css"
 
 const ProfileLayout = () => {
   const [doctorInfo, setDoctorInfo] = useState({
-    fullName: "",
+    fullName:"",
     gender: "",
     birthDate: "",
     specialty: "",
     phone: "",
   });
+
 
   useEffect(() => {
     const fetchDoctor = async () => {
@@ -28,11 +29,15 @@ const ProfileLayout = () => {
       }
     };
 
+
     fetchDoctor();
+
+
     const averageRating =
       reviews.length > 0
         ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
         : 0;
+
 
     const fetchFeedbacks = async () => {
       try {
@@ -51,10 +56,13 @@ const ProfileLayout = () => {
       }
     };
 
+
     fetchFeedbacks();
   }, []);
 
+
   const [reviews, setReviews] = useState([]);
+
 
   const handleInputChange = (field, value) => {
     setDoctorInfo((prev) => ({
@@ -63,6 +71,7 @@ const ProfileLayout = () => {
     }));
   };
 
+
   const handleSave = async () => {
     try {
       const payload = {
@@ -70,11 +79,18 @@ const ProfileLayout = () => {
         phone: doctorInfo.phone?.trim(), // fallback an toàn
         dob: doctorInfo.birthDate,
         gender: doctorInfo.gender,
-        description: doctorInfo.specialty,
+        specification: doctorInfo.specialty,
       };
+
+
       console.log("Payload gửi lên API:", payload); // Hiện log đầu vào
+
+
       const response = await DoctorAPI.updateCurrentDoctor(payload); // Gán vào biến
+
+
       console.log("Kết quả trả về từ API:", response); // Log kết quả
+
 
       alert("Đã lưu thông tin thành công!");
     } catch (err) {
@@ -82,20 +98,26 @@ const ProfileLayout = () => {
       alert("Lưu thất bại!");
     }
   };
+
+
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, index) => (
       <span key={index} className={`star ${index < rating ? "filled" : ""}`}>
         ⭐
       </span>
-    ))
-  }
+    ));
+  };
 
-  const averageRating = reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
+
+  const averageRating =
+    reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
+
 
   const formatDate = (dateString) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString("vi-VN")
-  }
+    const date = new Date(dateString);
+    return date.toLocaleDateString("vi-VN");
+  };
+
 
   return (
     <div className="profile-container">
@@ -107,15 +129,13 @@ const ProfileLayout = () => {
         </div>
       </div>
 
+
       {/* Main Content - 2 columns */}
       <div className="profile-content">
         {/* Left Column - Doctor Information */}
         <div className="doctor-info-section">
           <h3>Thông Tin Cá Nhân</h3>
           <div className="doctor-card">
-            {/* <div className="doctor-avatar">
-              <img src="/placeholder.svg?height=60&width=60" alt="Doctor Avatar" />
-            </div> */}
             <div className="doctor-details">
               <div className="info-grid">
                 <div className="info-item">
@@ -124,56 +144,70 @@ const ProfileLayout = () => {
                     type="text"
                     className="edit-input"
                     value={doctorInfo.fullName}
-                    onChange={(e) => handleInputChange("fullName", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("fullName", e.target.value)
+                    }
                     placeholder="Nhập họ và tên"
                   />
                 </div>
+
+
                 <div className="info-item">
                   <label>Giới Tính</label>
                   <select
                     className="edit-select"
                     value={doctorInfo.gender}
-                    onChange={(e) => handleInputChange("gender", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("gender", e.target.value)
+                    }
                   >
                     <option value="male">Nam</option>
                     <option value="female">Nữ</option>
-    
                   </select>
                 </div>
+
+
                 <div className="info-item">
                   <label>Ngày Sinh</label>
                   <input
                     type="date"
                     className="edit-input"
                     value={doctorInfo.birthDate}
-                    onChange={(e) => handleInputChange("birthDate", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("birthDate", e.target.value)
+                    }
                   />
                 </div>
+
+
                 <div className="info-item">
                   <label>Chuyên Môn</label>
                   <select
                     className="edit-select"
                     value={doctorInfo.specialty}
-                    onChange={(e) => handleInputChange("specialty", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("specialty", e.target.value)
+                    }
                   >
                     <option value="IVF">IVF</option>
                     <option value="IUI">IUI</option>
-        
                   </select>
                 </div>
+
+
                 <div className="info-item">
-                  <label>Kinh Nghiệm (năm)</label>
+                  <label>Số điện thoại</label>
                   <input
-                    type="number"
+                    type="text"
                     className="edit-input"
-                    value={doctorInfo.experience}
-                    onChange={(e) => handleInputChange("experience", Number.parseInt(e.target.value) || 0)}
-                    placeholder="Nhập số năm kinh nghiệm"
-                    min="0"
-                    max="50"
+                    value={doctorInfo.phone}
+                    onChange={(e) => handleInputChange("phone", e.target.value)}
+                    placeholder="Nhập số điện thoại"
                   />
                 </div>
               </div>
+
+
               <button className="btn-save" onClick={handleSave}>
                 💾 Lưu Thông Tin
               </button>
@@ -182,9 +216,11 @@ const ProfileLayout = () => {
         </div>
         <br></br>
 
+
         {/* Right Column - Reviews */}
         <div className="reviews-section">
           <h3>Đánh Giá Từ Bệnh Nhân</h3>
+
 
           {/* Rating Summary */}
           <div className="reviews-summary">
@@ -195,6 +231,7 @@ const ProfileLayout = () => {
             <div className="total-reviews">({reviews.length} đánh giá)</div>
           </div>
 
+
           {/* Individual Reviews */}
           <div className="reviews-list">
             {reviews.map((review) => (
@@ -202,11 +239,10 @@ const ProfileLayout = () => {
                 <div className="review-header">
                   <div className="patient-info">
                     <h4>{review.patientName}</h4>
+                 
                   </div>
                   <div className="review-meta">
-                    <div className="rating">
-                      {renderStars(review.rating)}
-                    </div>
+                    <div className="rating">{renderStars(review.rating)}</div>
                     <div className="review-date">{formatDate(review.date)}</div>
                   </div>
                 </div>
@@ -221,4 +257,6 @@ const ProfileLayout = () => {
     </div>
   );
 };
+
+
 export default ProfileLayout;

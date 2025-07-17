@@ -2,9 +2,15 @@ import React from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import './TreatmentCard.css';
 
-function TreatmentCard({ title, miniTitle, content, image, info }) {
+function TreatmentCard({ treatmentId, title, miniTitle, content, image }) {
 
   const navigate = useNavigate();
+
+  const NoiDung = ({ content }) => {
+    return (
+      <div dangerouslySetInnerHTML={{ __html: content }} />
+    );
+  };
 
   return (
     <div className="treatment-card">
@@ -16,16 +22,11 @@ function TreatmentCard({ title, miniTitle, content, image, info }) {
         <p>{miniTitle}</p>
       </header>
       <div className="info">
-        <p>{content}</p>
-        {info && 
-          <ul className="additional-info">
-            {info.map((item, index) => (
-              <li key={index}>{item}</li>
-            ))}
-          </ul>
-        }
+        <p>
+          <NoiDung content={content} />
+        </p>
       </div>
-      <button className="card-button" onClick={() => navigate('ivf')}>Tìm Hiểu Thêm →</button>
+      <button className="card-button" onClick={() => navigate(`detail/${treatmentId}`)}>Tìm Hiểu Thêm →</button>
     </div>
   );
 }

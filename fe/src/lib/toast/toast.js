@@ -15,3 +15,11 @@ export const showFail = (msg) => {
         }
     })
 }
+
+export const confirmToast = (msg) => {
+    toast(msg, {
+        style: {
+            color: "#ff9800"
+        }
+    })
+}
