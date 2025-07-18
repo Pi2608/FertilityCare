@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./DoctorDetail.css";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Star } from "lucide-react";
 import DoctorAPI from "../../../features/service/apiDoctor";
 import MaleDoc from "@asset/male-fertility-specialist.png";
@@ -9,10 +9,10 @@ import apiFeedback from "../../../features/service/apiFeedback";
 
 const DoctorDetail = () => {
   const [activeTab, setActiveTab] = useState("introduce");
-
   const [doctorData, setDoctorData] = useState(null);
   const { doctorId } = useParams();
-  console.log("🆔 doctorId từ URL:", doctorId);
+  console.log("doctorId từ URL:", doctorId);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchDoctorDetail();
@@ -127,8 +127,12 @@ const DoctorDetail = () => {
               ({doctor.totalReviews} đánh giá)
             </span>
           </div>
-
-          <button className="appointment-button">Đặt Lịch Hẹn</button>
+          <button
+            className="appointment-button"
+            onClick={() => navigate("/homepage/book-appointment")} // Thêm điều hướng tại đây
+          >
+            Đặt Lịch Hẹn
+          </button>
         </div>
       </div>
     );
@@ -327,8 +331,6 @@ const DoctorDetail = () => {
           </div>
         ))}
       </div>
-
-      {/* ✅ Thêm đoạn này vào bên trong renderReviews */}
       <div className="reviews-list">
         {doctorData.reviews.map((review, idx) => (
           <div key={idx} className="review-card">
@@ -341,10 +343,7 @@ const DoctorDetail = () => {
               <p className="review-comment">{review.comment}</p>
             )}
 
-            <div className="review-rating">
-              {renderStars(review.rating)}{" "}
-              {/* <span className="rating-number">{review.rating}</span> */}
-            </div>
+            <div className="review-rating">{renderStars(review.rating)} </div>
           </div>
         ))}
       </div>

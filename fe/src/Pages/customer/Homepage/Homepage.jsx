@@ -194,7 +194,12 @@ const Homepage = () => {
           </div>
         </div>
         <div className="services-footer">
-          <button className="all-services-btn">Xem Tất Cả Dịch Vụ</button>
+          <button
+            className="all-services-btn"
+            onClick={() => navigate("/homepage/treatment-method")}
+          >
+            Xem Tất Cả Dịch Vụ
+          </button>
         </div>
       </section>
 
