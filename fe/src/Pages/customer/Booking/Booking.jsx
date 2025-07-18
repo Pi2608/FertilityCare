@@ -4,7 +4,6 @@ import { BadgeCheck, Calendar, Clock, Check, Phone, FileText } from "lucide-reac
 import "./Booking.css";
 import apiConsultant from "../../../features/service/apiConsultant";
 
-
 const Booking = () => {
 
   const appointmentTypes = [
@@ -28,7 +27,6 @@ const Booking = () => {
     }
   ];
 
-
   const procedureTypes = [
     "Chọn loại thủ thuật",
     "Siêu âm đầu dò",
@@ -40,9 +38,7 @@ const Booking = () => {
     "Điều trị vô sinh nam",
   ];
 
-
-  const categories = ["Tất Cả", "Nội Tiết Sinh Sản", "Phổi Học", "Siêu Âm"];
-
+  const categories = [];
 
   // State management
   const navigate = useNavigate();
@@ -59,13 +55,14 @@ const Booking = () => {
     reason: "",
   });
 
-
   const [bookingComplete, setBookingComplete] = useState(false);
   const [appointmentDetails, setAppointmentDetails] = useState(null);
   const [customerId, setCustomerId] = useState(null);
   const [doctors, setDoctors] = useState([]);
   const [availableSchedules, setAvailableSchedules] = useState([]);
-  const minBookDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+  const minBookDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0];
   const FIXED_TIME_SLOTS = [
     "09:00",
     "10:00",
@@ -76,7 +73,6 @@ const Booking = () => {
     "15:00",
     "16:00",
   ];
-
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -91,10 +87,8 @@ const Booking = () => {
       }
     };
 
-
     fetchInitialData();
   }, []);
-
 
   // Filter doctors by category
   const filteredDoctors =
@@ -148,7 +142,6 @@ const Booking = () => {
     }
   };
 
-
   const handleDateSelect = async (date) => {
     setSelectedDate(date);
 
@@ -158,21 +151,17 @@ const Booking = () => {
       return;
     }
 
-
     try {
       const unavailable = await apiConsultant.getUnavailableSchedules(
         selectedDoctor.userId,
         date
       );
 
-
       const busyTimes = unavailable.map((slot) => slot.startTime?.slice(0, 5));
-
 
       const available = FIXED_TIME_SLOTS.filter(
         (slot) => !busyTimes.includes(slot)
       );
-
 
       setAvailableSchedules(available);
     } catch (err) {
@@ -181,11 +170,9 @@ const Booking = () => {
     }
   };
 
-
   const handleTimeSelect = (time) => {
     setSelectedTime(time);
   };
-
 
   const handlePersonalInfoChange = (field, value) => {
     setPersonalInfo((prev) => ({
@@ -194,11 +181,9 @@ const Booking = () => {
     }));
   };
 
-
   const isFormValid = () => {
     return Object.values(personalInfo).every((value) => value.trim() !== "");
   };
-
 
   const handleFinalSubmit = async () => {
     try {
@@ -208,19 +193,14 @@ const Booking = () => {
         date: `${selectedDate}T${formattedTime}`,
         note: personalInfo.reason,
       };
-     
-
 
       console.log("🟡 DỮ LIỆU GỬI LÊN API ĐẶT LỊCH:", payload);
 
-
       const res = await apiConsultant.registerAppointment(payload);
-
 
       const appointmentTypeObj = appointmentTypes.find(
         (type) => type.id === selectedAppointmentType
       );
-
 
       const details = {
         doctor: selectedDoctor,
@@ -230,7 +210,6 @@ const Booking = () => {
         appointmentType: appointmentTypeObj, // <== THÊM DÒNG NÀY
       };
 
-
       setAppointmentDetails(details);
       setBookingComplete(true);
     } catch (error) {
@@ -239,13 +218,11 @@ const Booking = () => {
     }
   };
 
-
   // Step 1: Select Appointment Type
   const renderStep1 = () => (
     <div className="step-content">
       <h2>Chọn Loại Lịch Hẹn</h2>
       <p>Vui lòng chọn loại lịch hẹn phù hợp với nhu cầu của bạn</p>
-
 
       <div className="appointment-types">
         {appointmentTypes.map((type) => (
@@ -267,7 +244,6 @@ const Booking = () => {
         ))}
       </div>
 
-
       {selectedAppointmentType === "procedure" && (
         <div className="procedure-selection">
           <h3>Loại Thủ Thuật</h3>
@@ -284,7 +260,6 @@ const Booking = () => {
           </select>
         </div>
       )}
-
 
       <div className="visited-question">
         <p>Bạn Đã Từng Đến Phòng Khám Của Chúng Tôi Chưa?</p>
@@ -312,24 +287,24 @@ const Booking = () => {
         </div>
       </div>
 
-
       <button
         className="next-btn"
         onClick={handleStepNext}
-        disabled={!selectedAppointmentType || (selectedAppointmentType === "procedure" && !selectedProcedureType)}
+        disabled={
+          !selectedAppointmentType ||
+          (selectedAppointmentType === "procedure" && !selectedProcedureType)
+        }
       >
         Tiếp Theo →
       </button>
     </div>
   );
 
-
   // Step 2: Select Doctor
   const renderStep2 = () => (
     <div className="step-content">
       <h2>Chọn Bác Sĩ</h2>
       <p>Vui lòng chọn bác sĩ bạn muốn đặt lịch hẹn</p>
-
 
       <div className="category-filters">
         {categories.map((category) => (
@@ -344,7 +319,6 @@ const Booking = () => {
           </button>
         ))}
       </div>
-
 
       <div className="doctors-list">
         {filteredDoctors.map((doctor) => (
@@ -364,13 +338,11 @@ const Booking = () => {
                 )}
               </div>
 
-
               <div className="doctor-info">
                 <h3>Bác sĩ {doctor.name}</h3>
                 <p>Chuyên khoa {doctor.specification}</p>
               </div>
             </div>
-
 
             <div className="lower">
               <span>
@@ -383,7 +355,6 @@ const Booking = () => {
           </div>
         ))}
       </div>
-
 
       <div className="step-navigation">
         <button className="back-btn" onClick={handleStepBack}>
@@ -400,13 +371,11 @@ const Booking = () => {
     </div>
   );
 
-
   // Step 3: Select Date and Time
   const renderStep3 = () => (
     <div className="step-content">
       <h2>Chọn Ngày và Giờ</h2>
       <p>Vui lòng chọn ngày và giờ phù hợp cho lịch hẹn của bạn</p>
-
 
       <div className="datetime-selection">
         <div className="date-section">
@@ -422,43 +391,42 @@ const Booking = () => {
             </div>
           </div>
           <h3>Chọn Ngày</h3>
-          <input type="date"
+          <input
+            type="date"
             onChange={(e) => {
-            const dateOnly = e.target.value.split('T')[0];
-            handleDateSelect(dateOnly);
-          }}
+              const dateOnly = e.target.value.split("T")[0];
+              handleDateSelect(dateOnly);
+            }}
             min={minBookDate}
           />
         </div>
-
 
         <div className="time-section">
           <h3>Chọn Giờ</h3>
 
           <div className="time-slots">
             {Array.isArray(availableSchedules) &&
-              availableSchedules.length > 0 ? (
-                availableSchedules.map((time) => {
-                  const isSelected = selectedTime === time;
-                  return (
-                    <button
-                      key={time}
-                      className={`time-slot ${isSelected ? "selected" : ""}`}
-                      onClick={() => handleTimeSelect(time)}
-                    >
-                      {time}
-                    </button>
-                  );
-                })
-              ) : (
-                <p style={{ color: "#999", fontStyle: "italic" }}>
-                  Bác sĩ không có lịch trống trong ngày đã chọn.
-                </p>
-              )}
+            availableSchedules.length > 0 ? (
+              availableSchedules.map((time) => {
+                const isSelected = selectedTime === time;
+                return (
+                  <button
+                    key={time}
+                    className={`time-slot ${isSelected ? "selected" : ""}`}
+                    onClick={() => handleTimeSelect(time)}
+                  >
+                    {time}
+                  </button>
+                );
+              })
+            ) : (
+              <p style={{ color: "#999", fontStyle: "italic" }}>
+                Bác sĩ không có lịch trống trong ngày đã chọn.
+              </p>
+            )}
           </div>
         </div>
       </div>
-
 
       <div className="notes">
         <h4>Lưu ý:</h4>
@@ -478,7 +446,6 @@ const Booking = () => {
         </ul>
       </div>
 
-
       <div className="step-navigation">
         <button className="back-btn" onClick={handleStepBack}>
           Quay Lại
@@ -494,13 +461,11 @@ const Booking = () => {
     </div>
   );
 
-
   // Step 4: Personal Information
   const renderStep4 = () => (
     <div className="step-content">
       <h2>Thông Tin Đặt Lịch</h2>
       <p>Vui lòng cung cấp lý do bạn muốn tư vấn với bác sĩ</p>
-
 
       <div className="personal-form">
         <div className="booking-form">
@@ -513,7 +478,6 @@ const Booking = () => {
           />
         </div>
       </div>
-
 
       <div className="step-navigation">
         <button className="back-btn" onClick={handleStepBack}>
@@ -530,7 +494,6 @@ const Booking = () => {
     </div>
   );
 
-
   // Booking Complete
   const renderBookingComplete = () => (
     <div className="step-content booking-complete">
@@ -538,10 +501,7 @@ const Booking = () => {
         <Check size={48} />
       </div>
       <h2>Đặt Lịch Hẹn Thành Công!</h2>
-      <p>
-        Cảm ơn bạn đã đặt lịch hẹn với chúng tôi
-      </p>
-
+      <p>Cảm ơn bạn đã đặt lịch hẹn với chúng tôi</p>
 
       <div className="appointment-summary">
         <h3>Chi Tiết Lịch Hẹn</h3>
@@ -567,7 +527,6 @@ const Booking = () => {
         </div>
       </div>
 
-
       <div className="important-notes">
         <p>
           Vui lòng đến trước 15 phút để hoàn thành thủ tục đăng ký. Mang theo hồ
@@ -579,16 +538,19 @@ const Booking = () => {
         </p>
       </div>
 
-
       <div className="action-buttons">
         <button className="secondary-btn" onClick={() => navigate("/homepage")}>
           Quay Về Trang Chủ
         </button>
-        <button className="primary-btn" onClick={() => navigate("/patient-dashboard/appointments")}>Quản Lý Lịch Hẹn</button>
+        <button
+          className="primary-btn"
+          onClick={() => navigate("/patient-dashboard/appointments")}
+        >
+          Quản Lý Lịch Hẹn
+        </button>
       </div>
     </div>
   );
-
 
   return (
     <div className="booking">
@@ -597,7 +559,6 @@ const Booking = () => {
           <a href="/homepage">Trang Chủ</a> / <span>Đặt Lịch Hẹn</span>
         </div>
 
-
         <div className="booking-header">
           <h1>Đặt Lịch Hẹn</h1>
           <p>
@@ -605,7 +566,6 @@ const Booking = () => {
             bắt đầu hành trình điều trị hiếm muộn của bạn.
           </p>
         </div>
-
 
         {!bookingComplete && (
           <div className="progress-steps">
@@ -628,7 +588,6 @@ const Booking = () => {
           </div>
         )}
 
-
         <div className="booking-content">
           {bookingComplete ? (
             renderBookingComplete()
@@ -645,6 +604,5 @@ const Booking = () => {
     </div>
   );
 };
-
 
 export default Booking;
