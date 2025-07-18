@@ -40,6 +40,9 @@ public class CycleStepService {
     private TestResultRepository testResultRepository;
 
     @Autowired
+    private CustomerRepository customerRepository;
+
+    @Autowired
     private SendMailService sendMailService;
 
 
