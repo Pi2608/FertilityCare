@@ -4,9 +4,10 @@ import { Calendar as CalendarIcon, Clock as ClockIcon } from "lucide-react";
 import apiAppointment from "../../../../features/service/apiAppointment";
 import ApiGateway from "@features/service/apiGateway";
 import apiFeedback from "@features/service/apiFeedback";
-
+import { useNavigate } from "react-router-dom";
 
 const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
+  const navigate = useNavigate();
   const [appointments, setAppointments] = useState([]);
   const [paymentNotifications, setPaymentNotifications] = useState([]);
   const [myFeedbacks, setMyFeedbacks] = useState([]);
@@ -14,12 +15,10 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
   const [selectedDoctor, setSelectedDoctor] = useState({ id: null, name: "" });
   const [feedbackData, setFeedbackData] = useState({ rating: 5, comment: "" });
 
-
   const handleOpenFeedbackForm = (doctorId, doctorName) => {
     setSelectedDoctor({ id: doctorId, name: doctorName });
     setShowFeedbackForm(true);
   };
-
 
   const handleSubmitFeedback = async () => {
     try {
@@ -29,7 +28,6 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
         comment: feedbackData.comment,
       });
 
-
       alert("Gửi đánh giá thành công");
       setShowFeedbackForm(false);
       fetchMyFeedbacks(); // reload để ẩn nút
@@ -38,7 +36,6 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
       alert("Gửi đánh giá thất bại.");
     }
   };
-
 
   const fetchMyFeedbacks = async () => {
     try {
@@ -50,21 +47,17 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
     }
   };
 
-
   useEffect(() => {
     fetchAppointments();
     fetchPaymentNotifications();
     fetchMyFeedbacks();
 
-
     const interval = setInterval(() => {
       fetchPaymentNotifications();
     }, 60000);
 
-
     return () => clearInterval(interval);
   }, []);
-
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("vi-VN", {
@@ -73,10 +66,8 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
     }).format(amount);
   };
 
-
   const formatDatetimeWithWeekday = (isoString) => {
     const date = new Date(isoString);
-
 
     const weekday = date.toLocaleDateString("vi-VN", { weekday: "long" }); // ví dụ: "Thứ Hai"
     const hours = String(date.getHours()).padStart(2, "0");
@@ -85,10 +76,8 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
 
-
     return `${weekday}, ${hours}:${minutes} ${day}/${month}/${year}`;
   };
-
 
   const fetchPaymentNotifications = async () => {
     try {
@@ -100,7 +89,6 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
     }
   };
 
-
   const cancelPayment = (paymentId) => {
     try {
       const response = ApiGateway.cancelPayment(paymentId);
@@ -111,7 +99,6 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
     }
   };
 
-
   const fetchAppointments = async () => {
     try {
       const data = await apiAppointment.getAllAppointments();
@@ -121,13 +108,11 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
     }
   };
 
-
   const cancelAppointment = async (appointmentId) => {
     const isConfirmed = window.confirm(
       "Bạn có chắc chắn muốn hủy cuộc hẹn này không?"
     );
     if (!isConfirmed) return;
-
 
     try {
       await apiAppointment.cancelAppointmentById(appointmentId);
@@ -139,48 +124,36 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
     }
   };
 
-
   useEffect(() => {
     fetchAppointments();
     fetchPaymentNotifications();
 
-
     console.log("Fetching payment notifications...");
-
 
     const interval = setInterval(() => {
       fetchPaymentNotifications();
     }, 60000);
 
-
     return () => clearInterval(interval);
   }, []);
 
-
   const now = new Date();
-
 
   const completedAppointments = appointments.filter(
     (appt) => appt.status === "done"
   );
 
-
   const upcomingAppointments = appointments.filter(
     (appt) => appt.status === "confirmed"
   );
- 
-
 
   const feedbackedDoctorIds = new Set(myFeedbacks.map((fb) => fb.doctorId));
-
 
   const completedAppointmentsFiltered = completedAppointments.filter((appt) => {
     return !feedbackedDoctorIds.has(appt.doctorId);
   });
 
-
   const displayedDoctors = new Set();
-
 
   return (
     <div className="appointment-page">
@@ -190,23 +163,19 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
           <p>Chào mừng quay trở lại với cổng thông tin bệnh nhân</p>
         </div>
 
-
         <div className="actions">
           {/* <button className="primary-btn">Đặt lịch hẹn</button> */}
           <button className="secondary-btn">Liên hệ bác sĩ</button>
         </div>
       </div>
 
-
       <div className="apt-container">
         <div className="page-title-actions">
           <h3>Lịch hẹn của tôi</h3>
-          <button className="btn-primary">Đặt lịch mới</button>
         </div>
         <div className="subtitle">
           <p>Quản lý tất cả các cuộc hẹn sắp tới và đã qua</p>
         </div>
-
 
         <section className="patient-apt-section">
           {paymentNotifications.length > 0 && (
@@ -233,8 +202,6 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
                 <div className="appointment-icon">
                   <CalendarIcon size={24} />
                 </div>
-
-
                 <div className="appointment-info">
                   <h5>{appt.type === "tu_van" ? "Tư vấn" : "Tái khám"}</h5>
                   <p>
@@ -243,8 +210,6 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
                   </p>
                   <p className="doctor-name">Bác sĩ {appt.doctorName}</p>
                 </div>
-
-
                 <div className="appointment-actions">
                   {appt.type === "tu_van" && appt.status === "confirmed" ? (
                     <button
@@ -254,15 +219,28 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
                       Hủy cuộc hẹn
                     </button>
                   ) : (
-                    <button className="secondary-btn"></button>
+                    <button className="secondary-btn" disabled>
+                      Hủy cuộc hẹn
+                    </button>
                   )}
-                  <button className="primary-btn">Chi tiết</button>
+                  <button
+                    className="primary-btn"
+                    onClick={() =>
+                      navigate(
+                        appt.type === "tu_van"
+                          ? `/patient-dashboard/appointments/tu_van/${appt.appointmentId}/${appt.customerId}`
+                          : `/patient-dashboard/appointments/dieu_tri/${appt.appointmentId}/${appt.customerId}`,
+                        { state: { appointmentId: appt.appointmentId } }
+                      )
+                    }
+                  >
+                    Chi tiết
+                  </button>
                 </div>
               </div>
             ))}
           </div>
         </section>
-
 
         <section className="patient-apt-section">
           <h4>Đã hoàn thành</h4>
@@ -271,11 +249,9 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
               const alreadyDisplayed = displayedDoctors.has(appt.doctorId);
               const showFeedbackButton = !alreadyDisplayed;
 
-
               if (showFeedbackButton) {
                 displayedDoctors.add(appt.doctorId);
               }
-
 
               return (
                 <div
@@ -285,8 +261,6 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
                   <div className="appointment-icon completed-icon">
                     <CalendarIcon size={24} />
                   </div>
-
-
                   <div className="appointment-info">
                     <h5>{appt.type === "tu_van" ? "Tư vấn" : "Tái khám"}</h5>
                     <p>
@@ -295,12 +269,20 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
                     </p>
                     <p className="doctor-name">Bác sĩ {appt.doctorName}</p>
                   </div>
-
-
                   <div className="appointment-actions">
-                    <button className="btn-outline">Xem chi tiết</button>
-
-
+                    <button
+                      className="btn-outline"
+                      onClick={() =>
+                        navigate(
+                          appt.type === "tu_van"
+                            ? `/patient-dashboard/appointments/tu_van/${appt.appointmentId}/${appt.customerId}`
+                            : `/patient-dashboard/appointments/dieu_tri/${appt.appointmentId}/${appt.customerId}`,
+                          { state: { appointmentId: appt.appointmentId } }
+                        )
+                      }
+                    >
+                      Xem chi tiết
+                    </button>
                     {showFeedbackButton && (
                       <button
                         className="btn-primary"
@@ -319,12 +301,10 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
         </section>
       </div>
 
-
       {showFeedbackForm && (
         <div className="feedback-form-overlay">
           <div className="feedback-form">
             <h3>Đánh giá bác sĩ {selectedDoctor.name}</h3>
-
 
             <label>Chấm điểm:</label>
             <select
@@ -343,7 +323,6 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
               ))}
             </select>
 
-
             <label>Nhận xét:</label>
             <textarea
               value={feedbackData.comment}
@@ -352,7 +331,6 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
               }
               placeholder="Nhập đánh giá của bạn..."
             />
-
 
             <div className="feedback-form-actions">
               <button
@@ -372,9 +350,7 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
   );
 };
 
-
 export default PatientApt;
-
 
 const PaymentNotification = ({
   payment,
@@ -384,12 +360,10 @@ const PaymentNotification = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false);
 
-
   const confirmPayment = async (paymentId) => {
     try {
       setIsLoading(true);
       const response = await ApiGateway.createVNPayUrl(paymentId);
-
 
       if (response) {
         window.location.href = response;
@@ -405,18 +379,15 @@ const PaymentNotification = ({
     }
   };
 
-
   const handleConfirmClick = (e) => {
     e.stopPropagation();
     confirmPayment(payment.paymentId);
   };
 
-
   const handleCancelClick = (e) => {
     e.stopPropagation();
     cancelPayment(payment.paymentId);
   };
-
 
   return (
     <div
@@ -429,7 +400,6 @@ const PaymentNotification = ({
       <div className="notification-icon payment-icon">
         <CalendarIcon size={24} />
       </div>
-
 
       <div className="notification-info">
         <div className="notification-header">
@@ -456,7 +426,6 @@ const PaymentNotification = ({
           </span>
         </p>
       </div>
-
 
       <div className="notification-actions">
         <button

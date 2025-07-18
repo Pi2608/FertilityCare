@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
 import apiAppointment from "../../../../features/service/apiAppointment";
+import apiMessage from "../../../../features/service/apiMessage";
 import "./Appointments.css";
 import { useNavigate } from "react-router-dom";
-
 
 export default function Appointments() {
   const [appointments, setAppointments] = useState([]);
   const navigate = useNavigate();
   const [filterType, setFilterType] = useState("all");
   const [filterTime, setFilterTime] = useState("all");
-
+  const [showMessagePopup, setShowMessagePopup] = useState(false);
+  const [messageContent, setMessageContent] = useState("");
+  const [selectedCustomerId, setSelectedCustomerId] = useState(null);
 
   const filterAppointments = () => {
     const today = new Date();
@@ -18,16 +20,16 @@ export default function Appointments() {
     const endOfWeek = new Date(startOfWeek);
     endOfWeek.setDate(startOfWeek.getDate() + 6); // Sunday
 
-
     return appointments
       .filter((item) => {
-        const itemDate = new Date(item.date);
+        // Hide canceled and done appointments
+        if (item.status === "canceled" || item.status === "done") return false;
 
+        const itemDate = new Date(item.date);
 
         // Filter theo loại điều trị
         if (filterType === "tu_van" && item.type !== "tu_van") return false;
         if (filterType === "tai_kham" && item.type === "tu_van") return false;
-
 
         // Filter theo thời gian
         if (filterTime === "today") {
@@ -42,7 +44,6 @@ export default function Appointments() {
           return itemDate >= startOfWeek && itemDate <= endOfWeek;
         }
 
-
         return true;
       })
       .sort((a, b) => {
@@ -52,6 +53,33 @@ export default function Appointments() {
       });
   };
 
+  const handleSendMessage = async () => {
+    try {
+      if (!messageContent.trim()) {
+        alert("Vui lòng nhập nội dung tin nhắn.");
+        return;
+      }
+
+      if (!selectedCustomerId) {
+        alert("Không tìm thấy thông tin bệnh nhân.");
+        return;
+      }
+
+      const payload = {
+        receiverId: selectedCustomerId,
+        message: messageContent,
+      };
+
+      await apiMessage.sendMessage(payload);
+      alert("Gửi tin nhắn thành công!");
+      setMessageContent("");
+      setShowMessagePopup(false);
+      setSelectedCustomerId(null);
+    } catch (err) {
+      console.error("Lỗi khi gửi tin nhắn:", err);
+      alert("Không thể gửi tin nhắn.");
+    }
+  };
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -63,14 +91,11 @@ export default function Appointments() {
       }
     };
 
-
     fetchAppointments();
   }, []);
 
-
   return (
     <div className="schedule-container">
-      {/* PHẦN 2: DANH SÁCH LỊCH HẸN */}
       <div className="schedule-header">
         <div>
           <h2>Lịch hẹn</h2>
@@ -87,8 +112,6 @@ export default function Appointments() {
             <option value="tomorrow">Ngày mai</option>
             <option value="week">Tuần này</option>
           </select>
-
-
           <select
             onChange={(e) => setFilterType(e.target.value)}
             value={filterType}
@@ -99,8 +122,40 @@ export default function Appointments() {
           </select>
         </div>
       </div>
-
-
+  
+      {showMessagePopup && (
+        <div className="schedule-popup">
+          <div className="schedule-popup-content">
+            <h3>Gửi tin nhắn</h3>
+            <p>Nhập tin nhắn cho bệnh nhân</p>
+            <div className="form-group">
+              <textarea
+                className="form-textarea"
+                rows={4}
+                placeholder="Nhập nội dung tin nhắn..."
+                value={messageContent}
+                onChange={(e) => setMessageContent(e.target.value)}
+              />
+            </div>
+            <div className="button-group">
+              <button className="btn btn-primary" onClick={handleSendMessage}>
+                Gửi
+              </button>
+              <button
+                className="btn btn-outline"
+                onClick={() => {
+                  setShowMessagePopup(false);
+                  setMessageContent("");
+                  setSelectedCustomerId(null);
+                }}
+              >
+                Hủy
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+  
       <table className="schedule-table">
         <thead>
           <tr>
@@ -155,28 +210,38 @@ export default function Appointments() {
                         onClick={() =>
                           navigate(
                             item.type === "tu_van"
-                            ? `/doctor-dashboard/appointments/tu_van/${item.appointmentId}/${item.customerId}`
-                            : `/doctor-dashboard/appointments/dieu_tri/${item.appointmentId}/${item.customerId}`,
+                              ? `/doctor-dashboard/appointments/tu_van/${item.appointmentId}/${item.customerId}`
+                              : `/doctor-dashboard/appointments/dieu_tri/${item.appointmentId}/${item.customerId}`,
                             { state: { appointmentId: item.appointmentId } }
                           )
                         }
                       >
                         Bắt đầu
                       </button>
-
-
-                      <a href="" className="btn btn-message no-underline">
+                      <button
+                        className="btn btn-message"
+                        onClick={() => {
+                          setSelectedCustomerId(item.customerId);
+                          setShowMessagePopup(true);
+                        }}
+                      >
                         Nhắn tin
-                      </a>
+                      </button>
                     </>
                   ) : (
                     <>
                       <a href="" className="btn btn-not-ready no-underline">
                         Chưa mở
                       </a>
-                      <a href="" className="btn btn-message no-underline">
+                      <button
+                        className="btn btn-message"
+                        onClick={() => {
+                          setSelectedCustomerId(item.customerId);
+                          setShowMessagePopup(true);
+                        }}
+                      >
                         Nhắn tin
-                      </a>
+                      </button>
                     </>
                   )}
                 </div>
@@ -185,8 +250,7 @@ export default function Appointments() {
           ))}
         </tbody>
       </table>
-
-
+  
       <div className="pagination">
         <button>Trước</button>
         <span>Trang 1 / 3</span>

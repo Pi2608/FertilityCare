@@ -49,7 +49,7 @@ const Header = () => {
 
   const handleProfile = () => {
     setShowUserMenu(false);
-    navigate('/profile');
+    navigate('/patient-dashboard');
   };
 
 
@@ -104,11 +104,9 @@ const Header = () => {
               {showUserMenu && (
                 <div className="user-dropdown">
                   <div className="dropdown-item" onClick={handleProfile}>
-                    Thông tin cá nhân
+                    Hồ sơ của tôi
                   </div>
-                  <div className="dropdown-item" onClick={handleMyAppointments}>
-                    Lịch hẹn của tôi
-                  </div>
+                 
                   <div className="dropdown-divider"></div>
                   <div className="dropdown-item logout" onClick={handleLogout}>
                     Đăng xuất

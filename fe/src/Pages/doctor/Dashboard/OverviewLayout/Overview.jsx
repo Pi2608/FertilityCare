@@ -290,22 +290,12 @@ export default function Overview() {
                     ? appt.note
                     : "Không có ghi chú"}
                 </p>
-
-                <div className="actions">
-                  <a href="/patient-profile">Xem hồ sơ</a>
-                  <span> · </span>
-                  <a href="#">Ghi chú</a>
-                </div>
               </div>
               <div className="appointment-time">
                 {appt.startTime?.slice(0, 5)} {/* ví dụ: 16:00 */}
               </div>
             </div>
           ))}
-        </div>
-
-        <div className="see-more">
-          <a href="#">Xem tất cả lịch hẹn</a>
         </div>
       </section>
     </div>

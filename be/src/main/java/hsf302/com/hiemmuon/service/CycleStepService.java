@@ -40,10 +40,10 @@ public class CycleStepService {
     private TestResultRepository testResultRepository;
 
     @Autowired
-    private CustomerRepository customerRepository;
+    private SendMailService sendMailService;
 
     @Autowired
-    private SendMailService sendMailService;
+    private CustomerRepository customerRepository;
 
 
     public List<CycleStepDTO> getAllCycleStep(int cycleId) {

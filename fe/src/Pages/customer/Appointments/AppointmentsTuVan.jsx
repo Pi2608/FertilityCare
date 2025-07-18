@@ -1,16 +1,15 @@
 import { useState, useEffect } from "react";
 import ApiGateway from "@features/service/apiGateway";
-import "./PatientProfileLayout1.css";
+import "./AppointmentsTuVan.css";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import apiAppointment from "@features/service/apiAppointment";
 import apiNote from "@features/service/apiNote";
 import apiMessage from "@features/service/apiMessage";
 
-const PatientProfileLayout1 = () => {
+const AppointmentsTuVan = () => {
   const [appointmentDetail, setAppointmentDetail] = useState(null);
   const [activeTab, setActiveTab] = useState("notes");
   const [showResultForm, setShowResultForm] = useState(false);
-  const [services, setServices] = useState([]);
   const [showConfirmPopup, setShowConfirmPopup] = useState(false);
   const [isAddingNote, setIsAddingNote] = useState(false);
   const [newNote, setNewNote] = useState("");
@@ -109,12 +108,12 @@ const PatientProfileLayout1 = () => {
         alert("Vui lòng nhập nội dung tin nhắn.");
         return;
       }
-  
+
       const payload = {
         receiverId: appointmentDetail.customerId, // Lấy customerId từ appointmentDetail
         message: messageContent,
       };
-  
+
       await apiMessage.sendMessage(payload);
       alert("Gửi tin nhắn thành công!");
       setMessageContent("");
@@ -133,9 +132,7 @@ const PatientProfileLayout1 = () => {
         payload
       );
       alert(
-        `Cập nhật thành công: ${
-          status === "done" ? "Hoàn thành" : "Thất bại"
-        }!`
+        `Cập nhật thành công: ${status === "done" ? "Hoàn thành" : "Thất bại"}!`
       );
       const updated = await apiAppointment.getAppointmentDetailById(
         appointmentDetail.appointmentId
@@ -159,10 +156,6 @@ const PatientProfileLayout1 = () => {
     medicalRecords: false,
     prescribedMeds: false,
   });
-
-  useEffect(() => {
-    getService();
-  }, []);
 
   useEffect(() => {
     if (!appointmentId) {
@@ -190,17 +183,6 @@ const PatientProfileLayout1 = () => {
       fetchAppointmentDetail();
     }
   }, [appointmentId]);
-
-  
-  const getService = async () => {
-    try {
-      const res = await ApiGateway.getActiveTreatments();
-      console.log("Dịch vụ:", res);
-      setServices(res);
-    } catch (error) {
-      console.error("Lỗi khi lấy danh sách dịch vụ:", error);
-    }
-  }
 
   const toggleSection = (section) => {
     setExpandedSections((prev) => ({
@@ -245,8 +227,31 @@ const PatientProfileLayout1 = () => {
     { id: "service", label: "Chỉ định dịch vụ", icon: "🧪" },
   ];
 
-  const renderServiceTab = () => <ServiceTabContent services={services} />;
+  const renderServiceTab = () => {
+    // Xác định tên dịch vụ dựa trên serviceId
+    const getServiceName = (serviceId) => {
+      switch (serviceId) {
+        case 0:
+          return "Chưa chỉ định";
+        case 1:
+          return "IUI";
+        case 2:
+          return "IVF";
+        default:
+          return "Chưa chỉ định";
+      }
+    };
 
+    return (
+      <div className="patient-profile-tab-content">
+        <h3>Chỉ định dịch vụ</h3>
+        <p>
+          Dịch vụ mà bác sĩ đã chỉ định:{" "}
+          <strong>{getServiceName(appointmentDetail?.serviceId)}</strong>
+        </p>
+      </div>
+    );
+  };
 
   const renderNotesTab = () => (
     <div className="patient-profile-tab-content">
@@ -255,12 +260,6 @@ const PatientProfileLayout1 = () => {
           <h3>Ghi chú khám bệnh</h3>
           <p>Ghi chú và theo dõi quá trình điều trị</p>
         </div>
-        <button
-          className="patient-profile-btn-primary"
-          onClick={() => setIsAddingNote((prev) => !prev)}
-        >
-          📝 Thêm ghi chú mới
-        </button>
 
         {isAddingNote && (
           <div style={{ marginTop: "1rem" }}>
@@ -330,7 +329,7 @@ const PatientProfileLayout1 = () => {
 
   const renderResultsTab = () => {
     const testResults = appointmentDetail?.testResultViewDTOList || [];
-  
+
     return (
       <div className="patient-profile-tab-content">
         <div className="patient-profile-results-header">
@@ -345,7 +344,7 @@ const PatientProfileLayout1 = () => {
             ➕ Thêm kết quả mới
           </button>
         </div>
-  
+
         {showResultForm && (
           <div className="patient-profile-result-form">
             <div className="form-group">
@@ -424,7 +423,7 @@ const PatientProfileLayout1 = () => {
             </div>
           </div>
         )}
-  
+
         <div className="patient-profile-results-by-phase">
           {testResults.filter((r) => !isNaN(Number(r.value))).length > 0 ? (
             <div className="patient-profile-phase-results-container">
@@ -608,16 +607,8 @@ const PatientProfileLayout1 = () => {
             </div>
           </div>
         </div>
-        <div className="patient-profile-header-actions">
-          <button
-            className="patient-profile-btn-danger"
-            onClick={() => setShowConfirmPopup(true)}
-          >
-            Kết thúc cuộc hẹn
-          </button>
-        </div>
       </div>
-  
+
       {showConfirmPopup && (
         <div className="patient-profile-popup">
           <div className="patient-profile-popup-content">
@@ -647,41 +638,38 @@ const PatientProfileLayout1 = () => {
         </div>
       )}
 
-{showMessagePopup && (
-      <div className="patient-profile-popup">
-        <div className="patient-profile-popup-content">
-          <h3>Gửi tin nhắn</h3>
-          <p>Nhập tin nhắn cho {patientData.name}</p>
-          <div className="form-group">
-            <textarea
-              className="form-textarea"
-              rows={4}
-              placeholder="Nhập nội dung tin nhắn..."
-              value={messageContent}
-              onChange={(e) => setMessageContent(e.target.value)}
-            />
-          </div>
-          <div className="button-group">
-            <button
-              className="btn btn-primary"
-              onClick={handleSendMessage}
-            >
-              Gửi
-            </button>
-            <button
-              className="btn btn-outline"
-              onClick={() => {
-                setShowMessagePopup(false);
-                setMessageContent("");
-              }}
-            >
-              Hủy
-            </button>
+      {showMessagePopup && (
+        <div className="patient-profile-popup">
+          <div className="patient-profile-popup-content">
+            <h3>Gửi tin nhắn</h3>
+            <p>Nhập tin nhắn cho {patientData.name}</p>
+            <div className="form-group">
+              <textarea
+                className="form-textarea"
+                rows={4}
+                placeholder="Nhập nội dung tin nhắn..."
+                value={messageContent}
+                onChange={(e) => setMessageContent(e.target.value)}
+              />
+            </div>
+            <div className="button-group">
+              <button className="btn btn-primary" onClick={handleSendMessage}>
+                Gửi
+              </button>
+              <button
+                className="btn btn-outline"
+                onClick={() => {
+                  setShowMessagePopup(false);
+                  setMessageContent("");
+                }}
+              >
+                Hủy
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    )}
-  
+      )}
+
       <div className="patient-profile-container">
         <div className="patient-profile-sidebar">
           <div className="patient-profile-patient-info">
@@ -696,7 +684,7 @@ const PatientProfileLayout1 = () => {
               </span>
             </div>
           </div>
-  
+
           <div className="patient-profile-patient-basic-info">
             <div className="patient-profile-info-row">
               <span className="patient-profile-label">Tuổi:</span>
@@ -704,24 +692,28 @@ const PatientProfileLayout1 = () => {
             </div>
             <div className="patient-profile-info-row">
               <span className="patient-profile-label">Ngày bắt đầu:</span>
-              <span className="patient-profile-value">{patientData.startDate}</span>
+              <span className="patient-profile-value">
+                {patientData.startDate}
+              </span>
             </div>
             <div className="patient-profile-info-row">
               <span className="patient-profile-label">Bác sĩ phụ trách:</span>
-              <span className="patient-profile-value">{patientData.doctor}</span>
+              <span className="patient-profile-value">
+                {patientData.doctor}
+              </span>
             </div>
           </div>
-  
+
           <div className="patient-profile-sidebar-actions">
-  <button
-    className="patient-profile-btn-outline"
-    onClick={() => setShowMessagePopup(true)}
-  >
-    💬 Nhắn tin
-  </button>
-</div>
+            <button
+              className="patient-profile-btn-outline"
+              onClick={() => setShowMessagePopup(true)}
+            >
+              💬 Nhắn tin
+            </button>
+          </div>
         </div>
-  
+
         <div className="patient-profile-main-content">
           <div className="patient-profile-tabs">
             {tabs.map((tab) => (
@@ -744,145 +736,4 @@ const PatientProfileLayout1 = () => {
   );
 };
 
-export default PatientProfileLayout1;
-
-
-const ServiceTabContent = ({services}) => {
-  const navigate = useNavigate();
-  const { appointmentId, customerId } = useParams();
-  const today = new Date();
-  const [paymentForm, setPaymentForm] = useState({
-    customerId: customerId,
-    serviceId: "",
-    appointmentId: appointmentId,
-    appointmentDate: "",
-    note: "",
-    total: 0,
-    type: "",
-  });
-
-  const typeOptions = [
-    { value: "test", label: "Test" },
-    { value: "treatment", label: "Điều trị" },
-  ];
-
-  useEffect(() => {
-    if (paymentForm.serviceId) {
-      const selectedService = services.find(
-        (service) => service.serviceId.toString() === paymentForm.serviceId
-      );
-      if (selectedService) {
-        setPaymentForm((prev) => ({ ...prev, total: selectedService.price }));
-      }
-    } else {
-      setPaymentForm((prev) => ({ ...prev, total: 0 }));
-    }
-  }, [paymentForm.serviceId, services]);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setPaymentForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async () => {
-    try {
-      const res = await ApiGateway.createPayment(paymentForm);
-      console.log(paymentForm)
-      console.log("Tạo chỉ định thành công:", res);
-      alert("Tạo chỉ định thành công!");
-    } catch (error) {
-      console.error("Tạo chỉ định thất bại:", error);
-      alert("Đã xảy ra lỗi khi tạo chỉ định.");
-    }
-  };
-
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    }).format(amount);
-  };
-
-  const isFormValid =
-    paymentForm.serviceId && paymentForm.appointmentDate && paymentForm.type;
-
-  return (
-    <div className="patient-profile-tab-content">
-      <h3>Chỉ định dịch vụ</h3>
-      <p>Điền thông tin chỉ định dịch vụ cho bệnh nhân</p>
-      <div className="form-group">
-        <label className="form-label required">Phương pháp</label>
-        <select
-          className="form-select"
-          name="serviceId"
-          value={paymentForm.serviceId}
-          onChange={handleInputChange}
-        >
-          <option value="">Chọn phương pháp</option>
-          {services?.map((service) => (
-            <option key={service.serviceId} value={service.serviceId}>
-              {service.name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="form-group">
-        <label className="form-label required">Ngày & Giờ khám</label>
-        <input
-          type="datetime-local"
-          className="form-input"
-          name="appointmentDate"
-          value={paymentForm.appointmentDate}
-          min={today.toISOString().slice(0, 16)}
-          step={3600}
-          onChange={handleInputChange}
-        />
-      </div>
-      <div className="form-group">
-        <label className="form-label required">Loại</label>
-        <select
-          className="form-select"
-          name="type"
-          value={paymentForm.type}
-          onChange={handleInputChange}
-        >
-          <option value="">Chọn loại khám</option>
-          {typeOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="form-group">
-        <label className="form-label">Ghi chú</label>
-        <textarea
-          className="form-textarea"
-          name="note"
-          rows={3}
-          value={paymentForm.note}
-          onChange={handleInputChange}
-        />
-      </div>
-      <div className="form-group">
-        <label className="form-label">Tổng số tiền</label>
-        <input
-          type="text"
-          className="form-input"
-          value={formatCurrency(paymentForm.total)}
-          disabled
-        />
-      </div>
-      <div className="button-group">
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={handleSubmit}
-          disabled={!isFormValid}
-        >
-          Tạo lịch khám
-        </button>
-      </div>
-    </div>
-  );
-};
+export default AppointmentsTuVan;

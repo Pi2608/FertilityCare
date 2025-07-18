@@ -30,6 +30,7 @@ function TreatmentMethod() {
    
             const formatted = data.map(service => ({
                 title: `Phương pháp điều trị ${service.name}`,
+                id: service.serviceId,
                 content: service.description,
                 info: [
                     // `Giá: ${service.price.toLocaleString()} VNĐ`,
@@ -65,10 +66,10 @@ function TreatmentMethod() {
                 <button className="secondary" onClick={() => navigate("/homepage/doctor-list")}>Đội ngũ bác sĩ</button>
             </section>
             <div className="cards">
-                {treatmentData.map((item, index) => (
+                {treatmentData?.map((item, index) => (
                     <TreatmentCard
                         key={index}
-                        treatmentId={1}
+                        treatmentId={item.id}
                         title={item.title}
                         content={item.content}
                         image={item.image}
