@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Search } from "lucide-react";
 import apiAppointment1 from "../../../features/service/apiAppointment1";
 import "./Appointment.css";
 
@@ -70,23 +71,6 @@ const Appointment = () => {
       {/* Header */}
       <header className="appointment-header">
         <h1 className="page-title">Thông tin cuộc hẹn</h1>
-
-        <div className="header-actions">
-          <div className="notification-bell">
-            <span>🔔</span>
-            <div className="notification-dot"></div>
-          </div>
-
-          <div className="user-profile">
-            <div className="avatar">
-              <span>JC</span>
-            </div>
-            <div className="user-info">
-              <div className="user-name">Jonitha Cathrine</div>
-              <div className="user-role">Manager</div>
-            </div>
-          </div>
-        </div>
       </header>
 
       {/* Content */}
@@ -113,7 +97,7 @@ const Appointment = () => {
           {/* Search and Filter */}
           <div className="search-filter-section">
             <div className="search-box">
-              <span className="search-icon">🔍</span>
+              <Search className="search-icon" size={20} />
               <input
                 type="text"
                 placeholder="Tìm kiếm"
@@ -133,7 +117,6 @@ const Appointment = () => {
                 className="filter-button"
                 onClick={() => setSelectedDate("")}
               >
-                <span>📅</span>
                 Xoá bộ lọc
               </button>
             </div>

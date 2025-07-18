@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
-import "./SuccessRate.css"
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import "./SuccessRate.css";
 
 const SuccessRate = () => {
-  const navigate = useNavigate()
-  const { serviceId } = useParams()
+  const navigate = useNavigate();
+  const { serviceId } = useParams();
 
   const [successRateData, setSuccessRateData] = useState([
     {
@@ -49,25 +49,39 @@ const SuccessRate = () => {
       nationalComparison: "+3% cao hơn",
       isEditing: false,
     },
-  ])
+  ]);
 
   const handleEdit = (id) => {
     setSuccessRateData((data) =>
-      data.map((item) => (item.id === id ? { ...item, isEditing: true } : { ...item, isEditing: false })),
-    )
-  }
+      data.map((item) =>
+        item.id === id
+          ? { ...item, isEditing: true }
+          : { ...item, isEditing: false }
+      )
+    );
+  };
 
   const handleSave = (id) => {
-    setSuccessRateData((data) => data.map((item) => (item.id === id ? { ...item, isEditing: false } : item)))
-  }
+    setSuccessRateData((data) =>
+      data.map((item) =>
+        item.id === id ? { ...item, isEditing: false } : item
+      )
+    );
+  };
 
   const handleCancel = (id) => {
-    setSuccessRateData((data) => data.map((item) => (item.id === id ? { ...item, isEditing: false } : item)))
-  }
+    setSuccessRateData((data) =>
+      data.map((item) =>
+        item.id === id ? { ...item, isEditing: false } : item
+      )
+    );
+  };
 
   const handleInputChange = (id, field, value) => {
-    setSuccessRateData((data) => data.map((item) => (item.id === id ? { ...item, [field]: value } : item)))
-  }
+    setSuccessRateData((data) =>
+      data.map((item) => (item.id === id ? { ...item, [field]: value } : item))
+    );
+  };
 
   const handleAddRow = () => {
     const newRow = {
@@ -77,15 +91,15 @@ const SuccessRate = () => {
       pregnancyRate: "0%",
       nationalComparison: "0% cao hơn",
       isEditing: true,
-    }
-    setSuccessRateData([...successRateData, newRow])
-  }
+    };
+    setSuccessRateData([...successRateData, newRow]);
+  };
 
   const handleDeleteRow = (id) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa dòng này?")) {
-      setSuccessRateData((data) => data.filter((item) => item.id !== id))
+      setSuccessRateData((data) => data.filter((item) => item.id !== id));
     }
-  }
+  };
 
   return (
     <div className="success-rate-page">
@@ -96,23 +110,6 @@ const SuccessRate = () => {
             ← Quay lại
           </button>
           <h1 className="page-title">Tỷ lệ thành công</h1>
-        </div>
-
-        <div className="header-actions">
-          <div className="notification-bell">
-            <span>🔔</span>
-            <div className="notification-dot"></div>
-          </div>
-
-          <div className="user-profile">
-            <div className="avatar">
-              <span>JC</span>
-            </div>
-            <div className="user-info">
-              <div className="user-name">Jonitha Cathrine</div>
-              <div className="user-role">Manager</div>
-            </div>
-          </div>
         </div>
       </header>
 
@@ -146,7 +143,9 @@ const SuccessRate = () => {
                       <input
                         type="text"
                         value={item.ageGroup}
-                        onChange={(e) => handleInputChange(item.id, "ageGroup", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange(item.id, "ageGroup", e.target.value)
+                        }
                         className="edit-input"
                       />
                     ) : (
@@ -158,7 +157,13 @@ const SuccessRate = () => {
                       <input
                         type="text"
                         value={item.livebirthRate}
-                        onChange={(e) => handleInputChange(item.id, "livebirthRate", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange(
+                            item.id,
+                            "livebirthRate",
+                            e.target.value
+                          )
+                        }
                         className="edit-input"
                       />
                     ) : (
@@ -170,7 +175,13 @@ const SuccessRate = () => {
                       <input
                         type="text"
                         value={item.pregnancyRate}
-                        onChange={(e) => handleInputChange(item.id, "pregnancyRate", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange(
+                            item.id,
+                            "pregnancyRate",
+                            e.target.value
+                          )
+                        }
                         className="edit-input"
                       />
                     ) : (
@@ -182,29 +193,49 @@ const SuccessRate = () => {
                       <input
                         type="text"
                         value={item.nationalComparison}
-                        onChange={(e) => handleInputChange(item.id, "nationalComparison", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange(
+                            item.id,
+                            "nationalComparison",
+                            e.target.value
+                          )
+                        }
                         className="edit-input"
                       />
                     ) : (
-                      <span className="comparison-text">{item.nationalComparison}</span>
+                      <span className="comparison-text">
+                        {item.nationalComparison}
+                      </span>
                     )}
                   </td>
                   <td className="action-cell">
                     {item.isEditing ? (
                       <div className="edit-actions">
-                        <button className="save-btn" onClick={() => handleSave(item.id)}>
+                        <button
+                          className="save-btn"
+                          onClick={() => handleSave(item.id)}
+                        >
                           Lưu
                         </button>
-                        <button className="cancel-btn" onClick={() => handleCancel(item.id)}>
+                        <button
+                          className="cancel-btn"
+                          onClick={() => handleCancel(item.id)}
+                        >
                           Hủy
                         </button>
                       </div>
                     ) : (
                       <div className="view-actions">
-                        <button className="edit-btn" onClick={() => handleEdit(item.id)}>
+                        <button
+                          className="edit-btn"
+                          onClick={() => handleEdit(item.id)}
+                        >
                           Sửa
                         </button>
-                        <button className="delete-btn" onClick={() => handleDeleteRow(item.id)}>
+                        <button
+                          className="delete-btn"
+                          onClick={() => handleDeleteRow(item.id)}
+                        >
                           Xóa
                         </button>
                       </div>
@@ -223,7 +254,7 @@ const SuccessRate = () => {
         </div>
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default SuccessRate
+export default SuccessRate;

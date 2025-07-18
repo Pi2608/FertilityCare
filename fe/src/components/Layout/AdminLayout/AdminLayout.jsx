@@ -4,13 +4,10 @@ import Header from "@components/Header/Header";
 import "./AdminLayout.css";
 import { useNavigate } from "react-router-dom";
 
-
 const AdminLayout = () => {
   const userType = localStorage.getItem("userType") || "Admin";
 
-
   const location = useLocation();
-
 
   const menuItems = [
     {
@@ -99,8 +96,6 @@ const AdminLayout = () => {
       ),
     },
   ];
-
-
   const isActive = (path) => {
     if (path === "/admin-dashboard") {
       return location.pathname === "/admin-dashboard";
@@ -108,21 +103,16 @@ const AdminLayout = () => {
     return location.pathname.startsWith(path);
   };
 
-
   const navigate = useNavigate();
-
-
   useEffect(() => {
     window.scrollTo(0, 0);
     const lastPath = localStorage.getItem("lastVisitedRoute");
-
 
     // Nếu đang ở /admin-dashboard thì redirect sang route cuối cùng
     if (location.pathname === "/admin-dashboard" && lastPath) {
       navigate(lastPath, { replace: true });
     }
   }, []);
-
 
   return (
     <div className="admin_layout">
@@ -134,7 +124,6 @@ const AdminLayout = () => {
             <h2 className="sidebar-title">Trung tâm IVF</h2>
             <p className="sidebar-subtitle">Cổng thông tin Admin</p>
           </div>
-
 
           {/* Sidebar Navigation */}
           <nav className="sidebar-nav">
@@ -154,15 +143,11 @@ const AdminLayout = () => {
               </Link>
             ))}
           </nav>
-
-
-       
         </aside>
         <Outlet />
       </main>
     </div>
   );
 };
-
 
 export default AdminLayout;

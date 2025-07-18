@@ -1,16 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./TreatmentService.css";
-import { Bell } from "lucide-react";
+import { Search } from "lucide-react";
 import TreatmentServiceAPI from "../../../features/service/apiTreatmentService";
-
 
 const TreatmentService = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [services, setServices] = useState([]);
   const [newServiceDraft, setNewServiceDraft] = useState(null);
-
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -37,9 +35,7 @@ const TreatmentService = () => {
     fetchServices();
   }, []);
 
-
   const [editingService, setEditingService] = useState(null);
-
 
   const handleEdit = (serviceId) => {
     setServices(
@@ -52,17 +48,14 @@ const TreatmentService = () => {
     setEditingService(serviceId);
   };
 
-
   const handleSave = async (serviceId) => {
     const service = services.find((s) => s.id === serviceId);
     if (!service) return;
-
 
     const updateData = {
       description: service.overview,
       price: Number(service.price),
     };
-
 
     try {
       await TreatmentServiceAPI.updateServiceInfo(serviceId, updateData);
@@ -78,7 +71,6 @@ const TreatmentService = () => {
     }
   };
 
-
   const handleCancel = (serviceId) => {
     setServices(
       services.map((service) =>
@@ -88,7 +80,6 @@ const TreatmentService = () => {
     setEditingService(null);
   };
 
-
   const handleInputChange = (serviceId, field, value) => {
     setServices(
       services.map((service) =>
@@ -97,10 +88,8 @@ const TreatmentService = () => {
     );
   };
 
-
   const handleAddService = () => {
     if (newServiceDraft) return; // Chỉ cho tạo 1 dịch vụ mới tại 1 thời điểm
-
 
     setNewServiceDraft({
       name: "",
@@ -108,7 +97,6 @@ const TreatmentService = () => {
       price: "",
     });
   };
-
 
   const handleCreateService = async () => {
     if (
@@ -120,21 +108,18 @@ const TreatmentService = () => {
       return;
     }
 
-
     const payload = {
       name: newServiceDraft.name,
       description: newServiceDraft.description,
       price: Number(newServiceDraft.price),
       successRate: 100,
-      specifications: "string",      
+      specifications: "string",
       targetPatient: "string",
       faq: "string",
       isActive: true,
     };
 
-
     console.log("Payload gửi lên:", payload);
-
 
     try {
       const created = await TreatmentServiceAPI.createService(payload);
@@ -155,9 +140,7 @@ const TreatmentService = () => {
       console.error("Lỗi khi tạo dịch vụ:", error.response?.data || error); // 👉 DEBUG LỖI CỤ THỂ
       alert("Không thể tạo dịch vụ mới.");
     }
- 
   };
-
 
   const handleDelete = (serviceId) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa dịch vụ này?")) {
@@ -165,24 +148,19 @@ const TreatmentService = () => {
     }
   };
 
-
   const handleSuccessRateEdit = (serviceId) => {
     navigate(`/manager-dashboard/treatment-service/success-rate/${serviceId}`);
   };
-
 
   const handleProcessEdit = (serviceId) => {
     navigate(`/manager-dashboard/treatment-service/process/${serviceId}`);
   };
 
-
   const handleToggleStatus = async (serviceId) => {
     const service = services.find((s) => s.id === serviceId);
     if (!service) return;
 
-
     const newStatus = !service.isActive;
-
 
     try {
       await TreatmentServiceAPI.updateStatus(serviceId, newStatus);
@@ -197,47 +175,27 @@ const TreatmentService = () => {
     }
   };
 
-
   const filteredServices = services.filter(
     (service) =>
       service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       service.overview.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-
   return (
     <div className="treatment-service-page">
       {/* Header */}
       <header className="treatment-service-header">
         <h1 className="page-title">Dịch vụ điều trị</h1>
-
-
         <div className="header-actions">
-          <div className="notification-bell">
-            <Bell size={20} />
-            <div className="notification-dot"></div>
-          </div>
-
-
-          <div className="user-profile">
-            <div className="avatar">
-              <span>JC</span>
-            </div>
-            <div className="user-info">
-              <div className="user-name">Jonitha Cathrine</div>
-              <div className="user-role">Manager</div>
-            </div>
-          </div>
         </div>
       </header>
-
 
       {/* Content */}
       <main className="treatment-service-content">
         {/* Search and Add Button */}
         <div className="content-header">
           <div className="search-box">
-            <span className="search-icon">🔍</span>
+            <Search className="search-icon" size={20} />
             <input
               type="text"
               placeholder="Tìm kiếm"
@@ -245,15 +203,11 @@ const TreatmentService = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-
-
           <button className="add-service-btn" onClick={handleAddService}>
             <span>+</span>
             Thêm dịch vụ
           </button>
         </div>
-
-
         {/* Services Table */}
         <div className="table-wrapper">
           <table className="services-table">
@@ -336,7 +290,6 @@ const TreatmentService = () => {
                   </td>
                 </tr>
               )}
-
 
               {filteredServices.map((service) => (
                 <tr key={service.id}>
@@ -433,12 +386,9 @@ const TreatmentService = () => {
           </table>
         </div>
 
-
         {/* Pagination */}
         <div className="pagination-section">
           <button className="pagination-btn prev">Trước đó</button>
-
-
           <div className="page-numbers">
             <button className="page-btn active">1</button>
             <button className="page-btn">2</button>
@@ -451,6 +401,5 @@ const TreatmentService = () => {
     </div>
   );
 };
-
 
 export default TreatmentService;
