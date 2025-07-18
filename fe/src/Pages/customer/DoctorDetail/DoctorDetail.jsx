@@ -114,10 +114,6 @@ const DoctorDetail = () => {
   const DoctorCard = ({ doctor }) => {
     return (
       <div className="doctor-card">
-        {/* <div className="img-container">
-                    <img src={doctor.avatar} alt={doctor.name} className="doctor-avatar" />
-                </div> */}
-
         <div className="doctor-info">
           <h3 className="doctor-name">Bác sĩ {doctor.name}</h3>
           <p className="doctor-specialty">{doctor.specialty}</p>
@@ -222,7 +218,6 @@ const DoctorDetail = () => {
             <strong>08:00 - 17:00</strong> mỗi ngày.
           </p>
         </div>
-        <button className="appointment-button">Đặt Lịch Hẹn</button>
       </div>
     </div>
   );
@@ -266,7 +261,6 @@ const DoctorDetail = () => {
             <strong>08:00 - 17:00</strong> mỗi ngày.
           </p>
         </div>
-        <button className="appointment-button">Đặt Lịch Hẹn</button>
       </div>
     </div>
   );
@@ -302,7 +296,6 @@ const DoctorDetail = () => {
             <strong>08:00 - 17:00</strong> mỗi ngày.
           </p>
         </div>
-        <button className="appointment-button">Đặt Lịch Hẹn</button>
       </div>
     </div>
   );
@@ -364,7 +357,6 @@ const DoctorDetail = () => {
             <strong>08:00 - 17:00</strong> mỗi ngày.
           </p>
         </div>
-        <button className="appointment-button">Đặt Lịch Hẹn</button>
       </div>
     </div>
   );

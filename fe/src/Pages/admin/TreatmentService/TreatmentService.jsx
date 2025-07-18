@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./TreatmentService.css";
-import { Bell, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import TreatmentServiceAPI from "../../../features/service/apiTreatmentService";
 
 const TreatmentService = () => {

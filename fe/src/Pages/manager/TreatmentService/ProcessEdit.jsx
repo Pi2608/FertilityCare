@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
-import "./ProcessEdit.css"
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import "./ProcessEdit.css";
 
 const ProcessEdit = () => {
-  const navigate = useNavigate()
-  const { serviceId } = useParams()
+  const navigate = useNavigate();
+  const { serviceId } = useParams();
 
   const [processSteps, setProcessSteps] = useState([
     {
@@ -77,7 +77,8 @@ const ProcessEdit = () => {
       id: 3,
       stepNumber: 3,
       title: "Thụ Tinh",
-      description: "Sau khi lấy trứng, chúng sẽ được thụ tinh với tinh trùng trong phòng thí nghiệm.",
+      description:
+        "Sau khi lấy trứng, chúng sẽ được thụ tinh với tinh trùng trong phòng thí nghiệm.",
       details: [
         {
           id: 1,
@@ -105,7 +106,8 @@ const ProcessEdit = () => {
       id: 4,
       stepNumber: 4,
       title: "Nuôi Cấy Phôi",
-      description: "Sau khi thụ tinh, phôi được nuôi cấy trong phòng thí nghiệm trong 3-5 ngày.",
+      description:
+        "Sau khi thụ tinh, phôi được nuôi cấy trong phòng thí nghiệm trong 3-5 ngày.",
       details: [
         {
           id: 1,
@@ -129,25 +131,41 @@ const ProcessEdit = () => {
       duration: "3-5 ngày",
       isEditing: false,
     },
-  ])
+  ]);
 
   const handleEdit = (stepId) => {
     setProcessSteps((steps) =>
-      steps.map((step) => (step.id === stepId ? { ...step, isEditing: true } : { ...step, isEditing: false })),
-    )
-  }
+      steps.map((step) =>
+        step.id === stepId
+          ? { ...step, isEditing: true }
+          : { ...step, isEditing: false }
+      )
+    );
+  };
 
   const handleSave = (stepId) => {
-    setProcessSteps((steps) => steps.map((step) => (step.id === stepId ? { ...step, isEditing: false } : step)))
-  }
+    setProcessSteps((steps) =>
+      steps.map((step) =>
+        step.id === stepId ? { ...step, isEditing: false } : step
+      )
+    );
+  };
 
   const handleCancel = (stepId) => {
-    setProcessSteps((steps) => steps.map((step) => (step.id === stepId ? { ...step, isEditing: false } : step)))
-  }
+    setProcessSteps((steps) =>
+      steps.map((step) =>
+        step.id === stepId ? { ...step, isEditing: false } : step
+      )
+    );
+  };
 
   const handleInputChange = (stepId, field, value) => {
-    setProcessSteps((steps) => steps.map((step) => (step.id === stepId ? { ...step, [field]: value } : step)))
-  }
+    setProcessSteps((steps) =>
+      steps.map((step) =>
+        step.id === stepId ? { ...step, [field]: value } : step
+      )
+    );
+  };
 
   const handleDetailChange = (stepId, detailId, field, value) => {
     setProcessSteps((steps) =>
@@ -155,12 +173,14 @@ const ProcessEdit = () => {
         step.id === stepId
           ? {
               ...step,
-              details: step.details.map((detail) => (detail.id === detailId ? { ...detail, [field]: value } : detail)),
+              details: step.details.map((detail) =>
+                detail.id === detailId ? { ...detail, [field]: value } : detail
+              ),
             }
-          : step,
-      ),
-    )
-  }
+          : step
+      )
+    );
+  };
 
   const handleAddStep = () => {
     const newStep = {
@@ -177,34 +197,43 @@ const ProcessEdit = () => {
       ],
       duration: "Thời gian",
       isEditing: true,
-    }
-    setProcessSteps([...processSteps, newStep])
-  }
+    };
+    setProcessSteps([...processSteps, newStep]);
+  };
 
   const handleDeleteStep = (stepId) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa bước này?")) {
-      setProcessSteps((steps) => steps.filter((step) => step.id !== stepId))
+      setProcessSteps((steps) => steps.filter((step) => step.id !== stepId));
     }
-  }
+  };
 
   const handleAddDetail = (stepId) => {
     const newDetail = {
       id: Date.now(),
       subtitle: "Chi tiết mới",
       content: "Nội dung chi tiết mới",
-    }
+    };
     setProcessSteps((steps) =>
-      steps.map((step) => (step.id === stepId ? { ...step, details: [...step.details, newDetail] } : step)),
-    )
-  }
+      steps.map((step) =>
+        step.id === stepId
+          ? { ...step, details: [...step.details, newDetail] }
+          : step
+      )
+    );
+  };
 
   const handleDeleteDetail = (stepId, detailId) => {
     setProcessSteps((steps) =>
       steps.map((step) =>
-        step.id === stepId ? { ...step, details: step.details.filter((detail) => detail.id !== detailId) } : step,
-      ),
-    )
-  }
+        step.id === stepId
+          ? {
+              ...step,
+              details: step.details.filter((detail) => detail.id !== detailId),
+            }
+          : step
+      )
+    );
+  };
 
   return (
     <div className="process-edit-page">
@@ -215,23 +244,6 @@ const ProcessEdit = () => {
             ← Quay lại
           </button>
           <h1 className="page-title">Chỉnh sửa quy trình điều trị</h1>
-        </div>
-
-        <div className="header-actions">
-          <div className="notification-bell">
-            <span>🔔</span>
-            <div className="notification-dot"></div>
-          </div>
-
-          <div className="user-profile">
-            <div className="avatar">
-              <span>JC</span>
-            </div>
-            <div className="user-info">
-              <div className="user-name">Jonitha Cathrine</div>
-              <div className="user-role">Manager</div>
-            </div>
-          </div>
         </div>
       </header>
 
@@ -256,7 +268,9 @@ const ProcessEdit = () => {
                     <input
                       type="text"
                       value={step.title}
-                      onChange={(e) => handleInputChange(step.id, "title", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange(step.id, "title", e.target.value)
+                      }
                       className="edit-title-input"
                     />
                   ) : (
@@ -266,7 +280,13 @@ const ProcessEdit = () => {
                   {step.isEditing ? (
                     <textarea
                       value={step.description}
-                      onChange={(e) => handleInputChange(step.id, "description", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange(
+                          step.id,
+                          "description",
+                          e.target.value
+                        )
+                      }
                       className="edit-description-textarea"
                       rows="2"
                     />
@@ -278,19 +298,31 @@ const ProcessEdit = () => {
                 <div className="step-actions">
                   {step.isEditing ? (
                     <>
-                      <button className="save-btn" onClick={() => handleSave(step.id)}>
+                      <button
+                        className="save-btn"
+                        onClick={() => handleSave(step.id)}
+                      >
                         Lưu
                       </button>
-                      <button className="cancel-btn" onClick={() => handleCancel(step.id)}>
+                      <button
+                        className="cancel-btn"
+                        onClick={() => handleCancel(step.id)}
+                      >
                         Hủy
                       </button>
                     </>
                   ) : (
                     <>
-                      <button className="edit-btn" onClick={() => handleEdit(step.id)}>
+                      <button
+                        className="edit-btn"
+                        onClick={() => handleEdit(step.id)}
+                      >
                         Sửa
                       </button>
-                      <button className="delete-btn" onClick={() => handleDeleteStep(step.id)}>
+                      <button
+                        className="delete-btn"
+                        onClick={() => handleDeleteStep(step.id)}
+                      >
                         Xóa
                       </button>
                     </>
@@ -306,16 +338,33 @@ const ProcessEdit = () => {
                         <input
                           type="text"
                           value={detail.subtitle}
-                          onChange={(e) => handleDetailChange(step.id, detail.id, "subtitle", e.target.value)}
+                          onChange={(e) =>
+                            handleDetailChange(
+                              step.id,
+                              detail.id,
+                              "subtitle",
+                              e.target.value
+                            )
+                          }
                           className="edit-subtitle-input"
                         />
                         <textarea
                           value={detail.content}
-                          onChange={(e) => handleDetailChange(step.id, detail.id, "content", e.target.value)}
+                          onChange={(e) =>
+                            handleDetailChange(
+                              step.id,
+                              detail.id,
+                              "content",
+                              e.target.value
+                            )
+                          }
                           className="edit-content-textarea"
                           rows="3"
                         />
-                        <button className="delete-detail-btn" onClick={() => handleDeleteDetail(step.id, detail.id)}>
+                        <button
+                          className="delete-detail-btn"
+                          onClick={() => handleDeleteDetail(step.id, detail.id)}
+                        >
                           Xóa chi tiết
                         </button>
                       </>
@@ -329,7 +378,10 @@ const ProcessEdit = () => {
                 ))}
 
                 {step.isEditing && (
-                  <button className="add-detail-btn" onClick={() => handleAddDetail(step.id)}>
+                  <button
+                    className="add-detail-btn"
+                    onClick={() => handleAddDetail(step.id)}
+                  >
                     + Thêm chi tiết
                   </button>
                 )}
@@ -341,11 +393,15 @@ const ProcessEdit = () => {
                   <input
                     type="text"
                     value={step.duration}
-                    onChange={(e) => handleInputChange(step.id, "duration", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange(step.id, "duration", e.target.value)
+                    }
                     className="edit-duration-input"
                   />
                 ) : (
-                  <span className="duration-text">Thời gian: {step.duration}</span>
+                  <span className="duration-text">
+                    Thời gian: {step.duration}
+                  </span>
                 )}
               </div>
             </div>
@@ -359,7 +415,7 @@ const ProcessEdit = () => {
         </div>
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default ProcessEdit
+export default ProcessEdit;

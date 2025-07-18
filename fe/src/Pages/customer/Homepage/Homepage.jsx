@@ -222,15 +222,6 @@ const Homepage = () => {
           </button>
         </div>
       </section>
-
-      <section className="dashboards">
-        <button onClick={() => navigate("/doctor-dashboard")}>
-          Doctor Dashboard
-        </button>
-        <button onClick={() => navigate("/patient-dashboard")}>
-          Patient Dashboard
-        </button>
-      </section>
     </div>
   );
 };
