@@ -6,12 +6,11 @@ import hsf302.com.hiemmuon.dto.responseDto.*;
 import hsf302.com.hiemmuon.entity.Customer;
 import hsf302.com.hiemmuon.entity.Doctor;
 import hsf302.com.hiemmuon.entity.User;
-import hsf302.com.hiemmuon.service.AppointmentService;
-import hsf302.com.hiemmuon.service.CustomerService;
-import hsf302.com.hiemmuon.service.DoctorService;
-import hsf302.com.hiemmuon.service.UserService;
+import hsf302.com.hiemmuon.service.*;
+import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -40,6 +39,9 @@ public class AppointmentController {
     @Autowired
     private CustomerService customerService;
 
+    @Autowired
+    private JwtService jwtService;
+
     @Operation(
             summary = "Xem lịch ban của bác sĩ",
             description = "Lấy danh sách các khung giờ bác sĩ còn ban trong ngày đã chọn. Dùng để đặt lịch mới."
@@ -48,6 +50,35 @@ public class AppointmentController {
     public ResponseEntity<?> getDoctorSchedules(
             @PathVariable int doctorId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+
+        List<AvailableScheduleDTO> unSchedules = appointmentService.getAvailableSchedules(doctorId, date);
+
+        // Lọc các lịch có status == 1
+        List<AvailableScheduleDTO> available = unSchedules.stream()
+                .filter(s -> !s.isStatus())
+                .toList();
+
+        if (available.isEmpty()) {
+            return ResponseEntity.ok("Bác sĩ ranh ca ngay ngày hôm nay");
+        }
+
+        return ResponseEntity.ok(available);
+    }
+
+    @Operation(
+            summary = "Xem lịch bận của chính bác sĩ",
+            description = "Lấy danh sách các khung giờ bác sĩ còn bận trong ngày đã chọn. Dùng để đặt lịch mới."
+    )
+    @GetMapping("/doctors/unavailable-schedules")
+    public ResponseEntity<?> getMySchedules(
+            HttpServletRequest request,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        final String authHeader = request.getHeader("Authorization");
+        final String token = authHeader.substring(7);
+        Claims claims = jwtService.extractAllClaims(token);
+
+        Object doctorIdObj = claims.get("userId");
+        Integer doctorId = Integer.parseInt(doctorIdObj.toString());
 
         List<AvailableScheduleDTO> unSchedules = appointmentService.getAvailableSchedules(doctorId, date);
 

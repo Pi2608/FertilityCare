@@ -69,8 +69,10 @@ const ProfileLayout = () => {
   const handleSave = async () => {
     try {
       // Format ngày sinh về dạng yyyy-MM-dd
-      const formattedDob = new Date(doctorInfo.birthDate).toISOString().split("T")[0];
-  
+      const formattedDob = new Date(doctorInfo.birthDate)
+        .toISOString()
+        .split("T")[0];
+
       const updatedData = {
         name: doctorInfo.fullName || "",
         gender: doctorInfo.gender || "",
@@ -78,17 +80,15 @@ const ProfileLayout = () => {
         phones: doctorInfo.phone || "",
         medicalHistory: "", // Optional, vẫn để rỗng
       };
-  
+
       const response = await CustomerAPI.updateCustomerInfo(updatedData);
-      console.log("✅ Cập nhật thành công:", response);
-      alert("✅ Đã lưu thông tin thành công!");
+      console.log("Cập nhật thành công:", response);
+      alert("Đã lưu thông tin thành công!");
     } catch (error) {
-      console.error("❌ Lỗi khi lưu thông tin:", error);
-      alert("❌ Lưu thông tin thất bại. Vui lòng thử lại.");
+      console.error("Lỗi khi lưu thông tin:", error);
+      alert("Lưu thông tin thất bại. Vui lòng thử lại.");
     }
   };
-  
-  
 
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, index) => (
@@ -127,18 +127,15 @@ const ProfileLayout = () => {
             </div> */}
             <div className="doctor-details">
               <div className="info-grid">
-                
-
-              <div className="info-item">
-  <label>Email</label>
-  <input
-    type="email"
-    className="edit-input"
-    value={doctorInfo.email || ""}
-    disabled
-  />
-</div>
-
+                <div className="info-item">
+                  <label>Email</label>
+                  <input
+                    type="email"
+                    className="edit-input"
+                    value={doctorInfo.email || ""}
+                    disabled
+                  />
+                </div>
 
                 <div className="info-item">
                   <label>Họ và Tên</label>
@@ -192,7 +189,7 @@ const ProfileLayout = () => {
               </div>
 
               <button className="btn-save" onClick={handleSave}>
-                💾 Lưu Thông Tin
+                Lưu Thông Tin
               </button>
             </div>
           </div>

@@ -27,10 +27,10 @@
 .ivf-detail-container .page-title-section .subtitle-section {
   text-align: center;
   padding: 1rem 2rem;
-  color: #388e3c;
-  background-color: #f9f9f9;
+  color: #E11D48;
+  background-color: #FFE4E6;
   border-radius: 8px;
-  border: 2px dashed #ddd;
+  border: 2px solid #E11D48;
 }
 
 .ivf-detail-container .subtitle {
@@ -44,7 +44,6 @@
 .ivf-detail-container .brief-description {
   padding: 0 10rem 2rem;
   border-radius: 8px;
-  margin-bottom: 2rem;
 }
 
 .ivf-detail-container .brief-description h2 {

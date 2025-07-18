@@ -500,29 +500,10 @@ const IvfDetail = () => {
           </p>
         </div>
       </div>
-
       <div className="brief-description">
         <h2>Giải Pháp Hiệu Quả Cho Hiếm Muộn</h2>
         <p>{subDescMapping(briefDescription?.name)}</p>
-        <div className="action-buttons">
-          <div className="button-group">
-            <button
-              className="primary-btn"
-              onClick={() => navigate("/homepage/book-appointment")}
-            >
-              Đặt Lịch Tư Vấn
-            </button>
-
-            <button
-              className="secondary-btn"
-              onClick={() => navigate("/homepage/doctor-list")}
-            >
-              Gặp gỡ đội ngũ bác sĩ
-            </button>
-          </div>
-        </div>
       </div>
-
       <div className="nav-bar">
         {navItems.map((item) => (
           <button
