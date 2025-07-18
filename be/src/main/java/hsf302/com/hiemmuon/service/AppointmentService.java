@@ -293,7 +293,20 @@ public class AppointmentService {
         if (dto.getNote() != null && !dto.getNote().trim().isEmpty()) {
             appointment.setNote(dto.getNote());
         }
-        appointment.setStatusAppointment(StatusAppointment.done);
+
+        if (appointment.getStatusAppointment() != null) {
+            switch (appointment.getStatusAppointment()) {
+                case confirmed:
+                    appointment.setStatusAppointment(StatusAppointment.done);
+                    break;
+                case canceled:
+                    appointment.setStatusAppointment(StatusAppointment.canceled);
+                    break;
+                case done:
+                    break;
+            }
+        }
+
 
         // ✅ Liên kết với testResult nếu bạn muốn
         if (dto.getTestResultId() != null) {
