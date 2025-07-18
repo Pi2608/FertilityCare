@@ -6,41 +6,6 @@ import apiConsultant from "../../../features/service/apiConsultant";
 
 
 const Booking = () => {
-  const mockData = [
-    {
-      schedule_id: 1,
-      date: "2025-06-30",
-      start_time: "08:00:00",
-      end_time: "09:30:00",
-      status: 0,
-      doctor_id: 3,
-    },
-    {
-      schedule_id: 2,
-      date: "2025-06-30",
-      start_time: "09:30:00",
-      end_time: "11:00:00",
-      status: 0,
-      doctor_id: 3,
-    },
-    {
-      schedule_id: 3,
-      date: "2025-06-30",
-      start_time: "13:00:00",
-      end_time: "14:30:00",
-      status: 0,
-      doctor_id: 3,
-    },
-    {
-      schedule_id: 4,
-      date: "2025-06-30",
-      start_time: "14:30:00",
-      end_time: "16:00:00",
-      status: 0,
-      doctor_id: 3,
-    },
-  ];
-
 
   const appointmentTypes = [
     {
@@ -60,13 +25,7 @@ const Booking = () => {
       title: "Thủ Thuật Điều Trị",
       description: "Lịch hẹn cho thủ thuật điều trị cụ thể",
       icon: Check,
-    },
-    // {
-    //   id: 'other',
-    //   title: 'Khác',
-    //   description: 'Loại lịch hẹn khác không được liệt kê ở trên',
-    //   icon: 'ℹ'
-    // }
+    }
   ];
 
 
@@ -116,7 +75,6 @@ const Booking = () => {
     "14:00",
     "15:00",
     "16:00",
-    "17:00",
   ];
 
 

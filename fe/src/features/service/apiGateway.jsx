@@ -317,6 +317,23 @@ export default class ApiGateway {
   }
 
   /**
+   * [GET] Lấy lịch ban của bác sĩ theo ngày
+   * @param {string} date (YYYY-MM-DD)
+   */
+  static async getMyUnavailableSchedules(date) {
+    try {
+      const response = await ApiGateway.axiosInstance.get(
+        `appointment-services/doctors/unavailable-schedules`,
+        { params: { date } }
+      );
+      return response.data;
+    } catch (error) {
+      console.error(`Get Doctor Unavailable Schedules error:`, error);
+      throw error;
+    }
+  }
+
+  /**
    * [POST] Đặt lịch hẹn mới
    * @param {object} dto
    */
@@ -439,6 +456,9 @@ export default class ApiGateway {
     }
   }
 
+  /**
+   * [GET] Lấy tất cả cuộc hẹn
+   */
   static async getAllAppointments() {
     try {
       const response = await ApiGateway.axiosInstance.get(

@@ -544,6 +544,7 @@
 .patient-profile-appointment-list {
   display: flex;
   flex-direction: column;
+  margin-bottom: 1rem;
   gap: 12px;
 }
 
@@ -943,6 +944,7 @@
 
 .patient-profile-note-content {
   margin-bottom: 16px;
+  margin-left: 0.5rem;
 }
 
 
@@ -1037,7 +1039,7 @@
 }
 
 
-.patient-profile-timeline-item.patient-profile-completed {
+.patient-profile-timeline-item.patient-profile-finished {
   border-left: 4px solid #10b981;
 }
 
@@ -1072,7 +1074,7 @@
 }
 
 
-.patient-profile-timeline-item.patient-profile-completed .patient-profile-timeline-marker {
+.patient-profile-timeline-item.patient-profile-finished .patient-profile-timeline-marker {
   background: #10b981;
   color: white;
   border-color: #10b981;
@@ -1486,6 +1488,59 @@
 
 .patient-profile-btn-outline:hover {
   background-color: rgba(25, 118, 210, 0.1);
+}
+
+.patient-profile-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.patient-profile-confirm-modal {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+}
+
+.patient-profile-confirm-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.patient-profile-confirm-actions button:first-child{
+  width: 100%;
+  padding: 10px 16px;
+  background-color: white;
+  color : #64748b;
+  border : 1px solid #e2e8f0;
+  border-radius: 6px;
+  cursor: pointer
+}
+
+.patient-profile-confirm-actions button:last-child{
+  width: 100%;
+  padding: 10px 16px;
+  background: #1e293b;
+  color : white;
+  border : none;
+  border-radius: 6px;
+  cursor: pointer
+}
+
+.patient-profile-confirm-actions button:first-child:hover{
+  background-color: #eaeaea;
+}
+
+.patient-profile-confirm-actions button:last-child:hover{
+  background: #131b27;
 }
 
 /* Animations */
