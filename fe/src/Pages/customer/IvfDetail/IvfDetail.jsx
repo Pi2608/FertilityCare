@@ -402,7 +402,7 @@ const IvfDetail = () => {
       <h2>{pageData.successRates.title}</h2>
       <p className="rates-description">
         Phương pháp này có tỷ lệ thành công trung bình là{" "}
-        <strong>
+        <strong style={{fontSize: "2rem"}}>
           {successRate != null ? `${successRate}%` : "đang cập nhật..."}
         </strong>
       </p>
