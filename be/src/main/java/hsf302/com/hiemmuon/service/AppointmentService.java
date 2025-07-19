@@ -276,44 +276,50 @@ public class AppointmentService {
 
     public void updateServiceForAppointment(int appointmentId, int doctorId, UpdateAppointmentServiceDTO dto) {
         Appointment appointment = appointmentRepository.findById(appointmentId);
-                if(appointment == null){
-                    throw new RuntimeException("Không có cuộc hẹn đó!");
-                }
+        if (appointment == null) {
+            throw new RuntimeException("Không có cuộc hẹn đó!");
+        }
 
-        if (appointment.getDoctor().getDoctorId() != (doctorId)){
+        if (appointment.getDoctor().getDoctorId() != doctorId) {
             throw new RuntimeException("Bạn không có quyền truy cập cuộc hẹn này.");
         }
 
-        if(!"confirmed".equalsIgnoreCase(String.valueOf(appointment.getStatusAppointment()))){
-            throw new RuntimeException("Chỉ có thể cap nhật dịch vụ khi cuộc hẹn là confirmed");
-        }
-        if(appointment.getTypeAppointment().equals(TypeAppointment.tu_van)){
-            appointment.setService(treatmentServiceRepository.findById(dto.getServiceId()));
-        }
-        if (dto.getNote() != null && !dto.getNote().trim().isEmpty()) {
-            appointment.setNote(dto.getNote());
+        if (!StatusAppointment.confirmed.equals(appointment.getStatusAppointment())) {
+            throw new RuntimeException("Chỉ có thể cập nhật dịch vụ khi cuộc hẹn là confirmed");
         }
 
-        if (appointment.getStatusAppointment() != null) {
-            switch (appointment.getStatusAppointment()) {
-                case confirmed:
+        // ✅ Cập nhật dịch vụ nếu loại là tư vấn và DTO có serviceId
+        if (appointment.getTypeAppointment().equals(TypeAppointment.tu_van)) {
+            appointment.setService(treatmentServiceRepository.findById(dto.getServiceId()));
+        }
+
+        // ✅ Cập nhật ghi chú nếu có
+        if (dto.getNote() != null && !dto.getNote().trim().isEmpty()) {
+            appointment.setNote(dto.getNote().trim());
+        }
+
+        // ✅ Chỉ cập nhật status nếu DTO có status hợp lệ (dạng String)
+        if (dto.getStatus() != null && !dto.getStatus().trim().isEmpty()) {
+            switch (dto.getStatus().trim().toLowerCase()) {
+                case "done":
                     appointment.setStatusAppointment(StatusAppointment.done);
                     break;
-                case canceled:
+                case "canceled":
                     appointment.setStatusAppointment(StatusAppointment.canceled);
                     break;
-                case done:
+                case "confirmed":
+                    appointment.setStatusAppointment(StatusAppointment.confirmed);
                     break;
+                default:
+                    throw new RuntimeException("Trạng thái không hợp lệ.");
             }
         }
 
-
-        // ✅ Liên kết với testResult nếu bạn muốn
+        // ✅ Liên kết testResult nếu DTO có testResultId
         if (dto.getTestResultId() != null) {
             TestResult testResult = testResultRepository.findById(dto.getTestResultId())
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy kết quả xét nghiệm"));
-            // Gán logic liên kết tại đây — ví dụ:
-            testResult.setAppointment(appointment); // nếu bạn muốn update ngược lại
+            testResult.setAppointment(appointment);
             testResultRepository.save(testResult);
         }
 
