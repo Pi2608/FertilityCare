@@ -158,18 +158,7 @@ const Pill = () => {
           <h1>Quản lý thuốc</h1>
           <p>Theo dõi và quản lý lịch uống thuốc của bạn</p>
         </div>
-        <div className="header-actions">
-          <button className="btn-secondary">
-            <ArrowRightFromLine size={18} style={{ marginRight: 6 }} />
-            Xuất báo cáo
-          </button>
-
-
-          <button className="btn-primary">
-            <Bell size={16} />
-            Cài đặt nhắc nhở
-          </button>
-        </div>
+        
       </div>
 
 

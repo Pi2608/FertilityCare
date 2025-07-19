@@ -241,10 +241,10 @@ public class AppointmentService {
                 .map(app -> new AppointmentHistoryDTO(
                         app.getAppointmentId(),
                         app.getDate(),
+                        app.getCustomer().getUser().getName() != null ? app.getCustomer().getUser().getName() : null,
                         app.getTypeAppointment() != null ? app.getTypeAppointment().toString() : null,
                         app.getStatusAppointment() != null ? app.getStatusAppointment().toString() : null,
-                        app.getNote(),
-                        app.getService() != null ? app.getService().getName() : null
+                        app.getNote()
                 ))
                 .collect(Collectors.toList());
 
@@ -287,10 +287,13 @@ public class AppointmentService {
         if(!"confirmed".equalsIgnoreCase(String.valueOf(appointment.getStatusAppointment()))){
             throw new RuntimeException("Chỉ có thể cap nhật dịch vụ khi cuộc hẹn là confirmed");
         }
-
-        appointment.setService(treatmentServiceRepository.findById(dto.getServiceId()));
-        appointment.setNote(dto.getNote());
-        appointment.setStatusAppointment(StatusAppointment.valueOf(dto.getStatus()));
+        if(appointment.getTypeAppointment().equals(TypeAppointment.tu_van)){
+            appointment.setService(treatmentServiceRepository.findById(dto.getServiceId()));
+        }
+        if (dto.getNote() != null && !dto.getNote().trim().isEmpty()) {
+            appointment.setNote(dto.getNote());
+        }
+        appointment.setStatusAppointment(StatusAppointment.done);
 
         // ✅ Liên kết với testResult nếu bạn muốn
         if (dto.getTestResultId() != null) {

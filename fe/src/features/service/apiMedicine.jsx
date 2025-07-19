@@ -19,6 +19,7 @@ const apiMedicine = {
   getCurrentCustomer: async () => {
     try {
       const res = await axiosInstance.get("customer/info");
+      console.log("✅ API getCurrentCustomer trả về:", res.data);
       return res.data.data;
     } catch (err) {
       console.error("Lỗi khi lấy thông tin khách hàng:", err);

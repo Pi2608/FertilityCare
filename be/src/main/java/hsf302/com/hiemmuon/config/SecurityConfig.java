@@ -184,6 +184,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "api/feedback/feedback-by-customer-and-doctor/{customerId}/{doctorId}").hasAnyRole("ADMIN", "MANAGER")
                         .requestMatchers(HttpMethod.PUT, "api/feedback/{id}").hasAnyRole("ADMIN", "MANAGER")
                         .requestMatchers(HttpMethod.DELETE, "api/feedback/{id}").hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers(HttpMethod.GET, "api/feedback").permitAll()
+
 
                         // Report
                         .requestMatchers(HttpMethod.GET, "api/reports/accounts").hasAnyRole("ADMIN")
@@ -197,11 +199,6 @@ public class SecurityConfig {
 
                         // Blog
                         .requestMatchers("/api/blogs/**").permitAll()
-
-                        .requestMatchers(HttpMethod.GET, "/api/success-rates/").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/success-rates/").hasAnyRole("MANAGER", "ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/success-rates/{id}").hasAnyRole("MANAGER", "ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/success-rates/{id}").hasAnyRole("MANAGER", "ADMIN")
 
                         /// Payment APIs
                         .requestMatchers(HttpMethod.GET, "/api/payments/all").hasAnyRole("ADMIN", "MANAGER")

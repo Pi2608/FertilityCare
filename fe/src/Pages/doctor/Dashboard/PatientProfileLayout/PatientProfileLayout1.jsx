@@ -10,6 +10,7 @@ const PatientProfileLayout1 = () => {
   const [appointmentDetail, setAppointmentDetail] = useState(null);
   const [activeTab, setActiveTab] = useState("notes");
   const [showResultForm, setShowResultForm] = useState(false);
+  const [services, setServices] = useState([]);
   const [showConfirmPopup, setShowConfirmPopup] = useState(false);
   const [isAddingNote, setIsAddingNote] = useState(false);
   const [newNote, setNewNote] = useState("");
@@ -160,6 +161,10 @@ const PatientProfileLayout1 = () => {
   });
 
   useEffect(() => {
+    getService();
+  }, []);
+
+  useEffect(() => {
     if (!appointmentId) {
       alert(
         "Thiếu thông tin lịch hẹn. Vui lòng quay lại danh sách và chọn lại."
@@ -185,6 +190,17 @@ const PatientProfileLayout1 = () => {
       fetchAppointmentDetail();
     }
   }, [appointmentId]);
+
+  
+  const getService = async () => {
+    try {
+      const res = await ApiGateway.getActiveTreatments();
+      console.log("Dịch vụ:", res);
+      setServices(res);
+    } catch (error) {
+      console.error("Lỗi khi lấy danh sách dịch vụ:", error);
+    }
+  }
 
   const toggleSection = (section) => {
     setExpandedSections((prev) => ({
@@ -229,7 +245,8 @@ const PatientProfileLayout1 = () => {
     { id: "service", label: "Chỉ định dịch vụ", icon: "🧪" },
   ];
 
-  const renderServiceTab = () => <ServiceTabContent />;
+  const renderServiceTab = () => <ServiceTabContent services={services} />;
+
 
   const renderNotesTab = () => (
     <div className="patient-profile-tab-content">
@@ -729,12 +746,13 @@ const PatientProfileLayout1 = () => {
 
 export default PatientProfileLayout1;
 
-const ServiceTabContent = () => {
+
+const ServiceTabContent = ({services}) => {
   const navigate = useNavigate();
-  const { appointmentId } = useParams();
+  const { appointmentId, customerId } = useParams();
   const today = new Date();
   const [paymentForm, setPaymentForm] = useState({
-    customerId: "",
+    customerId: customerId,
     serviceId: "",
     appointmentId: appointmentId,
     appointmentDate: "",
@@ -742,11 +760,6 @@ const ServiceTabContent = () => {
     total: 0,
     type: "",
   });
-
-  const [services, setServices] = useState([
-    { id: 1, name: "IUI", price: 5000000 },
-    { id: 2, name: "IVF", price: 70000000 },
-  ]);
 
   const typeOptions = [
     { value: "test", label: "Test" },
@@ -756,7 +769,7 @@ const ServiceTabContent = () => {
   useEffect(() => {
     if (paymentForm.serviceId) {
       const selectedService = services.find(
-        (service) => service.id.toString() === paymentForm.serviceId
+        (service) => service.serviceId.toString() === paymentForm.serviceId
       );
       if (selectedService) {
         setPaymentForm((prev) => ({ ...prev, total: selectedService.price }));
@@ -774,6 +787,7 @@ const ServiceTabContent = () => {
   const handleSubmit = async () => {
     try {
       const res = await ApiGateway.createPayment(paymentForm);
+      console.log(paymentForm)
       console.log("Tạo chỉ định thành công:", res);
       alert("Tạo chỉ định thành công!");
     } catch (error) {
@@ -805,8 +819,8 @@ const ServiceTabContent = () => {
           onChange={handleInputChange}
         >
           <option value="">Chọn phương pháp</option>
-          {services.map((service) => (
-            <option key={service.id} value={service.id}>
+          {services?.map((service) => (
+            <option key={service.serviceId} value={service.serviceId}>
               {service.name}
             </option>
           ))}

@@ -30,6 +30,7 @@ import Pill from '@customerpages/Dashboard/Pill/Pill';
 import Payment from '@customerpages/Payment/Payment';
 import PaymentList from '@customerpages/Dashboard/Payment/PaymentList';
 import AppointmentsTuVan from '@customerpages/Appointments/AppointmentsTuVan';
+import AppointmentsDieuTri from '@customerpages/Appointments/AppointmentsDieuTri';
 
 // Manager components
 import DocDashboard from '@doctorpages/Dashboard/DocDashboard';
@@ -359,6 +360,20 @@ export const router = createBrowserRouter([
       },
     ]
   },
+  {
+    path: "/patient-dashboard/appointments/dieu_tri/:appointmentId/:customerId",
+    element: (
+      // <DoctorRoute>
+        <PageLayout />
+      // </DoctorRoute>
+    ),
+    children: [
+      {
+        index: true,
+        element: <AppointmentsDieuTri />,
+      },
+    ]
+  },
   { 
     path: "/patient-dashboard/treatment-process",
     element: (
@@ -403,6 +418,11 @@ export const router = createBrowserRouter([
         index: false,
         path: "appointments",
         element: <PatientApt />,
+      },
+      {
+        index: false,
+        path: "book-appointment",
+        element: <Booking />,
       },
       {
         index: false,

@@ -50,8 +50,30 @@ const apiAppointment = {
     return response.data;
   },
 
-  getAllCyclesOfCustomer: async () => {
-    const response = await axiosInstance.get("cycles/meC/cycle/all");
+  getAllCyclesOfCustomer: async (customerId) => {
+    const response = await axiosInstance.get(`cycles/meC/cycle/all?customerId=${customerId}`);
+    return response.data;
+  },
+
+  // Lấy tất cả các bước điều trị trong chu kỳ
+  getCycleStepsByCycleId: async (cycleId) => {
+    const response = await axiosInstance.get(
+      `cycle-steps/cycleId/${cycleId}/step/all`
+    );
+    return response.data;
+  },
+
+  // Lấy lịch uống thuốc của bệnh nhân
+  getMedicationSchedulesByCustomer: async (customerId) => {
+    const response = await axiosInstance.get(`medicine/customer/${customerId}`);
+    return response.data;
+  },
+
+  // Lấy kết quả xét nghiệm của bệnh nhân
+  getTestResultsByCustomer: async (customerId) => {
+    const response = await axiosInstance.get(
+      `test-results/customer/${customerId}`
+    );
     return response.data;
   },
 };

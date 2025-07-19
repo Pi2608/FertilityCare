@@ -1,6 +1,6 @@
 "use client";
-
 import { useEffect, useState } from "react";
+import { Search } from "lucide-react";
 import "./Doctor.css";
 import DoctorAPI from "../../../features/service/apiDoctor1";
 import CreateDoctor from "./CreateDoctor";
@@ -101,22 +101,7 @@ const Doctor = () => {
       {/* Header */}
       <header className="doctor-header">
         <h1 className="page-title">Thông tin bác sĩ</h1>
-
         <div className="header-actions">
-          <div className="notification-bell">
-            <span>🔔</span>
-            <div className="notification-dot"></div>
-          </div>
-
-          <div className="user-profile">
-            <div className="avatar">
-              <span>JC</span>
-            </div>
-            <div className="user-info">
-              <div className="user-name">Jonitha Cathrine</div>
-              <div className="user-role">Manager</div>
-            </div>
-          </div>
         </div>
       </header>
 
@@ -125,7 +110,7 @@ const Doctor = () => {
         {/* Search and Filter */}
         <div className="search-section">
           <div className="search-box">
-            <span className="search-icon">🔍</span>
+            <Search className="search-icon" size={20} />
             <input
               type="text"
               placeholder="Tìm kiếm"
@@ -133,7 +118,6 @@ const Doctor = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-
           <div className="filter-section">
             <select
               value={statusFilter}

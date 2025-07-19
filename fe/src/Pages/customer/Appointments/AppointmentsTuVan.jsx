@@ -6,7 +6,7 @@ import apiAppointment from "@features/service/apiAppointment";
 import apiNote from "@features/service/apiNote";
 import apiMessage from "@features/service/apiMessage";
 
-const PatientProfileLayout1 = () => {
+const AppointmentsTuVan = () => {
   const [appointmentDetail, setAppointmentDetail] = useState(null);
   const [activeTab, setActiveTab] = useState("notes");
   const [showResultForm, setShowResultForm] = useState(false);
@@ -241,12 +241,13 @@ const PatientProfileLayout1 = () => {
           return "Chưa chỉ định";
       }
     };
-  
+
     return (
       <div className="patient-profile-tab-content">
         <h3>Chỉ định dịch vụ</h3>
         <p>
-          Dịch vụ mà bác sĩ đã chỉ định: <strong>{getServiceName(appointmentDetail?.serviceId)}</strong>
+          Dịch vụ mà bác sĩ đã chỉ định:{" "}
+          <strong>{getServiceName(appointmentDetail?.serviceId)}</strong>
         </p>
       </div>
     );
@@ -606,7 +607,6 @@ const PatientProfileLayout1 = () => {
             </div>
           </div>
         </div>
-        
       </div>
 
       {showConfirmPopup && (
@@ -736,4 +736,4 @@ const PatientProfileLayout1 = () => {
   );
 };
 
-export default PatientProfileLayout1;
+export default AppointmentsTuVan;

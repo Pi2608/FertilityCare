@@ -16,7 +16,7 @@ public interface TestResultRepository extends JpaRepository<TestResult, Integer>
     @Query("""
     SELECT new hsf302.com.hiemmuon.dto.testresult.TestResultViewDTO(
         r.resultId, r.name, r.value, r.unit, r.referenceRange,
-        r.testDate, r.note, r.appointment.appointmentId, r.appointment.cycleStep.stepId
+        r.testDate, r.note, r.appointment.appointmentId, r.cycleStep.stepId, r.cycleStep.stepOrder
     )
     FROM TestResult r
     JOIN r.appointment a
