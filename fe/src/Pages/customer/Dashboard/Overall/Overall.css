@@ -102,12 +102,11 @@
 }
 
 .patient-dashboard-main .step-item.completed {
-    border: 2px solid #4caf50;
-    background: #f0fdf4;
+    border: 2px solid #dc2626;
+    background: #fce7e6;
 }
 .patient-dashboard-main .step-item.in-progress {
-    border: 2px solid #ff9800;
-    background: #fff8e1;
+    border: 1px solid #555;
 }
 .patient-dashboard-main .step-item.pending {
     border: 2px solid #e0e0e0;

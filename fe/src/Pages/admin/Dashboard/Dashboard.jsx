@@ -1,48 +1,15 @@
 import { useState, useEffect } from "react";
+import { Users, UserRoundCheck, UserRoundX, HandCoins } from "lucide-react";
 import "./Dashboard.css";
 import apiDashboard from "@features/service/apiDashboard";
+import ApiGateway from "../../../features/service/apiGateway"; 
+import moment from "moment";
 
 const Dashboard = () => {
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        const [userSummary, revenueData, accountStats] = await Promise.all([
-          apiDashboard.getUserSummary(),
-          apiDashboard.getRevenue(),
-          apiDashboard.getAccountStats(),
-        ]);
-
-        console.log("👤 userSummary:", userSummary);
-        console.log("💰 revenueData:", revenueData);
-        console.log("📊 accountStats:", accountStats);
-
-        setDashboardData({
-          totalPatients: userSummary.patients || 0,
-          totalDoctors: userSummary.doctors || 0,
-          totalManagers: userSummary.managers || 0,
-          totalAppointments: 0,
-          totalRevenue: revenueData.revenue || 0,
-          newPatientsThisMonth: 0,
-          completedAppointments: 0,
-          pendingAppointments: 0,
-          activeServices: 0,
-          totalAccounts: userSummary.total || 0,
-          activeAccounts: userSummary.total || 0,
-          inactiveAccounts: accountStats.inactive || 0,
-          newAccountsThisMonth: accountStats.increaseThisMonth || 0,
-        });
-      } catch (error) {
-        console.error("Lỗi khi tải dữ liệu dashboard:", error);
-      }
-    };
-
-    fetchDashboardData();
-  }, []);
-
-  const [timeRange, setTimeRange] = useState("thisMonth"); // thisMonth, lastMonth, thisYear
   const [dashboardData, setDashboardData] = useState({
     totalPatients: 0,
     totalDoctors: 0,
+    totalManagers: 0,
     totalAppointments: 0,
     totalRevenue: 0,
     newPatientsThisMonth: 0,
@@ -55,14 +22,100 @@ const Dashboard = () => {
     newAccountsThisMonth: 0,
   });
 
-  const [monthlyStats, setMonthlyStats] = useState([
-    { month: "T1", appointments: 65, revenue: 180 },
-    { month: "T2", appointments: 78, revenue: 220 },
-    { month: "T3", appointments: 82, revenue: 245 },
-    { month: "T4", appointments: 91, revenue: 280 },
-    { month: "T5", appointments: 87, revenue: 265 },
-    { month: "T6", appointments: 95, revenue: 310 },
-  ]);
+  const [timeUnit, setTimeUnit] = useState("month"); // 'month' hoặc 'day'
+  const [stats, setStats] = useState([]); // Dữ liệu chart động
+  const [loading, setLoading] = useState(true); // Loading state
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [userSummary, accountStats, payments] = await Promise.all([
+          apiDashboard.getUserSummary(),
+          apiDashboard.getAccountStats(),
+          ApiGateway.getAllPayments(), // Sử dụng ApiGateway để gọi API
+        ]);
+
+        const totalRevenue = payments.reduce((sum, p) => sum + p.total, 0); // Tổng doanh thu
+
+        setDashboardData({
+          totalPatients: userSummary.patients || 0,
+          totalDoctors: userSummary.doctors || 0,
+          totalManagers: userSummary.managers || 0,
+          totalAppointments: 0,
+          totalRevenue,
+          newPatientsThisMonth: 0,
+          completedAppointments: 0,
+          pendingAppointments: 0,
+          activeServices: 0,
+          totalAccounts: userSummary.total || 0,
+          activeAccounts: userSummary.total || 0,
+          inactiveAccounts: accountStats.inactive || 0,
+          newAccountsThisMonth: accountStats.increaseThisMonth || 0,
+        });
+
+        processStats(payments); // Xử lý chart data
+      } catch (error) {
+        console.error("Lỗi khi tải dữ liệu:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    // Re-fetch và process stats khi thay đổi timeUnit
+    if (dashboardData.totalRevenue > 0) {
+      const refetchPayments = async () => {
+        try {
+          const payments = await ApiGateway.getAllPayments();
+          processStats(payments);
+        } catch (error) {
+          console.error("Lỗi khi refetch payments:", error);
+        }
+      };
+      refetchPayments();
+    }
+  }, [timeUnit]);
+
+  const processStats = (payments) => {
+    const grouped = payments.reduce((acc, payment) => {
+      const date = moment(payment.paid); // Parse date từ "paid"
+      let key;
+      if (timeUnit === "month") {
+        key = date.format("MM/YYYY"); // Nhóm theo tháng/năm
+      } else {
+        key = date.format("DD/MM"); // Nhóm theo ngày/tháng
+      }
+      acc[key] = (acc[key] || 0) + payment.total;
+      return acc;
+    }, {});
+
+    // Lấy 6 tháng gần nhất hoặc 7 ngày gần nhất (dựa trên current date 18/07/2025)
+    let periods = [];
+    const currentDate = moment("2025-07-18");
+    if (timeUnit === "month") {
+      for (let i = 5; i >= 0; i--) {
+        const month = currentDate
+          .clone()
+          .subtract(i, "months")
+          .format("MM/YYYY");
+        periods.push({
+          period: `T${month.split("/")[0]}/${month.split("/")[1]}`,
+          revenue: grouped[month] || 0,
+        });
+      }
+    } else {
+      for (let i = 6; i >= 0; i--) {
+        const day = currentDate.clone().subtract(i, "days").format("DD/MM");
+        periods.push({ period: day, revenue: grouped[day] || 0 });
+      }
+    }
+
+    setStats(periods);
+  };
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("vi-VN", {
@@ -75,42 +128,33 @@ const Dashboard = () => {
     return new Intl.NumberFormat("vi-VN").format(number);
   };
 
+  const getMaxRevenue = () => {
+    return Math.max(...stats.map((s) => s.revenue), 1); // Tránh chia 0
+  };
+
   return (
     <div className="admin-dashboard">
-      {/* Header */}
       <header className="dashboard-header">
+        <h1 className="page-title">Báo cáo thống kê</h1>
         <div className="header-content">
-          <h1 className="page-title">Báo cáo thống kê</h1>
-          <div className="header-actions">
-            <select
-              value={timeRange}
-              onChange={(e) => setTimeRange(e.target.value)}
-              className="time-range-select"
-            >
-              <option value="thisMonth">Tháng này</option>
-              <option value="lastMonth">Tháng trước</option>
-              <option value="thisYear">Năm này</option>
-            </select>
-
-            <div className="user-profile">
-              <div className="avatar">
-                <span>JC</span>
-              </div>
-              <div className="user-info">
-                <div className="user-name">Jonitha Cathrine</div>
-                <div className="user-role">Admin</div>
-              </div>
-            </div>
-          </div>
+          <select
+            className="time-range-select"
+            value={timeUnit}
+            onChange={(e) => setTimeUnit(e.target.value)}
+          >
+            <option value="month">Theo tháng</option>
+            <option value="day">Theo ngày</option>
+          </select>
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="dashboard-content">
-        {/* Stats Cards */}
         <div className="stats-grid">
+          {/* Giữ nguyên stats cards */}
           <div className="stat-card primary">
-            <div className="stat-icon">📊</div>
+            <div className="stat-icon">
+              <Users size={24} color="#4b5563" />
+            </div>
             <div className="stat-content">
               <h3>Tổng tài khoản</h3>
               <div className="stat-number">
@@ -118,9 +162,10 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-
           <div className="stat-card success">
-            <div className="stat-icon">✅</div>
+            <div className="stat-icon">
+              <UserRoundCheck size={24} color="#4b5563" />
+            </div>
             <div className="stat-content">
               <h3>Tài khoản hoạt động</h3>
               <div className="stat-number">
@@ -128,9 +173,10 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-
           <div className="stat-card warning">
-            <div className="stat-icon">⏸️</div>
+            <div className="stat-icon">
+              <UserRoundX size={24} color="#4b5563" />
+            </div>
             <div className="stat-content">
               <h3>Tài khoản không hoạt động</h3>
               <div className="stat-number">
@@ -138,9 +184,10 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-
           <div className="stat-card info">
-            <div className="stat-icon">💰</div>
+            <div className="stat-icon">
+              <HandCoins size={24} color="#4b5563" />
+            </div>
             <div className="stat-content">
               <h3>Doanh thu</h3>
               <div className="stat-number">
@@ -150,17 +197,13 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Charts and Tables Section */}
         <div className="dashboard-grid">
-          {/* Monthly Statistics Chart */}
           <div className="dashboard-card chart-card">
             <div className="card-header">
-              <h3>Thống kê theo tháng</h3>
+              <h3>
+                Thống kê {timeUnit === "month" ? "theo tháng" : "theo ngày"}
+              </h3>
               <div className="chart-legend">
-                <div className="legend-item">
-                  <span className="legend-color appointments"></span>
-                  <span>Lịch hẹn</span>
-                </div>
                 <div className="legend-item">
                   <span className="legend-color revenue"></span>
                   <span>Doanh thu (triệu VNĐ)</span>
@@ -168,29 +211,37 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="chart-container">
-              <div className="chart">
-                {monthlyStats.map((stat, index) => (
-                  <div key={index} className="chart-bar-group">
-                    <div className="chart-bars">
-                      <div
-                        className="chart-bar appointments"
-                        style={{
-                          height: `${(stat.appointments / 100) * 100}%`,
-                        }}
-                      ></div>
-                      <div
-                        className="chart-bar revenue"
-                        style={{ height: `${(stat.revenue / 350) * 100}%` }}
-                      ></div>
+              {loading ? (
+                <p>Đang tải dữ liệu...</p>
+              ) : (
+                <div className="chart">
+                  {stats.map((stat, index) => (
+                    <div
+                      key={index}
+                      className="chart-bar-group"
+                      style={{ position: "relative" }}
+                    >
+                      <div className="chart-bars">
+                        <div
+                          className="chart-bar revenue"
+                          style={{
+                            height: `${
+                              (stat.revenue / getMaxRevenue()) * 100
+                            }%`,
+                          }}
+                        ></div>
+                      </div>
+                      <div className="chart-value">
+                        {Math.floor(stat.revenue / 1e6)}
+                      </div>
+                      <div className="chart-label">{stat.period}</div>
                     </div>
-                    <div className="chart-label">{stat.month}</div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Quick Stats */}
           <div className="dashboard-card quick-stats">
             <div className="card-header">
               <h3>Thống kê nhanh</h3>

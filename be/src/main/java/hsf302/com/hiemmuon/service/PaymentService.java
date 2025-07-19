@@ -277,10 +277,10 @@ public class PaymentService {
                     return "Payment failed with code: " + vnp_ResponseCode;
                 }
             } catch (NumberFormatException e) {
-                return "Invalid payment ID format";
+                throw e;
             }
         } catch (Exception e) {
-            return "Error processing callback: " + e.getMessage();
+            throw e;
         }
     }
 }

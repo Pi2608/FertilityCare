@@ -209,7 +209,7 @@ const ProfileLayout = () => {
 
 
               <button className="btn-save" onClick={handleSave}>
-                💾 Lưu Thông Tin
+                 Lưu Thông Tin
               </button>
             </div>
           </div>

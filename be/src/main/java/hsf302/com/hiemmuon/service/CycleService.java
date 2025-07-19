@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class CycleService {
@@ -64,25 +61,39 @@ public class CycleService {
         if (user.getDoctor() == null) {
             throw new RuntimeException("Bạn không phải là bác sĩ.");
         }
-        // Lấy tất cả các cycle của customer, status ongoing, sắp xếp theo startdate giảm dần
-        List<Cycle> cycles = cycleRepository.findByCustomer_CustomerId(customerId)
-                .stream()
-                .filter(c -> c.getStatus() == StatusCycle.ongoing)
-                .sorted((c1, c2) -> c2.getStartdate().compareTo(c1.getStartdate()))
-                .toList();
 
-        if (cycles.isEmpty()) {
-            throw new RuntimeException("Không tìm thấy chu kỳ điều trị nào cho khách hàng này.");
+        List<Cycle> allCycles = cycleRepository.findByCustomer_CustomerId(customerId);
+
+        if (allCycles.isEmpty()) {
+            return null; // hoặc trả về new CycleDTO() tùy bạn xử lý ngoài frontend
         }
 
-        Cycle latestCycle = cycles.get(0);
+        // Kiểm tra quyền truy cập
+        allCycles.removeIf(c -> c.getDoctor() == null || c.getDoctor().getDoctorId() != user.getDoctor().getDoctorId());
 
-        if (latestCycle.getDoctor() == null || latestCycle.getDoctor().getDoctorId() != user.getDoctor().getDoctorId()) {
+        if (allCycles.isEmpty()) {
             throw new RuntimeException("Bạn không có quyền xem chu kỳ điều trị này.");
         }
 
-        return convertToCycleDTO(latestCycle);
+        // Ưu tiên lấy chu kỳ có status = ongoing mới nhất
+        Optional<Cycle> ongoingCycle = allCycles.stream()
+                .filter(c -> c.getStatus() == StatusCycle.ongoing)
+                .sorted((c1, c2) -> c2.getStartdate().compareTo(c1.getStartdate()))
+                .findFirst();
+
+        if (ongoingCycle.isPresent()) {
+            return convertToCycleFODTO(ongoingCycle.get());
+        }
+
+        // Nếu không có ongoing → lấy finished mới nhất
+        Optional<Cycle> latestFinished = allCycles.stream()
+                .filter(c -> c.getStatus() == StatusCycle.finished)
+                .sorted((c1, c2) -> c2.getStartdate().compareTo(c1.getStartdate()))
+                .findFirst();
+
+        return latestFinished.map(this::convertToCycleFODTO).orElse(null);
     }
+
 
     public CycleNoteDTO updateCycleNote(int cycleId, String note) {
         Cycle cycle = cycleRepository.findById(cycleId);
@@ -297,5 +308,45 @@ public class CycleService {
                 savedCycle.getNote(),
                 listStep
         );
+    }
+
+    private CycleDTO convertToCycleFODTO(Cycle cycle) {
+        List<CycleStepDTO> stepDTOs = new ArrayList<>();
+
+        // 1. Lấy tất cả các bước đã hoàn thành
+        List<CycleStep> finishedSteps = cycleStepRepository
+                .findByCycle_CycleIdAndStatusCycleStepOrderByStepOrderAsc(
+                        cycle.getCycleId(), StatusCycle.finished);
+
+        for (CycleStep step : finishedSteps) {
+            stepDTOs.add(convertToCycleStepDTO(step));
+        }
+
+        // 2. Thêm bước đang diễn ra (nếu có)
+        CycleStep ongoingStep = cycleStepRepository
+                .findFirstByCycle_CycleIdAndStatusCycleStepOrderByStepOrderAsc(
+                        cycle.getCycleId(), StatusCycle.ongoing);
+
+        if (ongoingStep != null) {
+            stepDTOs.add(convertToCycleStepDTO(ongoingStep));
+        }
+
+        return CycleDTO.builder()
+                .cycleId(cycle.getCycleId())
+                .customerId(cycle.getCustomer().getCustomerId())
+                .customerName(cycle.getCustomer().getUser().getName())
+                .customerAge(Period.between(
+                        cycle.getCustomer().getUser().getDob(),
+                        LocalDate.now()).getYears())
+                .doctorId(cycle.getDoctor().getDoctorId())
+                .doctorName(cycle.getDoctor().getUser().getName())
+                .serviceId(cycle.getService().getServiceId())
+                .serviceName(cycle.getService().getName())
+                .startDate(cycle.getStartdate())
+                .endDate(cycle.getEndDate())
+                .status(cycle.getStatus())
+                .note(cycle.getNote())
+                .cycleStep(stepDTOs)
+                .build();
     }
 }

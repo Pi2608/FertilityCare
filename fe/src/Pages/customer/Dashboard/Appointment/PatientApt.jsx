@@ -157,17 +157,7 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
 
   return (
     <div className="appointment-page">
-      <div className="welcome-section">
-        <div className="welcome-text">
-          <h2>Xin chào, {userName}</h2>
-          <p>Chào mừng quay trở lại với cổng thông tin bệnh nhân</p>
-        </div>
-
-        <div className="actions">
-          {/* <button className="primary-btn">Đặt lịch hẹn</button> */}
-          <button className="secondary-btn">Liên hệ bác sĩ</button>
-        </div>
-      </div>
+      <div className="welcome-section"></div>
 
       <div className="apt-container">
         <div className="page-title-actions">

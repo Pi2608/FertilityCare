@@ -173,7 +173,10 @@ const DoctorList = () => {
                     >
                       Xem Hồ Sơ
                     </button>
-                    <button className="book-appointment-btn">
+                    <button
+                      className="book-appointment-btn"
+                      onClick={() => navigate("/homepage/book-appointment")}
+                    >
                       Đặt Lịch Hẹn
                     </button>
                   </div>
@@ -200,14 +203,6 @@ const DoctorList = () => {
               </div>
             </div>
           )}
-        </div>
-
-        <div className="page-footer-text">
-          <p>
-            Đội ngũ bác sĩ của chúng tôi luôn sẵn sàng hỗ trợ bạn trong hành
-            trình điều trị hiếm muộn. Đặt lịch hẹn ngay hôm nay để biết điều.
-          </p>
-          <button className="consultation-btn">Đặt Lịch Tư Vấn</button>
         </div>
       </div>
     </div>

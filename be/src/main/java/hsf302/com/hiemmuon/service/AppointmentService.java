@@ -241,7 +241,7 @@ public class AppointmentService {
                 .map(app -> new AppointmentHistoryDTO(
                         app.getAppointmentId(),
                         app.getDate(),
-                        app.getCustomer().getUser().getName() != null ? app.getCustomer().getUser().getName().toString() : null,
+                        app.getCustomer().getUser().getName() != null ? app.getCustomer().getUser().getName() : null,
                         app.getTypeAppointment() != null ? app.getTypeAppointment().toString() : null,
                         app.getStatusAppointment() != null ? app.getStatusAppointment().toString() : null,
                         app.getNote()

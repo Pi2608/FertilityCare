@@ -421,6 +421,11 @@ export const router = createBrowserRouter([
       },
       {
         index: false,
+        path: "book-appointment",
+        element: <Booking />,
+      },
+      {
+        index: false,
         path: "medical-records",
         element: <TreatmentHistory />,
       },

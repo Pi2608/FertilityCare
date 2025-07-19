@@ -47,12 +47,6 @@
   border-radius: 50%;
 }
 
-.user-profile {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
 .avatar {
   width: 40px;
   height: 40px;
@@ -70,28 +64,14 @@
   object-fit: cover;
 }
 
-.user-info {
-  text-align: left;
-}
-
-.user-name {
-  font-weight: 500;
-  color: #1e293b;
-  font-size: 14px;
-  margin: 0;
-}
-
-.user-role {
-  font-size: 12px;
-  color: #64748b;
-  margin: 0;
-}
-
 /* Content */
 .patient-content {
   flex: 1;
   padding: 24px;
-  background-color: #f8fafc;
+  background-color: white;
+  margin: 24px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Search Section */
