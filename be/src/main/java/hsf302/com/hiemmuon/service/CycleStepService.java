@@ -270,7 +270,7 @@ public class CycleStepService {
 
     @Transactional
     public void sendCycleStepReminders() {
-        LocalDateTime from = LocalDate.now().plusDays(1).atStartOfDay();
+        LocalDateTime from = LocalDate.now().atStartOfDay();
         LocalDateTime to = from.plusDays(2);
 
         List<CycleStep> steps = cycleStepRepository.findByEventdateBetween(from, to);
