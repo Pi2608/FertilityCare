@@ -374,7 +374,7 @@ public class AppointmentService {
     public void sendAppointmentReminders() {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime from = now.plusMinutes(10);
-        LocalDateTime to = now.plusMinutes(1460);
+        LocalDateTime to = now.plusDays(1);
 
         List<Appointment> appointments = appointmentRepository.findByStatusAppointmentAndDateBetweenAndIsReminded(
                 StatusAppointment.confirmed, from, to, false
@@ -401,7 +401,6 @@ public class AppointmentService {
             sendMailService.sendEmail(email, subject, content);
 
             appt.setIsReminded(true);
-            appointmentRepository.save(appt);
         }
     }
 }

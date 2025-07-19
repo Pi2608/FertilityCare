@@ -2,6 +2,7 @@ package hsf302.com.hiemmuon.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Nationalized;
 
 import java.time.LocalDate;
 
@@ -21,13 +22,15 @@ public class Blog {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Nationalized
     @Column(name = "title", length = 255, columnDefinition = "NVARCHAR(255)", nullable = false)
     private String title;
 
+    @Nationalized
     @Column(name = "content", columnDefinition = "NVARCHAR(MAX)", nullable = false)
     private String content;
 
-
+    @Nationalized
     @Column(name = "tags", length = 255)
     private String tags;
 

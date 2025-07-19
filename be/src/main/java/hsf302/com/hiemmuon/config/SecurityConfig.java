@@ -42,14 +42,14 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/login/**").permitAll()
+                                .requestMatchers("/api/login/**").permitAll()
 
-                        /// Doctor APIs
-                        .requestMatchers(HttpMethod.GET,
-                                "/api/doctors/id/**",
-                                "/api/doctors/name/**",
-                                "/api/doctors/active",
-                                "/api/doctors/specification").permitAll()
+                                /// Doctor APIs
+                                .requestMatchers(HttpMethod.GET,
+                                        "/api/doctors/id/**",
+                                        "/api/doctors/name/**",
+                                        "/api/doctors/active",
+                                        "/api/doctors/specification").permitAll()
 
                                 .requestMatchers(HttpMethod.GET,
                                         "api/appointment-services/doctors/{doctorId}/available-schedules",
