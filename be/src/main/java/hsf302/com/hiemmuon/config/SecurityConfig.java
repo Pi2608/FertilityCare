@@ -184,6 +184,8 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "api/feedback/feedback-by-customer-and-doctor/{customerId}/{doctorId}").hasAnyRole("ADMIN",  "MANAGER")
                                 .requestMatchers(HttpMethod.PUT, "api/feedback/{id}").hasAnyRole("ADMIN",  "MANAGER")
                                 .requestMatchers(HttpMethod.DELETE, "api/feedback/{id}").hasAnyRole("ADMIN",  "MANAGER")
+                        .requestMatchers(HttpMethod.GET, "api/feedback").permitAll()
+
                                 
                                 // Report
                                 .requestMatchers(HttpMethod.GET, "api/reports/accounts").hasAnyRole("ADMIN")

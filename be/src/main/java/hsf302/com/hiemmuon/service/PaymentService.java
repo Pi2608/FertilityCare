@@ -156,7 +156,7 @@ public class PaymentService {
         createCycle.setServiceId(dto.getServiceId());
         createCycle.setStartDate(LocalDate.now());
         createCycle.setNote("Bệnh nhân bắt đầu chu trình điều trị hiếm muộn tại cơ sở.");
-        CycleDTO cycledDto = cycleService.createCycle(createCycle, customer, doc);
+        CycleDTO cycledDto = cycleService.createCycle(createCycle, request);
 
         Cycle cycle = cycleRepository.findById(cycledDto.getCycleId());
 
@@ -211,6 +211,7 @@ public class PaymentService {
     }
 
     public String createVNPayRedirectUrl(int paymentId) {
+        String txnRef = paymentId + "-" + System.currentTimeMillis();
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy payment với ID: " + paymentId));
 
@@ -222,7 +223,7 @@ public class PaymentService {
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
         vnp_Params.put("vnp_Amount", payment.getTotal().multiply(BigDecimal.valueOf(100)).toBigInteger().toString());
         vnp_Params.put("vnp_CurrCode", "VND");
-        vnp_Params.put("vnp_TxnRef", serviceId);
+        vnp_Params.put("vnp_TxnRef", txnRef);
         vnp_Params.put("vnp_OrderInfo", "Thanh toan dich vu: " + serviceId);
         vnp_Params.put("vnp_OrderType", "other");
         vnp_Params.put("vnp_Locale", "vn");
@@ -252,21 +253,24 @@ public class PaymentService {
             }
 
             try {
-                int paymentId = Integer.parseInt(vnp_TxnRef);
+                String[] parts = vnp_TxnRef.split("-");
+                int paymentId = Integer.parseInt(parts[0]);
                 Payment payment = paymentRepository.findById(paymentId).orElseThrow(() -> new NotFoundException("Không tìm thấy Payment ID: " + paymentId));
                 Customer customer = payment.getCustomer();
                 Appointment appointment = payment.getAppointment();
                 Doctor doctor = appointment.getDoctor();
 
                 if ("00".equals(vnp_ResponseCode)) {
-                    updatePaymentStatus(paymentId, StatusPayment.paid);
                     ReExamAppointmentDTO newApt = new ReExamAppointmentDTO();
                     newApt.setCustomerId(payment.getCustomer().getCustomerId());
                     newApt.setServiceId(payment.getService().getServiceId());
                     newApt.setDate(LocalDateTime.of(payment.getCycle().getStartdate(), LocalTime.of(8, 0)));
                     newApt.setNote("");
-                    newApt.setCycleStepId(cycleStepRepository.findFirstByCycleIdOrderByStepOrder(payment.getCycle().getCycleId()));
+                    List<Integer> stepIds = cycleStepRepository.findStepIdsByCycleIdOrdered(payment.getCycle().getCycleId());
+                    if (stepIds.isEmpty()) throw new NotFoundException("No steps found");
+                    newApt.setCycleStepId(stepIds.get(0));
                     appointmentService.scheduleReExam(newApt, doctor);
+                    updatePaymentStatus(paymentId, StatusPayment.paid);
                     return "Payment successful";
                 } else {
                     updatePaymentStatus(paymentId, StatusPayment.failed);
