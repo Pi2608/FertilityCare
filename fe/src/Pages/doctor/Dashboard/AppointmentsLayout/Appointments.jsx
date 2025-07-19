@@ -14,7 +14,7 @@ export default function Appointments() {
   const [selectedCustomerId, setSelectedCustomerId] = useState(null);
 
   const filterAppointments = () => {
-    const today = new Date();
+    const today = new Date("2025-07-19T08:05:00+07:00"); // Thời gian hiện tại
     const startOfWeek = new Date(today);
     startOfWeek.setDate(today.getDate() - today.getDay() + 1); // Monday
     const endOfWeek = new Date(startOfWeek);
@@ -22,14 +22,18 @@ export default function Appointments() {
 
     return appointments
       .filter((item) => {
-        // Hide canceled and done appointments
-        if (item.status === "canceled" || item.status === "done") return false;
-
         const itemDate = new Date(item.date);
+
+        // Loại bỏ các cuộc hẹn có status "canceled" khỏi tất cả các loại
+        if (item.status === "canceled") return false;
 
         // Filter theo loại điều trị
         if (filterType === "tu_van" && item.type !== "tu_van") return false;
         if (filterType === "tai_kham" && item.type === "tu_van") return false;
+        if (filterType === "khac" && item.status === "confirmed") return false; // Chỉ loại bỏ confirmed trong "Khác"
+
+        // Loại bỏ "done" khỏi "Tất cả loại", "Tư vấn", và "Tái khám"
+        if (["all", "tu_van", "tai_kham"].includes(filterType) && item.status === "done") return false;
 
         // Filter theo thời gian
         if (filterTime === "today") {
@@ -85,6 +89,7 @@ export default function Appointments() {
     const fetchAppointments = async () => {
       try {
         const data = await apiAppointment.getAllAppointments();
+        console.log("Appointments data:", data); // Thêm log để kiểm tra dữ liệu
         setAppointments(data);
       } catch (err) {
         console.error("Lỗi khi gọi API lịch hẹn:", err);
@@ -119,10 +124,11 @@ export default function Appointments() {
             <option value="all">Tất cả loại</option>
             <option value="tu_van">Tư vấn</option>
             <option value="tai_kham">Tái khám</option>
+            <option value="khac">Đã hoàn thành</option>
           </select>
         </div>
       </div>
-  
+
       {showMessagePopup && (
         <div className="schedule-popup">
           <div className="schedule-popup-content">
@@ -155,7 +161,7 @@ export default function Appointments() {
           </div>
         </div>
       )}
-  
+
       <table className="schedule-table">
         <thead>
           <tr>
@@ -250,7 +256,7 @@ export default function Appointments() {
           ))}
         </tbody>
       </table>
-  
+
       <div className="pagination">
         <button>Trước</button>
         <span>Trang 1 / 3</span>

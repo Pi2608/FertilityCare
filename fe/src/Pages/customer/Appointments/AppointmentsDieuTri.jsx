@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import ApiGateway from "../../../features/service/apiGateway";
 import apiMessage from "@features/service/apiMessage";
@@ -93,42 +92,46 @@ const AppointmentsDieuTri = () => {
   };
 
   const patientData = selectedCycle
-    ? {
-        name: selectedCycle.customerName,
-        id: `PT-${selectedCycle.customerId}`,
-        status:
-          selectedCycle.status === "ongoing" ? "Đang điều trị" : "Hoàn thành",
-        age: selectedCycle.customerAge,
-        treatment: selectedCycle.serviceName,
-        startDate: selectedCycle.startDate,
-        doctor: selectedCycle.doctorName,
-        phone: "0912345678",
-        email: "customer@email.com",
-        address: "Địa chỉ bệnh nhân",
-        currentAppointment: {
-          type: "Tái khám", // Thêm dòng này
-          date: "",
-          time: "",
-          status: "Đang diễn ra",
-          details: "", // Thêm dòng này nếu cần
-        },
-      }
-    : {
-        name: "Đang tải...",
-        id: "",
+  ? {
+      name: selectedCycle.customerName,
+      id: `PT-${selectedCycle.customerId}`,
+      status: selectedCycle.status === "ongoing" ? "Đang điều trị" : "Hoàn thành",
+      age: selectedCycle.customerAge,
+      treatment: selectedCycle.serviceName,
+      startDate: selectedCycle.startDate,
+      doctor: selectedCycle.doctorName,
+      phone: "0912345678",
+      email: "customer@email.com",
+      address: "Địa chỉ bệnh nhân",
+      currentAppointment: {
+        type: "Tái khám",
+        date: "",
+        time: "",
+        status: selectedCycle.status === "finished" ? "Hoàn thành" : "Đang diễn ra",
+        details: "",
+      },
+    }
+  : {
+      name: "Đang tải...",
+      id: "",
+      status:
+        selectedCycle?.status === "ongoing"
+          ? "Đang điều trị"
+          : selectedCycle?.status === "finished"
+          ? "Hoàn thành"
+          : "Không xác định",
+      age: 0,
+      treatment: "",
+      startDate: "",
+      doctor: "",
+      currentAppointment: {
+        type: "",
+        date: "",
+        time: "",
         status: "",
-        age: 0,
-        treatment: "",
-        startDate: "",
-        doctor: "",
-        currentAppointment: {
-          type: "",
-          date: "",
-          time: "",
-          status: "",
-          details: "",
-        },
-      };
+        details: "",
+      },
+    };
 
   const tabs = [
     { id: "overview", label: "Tổng quan", icon: "👤" },
@@ -642,20 +645,21 @@ const AppointmentsDieuTri = () => {
   };
 
   const renderOverviewTab = () => {
-    const today = new Date("2025-07-17T15:08:00+07:00"); // Thời gian hiện tại
-
-    // Sắp xếp allCycleSteps theo eventdate tăng dần
+    const today = new Date("2025-07-19T07:55:00+07:00"); // Thời gian hiện tại
+  
+    // Sắp xếp allCycleSteps theo stepOrder tăng dần
     const sortedSteps = [...(allCycleSteps || [])].sort(
-      (a, b) => new Date(a.eventdate) - new Date(b.eventdate)
+      (a, b) => a.stepOrder - b.stepOrder
     );
-
-    // Tìm giai đoạn hiện tại (gần nhất với hoặc đã qua ngày hiện tại)
-    const currentPhaseIndex = sortedSteps.findIndex(
-      (step) => new Date(step.eventdate) >= today
-    );
-    const currentPhase =
-      currentPhaseIndex !== -1 ? sortedSteps[currentPhaseIndex] : null;
-
+  
+    // Tìm giai đoạn hiện tại dựa trên statusCycleStep
+    const currentPhase = sortedSteps.find(
+      (step) => step.statusCycleStep === "ongoing"
+    ) || sortedSteps[sortedSteps.length - 1]; // Nếu không có ongoing, lấy bước cuối cùng
+  
+    const currentPhaseIndex = currentPhase ? currentPhase.stepOrder - 1 : 0;
+    const nextPhaseIndex = currentPhaseIndex + 1;
+  
     return (
       <div className="patient-profile-tab-content">
         <div className="patient-profile-treatment-plan">
@@ -663,7 +667,7 @@ const AppointmentsDieuTri = () => {
           <p className="patient-profile-treatment-subtitle">
             Thông tin về kế hoạch điều trị hiện tại
           </p>
-
+  
           <div className="patient-profile-treatment-cards">
             <div className="patient-profile-treatment-card patient-profile-current">
               <div className="patient-profile-card-icon">
@@ -671,40 +675,52 @@ const AppointmentsDieuTri = () => {
               </div>
               <div className="patient-profile-card-content">
                 <h4>Giai đoạn hiện tại</h4>
-                <p>{mappingStepsName(selectedCycle?.cycleStep?.length || 0)}</p>
+                <p>{mappingStepsName(currentPhase?.stepOrder || 1)}</p>
               </div>
             </div>
-            <div className="patient-profile-treatment-card patient-profile-next">
-              <div className="patient-profile-card-icon">
-                <span className="patient-profile-icon-blue">📅</span>
+            {selectedCycle?.status !== "finished" && (
+              <div className="patient-profile-treatment-card patient-profile-next">
+                <div className="patient-profile-card-icon">
+                  <span className="patient-profile-icon-blue">📅</span>
+                </div>
+                <div className="patient-profile-card-content">
+                  <h4>Giai đoạn tiếp theo</h4>
+                  <p>
+                    {mappingStepsName(
+                      nextPhaseIndex < sortedSteps.length
+                        ? sortedSteps[nextPhaseIndex].stepOrder
+                        : currentPhase?.stepOrder + 1 || 2
+                    )}
+                  </p>
+                  <span className="patient-profile-date"></span>
+                </div>
               </div>
-              <div className="patient-profile-card-content">
-                <h4>Giai đoạn tiếp theo</h4>
-                <p>
-                  {mappingStepsName(
-                    (selectedCycle?.cycleStep?.length || 0) + 1
-                  )}
-                </p>
-                <span className="patient-profile-date"></span>
+            )}
+            {selectedCycle?.status === "finished" && (
+              <div className="patient-profile-treatment-card patient-profile-next">
+                <div className="patient-profile-card-icon">
+                  <span className="patient-profile-icon-blue">✅</span>
+                </div>
+                <div className="patient-profile-card-content">
+                  <h4>Trạng thái</h4>
+                  <p>Hết</p>
+                  <span className="patient-profile-date"></span>
+                </div>
               </div>
-            </div>
+            )}
           </div>
-
+  
           <div className="patient-profile-treatment-timeline">
             <h3>Toàn bộ giai đoạn điều trị</h3>
             <div className="patient-profile-timeline">
               {sortedSteps.map((step) => {
-                const isCompleted = new Date(step.eventdate) < today;
-                const isOngoing =
-                  currentPhase &&
-                  step.stepOrder === currentPhase.stepOrder &&
-                  new Date(step.eventdate) <= today;
+                const isCompleted = step.statusCycleStep === "finished";
+                const isOngoing = step.statusCycleStep === "ongoing";
                 const isUpcoming =
                   !isCompleted &&
                   !isOngoing &&
-                  new Date(step.eventdate) > today &&
-                  step.stepOrder > (currentPhase?.stepOrder || 0);
-
+                  new Date(step.eventdate || today) > today;
+  
                 return (
                   <div
                     key={step.stepId}
@@ -727,15 +743,11 @@ const AppointmentsDieuTri = () => {
                       </span>
                     </div>
                     <div className="patient-profile-timeline-status">
-                      {isCompleted && "✅ Hoàn thành"}
-                      {isOngoing && "⏳ Đang diễn ra"}
-                      {isUpcoming && "📅 Chưa diễn ra"}
-                      {!isCompleted &&
-                        !isOngoing &&
-                        !isUpcoming &&
-                        "📅 Đang diễn ra"}
+                      {isCompleted && ""}
+                      {isOngoing && ""}
+                      {isUpcoming && ""}
                     </div>
-
+  
                     {/* Ghi chú */}
                     {step.note && step.note.trim() && (
                       <div className="patient-profile-timeline-section">
@@ -743,7 +755,7 @@ const AppointmentsDieuTri = () => {
                         <p>{step.note}</p>
                       </div>
                     )}
-
+  
                     {/* Cuộc hẹn */}
                     {step.appointment?.length > 0 && (
                       <div className="patient-profile-timeline-section">
@@ -752,13 +764,13 @@ const AppointmentsDieuTri = () => {
                           {step.appointment.map((apt) => (
                             <li key={apt.appointmentId}>
                               {formatDate(apt.date)} - Bác sĩ {apt.doctorName}
-                              {apt.note && ` `}
+                              {apt.note && ` - ${apt.note}`}
                             </li>
                           ))}
                         </ul>
                       </div>
                     )}
-
+  
                     {/* Thuốc sử dụng */}
                     {step.medicineSchedule?.length > 0 && (
                       <div className="patient-profile-timeline-section">
@@ -788,8 +800,8 @@ const AppointmentsDieuTri = () => {
                         ).map(([medicineName, details]) => (
                           <p key={medicineName}>
                             <strong>{medicineName}:</strong> {details.dose} -{" "}
-                            {details.frequency} ({formatDate(details.startDate)}{" "}
-                            - {formatDate(details.endDate)})
+                            {details.frequency} ({formatDate(details.startDate)} -{" "}
+                            {formatDate(details.endDate)})
                           </p>
                         ))}
                       </div>
