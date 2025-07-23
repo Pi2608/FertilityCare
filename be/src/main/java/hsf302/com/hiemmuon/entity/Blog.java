@@ -7,9 +7,6 @@ import org.hibernate.annotations.Nationalized;
 import java.time.LocalDate;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "blogs")
 public class Blog {
 
@@ -39,4 +36,73 @@ public class Blog {
 
     @Column(name = "view_count")
     private Integer viewCount;
+
+    public Blog(int blogId, User user, String title, String content, String tags, LocalDate createDate, Integer viewCount) {
+        this.blogId = blogId;
+        this.user = user;
+        this.title = title;
+        this.content = content;
+        this.tags = tags;
+        this.createDate = createDate;
+        this.viewCount = viewCount;
+    }
+
+    public Blog() {
+    }
+
+    public int getBlogId() {
+        return blogId;
+    }
+
+    public void setBlogId(int blogId) {
+        this.blogId = blogId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public LocalDate getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDate createDate) {
+        this.createDate = createDate;
+    }
+
+    public Integer getViewCount() {
+        return viewCount;
+    }
+
+    public void setViewCount(Integer viewCount) {
+        this.viewCount = viewCount;
+    }
 }

@@ -115,11 +115,25 @@ public class PaymentService {
     }
 
     public PaymentResponsesDTO createPayment(HttpServletRequest request, CreatePaymentWithReExamDTO dto) {
+        final String authHeader = request.getHeader("Authorization");
+        final String token = authHeader.substring(7);
+        Claims claims = jwtService.extractAllClaims(token);
 
+        Object doctorIdObj = claims.get("userId");
+        Integer doctorId = Integer.parseInt(doctorIdObj.toString());
+        Doctor doc = doctorRepository.findById(doctorId).orElseThrow();
         if (dto == null) {
             throw new IllegalArgumentException("DTO null");
         }
 
+//        ReExamAppointmentDTO reExamDto = new ReExamAppointmentDTO();
+//        reExamDto.setCustomerId(dto.getCustomerId());
+//        reExamDto.setDate(dto.getAppointmentDate());
+//        reExamDto.setServiceId(dto.getServiceId());
+//        reExamDto.setNote(dto.getNote());
+//
+//        AppointmentHistoryDTO appointmentHistory = appointmentService.scheduleReExam(reExamDto, doc);
+//
         Appointment appointment = appointmentRepository.findById(dto.getAppointmentId());
 
         if (appointment == null) {
@@ -142,7 +156,7 @@ public class PaymentService {
         createCycle.setServiceId(dto.getServiceId());
         createCycle.setStartDate(LocalDate.now());
         createCycle.setNote("Bệnh nhân bắt đầu chu trình điều trị hiếm muộn tại cơ sở.");
-        CycleDTO cycledDto = cycleService.createCycle(createCycle, request );
+        CycleDTO cycledDto = cycleService.createCycle(createCycle, request);
 
         Cycle cycle = cycleRepository.findById(cycledDto.getCycleId());
 
@@ -208,7 +222,7 @@ public class PaymentService {
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
         vnp_Params.put("vnp_Amount", payment.getTotal().multiply(BigDecimal.valueOf(100)).toBigInteger().toString());
         vnp_Params.put("vnp_CurrCode", "VND");
-        vnp_Params.put("vnp_TxnRef", serviceId);
+        vnp_Params.put("vnp_TxnRef", txnRef);
         vnp_Params.put("vnp_OrderInfo", "Thanh toan dich vu: " + serviceId);
         vnp_Params.put("vnp_OrderType", "other");
         vnp_Params.put("vnp_Locale", "vn");
@@ -238,31 +252,34 @@ public class PaymentService {
             }
 
             try {
-                int paymentId = Integer.parseInt(vnp_TxnRef);
+                String[] parts = vnp_TxnRef.split("-");
+                int paymentId = Integer.parseInt(parts[0]);
                 Payment payment = paymentRepository.findById(paymentId).orElseThrow(() -> new NotFoundException("Không tìm thấy Payment ID: " + paymentId));
                 Customer customer = payment.getCustomer();
                 Appointment appointment = payment.getAppointment();
                 Doctor doctor = appointment.getDoctor();
 
                 if ("00".equals(vnp_ResponseCode)) {
-                    updatePaymentStatus(paymentId, StatusPayment.paid);
                     ReExamAppointmentDTO newApt = new ReExamAppointmentDTO();
                     newApt.setCustomerId(payment.getCustomer().getCustomerId());
                     newApt.setServiceId(payment.getService().getServiceId());
                     newApt.setDate(LocalDateTime.of(payment.getCycle().getStartdate(), LocalTime.of(8, 0)));
                     newApt.setNote("");
-                    newApt.setCycleStepId(cycleStepRepository.findFirstByCycleIdOrderByStepOrder(payment.getCycle().getCycleId()));
+                    List<Integer> stepIds = cycleStepRepository.findStepIdsByCycleIdOrdered(payment.getCycle().getCycleId());
+                    if (stepIds.isEmpty()) throw new NotFoundException("No steps found");
+                    newApt.setCycleStepId(stepIds.get(0));
                     appointmentService.scheduleReExam(newApt, doctor);
+                    updatePaymentStatus(paymentId, StatusPayment.paid);
                     return "Payment successful";
                 } else {
                     updatePaymentStatus(paymentId, StatusPayment.failed);
                     return "Payment failed with code: " + vnp_ResponseCode;
                 }
             } catch (NumberFormatException e) {
-                return "Invalid payment ID format";
+                throw e;
             }
         } catch (Exception e) {
-            return "Error processing callback: " + e.getMessage();
+            throw e;
         }
     }
 }

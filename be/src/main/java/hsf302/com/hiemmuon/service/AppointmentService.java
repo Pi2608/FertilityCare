@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -276,34 +277,47 @@ public class AppointmentService {
 
     public void updateServiceForAppointment(int appointmentId, int doctorId, UpdateAppointmentServiceDTO dto) {
         Appointment appointment = appointmentRepository.findById(appointmentId);
-                if(appointment == null){
-                    throw new RuntimeException("Không có cuộc hẹn đó!");
-                }
+        if (appointment == null) {
+            throw new RuntimeException("Không có cuộc hẹn đó!");
+        }
 
-        if (appointment.getDoctor().getDoctorId() != (doctorId)){
+        if (appointment.getDoctor().getDoctorId() != doctorId) {
             throw new RuntimeException("Bạn không có quyền truy cập cuộc hẹn này.");
         }
 
-        if(!"confirmed".equalsIgnoreCase(String.valueOf(appointment.getStatusAppointment()))){
-            throw new RuntimeException("Chỉ có thể cap nhật dịch vụ khi cuộc hẹn là confirmed");
+        if (!"confirmed".equalsIgnoreCase(String.valueOf(appointment.getStatusAppointment()))) {
+            throw new RuntimeException("Chỉ có thể cập nhật dịch vụ khi cuộc hẹn là confirmed");
         }
-        if(appointment.getTypeAppointment().equals(TypeAppointment.tu_van)){
-            appointment.setService(treatmentServiceRepository.findById(dto.getServiceId()));
+
+        boolean hasImportantUpdate = false;
+
+        if (appointment.getTypeAppointment().equals(TypeAppointment.tu_van) && dto.getServiceId() != null) {
+            Optional<TreatmentService> optionalService = treatmentServiceRepository.findById(dto.getServiceId());
+            if (optionalService.isPresent()) {
+                appointment.setService(optionalService.get());
+            } else {
+                throw new RuntimeException("Không tìm thấy dịch vụ!");
+            }
+            hasImportantUpdate = true;
         }
+
         if (dto.getNote() != null && !dto.getNote().trim().isEmpty()) {
             appointment.setNote(dto.getNote());
         }
-        appointment.setStatusAppointment(StatusAppointment.done);
 
-        // ✅ Liên kết với testResult nếu bạn muốn
         if (dto.getTestResultId() != null) {
             TestResult testResult = testResultRepository.findById(dto.getTestResultId())
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy kết quả xét nghiệm"));
-            // Gán logic liên kết tại đây — ví dụ:
-            testResult.setAppointment(appointment); // nếu bạn muốn update ngược lại
+            testResult.setAppointment(appointment);
             testResultRepository.save(testResult);
+            hasImportantUpdate = true;
         }
 
+        // ✅ Chỉ set trạng thái done nếu người dùng bấm nút “Kết thúc cuộc hẹn”
+        if (Boolean.TRUE.equals(dto.getMarkAsDone())) {
+            appointment.setStatusAppointment(StatusAppointment.done);
+        }
+        // ket thuc cuoc hen la true va them ghi chu moi la false
         appointmentRepository.save(appointment);
     }
 

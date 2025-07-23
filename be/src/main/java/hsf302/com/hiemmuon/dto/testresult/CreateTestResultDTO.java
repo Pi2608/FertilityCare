@@ -16,4 +16,6 @@ public class CreateTestResultDTO {
     private LocalDate testDate;
     private String note;
     private int cycleStepId;
+
+
 }

@@ -1532,6 +1532,7 @@ const PatientProfileLayout = () => {
         await updateCycleStepStatus(currentCycle.cycleId, allCycleStep?.[currentStep(allCycleStep) - 1].stepOrder, "finished")
         showSuccess("Đặt lịch tái khám thành công");
         onClose();
+        await fetchData();
       } catch {
         showFail("Đặt lịch thất bại");
       } finally {
