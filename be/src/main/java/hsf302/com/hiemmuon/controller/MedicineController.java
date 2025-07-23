@@ -23,26 +23,7 @@ import java.util.List;
 public class MedicineController {
 
     @Autowired
-    private MedicineService medicineService;
-
-    @Autowired
     private MedicineScheduleService medicineScheduleService;
-
-    @Operation(
-            summary = "Lấy danh sách thuốc",
-            description = "API cho phép lấy danh sách thông tin thuốc."
-    )
-    @GetMapping("/all")
-    public ResponseEntity<ApiResponse<?>> getAllMedicineSchedules() {
-        List<Medicine> medicines = medicineService.getAllMedicines();
-
-        ApiResponse<List<Medicine>> response = new ApiResponse<>(
-                200,
-                "Get all medicines successfully",
-                medicines
-        );
-        return ResponseEntity.ok(response);
-    }
 
     @Operation(
             summary = "Lấy lịch uống thuốc theo chu kỳ và bước điều trị",
