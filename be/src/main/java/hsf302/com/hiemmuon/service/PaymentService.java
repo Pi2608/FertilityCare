@@ -115,25 +115,11 @@ public class PaymentService {
     }
 
     public PaymentResponsesDTO createPayment(HttpServletRequest request, CreatePaymentWithReExamDTO dto) {
-        final String authHeader = request.getHeader("Authorization");
-        final String token = authHeader.substring(7);
-        Claims claims = jwtService.extractAllClaims(token);
 
-        Object doctorIdObj = claims.get("userId");
-        Integer doctorId = Integer.parseInt(doctorIdObj.toString());
-        Doctor doc = doctorRepository.findById(doctorId).orElseThrow();
         if (dto == null) {
             throw new IllegalArgumentException("DTO null");
         }
 
-//        ReExamAppointmentDTO reExamDto = new ReExamAppointmentDTO();
-//        reExamDto.setCustomerId(dto.getCustomerId());
-//        reExamDto.setDate(dto.getAppointmentDate());
-//        reExamDto.setServiceId(dto.getServiceId());
-//        reExamDto.setNote(dto.getNote());
-//
-//        AppointmentHistoryDTO appointmentHistory = appointmentService.scheduleReExam(reExamDto, doc);
-//
         Appointment appointment = appointmentRepository.findById(dto.getAppointmentId());
 
         if (appointment == null) {
@@ -156,7 +142,7 @@ public class PaymentService {
         createCycle.setServiceId(dto.getServiceId());
         createCycle.setStartDate(LocalDate.now());
         createCycle.setNote("Bệnh nhân bắt đầu chu trình điều trị hiếm muộn tại cơ sở.");
-        CycleDTO cycledDto = cycleService.createCycle(createCycle, customer, doc);
+        CycleDTO cycledDto = cycleService.createCycle(createCycle, request );
 
         Cycle cycle = cycleRepository.findById(cycledDto.getCycleId());
 

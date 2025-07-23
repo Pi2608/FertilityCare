@@ -55,24 +55,6 @@ public class CycleController {
     }
 
     @Operation(
-        summary = "Bác sĩ xem chu kỳ điều trị hiện tại của khách hàng",
-        description = "API cho phép bác sĩ lấy chu kỳ điều trị đang diễn ra mới nhất của khách hàng, chỉ khi bác sĩ là người điều trị."
-    )
-    @GetMapping("/current-cycle/{customerId}")
-    public ResponseEntity<ApiResponse<?>> getCurrentCycleByCustomerId(
-            HttpServletRequest request,
-            @PathVariable("customerId") int customerId) {
-            CycleDTO cycle = cycleService.getCurrentCycleByCustomerId(request, customerId);
-
-            ApiResponse<CycleDTO> response = new ApiResponse<>(
-                    200,
-                    "Get current cycle of customer successfully",
-                    cycle
-            );
-            return ResponseEntity.ok(response);
-    }
-
-    @Operation(
             summary = "Cập nhật ghi chú chu kỳ điều trị",
             description = "Bác sĩ cập nhật hoặc thêm ghi chú chuyên môn vào một chu kỳ điều trị cụ thể."
     )

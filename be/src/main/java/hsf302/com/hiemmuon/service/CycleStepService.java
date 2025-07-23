@@ -2,6 +2,7 @@ package hsf302.com.hiemmuon.service;
 
 import hsf302.com.hiemmuon.dto.responseDto.*;
 import hsf302.com.hiemmuon.dto.testresult.TestResultViewDTO;
+import hsf302.com.hiemmuon.dto.updateDto.CycleStepFailedReason;
 import hsf302.com.hiemmuon.dto.updateDto.NoteMedicineScheduleDTO;
 import hsf302.com.hiemmuon.entity.*;
 import hsf302.com.hiemmuon.enums.StatusCycle;
@@ -11,6 +12,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.print.Doc;
 import java.time.LocalDate;
@@ -68,7 +70,10 @@ public class CycleStepService {
         return convertToDTO(step);
     }
 
-    public CycleStepDTO updateCycleStepStatus(int cycleId, int stepId, StatusCycle status) {
+    public CycleStepDTO updateCycleStepStatus(int cycleId,
+                                              int stepId,
+                                              StatusCycle status,
+                                              String reason) {
         CycleStep step = cycleStepRepository.findByCycle_CycleIdAndStepOrder(cycleId, stepId);
 
         if (step.getStatusCycleStep() == StatusCycle.finished || step.getStatusCycleStep() == StatusCycle.stopped) {
@@ -117,6 +122,7 @@ public class CycleStepService {
 
         if (status == StatusCycle.stopped) {
             // Dừng các bước sau
+            step.setFailedReason(reason);
             List<CycleStep> lateSteps = cycleStepRepository
                     .findByCycle_CycleIdAndStepOrderGreaterThan(cycleId, step.getStepOrder());
 

@@ -2,6 +2,7 @@ package hsf302.com.hiemmuon.controller;
 
 import hsf302.com.hiemmuon.dto.ApiResponse;
 import hsf302.com.hiemmuon.dto.responseDto.CycleStepDetailsDTO;
+import hsf302.com.hiemmuon.dto.updateDto.CycleStepFailedReason;
 import hsf302.com.hiemmuon.dto.updateDto.NoteMedicineScheduleDTO;
 import hsf302.com.hiemmuon.dto.responseDto.CycleStepDTO;
 import hsf302.com.hiemmuon.enums.StatusCycle;
@@ -65,8 +66,9 @@ public class CycleStepController {
     public ResponseEntity<ApiResponse<?>> updateCycleStepStatus(
             @PathVariable("cycleId") int cycleId,
             @PathVariable("stepOrder") int stepId,
-            @RequestParam("status") StatusCycle status) {
-        CycleStepDTO updatedStep = cycleStepService.updateCycleStepStatus(cycleId, stepId, status);
+            @RequestParam("status") StatusCycle status,
+            @RequestParam("reason") String reason) {
+        CycleStepDTO updatedStep = cycleStepService.updateCycleStepStatus(cycleId, stepId, status, reason);
 
         ApiResponse<CycleStepDTO> response = new ApiResponse<>(
                 200,
