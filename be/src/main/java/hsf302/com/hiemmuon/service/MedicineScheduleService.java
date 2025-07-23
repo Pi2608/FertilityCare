@@ -77,14 +77,50 @@ public class MedicineScheduleService {
     }
 
     public List<MedicineScheduleDTO> createSchedule(CreateMedicationScheduleDTO dto) {
-
+        // 1. Tìm bước chu kỳ
         CycleStep step = cycleStepRepository.findById(dto.getStepId());
+        if (step == null) {
+            throw new RuntimeException("Không tìm thấy bước chu kỳ với id = " + dto.getStepId());
+        }
 
         List<MedicineScheduleDTO> result = new ArrayList<>();
 
+        // 2. Lặp qua từng ngày từ start đến end
+        LocalDate current = dto.getStartDate();
+        while (!current.isAfter(dto.getEndDate())) {
 
+            // 3. Tạo đối tượng entity
+            MedicineSchedule schedule = new MedicineSchedule();
+            schedule.setCycleStep(step);
+            schedule.setMedicineName(dto.getMedicineName());
+            schedule.setStartDate(dto.getStartDate());
+            schedule.setEndDate(dto.getEndDate());
+            schedule.setTime(dto.getTime());
+            schedule.setEventDate(LocalDateTime.of(current, dto.getTime()));
+            schedule.setStatus(StatusMedicineSchedule.dang_dien_ra); // hoặc PENDING tùy enum của bạn
+            schedule.setIsReminded(false);
+            schedule.setNote(null);
+
+            medicineScheduleRepository.save(schedule);
+
+            MedicineScheduleDTO dtoResponse = new MedicineScheduleDTO(
+                    schedule.getMedicationId(),
+                    schedule.getCycleStep().getStepOrder(),
+                    schedule.getMedicineName(),
+                    schedule.getTime(),
+                    schedule.getStartDate(),
+                    schedule.getEndDate(),
+                    schedule.getEventDate(),
+                    schedule.getStatus(),
+                    schedule.getNote(),
+                    schedule.getIsReminded()
+            );
+            result.add(dtoResponse);
+            current = current.plusDays(1);
+        }
         return result;
     }
+
 
     @Transactional
     public void updateExpiredSchedules() {
@@ -129,11 +165,13 @@ public class MedicineScheduleService {
                 schedule.getMedicationId(),
                 schedule.getCycleStep().getStepOrder(),
                 schedule.getMedicineName(),
+                schedule.getTime(),
                 schedule.getStartDate(),
                 schedule.getEndDate(),
                 schedule.getEventDate(),
                 schedule.getStatus(),
-                schedule.getNote()
+                schedule.getNote(),
+                schedule.getIsReminded()
         );
     }
 

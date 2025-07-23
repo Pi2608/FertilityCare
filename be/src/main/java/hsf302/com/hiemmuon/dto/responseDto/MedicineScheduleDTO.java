@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Data
 @NoArgsConstructor
@@ -13,9 +14,11 @@ public class MedicineScheduleDTO {
     private int scheduleId;
     private int stepOrder;
     private String medicineName;
+    private LocalTime time;
     private LocalDate startDate;
     private LocalDate endDate;
     private LocalDateTime eventDate;
     private StatusMedicineSchedule status;
     private String note;
+    private Boolean isReminded;
 }

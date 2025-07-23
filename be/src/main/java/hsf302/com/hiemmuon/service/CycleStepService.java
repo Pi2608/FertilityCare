@@ -151,28 +151,18 @@ public class CycleStepService {
         List<MedicineSchedule> schedules = medicineScheduleRepository.findByCycleStep_StepId(cycleStep.getStepId());
 
         List<MedicineScheduleDTO> medicineScheduleDTOs = schedules.stream().map(schedule -> {
-            List<MedicineDTO> medicineDTOList = List.of(
-                    new MedicineDTO(
-                            schedule.getMedicine().getName(),
-                            schedule.getMedicine().getDiscription(),
-                            schedule.getMedicine().getDose(),
-                            schedule.getMedicine().getFrequency(),
-                            schedule.getMedicine().getUseAt()
-                    )
-            );
 
             return new MedicineScheduleDTO(
                     schedule.getMedicationId(),
                     schedule.getCycleStep().getStepOrder(),
-                    schedule.getMedicine().getName(),
-                    schedule.getMedicine().getDiscription(),
-                    schedule.getMedicine().getDose(),
-                    schedule.getMedicine().getFrequency(),
+                    schedule.getMedicineName(),
+                    schedule.getTime(),
                     schedule.getStartDate(),
                     schedule.getEndDate(),
                     schedule.getEventDate(),
                     schedule.getStatus(),
-                    schedule.getNote()
+                    schedule.getNote(),
+                    schedule.getIsReminded()
             );
         }).collect(Collectors.toList());
 
@@ -226,11 +216,13 @@ public class CycleStepService {
             MedicineScheduleDTO dto = new MedicineScheduleDTO();
             dto.setScheduleId(m.getMedicationId());
             dto.setStepOrder(m.getCycleStep().getStepOrder());
-            dto.setMedicineName(m.getMedicine().getName());
-            dto.setDose(m.getMedicine().getDose());
+            dto.setMedicineName(m.getMedicineName());
+            dto.setTime(m.getTime());
             dto.setStartDate(m.getStartDate());
             dto.setEndDate(m.getEndDate());
             dto.setStatus(m.getStatus());
+            dto.setNote(m.getNote());
+            dto.setIsReminded(m.getIsReminded());
             return dto;
         }).collect(Collectors.toList());
 
@@ -252,10 +244,6 @@ public class CycleStepService {
         LocalDateTime to = from.plusDays(2);
 
         List<CycleStep> steps = cycleStepRepository.findByEventdateBetween(from, to);
-
-        if(steps.isEmpty()) {
-            System.err.println("bug");
-        }
 
         for (CycleStep step : steps) {
             String toEmail = step.getCycle().getCustomer().getUser().getEmail();
