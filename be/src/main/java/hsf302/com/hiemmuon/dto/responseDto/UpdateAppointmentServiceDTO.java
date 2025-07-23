@@ -11,9 +11,13 @@ public class UpdateAppointmentServiceDTO {
     private String note;
 
     @Schema(description = "ID dịch vụ muốn cập nhật")
-    private int serviceId;
+    private Integer serviceId;
 
     private String status;
 
     private Integer testResultId;
+
+    private Boolean markAsDone;
+
+
 }

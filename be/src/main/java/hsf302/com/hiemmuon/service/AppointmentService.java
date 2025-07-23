@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -284,45 +285,39 @@ public class AppointmentService {
             throw new RuntimeException("Bạn không có quyền truy cập cuộc hẹn này.");
         }
 
-        if (!StatusAppointment.confirmed.equals(appointment.getStatusAppointment())) {
+        if (!"confirmed".equalsIgnoreCase(String.valueOf(appointment.getStatusAppointment()))) {
             throw new RuntimeException("Chỉ có thể cập nhật dịch vụ khi cuộc hẹn là confirmed");
         }
 
-        // ✅ Cập nhật dịch vụ nếu loại là tư vấn và DTO có serviceId
-        if (appointment.getTypeAppointment().equals(TypeAppointment.tu_van)) {
-            appointment.setService(treatmentServiceRepository.findById(dto.getServiceId()));
+        boolean hasImportantUpdate = false;
+
+        if (appointment.getTypeAppointment().equals(TypeAppointment.tu_van) && dto.getServiceId() != null) {
+            Optional<TreatmentService> optionalService = treatmentServiceRepository.findById(dto.getServiceId());
+            if (optionalService.isPresent()) {
+                appointment.setService(optionalService.get());
+            } else {
+                throw new RuntimeException("Không tìm thấy dịch vụ!");
+            }
+            hasImportantUpdate = true;
         }
 
-        // ✅ Cập nhật ghi chú nếu có
         if (dto.getNote() != null && !dto.getNote().trim().isEmpty()) {
             appointment.setNote(dto.getNote().trim());
         }
 
-        // ✅ Chỉ cập nhật status nếu DTO có status hợp lệ (dạng String)
-        if (dto.getStatus() != null && !dto.getStatus().trim().isEmpty()) {
-            switch (dto.getStatus().trim().toLowerCase()) {
-                case "done":
-                    appointment.setStatusAppointment(StatusAppointment.done);
-                    break;
-                case "canceled":
-                    appointment.setStatusAppointment(StatusAppointment.canceled);
-                    break;
-                case "confirmed":
-                    appointment.setStatusAppointment(StatusAppointment.confirmed);
-                    break;
-                default:
-                    throw new RuntimeException("Trạng thái không hợp lệ.");
-            }
-        }
-
-        // ✅ Liên kết testResult nếu DTO có testResultId
         if (dto.getTestResultId() != null) {
             TestResult testResult = testResultRepository.findById(dto.getTestResultId())
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy kết quả xét nghiệm"));
             testResult.setAppointment(appointment);
             testResultRepository.save(testResult);
+            hasImportantUpdate = true;
         }
 
+        // ✅ Chỉ set trạng thái done nếu người dùng bấm nút “Kết thúc cuộc hẹn”
+        if (Boolean.TRUE.equals(dto.getMarkAsDone())) {
+            appointment.setStatusAppointment(StatusAppointment.done);
+        }
+        // ket thuc cuoc hen la true va them ghi chu moi la false
         appointmentRepository.save(appointment);
     }
 
