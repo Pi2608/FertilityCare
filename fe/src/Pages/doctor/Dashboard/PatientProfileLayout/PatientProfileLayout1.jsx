@@ -762,7 +762,6 @@ const ServiceTabContent = ({services}) => {
   });
 
   const typeOptions = [
-    { value: "test", label: "Test" },
     { value: "treatment", label: "Điều trị" },
   ];
 

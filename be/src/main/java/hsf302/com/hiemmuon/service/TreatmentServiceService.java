@@ -35,6 +35,7 @@ public class TreatmentServiceService {
         treatmentService.setSuccessRate(treatmentServiceDTO.getSuccessRate());
         treatmentService.setSpecifications(treatmentServiceDTO.getSpecifications());
         treatmentService.setTargetPatient(treatmentServiceDTO.getTargetPatient());
+        treatmentService.setBenefit(treatmentServiceDTO.getBenefit());
         treatmentService.setFaq(treatmentServiceDTO.getFaq());
         treatmentService.setActive(true);
 
@@ -77,6 +78,10 @@ public class TreatmentServiceService {
 
         if (updateServiceDTO.getFaq() != null) {
             service.setFaq(updateServiceDTO.getFaq());
+        }
+
+        if( updateServiceDTO.getBenefit() != null) {
+            service.setBenefit(updateServiceDTO.getBenefit());
         }
 
         return treatmentServiceRepository.save(service);

@@ -156,7 +156,7 @@ public class PaymentService {
         createCycle.setServiceId(dto.getServiceId());
         createCycle.setStartDate(LocalDate.now());
         createCycle.setNote("Bệnh nhân bắt đầu chu trình điều trị hiếm muộn tại cơ sở.");
-        CycleDTO cycledDto = cycleService.createCycle(createCycle, customer, doc);
+        CycleDTO cycledDto = cycleService.createCycle(createCycle, request);
 
         Cycle cycle = cycleRepository.findById(cycledDto.getCycleId());
 
