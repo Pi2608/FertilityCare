@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import ApiGateway from "@features/service/apiGateway";
 import "./PatientProfileLayout1.css";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -750,7 +750,28 @@ export default PatientProfileLayout1;
 const ServiceTabContent = ({services}) => {
   const navigate = useNavigate();
   const { appointmentId, customerId } = useParams();
-  const today = new Date();
+  
+  const FIXED_TIME_SLOTS = [
+    "09:00",
+    "10:00", 
+    "11:00",
+    "12:00",
+    "13:00",
+    "14:00",
+    "15:00",
+    "16:00",
+  ];
+
+  const now = new Date();
+  const todayStr = now.getFullYear() + '-' + 
+    String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+    String(now.getDate()).padStart(2, '0');
+  const minDate = new Date(new Date().setDate(new Date().getDate() + 1));
+
+  const [availableSchedules, setAvailableSchedules] = useState([]);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
+
   const [paymentForm, setPaymentForm] = useState({
     customerId: customerId,
     serviceId: "",
@@ -777,6 +798,61 @@ const ServiceTabContent = ({services}) => {
       setPaymentForm((prev) => ({ ...prev, total: 0 }));
     }
   }, [paymentForm.serviceId, services]);
+
+  const handleDateSelect = useCallback(async (dateStr) => {
+    try {
+      let available;
+      
+      setSelectedDate(dateStr);
+      setSelectedTime("");
+      
+      setPaymentForm((prev) => ({ ...prev, appointmentDate: "" }));
+
+      const unavailable = await ApiGateway.getMyUnavailableSchedules(dateStr);
+  
+      let busyTimes = [];
+      if (Array.isArray(unavailable)) {
+        busyTimes = unavailable.map((slot) => slot.startTime?.slice(0, 5));
+      } else {
+        console.log("API response is not array:", unavailable);
+        busyTimes = [];
+      }
+
+      if (dateStr !== todayStr) {  
+        available = FIXED_TIME_SLOTS.filter(
+          (slot) => !busyTimes.includes(slot)
+        );
+      } else {
+        const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
+
+        available = FIXED_TIME_SLOTS.filter((slot) => {
+          const [hour, minute] = slot.split(":").map(Number);
+          const isAfterCurrentTime = 
+            hour > currentHour || 
+            (hour === currentHour && minute > currentMinute);
+          
+          return isAfterCurrentTime && !busyTimes.includes(slot);
+        });
+      }
+
+      setAvailableSchedules(available);
+    } catch (err) {
+      console.error("Lỗi khi lấy lịch bận của bác sĩ:", err);
+      setAvailableSchedules(FIXED_TIME_SLOTS);
+    }
+  }, []);
+
+  // Handle time selection - similar to NewOnNewCycleModal
+  const handleTimeSelect = (timeStr) => {
+    setSelectedTime(timeStr);
+
+    const fullDateTime = `${selectedDate}T${timeStr}`;
+    setPaymentForm((prev) => ({
+      ...prev,
+      appointmentDate: fullDateTime,
+    }));
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -825,18 +901,38 @@ const ServiceTabContent = ({services}) => {
           ))}
         </select>
       </div>
+      
+      {/* Updated Date & Time Selection - Similar to NewOnNewCycleModal */}
       <div className="form-group">
-        <label className="form-label required">Ngày & Giờ khám</label>
+        <label className="form-label required">Ngày khám</label>
         <input
-          type="datetime-local"
+          type="date"
           className="form-input"
-          name="appointmentDate"
-          value={paymentForm.appointmentDate}
-          min={today.toISOString().slice(0, 16)}
-          step={3600}
-          onChange={handleInputChange}
+          value={selectedDate}
+          onChange={(e) => handleDateSelect(e.target.value)}
+          required
+          min={minDate.toISOString().split("T")[0]}
         />
       </div>
+
+      <div className="form-group">
+        <label className="form-label required">Giờ khám</label>
+        <select
+          className="form-select"
+          value={selectedTime}
+          onChange={(e) => handleTimeSelect(e.target.value)}
+          required
+          disabled={!availableSchedules.length > 0}
+        >
+          <option value="">{availableSchedules.length > 0 ? "-- Chọn giờ khám --": "--Không có lịch trống--"}</option>
+          {availableSchedules.map((time) => (
+            <option key={time} value={time}>
+              {time}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <div className="form-group">
         <label className="form-label required">Loại</label>
         <select

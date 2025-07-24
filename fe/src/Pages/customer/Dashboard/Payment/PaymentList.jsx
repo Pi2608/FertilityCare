@@ -154,7 +154,7 @@ const PaymentList = ({ userName = "Nguyễn Thị Hoa" }) => {
                   </div>
 
                   <div className="payment-actions">
-                    <button className="btn-outline">Chi tiết</button>
+                    {/* <button className="btn-outline">Chi tiết</button> */}
                   </div>
                 </div>
               ))
@@ -201,7 +201,7 @@ const PaymentList = ({ userName = "Nguyễn Thị Hoa" }) => {
                   </div>
 
                   <div className="payment-actions">
-                    <button className="btn-outline">Chi tiết</button>
+                    {/* <button className="btn-outline">Chi tiết</button> */}
                     {/* <button className="primary-btn">Thử lại</button> */}
                   </div>
                 </div>

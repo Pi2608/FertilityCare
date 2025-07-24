@@ -3,6 +3,7 @@ import ApiGateway from "../../../../features/service/apiGateway"
 import { useNavigate, useParams } from "react-router-dom"
 import { HashLoader, BeatLoader } from "react-spinners";
 import { showSuccess, showFail, confirmToast } from "@lib/toast/toast"
+import { AlertTriangle, RefreshCcw, Hourglass, Check, CalendarDays } from "lucide-react";
 import "./PatientProfileLayout.css"
 
 const PatientProfileLayout = () => {
@@ -93,7 +94,7 @@ const PatientProfileLayout = () => {
 
   const tabs = [
     { id: "overview", label: "Tổng quan", icon: "👤" },
-    { id: "schedule", label: "Lịch hẹn", icon: "📅" },
+    // { id: "schedule", label: "Lịch hẹn", icon: "📅" },
     { id: "notes", label: "Ghi chú khám", icon: "📝" },
     { id: "results", label: "Kết quả xét nghiệm", icon: "📋" },
     { id: "medications", label: "Thuốc", icon: "💊" },
@@ -173,15 +174,14 @@ const PatientProfileLayout = () => {
     if (!cycleStepNames || cycleStepNames.length === 0) {
       return `Bước ${stepOrder}`;
     }
-    console.log(cycleStepNames)
     const step = cycleStepNames.find(name => name.stepOrder === stepOrder);
     return step ? step.title : `Bước ${stepOrder}`;
   }
 
   const getCurrentStepPeriod = (stepOrder) => {
     const step = cycleSteps.find(phase => phase.stepOrder === stepOrder);
-    const nextStep = cycleSteps.find(phase => phase.stepOrder === stepOrder + 1);
-    if (step && nextStep) {
+    const nextStep = cycleSteps.find(phase => phase.stepOrder === (stepOrder + 1));
+    if (step?.eventdate && nextStep?.eventdate) {
       return `${new Date(step.eventdate).toLocaleDateString("vi-VN")} - ${new Date(nextStep.eventdate).toLocaleDateString("vi-VN")}`;
     } else if (step) {
       return `${new Date(step.eventdate).toLocaleDateString("vi-VN")} - Hiện tại`;
@@ -273,7 +273,6 @@ const PatientProfileLayout = () => {
   const getAllCycleStep = async (cycleId) => {
     try {
       const res = await ApiGateway.getCycleStepsByCycleId(cycleId);
-      console.log(res.data)
       setAllCycleStep(res.data)
     } catch (error) {
       throw error;
@@ -304,7 +303,6 @@ const PatientProfileLayout = () => {
   const getAppointmentHistoryByCustomer = async (customerId) => {
     try {
       const res = await ApiGateway.getAppointmentHistoryByCustomer(customerId);
-      console.log(res);
       setAppointmentHistory(res);
       return res;
     } catch (error) {
@@ -316,6 +314,7 @@ const PatientProfileLayout = () => {
   const getCycleStepsByCycle = async (cycleId) => {
     try {
       const res = await ApiGateway.getCycleStepsByCycleId(cycleId);
+      console.log(res.data)
       setCycleSteps(res.data);
       return res;
     } catch (error) {
@@ -347,7 +346,6 @@ const PatientProfileLayout = () => {
   const getCustomerTestResults = async (customerId) => {
     try {
       const res = await ApiGateway.getCustomerTestResults(customerId);
-      console.log(res.data)
       setTestResult(res.data);
       return res.data;
     } catch (error) {
@@ -432,8 +430,8 @@ const PatientProfileLayout = () => {
   const getAppointmentDetail = async (appointmentId) => {
     try {
       const res = await ApiGateway.getAppointmentDetailById(appointmentId);
-      setAppointmentDetail(res);
       console.log(res);
+      setAppointmentDetail(res);
     } catch (error) {
       throw error;
     }
@@ -463,7 +461,7 @@ const PatientProfileLayout = () => {
             </div>
           </div>
 
-          {allCycleStep.length > currentStep(allCycleStep).length && 
+          {allCycleStep.length > currentStep(allCycleStep) && 
             <div className="patient-profile-treatment-card patient-profile-next">
               <div className="patient-profile-card-icon">
                 <span className="patient-profile-icon-blue">📅</span>
@@ -483,7 +481,7 @@ const PatientProfileLayout = () => {
             {filterFirstOngoingStep(allCycleStep)?.map((phase, idx) => (
               <div key={`key-${phase.stepId}-${idx}`} className={`patient-profile-timeline-item patient-profile-${phase.statusCycleStep}`}>
                 <div className="patient-profile-timeline-marker">
-                  {phase.statusCycleStep === "finished" ? '✓' : phase.statusCycleStep === 'ongoing' ? '⏳' : '📅'}
+                  {phase.statusCycleStep === "finished" ? <Check  size={20}/> : phase.statusCycleStep === 'ongoing' ? <Hourglass  size={20}/> : phase.statusCycleStep === 'restart' ? <RefreshCcw  size={20}/> : <CalendarDays  size={20}/>}
                 </div>
                 <div className="patient-profile-timeline-content">
                   <div className="patient-profile-timeline-header">
@@ -561,28 +559,32 @@ const PatientProfileLayout = () => {
 
 
                     {/* Action buttons cho từng giai đoạn */}
-                    {phase.statusCycleStep === "ongoing" &&
+                    {(phase.statusCycleStep === "ongoing" && appointmentDetail.status === "confirmed") &&
                       <>
                         <h5>⚡ Cập nhật nhanh:</h5>
                         <div className="patient-profile-timeline-actions">
                           {phase.statusCycleStep === 'ongoing' && (
                             <div className="patient-profile-phase-actions">
                               <div className="patient-profile-quick-actions">
-                                <button className="patient-profile-btn-outline-small" 
-                                  onClick={() => {
-                                    setUpdateCycleStepNoteForm({
-                                      cycleId: currentCycle?.cycleId,
-                                      stepOrder: phase?.stepOrder,
-                                      note: phase.note || ''
-                                    }),
-                                    handleOpenUpdateCycleStepNoteModal()
-                                  }}
-                                >📝 Ghi chú</button>
-                                <button className="patient-profile-btn-outline-small" 
-                                  onClick={() => handleOpenCreateTestResultModal()}
-                                >📋 Kết quả XN</button>
-                                <button className="patient-profile-btn-outline-small" 
-                                  onClick={() => handleOpenCreateMedicationModal()}>💊 Thuốc</button>
+                                <div>
+                                  <button className="patient-profile-btn-outline-small" 
+                                    onClick={() => {
+                                      setUpdateCycleStepNoteForm({
+                                        cycleId: currentCycle?.cycleId,
+                                        stepOrder: phase?.stepOrder,
+                                        note: phase.note || ''
+                                      }),
+                                      handleOpenUpdateCycleStepNoteModal()
+                                    }}
+                                  >📝 Ghi chú</button>
+                                  <button className="patient-profile-btn-outline-small" 
+                                    onClick={() => handleOpenCreateTestResultModal()}
+                                  >📋 Kết quả XN</button>
+                                  <button className="patient-profile-btn-outline-small" 
+                                    onClick={() => handleOpenCreateMedicationModal()}>💊 Thuốc</button>
+                                </div>
+                                <button className="patient-profile-btn-outline-small fail" 
+                                >Đánh dấu thất bại</button>
                               </div>
                             </div>
                           )}
@@ -593,10 +595,10 @@ const PatientProfileLayout = () => {
                 </div>
               </div>
             ))}
-            {filterFirstOngoingStep(allCycleStep).length < allCycleStep.length ? (
+            {currentStep(allCycleStep) < allCycleStep.length ? (
               <div className={`patient-profile-timeline-item patient-profile-upcoming`}>
-                <div className="patient-profile-timeline-marker">
-                  📅
+                <div className="patient-profile-timeline-marker" style={{background: "#a9b5c6", color: "white"}}>
+                  <CalendarDays size={20}/>
                 </div>
                 <div className="patient-profile-timeline-content">
                   <div className="patient-profile-timeline-header">
@@ -614,7 +616,9 @@ const PatientProfileLayout = () => {
                 <div className="patient-profile-timeline-actions">
                   <div className="patient-profile-phase-actions">
                     <div className="patient-profile-quick-actions">
-                      <button className="patient-profile-btn-primary-small" onClick={() => handleOpenNewOnNewCycleModal()}>Bắt đầu</button>
+                      {appointmentDetail.status === "confirmed" &&
+                        <button className="patient-profile-btn-primary-small" onClick={() => handleOpenNewOnNewCycleModal()}>Bắt đầu</button>
+                      }
                     </div>
                   </div>
                 </div>
@@ -629,61 +633,61 @@ const PatientProfileLayout = () => {
   )
 
 
-  const renderScheduleTab = () => (
-    <div className="patient-profile-tab-content">
-      <div className="patient-profile-schedule-header">
-        <div>
-          <h3>Lịch hẹn</h3>
-          <p>Lịch sử và lịch hẹn sắp tới</p>
-        </div>
-        <button className="patient-profile-btn-primary" onClick={() => handleOpenCreateReExamAppointmentModal()}>📅 Đặt lịch hẹn mới</button>
-      </div>
+  // const renderScheduleTab = () => (
+  //   <div className="patient-profile-tab-content">
+  //     <div className="patient-profile-schedule-header">
+  //       <div>
+  //         <h3>Lịch hẹn</h3>
+  //         <p>Lịch sử và lịch hẹn sắp tới</p>
+  //       </div>
+  //       <button className="patient-profile-btn-primary" onClick={() => handleOpenCreateReExamAppointmentModal()}>📅 Đặt lịch hẹn mới</button>
+  //     </div>
 
 
-      <div className="patient-profile-schedule-section">
-        {appointmentHistory.some(aptHis => aptHis.status === "done") && <h4>Lịch hẹn sắp tới</h4>}
-        {appointmentHistory.map((aptHis, idx) =>(
-          aptHis.status === "confirmed" && (
-            <div key={`${idx}-${idx}`}>
-              <div className="patient-profile-appointment-list">
-                <div className="patient-profile-appointment-item patient-profile-upcoming">
-                  <div className="patient-profile-appointment-time">
-                    <span className="patient-profile-time-icon">🕘</span>
-                  </div>
-                  <div className="patient-profile-appointment-details">
-                    <h5>{aptHis.type === "tu_van" ? "Tư vấn" : aptHis.type === "tai_kham" ? "Tái khám" : ""}</h5>
-                    <p>{aptHis.date.split("T")[0]} - {aptHis.date.split("T")[1]}</p>
-                  </div>
-                  <button className="patient-profile-reschedule-btn">Đã lên lịch</button>
-                </div>
-              </div>
-            </div>
-          )))
-        }
+  //     <div className="patient-profile-schedule-section">
+  //       {appointmentHistory.some(aptHis => aptHis.status === "done") && <h4>Lịch hẹn sắp tới</h4>}
+  //       {appointmentHistory.map((aptHis, idx) =>(
+  //         aptHis.status === "confirmed" && (
+  //           <div key={`${idx}-${idx}`}>
+  //             <div className="patient-profile-appointment-list">
+  //               <div className="patient-profile-appointment-item patient-profile-upcoming">
+  //                 <div className="patient-profile-appointment-time">
+  //                   <span className="patient-profile-time-icon">🕘</span>
+  //                 </div>
+  //                 <div className="patient-profile-appointment-details">
+  //                   <h5>{aptHis.type === "tu_van" ? "Tư vấn" : aptHis.type === "tai_kham" ? "Tái khám" : ""}</h5>
+  //                   <p>{aptHis.date.split("T")[0]} - {aptHis.date.split("T")[1]}</p>
+  //                 </div>
+  //                 <button className="patient-profile-reschedule-btn">Đã lên lịch</button>
+  //               </div>
+  //             </div>
+  //           </div>
+  //         )))
+  //       }
 
-        {appointmentHistory.some(aptHis => aptHis.status === "done" || aptHis.status === "fail") && <h4>Lịch sử cuộc hẹn</h4>}
-          {appointmentHistory.map((aptHis, idx) =>(
-            (aptHis.status === "done"  || aptHis.status === "fail") && (
-              <div key={`${idx}-${idx}`}>
-                <div className="patient-profile-appointment-list">
-                  <div className="patient-profile-appointment-item patient-profile-completed">
-                    <div className="patient-profile-appointment-time">
-                      <span className="patient-profile-time-icon patient-profile-completed">✅</span>
-                    </div>
-                    <div className="patient-profile-appointment-details">
-                      <h5>{aptHis.type === "tu_van" ? "Tư vấn" : aptHis.type === "tai_kham" ? "Tái khám" : "Chịu"}</h5>
-                      <p>{aptHis.date.split("T")[0]} - {aptHis.date.split("T")[1]}</p>
-                      {aptHis.note && <p>Ghi chú: {aptHis.note}</p>}
-                    </div>
-                    <span className="patient-profile-status-badge patient-profile-completed">Hoàn thành</span>
-                  </div>
-                </div>
-              </div>
-            )))
-          }
-      </div>
-    </div>
-  )
+  //       {appointmentHistory.some(aptHis => aptHis.status === "done" || aptHis.status === "fail") && <h4>Lịch sử cuộc hẹn</h4>}
+  //         {appointmentHistory.map((aptHis, idx) =>(
+  //           (aptHis.status === "done"  || aptHis.status === "fail") && (
+  //             <div key={`${idx}-${idx}`}>
+  //               <div className="patient-profile-appointment-list">
+  //                 <div className="patient-profile-appointment-item patient-profile-completed">
+  //                   <div className="patient-profile-appointment-time">
+  //                     <span className="patient-profile-time-icon patient-profile-completed">✅</span>
+  //                   </div>
+  //                   <div className="patient-profile-appointment-details">
+  //                     <h5>{aptHis.type === "tu_van" ? "Tư vấn" : aptHis.type === "tai_kham" ? "Tái khám" : "Chịu"}</h5>
+  //                     <p>{aptHis.date.split("T")[0]} - {aptHis.date.split("T")[1]}</p>
+  //                     {aptHis.note && <p>Ghi chú: {aptHis.note}</p>}
+  //                   </div>
+  //                   <span className="patient-profile-status-badge patient-profile-completed">Hoàn thành</span>
+  //                 </div>
+  //               </div>
+  //             </div>
+  //           )))
+  //         }
+  //     </div>
+  //   </div>
+  // )
 
 
   const renderNotesTab = () => (
@@ -693,7 +697,7 @@ const PatientProfileLayout = () => {
           <h3>Ghi chú khám bệnh</h3>
           <p>Ghi chú và theo dõi quá trình điều trị</p>
         </div>
-        {!allCycleStep?.[currentStep(allCycleStep) - 1]?.note && 
+        {(!allCycleStep?.[currentStep(allCycleStep) - 1]?.note && appointmentDetail.status === "confirmed") && 
           <button className="patient-profile-btn-primary"
             onClick={() => 
               {setUpdateCycleStepNoteForm({
@@ -726,7 +730,7 @@ const PatientProfileLayout = () => {
                       <div className="patient-profile-note-date">
                         <span>{formatDate(phase.eventdate)}</span>
                       </div>
-                      {phase.stepOrder == currentCycle?.cycleStep?.length &&
+                      {(phase.stepOrder == currentStep(allCycleStep) && appointmentDetail.status === "confirmed") &&
                       <button className="patient-profile-btn-outline-blue" 
                         onClick={() => 
                           {setUpdateCycleStepNoteForm({
@@ -755,7 +759,9 @@ const PatientProfileLayout = () => {
           <h3>Kết quả xét nghiệm</h3>
           <p>Lịch sử các xét nghiệm và kết quả</p>
         </div>
-        <button className="patient-profile-btn-primary" onClick={() => handleOpenCreateTestResultModal()}>➕ Thêm kết quả mới</button>
+        {appointmentDetail.status === "confirmed" &&
+          <button className="patient-profile-btn-primary" onClick={() => handleOpenCreateTestResultModal()}>➕ Thêm kết quả mới</button>
+        }
       </div>
 
 
@@ -778,21 +784,23 @@ const PatientProfileLayout = () => {
                     <p>Ngày: {formatDate(phase.testDate)}</p>
                     <p>Kết quả: {phase.value} {phase.unit}</p>
                     <p>Trạng thái: <strong>{phase.note}</strong></p>
-                    <button className="patient-profile-btn-outline" 
-                      onClick={() => {
-                        setUpdateTestResultForm({
-                        id: phase.resultId,
-                        name: phase.name,
-                        value: phase.value,
-                        unit: phase.unit,
-                        referenceRange: phase.referenceRange,
-                        note: phase.note || '',
-                        testDate: phase.testDate
-                      })
-                      handleOpenUpdateTestResultModal()}}
-                    >Chỉnh sửa</button>
+                    {appointmentDetail.status === "confirmed" &&
+                      <button className="patient-profile-btn-outline" 
+                        onClick={() => {
+                          setUpdateTestResultForm({
+                          id: phase.resultId,
+                          name: phase.name,
+                          value: phase.value,
+                          unit: phase.unit,
+                          referenceRange: phase.referenceRange,
+                          note: phase.note || '',
+                          testDate: phase.testDate
+                        })
+                        handleOpenUpdateTestResultModal()}}
+                      >Chỉnh sửa</button>
+                    }
                   </div>
-                  <span className="patient-profile-status-badge patient-profile-completed">Hoàn thành</span>
+                  {/* <span className="patient-profile-status-badge patient-profile-completed">Hoàn thành</span> */}
                 </div>
               </div>
             </div>
@@ -802,6 +810,7 @@ const PatientProfileLayout = () => {
     </div>
   )
 
+
   const renderMedicationsTab = () => (
     <div className="patient-profile-tab-content">
       <div className="patient-profile-medications-header">
@@ -809,7 +818,9 @@ const PatientProfileLayout = () => {
           <h3>Thuốc</h3>
           <p>Thuốc hiện tại và lịch sử thuốc</p>
         </div>
-        <button className="patient-profile-btn-primary" onClick={() => handleOpenCreateMedicationModal()}>➕ Thêm thuốc mới</button>
+        {appointmentDetail.status === "confirmed" && 
+          <button className="patient-profile-btn-primary" onClick={() => handleOpenCreateMedicationModal()}>➕ Thêm thuốc mới</button>
+        }
       </div>
 
 
@@ -819,14 +830,26 @@ const PatientProfileLayout = () => {
           {allCycleStep 
             .flatMap((step) =>
               step.medicineSchedule.map((med, medIndex) => {
-                const isActive =
-                  step.statusCycleStep === 'ongoing' &&
-                  !med.status?.includes('qua_han') &&
-                  new Date(med.endDate) >= new Date(); // kiểm tra còn trong thời gian dùng
+                const isExpired = med.status?.includes('qua_han');
+                const isCompleted = med.status?.includes('da_uong');
+                const isActive = step.statusCycleStep === 'ongoing' && 
+                                med.status?.includes('dang_dien_ra') && 
+                                !isExpired;
+
+                let statusInfo;
+                if (isExpired) {
+                  statusInfo = { class: 'expired', text: 'Quá hạn' };
+                } else if (isCompleted) {
+                  statusInfo = { class: 'completed', text: 'Đã hoàn thành' };
+                } else if (isActive) {
+                  statusInfo = { class: 'active', text: 'Đang dùng' };
+                } else {
+                  statusInfo = { class: 'inactive', text: 'Chưa bắt đầu' };
+                }
 
                 return {
                   key: `${step.stepId}-${medIndex}`,
-                  isActive,
+                  statusInfo,
                   step,
                   med,
                   medIndex
@@ -834,16 +857,18 @@ const PatientProfileLayout = () => {
               })
             )
             .sort((a, b) => {
-              if (a.isActive && !b.isActive) return -1;
-              if (!a.isActive && b.isActive) return 1;
-              return 0;
+              const priority = { active: 3, completed: 2, expired: 1, inactive: 0 };
+              return priority[b.statusInfo.class] - priority[a.statusInfo.class];
             })
-            .map(({ key, isActive, step, med }) => (
-              <div key={key} className={`patient-profile-medication-card ${isActive ? 'patient-profile-active' : 'patient-profile-completed'}`}>
+            .map(({ key, statusInfo, step, med }) => (
+              <div 
+                key={key} 
+                className={`patient-profile-medication-dieu_tri-card patient-profile-${statusInfo.class}`}
+              >
                 <div className="patient-profile-med-header">
                   <h5>{med.medicineName}</h5>
-                  <span className={`patient-profile-status-badge ${isActive ? 'patient-profile-active' : 'patient-profile-completed'}`}>
-                    {isActive ? 'Đang dùng' : 'Đã hoàn thành'}
+                  <span className={`patient-profile-status-badge patient-profile-${statusInfo.class}`}>
+                    {statusInfo.text}
                   </span>
                 </div>
                 <div className="patient-profile-med-details">
@@ -872,12 +897,13 @@ const PatientProfileLayout = () => {
     </div>
   )
 
+
   const renderTabContent = () => {
     switch (activeTab) {
       case "overview":
         return renderOverviewTab()
-      case "schedule":
-        return renderScheduleTab()
+      // case "schedule":
+      //   return renderScheduleTab()
       case "notes":
         return renderNotesTab()
       case "results":
@@ -900,7 +926,12 @@ const PatientProfileLayout = () => {
       "15:00",
       "16:00",
     ];
-
+    
+    const now = new Date();
+    const todayStr = now.getFullYear() + '-' + 
+      String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+      String(now.getDate()).padStart(2, '0');
+    
     const minDate = new Date(new Date().setDate(new Date().getDate() + 1));
 
     const [isLoading, setIsLoading] = useState(false);
@@ -931,17 +962,37 @@ const PatientProfileLayout = () => {
 
     const handleDateSelect = useCallback(async (dateStr) => {
       try {
+        let available;
+        
         setSelectedDate(dateStr);
         setSelectedTime("");
 
         const unavailable = await ApiGateway.getMyUnavailableSchedules(dateStr);
-        const busyTimes = unavailable.map((slot) =>
-          slot.startTime?.slice(0, 5)
-        );
+    
+        let busyTimes = [];
+        if (Array.isArray(unavailable)) {
+          busyTimes = unavailable.map((slot) => slot.startTime?.slice(0, 5));
+        } else {
+          busyTimes = [];
+        }
 
-        const available = FIXED_TIME_SLOTS.filter(
-          (slot) => !busyTimes.includes(slot)
-        );
+        if (dateStr !== todayStr) {  
+          available = FIXED_TIME_SLOTS.filter(
+            (slot) => !busyTimes.includes(slot)
+          );
+        } else {
+          const currentHour = now.getHours();
+          const currentMinute = now.getMinutes();
+
+          available = FIXED_TIME_SLOTS.filter((slot) => {
+            const [hour, minute] = slot.split(":").map(Number);
+            const isAfterCurrentTime = 
+              hour > currentHour || 
+              (hour === currentHour && minute > currentMinute);
+            
+            return isAfterCurrentTime && !busyTimes.includes(slot);
+          });
+        }
 
         setAvailableSchedules(available);
       } catch (err) {
@@ -1049,7 +1100,7 @@ const PatientProfileLayout = () => {
     const [isLoading, setIsLoading] = useState(false)
 
     const [formData, setFormData] = useState({
-      medicineId: "",
+      medicineName: "",
       cycleId: "",
       stepId: "",
       startDate: "",
@@ -1098,7 +1149,7 @@ const PatientProfileLayout = () => {
           <form onSubmit={handleCreateMedicationSchedule}>
             <label>
               Tên thuốc:
-              <select
+              {/* <select
                 value={formData.medicineId}
                 onChange={(e) => handleChange('medicineId', e.target.value)}
                 required
@@ -1107,7 +1158,13 @@ const PatientProfileLayout = () => {
                 {allMedicines.map(med => (
                   <option key={med.medicinId} value={med.medicinId}>{med.name}</option>
                 ))}
-              </select>
+              </select> */}
+              <input 
+                type="text"
+                value={formData.medicineName}
+                onChange={(e) => handleChange('medicineName', e.target.value)}
+                required 
+              />
             </label>
             <label>
               Ngày bắt đầu:
@@ -1172,7 +1229,6 @@ const PatientProfileLayout = () => {
       e.preventDefault();
       setIsLoading(true)
       try {
-        console.log("Tạo test rù súc: ", formData)
         await createTestResult(formData);
         showSuccess("Tạo kết quả xét nghiệm thành công");
         onClose();
@@ -1452,6 +1508,10 @@ const PatientProfileLayout = () => {
       "16:00",
     ];
 
+    const now = new Date();
+    const todayStr = now.getFullYear() + '-' + 
+      String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+      String(now.getDate()).padStart(2, '0');
     const minDate = new Date(new Date().setDate(new Date().getDate() + 1));
 
     const [isLoading, setIsLoading] = useState(false);
@@ -1483,17 +1543,37 @@ const PatientProfileLayout = () => {
 
     const handleDateSelect = useCallback(async (dateStr) => {
       try {
+        let available;
+        
         setSelectedDate(dateStr);
         setSelectedTime("");
 
         const unavailable = await ApiGateway.getMyUnavailableSchedules(dateStr);
-        const busyTimes = unavailable.map((slot) =>
-          slot.startTime?.slice(0, 5)
-        );
+    
+        let busyTimes = [];
+        if (Array.isArray(unavailable)) {
+          busyTimes = unavailable.map((slot) => slot.startTime?.slice(0, 5));
+        } else {
+          busyTimes = [];
+        }
 
-        const available = FIXED_TIME_SLOTS.filter(
-          (slot) => !busyTimes.includes(slot)
-        );
+        if (dateStr !== todayStr) {  
+          available = FIXED_TIME_SLOTS.filter(
+            (slot) => !busyTimes.includes(slot)
+          );
+        } else {
+          const currentHour = now.getHours();
+          const currentMinute = now.getMinutes();
+
+          available = FIXED_TIME_SLOTS.filter((slot) => {
+            const [hour, minute] = slot.split(":").map(Number);
+            const isAfterCurrentTime = 
+              hour > currentHour || 
+              (hour === currentHour && minute > currentMinute);
+            
+            return isAfterCurrentTime && !busyTimes.includes(slot);
+          });
+        }
 
         setAvailableSchedules(available);
       } catch (err) {
@@ -1521,14 +1601,18 @@ const PatientProfileLayout = () => {
 
     const handleSubmitClick = (e) => {
       e.preventDefault();
-      setShowConfirm(true); // Mở modal xác nhận
+      setShowConfirm(true);
     };
 
     const confirmSubmit = async () => {
       setShowConfirm(false);
       setIsLoading(true);
       try {
+        const dto = {
+          markAsDone: true
+        }
         await createReExamAppointment(formData);
+        await updateAppointmentService(appointmentId, dto);
         await updateCycleStepStatus(currentCycle.cycleId, allCycleStep?.[currentStep(allCycleStep) - 1].stepOrder, "finished")
         showSuccess("Đặt lịch tái khám thành công");
         onClose();
@@ -1598,8 +1682,13 @@ const PatientProfileLayout = () => {
         {showConfirm && (
           <div className="patient-profile-confirm-overlay">
             <div className="patient-profile-confirm-modal">
-              <p>Bạn có chắc chắn đi tới bước tiếp theo và kết thúc bước hiện tại hay không?</p>
-              <p>(Xác nhận cũng sẽ kết thúc cuộc hẹn hiện tại)</p>
+              <div className="confirm-modal-header">
+                <AlertTriangle className="warning-icon" size={48} color="#f59e0b" />
+              </div>
+              <div>
+                <p>Bạn có chắc chắn đi tới bước tiếp theo và kết thúc bước hiện tại hay không?</p>
+                <p>(Xác nhận cũng sẽ kết thúc cuộc hẹn hiện tại)</p>
+              </div>
               <div className="patient-profile-confirm-actions">
                 <button
                   onClick={() => setShowConfirm(false)}
@@ -1626,7 +1715,7 @@ const PatientProfileLayout = () => {
     const confirmSubmit = async () => {
       try {
         const dto = {
-          status: "done"
+          markAsDone: true
         }
         if (type == "cycle") {
           await updateCycleStepStatus(currentCycle.cycleId, allCycleStep?.[currentStep(allCycleStep) - 1].stepOrder, "finished")
@@ -1670,7 +1759,7 @@ const PatientProfileLayout = () => {
           </div>
         </div>
         <div className="patient-profile-header-actions">
-          <button className="patient-profile-btn-danger" onClick={() => handleOpenConfirmModal()}>Kết thúc cuộc hẹn</button>
+          {/* <button className="patient-profile-btn-danger" onClick={() => handleOpenConfirmModal()}>Kết thúc cuộc hẹn</button> */}
         </div>
       </div>
 
