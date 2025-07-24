@@ -2,7 +2,6 @@ package hsf302.com.hiemmuon.service;
 
 import hsf302.com.hiemmuon.dto.responseDto.*;
 import hsf302.com.hiemmuon.dto.testresult.TestResultViewDTO;
-import hsf302.com.hiemmuon.dto.updateDto.CycleStepFailedReason;
 import hsf302.com.hiemmuon.dto.updateDto.NoteMedicineScheduleDTO;
 import hsf302.com.hiemmuon.entity.*;
 import hsf302.com.hiemmuon.enums.StatusCycle;
@@ -10,9 +9,7 @@ import hsf302.com.hiemmuon.exception.NotFoundException;
 import hsf302.com.hiemmuon.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.print.Doc;
 import java.time.LocalDate;
