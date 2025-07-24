@@ -222,7 +222,7 @@ public class PaymentService {
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
         vnp_Params.put("vnp_Amount", payment.getTotal().multiply(BigDecimal.valueOf(100)).toBigInteger().toString());
         vnp_Params.put("vnp_CurrCode", "VND");
-        vnp_Params.put("vnp_TxnRef", txnRef);
+        vnp_Params.put("vnp_TxnRef", serviceId);
         vnp_Params.put("vnp_OrderInfo", "Thanh toan dich vu: " + serviceId);
         vnp_Params.put("vnp_OrderType", "other");
         vnp_Params.put("vnp_Locale", "vn");

@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Tag(name = "8. Cycle Step Controller")
@@ -66,9 +67,10 @@ public class CycleStepController {
     public ResponseEntity<ApiResponse<?>> updateCycleStepStatus(
             @PathVariable("cycleId") int cycleId,
             @PathVariable("stepOrder") int stepId,
-            @RequestParam("status") StatusCycle status,
-            @RequestParam("reason") String reason) {
-        CycleStepDTO updatedStep = cycleStepService.updateCycleStepStatus(cycleId, stepId, status, reason);
+            @RequestParam StatusCycle status,
+            @RequestParam(required = false) String reason,
+            @RequestParam(required = false)     LocalDateTime changeDate) {
+        CycleStepDTO updatedStep = cycleStepService.updateCycleStepStatus(cycleId, stepId, status, reason, changeDate);
 
         ApiResponse<CycleStepDTO> response = new ApiResponse<>(
                 200,
