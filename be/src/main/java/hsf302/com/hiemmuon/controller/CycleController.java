@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "7. Cycle Controller")
+@Tag(name = "5. Cycle Controller")
 @RestController
 @RequestMapping("/api/cycles")
 public class CycleController {

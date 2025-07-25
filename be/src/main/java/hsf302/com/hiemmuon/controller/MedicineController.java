@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
-@Tag(name = "9. Medicine Schedule Controller")
+@Tag(name = "7. Medicine Schedule Controller")
 @RestController
 @RequestMapping("/api/medicine")
 public class MedicineController {

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "6. Test Result Controller")
+@Tag(name = "3. Test Result Controller")
 @RestController
 @RequestMapping("/api/test-results")
 public class TestResultController {

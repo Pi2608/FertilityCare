@@ -5,11 +5,13 @@ import hsf302.com.hiemmuon.dto.responseDto.SuccessRateByAgeDTO;
 import hsf302.com.hiemmuon.dto.updateDto.UpdateSuccessRateByAgeDTO;
 import hsf302.com.hiemmuon.entity.SuccessRateByAge;
 import hsf302.com.hiemmuon.service.SuccessRateByAgeService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "10. Success Rate Controller")
 @RestController
 @RequestMapping("/api/success-rates")
 public class SuccessRateByAgeController {

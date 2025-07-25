@@ -269,11 +269,11 @@ public class CycleStepService {
                     };
                 } else if (serviceName.equals("ivf")) {
                     offsetDays = switch (nextStepOrder) {
-                        case 2 -> 2;   // Kích thích buồng trứng sau khám
-                        case 3 -> 10;  // Chọc hút trứng sau kích thích
-                        case 4 -> 0;   // Kết hợp trứng – thường trong ngày
-                        case 5 -> 3;   // Chuyển phôi sau nuôi cấy
-                        case 6 -> 14;  // Thử thai sau chuyển phôi
+                        case 2 -> 2;
+                        case 3 -> 10;
+                        case 4 -> 0;
+                        case 5 -> 3;
+                        case 6 -> 14;
                         default -> 0;
                     };
                 } else {
