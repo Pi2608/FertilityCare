@@ -5,6 +5,9 @@ import apiAppointment from "../../../../features/service/apiAppointment";
 import ApiGateway from "@features/service/apiGateway";
 import apiFeedback from "@features/service/apiFeedback";
 import { useNavigate } from "react-router-dom";
+import { Star } from "lucide-react";
+import { FaStar } from "react-icons/fa";
+
 
 const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
   const navigate = useNavigate();
@@ -13,7 +16,7 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
   const [myFeedbacks, setMyFeedbacks] = useState([]);
   const [showFeedbackForm, setShowFeedbackForm] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState({ id: null, name: "" });
-  const [feedbackData, setFeedbackData] = useState({ rating: 5, comment: "" });
+  const [feedbackData, setFeedbackData] = useState({ rating: 0, comment: "" });
 
   const handleOpenFeedbackForm = (doctorId, doctorName) => {
     setSelectedDoctor({ id: doctorId, name: doctorName });
@@ -193,7 +196,7 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
                   <CalendarIcon size={24} />
                 </div>
                 <div className="appointment-info">
-                  <h5>{appt.type === "tu_van" ? "Tư vấn" : "Tái khám"}</h5>
+                  <h5>{appt.type === "tu_van" ? "Tư vấn" : "Điều trị"}</h5>
                   <p>
                     {new Date(appt.date).toLocaleDateString("vi-VN")} -{" "}
                     {appt.startTime.slice(0, 5)}
@@ -252,7 +255,7 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
                     <CalendarIcon size={24} />
                   </div>
                   <div className="appointment-info">
-                    <h5>{appt.type === "tu_van" ? "Tư vấn" : "Tái khám"}</h5>
+                    <h5>{appt.type === "tu_van" ? "Tư vấn" : "Điều trị"}</h5>
                     <p>
                       {new Date(appt.date).toLocaleDateString("vi-VN")} -{" "}
                       {appt.startTime.slice(0, 5)}
@@ -297,21 +300,24 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
             <h3>Đánh giá bác sĩ {selectedDoctor.name}</h3>
 
             <label>Chấm điểm:</label>
-            <select
-              value={feedbackData.rating}
-              onChange={(e) =>
-                setFeedbackData({
-                  ...feedbackData,
-                  rating: parseInt(e.target.value),
-                })
-              }
+            <div
+              style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}
             >
-              {[5, 4, 3, 2, 1].map((r) => (
-                <option key={r} value={r}>
-                  {r} sao
-                </option>
+              {[1, 2, 3, 4, 5].map((star) => (
+                <FaStar
+                  key={star}
+                  size={24}
+                  onClick={() =>
+                    setFeedbackData({ ...feedbackData, rating: star })
+                  }
+                  style={{
+                    cursor: "pointer",
+                    color: star <= feedbackData.rating ? "#FFD700" : "#ccc",
+                    transition: "color 0.2s",
+                  }}
+                />
               ))}
-            </select>
+            </div>
 
             <label>Nhận xét:</label>
             <textarea
