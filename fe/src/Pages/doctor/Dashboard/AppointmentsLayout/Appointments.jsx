@@ -33,7 +33,11 @@ export default function Appointments() {
         if (filterType === "khac" && item.status === "confirmed") return false; // Chỉ loại bỏ confirmed trong "Khác"
 
         // Loại bỏ "done" khỏi "Tất cả loại", "Tư vấn", và "Tái khám"
-        if (["all", "tu_van", "tai_kham"].includes(filterType) && item.status === "done") return false;
+        if (
+          ["all", "tu_van", "tai_kham"].includes(filterType) &&
+          item.status === "done"
+        )
+          return false;
 
         // Filter theo thời gian
         if (filterTime === "today") {
@@ -55,6 +59,48 @@ export default function Appointments() {
         const dateB = new Date(`${b.date}T${b.startTime}`);
         return dateB - dateA; // Sắp xếp mới nhất lên đầu
       });
+  };
+
+  const renderActionButton = (status, isDoneSection, appointmentId) => {
+    if (isDoneSection) {
+      // Đã hoàn thành: đổi "Chưa mở" thành "Chi tiết", vẫn để màu xám, nhưng không bị disabled
+      return (
+        <button
+          className="btn btn-grey text-gray-600 border border-gray-300 px-3 py-1 rounded hover:bg-gray-100"
+          onClick={() => handleViewDetail(appointmentId)} // mở popup chi tiết
+        >
+          Chi tiết
+        </button>
+      );
+    }
+
+    // Các trạng thái khác như đang xử lý, chưa đến,... vẫn giữ nguyên xử lý cũ
+    switch (status) {
+      case "new":
+        return (
+          <button
+            className="btn btn-green"
+            onClick={() => handleStart(appointmentId)}
+          >
+            Bắt đầu
+          </button>
+        );
+      case "processing":
+        return (
+          <button
+            className="btn btn-yellow"
+            onClick={() => handleContinue(appointmentId)}
+          >
+            Tiếp tục
+          </button>
+        );
+      default:
+        return (
+          <button className="btn btn-disabled text-gray-400 bg-gray-100 cursor-not-allowed">
+            Không khả dụng
+          </button>
+        );
+    }
   };
 
   const handleSendMessage = async () => {
@@ -107,7 +153,6 @@ export default function Appointments() {
           <p>Quản lý tất cả các cuộc hẹn của bạn</p>
         </div>
         <div className="schedule-actions">
-          <input type="text" placeholder="Tìm kiếm bệnh nhân..." />
           <select
             onChange={(e) => setFilterTime(e.target.value)}
             value={filterTime}
@@ -169,7 +214,6 @@ export default function Appointments() {
             <th>Tuổi</th>
             <th>Thời gian</th>
             <th>Loại điều trị</th>
-            <th>Giai đoạn điều trị</th>
             <th>Hành động</th>
           </tr>
         </thead>
@@ -205,9 +249,6 @@ export default function Appointments() {
                 </span>
               </td>
               <td>
-                <span className="treatment-stage">Đang cập nhật</span>
-              </td>
-              <td>
                 <div className="actions">
                   {item.status === "confirmed" ? (
                     <>
@@ -234,9 +275,34 @@ export default function Appointments() {
                         Nhắn tin
                       </button>
                     </>
+                  ) : item.status === "done" ? (
+                    <>
+                      <button
+                        className="btn btn-not-ready"
+                        onClick={() =>
+                          navigate(
+                            item.type === "tu_van"
+                              ? `/doctor-dashboard/appointments/tu_van/${item.appointmentId}/${item.customerId}`
+                              : `/doctor-dashboard/appointments/dieu_tri/${item.appointmentId}/${item.customerId}`,
+                            { state: { appointmentId: item.appointmentId } }
+                          )
+                        }
+                      >
+                        Chi tiết
+                      </button>
+                      <button
+                        className="btn btn-message"
+                        onClick={() => {
+                          setSelectedCustomerId(item.customerId);
+                          setShowMessagePopup(true);
+                        }}
+                      >
+                        Nhắn tin
+                      </button>
+                    </>
                   ) : (
                     <>
-                      <a href="" className="btn btn-not-ready no-underline">
+                      <a href="#" className="btn btn-not-ready no-underline">
                         Chưa mở
                       </a>
                       <button
@@ -257,11 +323,9 @@ export default function Appointments() {
         </tbody>
       </table>
 
-      <div className="pagination">
-        <button>Trước</button>
-        <span>Trang 1 / 3</span>
-        <button>Tiếp</button>
-      </div>
+      <br></br>
+      <br></br>
+      <br></br>
     </div>
   );
 }

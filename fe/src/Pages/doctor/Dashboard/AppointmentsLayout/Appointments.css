@@ -66,13 +66,11 @@
 .schedule-container .btn.btn-not-ready {
   background: #9ca3af;
   color: white;
-  cursor: not-allowed;
 }
 
 
 .schedule-container .btn.btn-not-ready:hover {
   background: #9ca3af;
-  cursor: not-allowed;
 }
 
 
@@ -343,4 +341,14 @@
     width: 100%;
     padding: 12px;
   }
+}
+
+.btn-grey {
+  background-color: #f1f1f1;
+  color: #666;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+.btn-grey:hover {
+  background-color: #e5e5e5;
 }
