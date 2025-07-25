@@ -13,11 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -96,7 +93,7 @@ public class CycleService {
         cycle.setCustomer(customer);
         cycle.setDoctor(doctor);
         cycle.setService(service);
-        cycle.setStartdate(dto.getStartDate());
+        cycle.setStartDate(dto.getStartDate());
         cycle.setEndDate(dto.getStartDate().plusMonths(10));
         cycle.setNote(dto.getNote());
         cycle.setStatus(StatusCycle.ongoing);
@@ -108,7 +105,6 @@ public class CycleService {
 
         List<CycleStepDTO> listStep = new ArrayList<>();
 
-        LocalDateTime eventDate = dto.getStartDate().plusMonths(2).atStartOfDay(); // ngày đầu tiên
         for (int i = 0; i < treatmentSteps.size(); i++) {
             TreatmentStep step = treatmentSteps.get(i);
 
@@ -120,7 +116,8 @@ public class CycleService {
             cycleStep.setDescription(step.getDescription());
 
             if (i == 0) {
-                cycleStep.setEventdate(eventDate);
+                cycleStep.setStartDate(dto.getStartDate());
+                cycleStep.setEventdate(dto.getStartDate().plusDays(1).atTime(10, 0));
             }
 
             cycleStepRepository.save(cycleStep);
@@ -128,9 +125,10 @@ public class CycleService {
             CycleStepDTO cycleStepDTO = CycleStepDTO.builder()
                     .stepId(cycleStep.getStepId())
                     .stepOrder(cycleStep.getStepOrder())
-                    .serive(cycle.getService().getName())
+                    .service(cycle.getService().getName())
                     .description(cycleStep.getDescription())
-                    .eventdate(cycleStep.getEventdate())
+                    .startDate(cycleStep.getStartDate())
+                    .eventDate(cycleStep.getEventdate())
                     .statusCycleStep(cycleStep.getStatusCycleStep())
                     .note(cycleStep.getNote())
                     .build();
@@ -146,7 +144,7 @@ public class CycleService {
                 savedCycle.getDoctor().getUser().getName(),
                 savedCycle.getService().getServiceId(),
                 savedCycle.getService().getName(),
-                savedCycle.getStartdate(),
+                savedCycle.getStartDate(),
                 savedCycle.getEndDate(),
                 savedCycle.getStatus(),
                 savedCycle.getNote(),
@@ -185,7 +183,7 @@ public class CycleService {
                 .doctorName(cycle.getDoctor().getUser().getName())
                 .serviceId(cycle.getService().getServiceId())
                 .serviceName(cycle.getService().getName())
-                .startDate(cycle.getStartdate())
+                .startDate(cycle.getStartDate())
                 .endDate(cycle.getEndDate())
                 .status(cycle.getStatus())
                 .note(cycle.getNote())
@@ -197,11 +195,12 @@ public class CycleService {
         return CycleStepDTO.builder()
                 .stepId(step.getStepId())
                 .stepOrder(step.getStepOrder())
-                .serive(step.getCycle().getService().getName())
+                .service(step.getCycle().getService().getName())
                 .description(step.getDescription())
-                .eventdate(step.getEventdate())
+                .eventDate(step.getEventdate())
                 .statusCycleStep(step.getStatusCycleStep())
                 .note(step.getNote())
+                .startDate(step.getStartDate())
                 .build();
     }
 }

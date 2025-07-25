@@ -31,7 +31,7 @@ public class Cycle {
     private TreatmentService service;
 
     @Column(name = "start_date", nullable = false)
-    private LocalDate startdate;
+    private LocalDate startDate;
 
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;

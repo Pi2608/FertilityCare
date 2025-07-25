@@ -3,7 +3,6 @@ package hsf302.com.hiemmuon.service;
 import hsf302.com.hiemmuon.dto.createDto.CreateCycleDTO;
 import hsf302.com.hiemmuon.dto.createDto.ReExamAppointmentDTO;
 import hsf302.com.hiemmuon.dto.createDto.CreatePaymentWithReExamDTO;
-import hsf302.com.hiemmuon.dto.responseDto.AppointmentHistoryDTO;
 import hsf302.com.hiemmuon.dto.responseDto.CycleDTO;
 import hsf302.com.hiemmuon.dto.responseDto.PaymentResponsesDTO;
 import hsf302.com.hiemmuon.entity.*;
@@ -263,7 +262,7 @@ public class PaymentService {
                     ReExamAppointmentDTO newApt = new ReExamAppointmentDTO();
                     newApt.setCustomerId(payment.getCustomer().getCustomerId());
                     newApt.setServiceId(payment.getService().getServiceId());
-                    newApt.setDate(LocalDateTime.of(payment.getCycle().getStartdate(), LocalTime.of(8, 0)));
+                    newApt.setDate(LocalDateTime.of(payment.getCycle().getStartDate(), LocalTime.of(8, 0)));
                     newApt.setNote("");
                     List<Integer> stepIds = cycleStepRepository.findStepIdsByCycleIdOrdered(payment.getCycle().getCycleId());
                     if (stepIds.isEmpty()) throw new NotFoundException("No steps found");

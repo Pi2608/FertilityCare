@@ -11,11 +11,12 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.print.Doc;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -151,6 +152,7 @@ public class CycleStepService {
                 cycleStep.getStepOrder(),
                 cycleStep.getCycle().getService().getName(),
                 cycleStep.getDescription(),
+                cycleStep.getStartDate(),
                 cycleStep.getEventdate(),
                 cycleStep.getStatusCycleStep(),
                 cycleStep.getNote(),
@@ -238,13 +240,50 @@ public class CycleStepService {
         }
     }
 
-    private void handleStepFinished(CycleStep step) {
-        int cycleId = step.getCycle().getCycleId();
+    private void handleStepFinished(CycleStep currentStep) {
+        int cycleId = currentStep.getCycle().getCycleId();
+        TreatmentService service = currentStep.getCycle().getService();
 
-        // Gán eventDate cho bước kế tiếp nếu chưa có
-        CycleStep nextStep = cycleStepRepository.findByCycle_CycleIdAndStepOrder(cycleId, step.getStepOrder() + 1);
-        if (nextStep != null && nextStep.getEventdate() == null && step.getEventdate() != null) {
-            nextStep.setEventdate(step.getEventdate().plusDays(1));
+        // Tìm step kế tiếp
+        CycleStep nextStep = cycleStepRepository.findByCycle_CycleIdAndStepOrder(
+                cycleId, currentStep.getStepOrder() + 1);
+
+        if (nextStep != null && nextStep.getStartDate() == null && currentStep.getEventdate() != null) {
+
+            // Gán startDate = eventDate của step hiện tại + 1 ngày
+            LocalDate nextStart = currentStep.getEventdate().plusDays(1).toLocalDate();
+            nextStep.setStartDate(nextStart);
+
+            // Tính eventDate dựa trên dịch vụ
+            if (service != null) {
+                String serviceName = service.getName().toLowerCase();
+                int nextStepOrder = nextStep.getStepOrder();
+                int offsetDays = 0;
+
+                if (serviceName.equals("iui")) {
+                    offsetDays = switch (nextStepOrder) {
+                        case 1, 2, 4 -> 2;
+                        case 3 -> 10;
+                        case 5 -> 14;
+                        default -> 0;
+                    };
+                } else if (serviceName.equals("ivf")) {
+                    offsetDays = switch (nextStepOrder) {
+                        case 2 -> 2;   // Kích thích buồng trứng sau khám
+                        case 3 -> 10;  // Chọc hút trứng sau kích thích
+                        case 4 -> 0;   // Kết hợp trứng – thường trong ngày
+                        case 5 -> 3;   // Chuyển phôi sau nuôi cấy
+                        case 6 -> 14;  // Thử thai sau chuyển phôi
+                        default -> 0;
+                    };
+                } else {
+                    // Mặc định: eventDate = startDate + 1
+                    offsetDays = 1;
+                }
+
+                nextStep.setEventdate(nextStart.plusDays(offsetDays).atTime(LocalTime.of(10, 0)));
+            }
+
             cycleStepRepository.save(nextStep);
         }
 
@@ -254,7 +293,7 @@ public class CycleStepService {
                 .allMatch(s -> s.getStatusCycleStep() == StatusCycle.finished);
 
         if (allStepsFinished) {
-            Cycle cycle = step.getCycle();
+            Cycle cycle = currentStep.getCycle();
             cycle.setStatus(StatusCycle.finished);
             cycleRepository.save(cycle);
         }
@@ -304,5 +343,4 @@ public class CycleStepService {
             cycleRepository.save(cycle);
         }
     }
-
 }

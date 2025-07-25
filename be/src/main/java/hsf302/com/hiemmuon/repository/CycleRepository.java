@@ -20,12 +20,9 @@ public interface CycleRepository extends JpaRepository<Cycle, Integer> {
 
     Cycle findById(int cycleId);
 
-    boolean existsByCustomer_CustomerIdAndStartdate(
-            int customerId, LocalDate startdate);
-
     @Query("SELECT c FROM Cycle c WHERE c.customer.customerId = :customerId " +
             "AND c.status IN (:statuses) " +
-            "AND (c.startdate <= :endDate AND c.endDate >= :startDate)")
+            "AND (c.startDate <= :endDate AND c.endDate >= :startDate)")
     List<Cycle> findOverlappingCycles(
             @Param("customerId") int customerId,
             @Param("startDate") LocalDate startDate,
