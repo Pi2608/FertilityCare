@@ -645,9 +645,9 @@ export default class ApiGateway {
   static async createMedicationSchedule(schedule) {
     try {
       const scheduleDto = {
-        medicineId: parseInt(schedule.medicineId),
-        cycleId: parseInt(schedule.cycleId),
         stepId: parseInt(schedule.stepId),
+        medicineName: parseInt(schedule.medicineName),
+        time: null,
         startDate: schedule.startDate,
         endDate: schedule.endDate
       }

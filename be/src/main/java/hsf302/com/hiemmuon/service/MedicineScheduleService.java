@@ -4,12 +4,10 @@ import hsf302.com.hiemmuon.dto.createDto.CreateMedicationScheduleDTO;
 import hsf302.com.hiemmuon.dto.responseDto.MedicineScheduleDTO;
 import hsf302.com.hiemmuon.dto.responseDto.StatusMedicineDTO;
 import hsf302.com.hiemmuon.entity.CycleStep;
-import hsf302.com.hiemmuon.entity.Medicine;
 import hsf302.com.hiemmuon.entity.MedicineSchedule;
 import hsf302.com.hiemmuon.enums.StatusMedicineSchedule;
 import hsf302.com.hiemmuon.exception.NotFoundException;
 import hsf302.com.hiemmuon.repository.CycleStepRepository;
-import hsf302.com.hiemmuon.repository.MedicineRepository;
 import hsf302.com.hiemmuon.repository.MedicineScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,9 +31,6 @@ public class MedicineScheduleService {
 
     @Autowired
     private CycleStepRepository cycleStepRepository;
-
-    @Autowired
-    private MedicineRepository medicineRepository;
 
     @Autowired
     private SendMailService sendMailService;
@@ -82,56 +77,50 @@ public class MedicineScheduleService {
     }
 
     public List<MedicineScheduleDTO> createSchedule(CreateMedicationScheduleDTO dto) {
-        // Lấy thuốc và bước điều trị
-        Medicine medicine = medicineRepository.findById(dto.getMedicineId())
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy thuốc"));
-
+        // 1. Tìm bước chu kỳ
         CycleStep step = cycleStepRepository.findById(dto.getStepId());
-
-        if (step.getCycle().getCycleId() != dto.getCycleId()) {
-            throw new RuntimeException("Bước điều trị không thuộc chu kỳ đã chọn");
+        if (step == null) {
+            throw new RuntimeException("Không tìm thấy bước chu kỳ với id = " + dto.getStepId());
         }
 
         List<MedicineScheduleDTO> result = new ArrayList<>();
 
-        // 🧠 Bước 1: Tạo tất cả các eventDateTime cần lên lịch
-        List<LocalDateTime> targetTimes = new ArrayList<>();
-        LocalDate currentDate = dto.getStartDate();
+        // 2. Lặp qua từng ngày từ start đến end
+        LocalDate current = dto.getStartDate();
+        while (!current.isAfter(dto.getEndDate())) {
 
-        while (!currentDate.isAfter(dto.getEndDate())) {
-            for (Time time : medicine.getUseAt()) {
-                targetTimes.add(LocalDateTime.of(currentDate, time.toLocalTime()));
-            }
-            currentDate = currentDate.plusDays(1);
-        }
-
-        // 🧠 Bước 2: Lấy danh sách eventDateTime đã tồn tại trong DB
-        List<LocalDateTime> existedTimes = medicineScheduleRepository
-                .findAllEventTimesByMedicineAndStep(medicine.getMedicinId(), step.getStepId());
-
-        Set<LocalDateTime> existedSet = new HashSet<>(existedTimes);
-
-        // 🧠 Bước 3: Tạo lịch mới cho những event chưa có
-        for (LocalDateTime eventDateTime : targetTimes) {
-            if (existedSet.contains(eventDateTime)) {
-                continue; // Bỏ qua nếu đã tồn tại
-            }
-
+            // 3. Tạo đối tượng entity
             MedicineSchedule schedule = new MedicineSchedule();
-            schedule.setMedicine(medicine);
             schedule.setCycleStep(step);
+            schedule.setMedicineName(dto.getMedicineName());
             schedule.setStartDate(dto.getStartDate());
             schedule.setEndDate(dto.getEndDate());
-            schedule.setEventDate(eventDateTime);
-            schedule.setStatus(StatusMedicineSchedule.dang_dien_ra);
+            schedule.setTime(dto.getTime());
+            schedule.setEventDate(LocalDateTime.of(current, dto.getTime()));
+            schedule.setStatus(StatusMedicineSchedule.dang_dien_ra); // hoặc PENDING tùy enum của bạn
             schedule.setIsReminded(false);
+            schedule.setNote(null);
 
             medicineScheduleRepository.save(schedule);
 
-            result.add(convertToDTO(schedule));
+            MedicineScheduleDTO dtoResponse = new MedicineScheduleDTO(
+                    schedule.getMedicationId(),
+                    schedule.getCycleStep().getStepOrder(),
+                    schedule.getMedicineName(),
+                    schedule.getTime(),
+                    schedule.getStartDate(),
+                    schedule.getEndDate(),
+                    schedule.getEventDate(),
+                    schedule.getStatus(),
+                    schedule.getNote(),
+                    schedule.getIsReminded()
+            );
+            result.add(dtoResponse);
+            current = current.plusDays(1);
         }
         return result;
     }
+
 
     @Transactional
     public void updateExpiredSchedules() {
@@ -175,15 +164,14 @@ public class MedicineScheduleService {
         return new MedicineScheduleDTO(
                 schedule.getMedicationId(),
                 schedule.getCycleStep().getStepOrder(),
-                schedule.getMedicine().getName(),
-                schedule.getMedicine().getDiscription(),
-                schedule.getMedicine().getDose(),
-                schedule.getMedicine().getFrequency(),
+                schedule.getMedicineName(),
+                schedule.getTime(),
                 schedule.getStartDate(),
                 schedule.getEndDate(),
                 schedule.getEventDate(),
                 schedule.getStatus(),
-                schedule.getNote()
+                schedule.getNote(),
+                schedule.getIsReminded()
         );
     }
 
@@ -200,20 +188,20 @@ public class MedicineScheduleService {
             if (schedule.getIsReminded()) continue;
             String email = schedule.getCycleStep().getCycle().getCustomer().getUser().getEmail();
             String customerName = schedule.getCycleStep().getCycle().getCustomer().getUser().getName();
-            String medicineName = schedule.getMedicine().getName();
+            String medicineName = schedule.getMedicineName();
             LocalDateTime eventTime = schedule.getEventDate();
 
             String subject = "Nhắc nhở uống thuốc: " + medicineName;
             String content = String.format("""
-                Chào %s,
-
-                Đây là nhắc nhở rằng bạn cần uống thuốc "%s" vào lúc %s.
-
-                Vui lòng không quên thực hiện đúng giờ để đảm bảo hiệu quả điều trị.
-
-                Trân trọng,
-                Hệ thống hỗ trợ điều trị HiemMuon.
-                """, customerName, medicineName, eventTime.format(DateTimeFormatter.ofPattern("HH:mm dd-MM-yyyy")));
+                    Chào %s,
+                    
+                    Đây là nhắc nhở rằng bạn cần uống thuốc "%s" vào lúc %s.
+                    
+                    Vui lòng không quên thực hiện đúng giờ để đảm bảo hiệu quả điều trị.
+                    
+                    Trân trọng,
+                    Hệ thống hỗ trợ điều trị HiemMuon.
+                    """, customerName, medicineName, eventTime.format(DateTimeFormatter.ofPattern("HH:mm dd-MM-yyyy")));
 
             sendMailService.sendEmail(email, subject, content);
             schedule.setIsReminded(true);

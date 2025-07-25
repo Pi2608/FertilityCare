@@ -27,7 +27,6 @@ const PatientProfileLayout = () => {
   const [allCycleStep, setAllCycleStep] = useState([]); // Chi tiết tất cả các step
   const [pastAndCurrentSteps, setPastAndCurrentSteps] = useState([]); // Các bước đã và đang thực hiện
   const [medicationSchedules, setMedicationSchedules] = useState([]); // Lịch uống thuốc theo bước
-  const [allMedicines, setAllMedicines] = useState([]); // Danh sách thuốc
   const [loading, setLoading] = useState(false); // Loading chung cho các thao tác async
 
   const [updateCycleStepNoteForm, setUpdateCycleStepNoteForm] = useState({
@@ -235,7 +234,6 @@ const PatientProfileLayout = () => {
       await Promise.all([
         getAppointmentHistoryByCustomer(customerId),
         getCustomerTestResults(customerId),
-        getAllMedicines(),
       ]);
 
       if (crtCycle?.data?.cycleId) {
@@ -374,17 +372,6 @@ const PatientProfileLayout = () => {
     }
   };
 
-  // 12. Lấy danh sách thuốc
-  const getAllMedicines = async () => {
-    try {
-      const res = await ApiGateway.getAllMedicines();
-      setAllMedicines(res.data);
-      return res.data;
-    } catch (error) {
-      throw error;
-    }
-  };
-
   // 14. Tạo mới kết quả xét nghiệm
   const createTestResult = async (dto) => {
     try {
@@ -479,9 +466,17 @@ const PatientProfileLayout = () => {
           <h3>Toàn bộ giai đoạn điều trị</h3>
           <div className="patient-profile-timeline">
             {filterFirstOngoingStep(allCycleStep)?.map((phase, idx) => (
-              <div key={`key-${phase.stepId}-${idx}`} className={`patient-profile-timeline-item patient-profile-${phase.statusCycleStep}`}>
+              <div key={`key-${phase.stepId}-${idx}`} className={`patient-profile-timeline-item patient-profile-${(phase.statusCycleStep === "ongoing" && phase.failedReason) ? "restart" : phase.statusCycleStep}`}>
                 <div className="patient-profile-timeline-marker">
-                  {phase.statusCycleStep === "finished" ? <Check  size={20}/> : phase.statusCycleStep === 'ongoing' ? <Hourglass  size={20}/> : phase.statusCycleStep === 'restart' ? <RefreshCcw  size={20}/> : <CalendarDays  size={20}/>}
+                  {phase.statusCycleStep === "finished" ? (
+                    <Check size={20} />
+                  ) : phase.statusCycleStep === "ongoing" && phase.failedReason ? (
+                    <RefreshCcw size={20} />
+                  ) : phase.statusCycleStep === "ongoing" ? (
+                    <Hourglass size={20} />
+                  ) : (
+                    <CalendarDays size={20} />
+                  )}
                 </div>
                 <div className="patient-profile-timeline-content">
                   <div className="patient-profile-timeline-header">
@@ -1095,7 +1090,7 @@ const PatientProfileLayout = () => {
     );
   });
 
-  const CreateMedicationScheduleModal = memo(({ isOpen, onClose, allMedicines }) => {
+  const CreateMedicationScheduleModal = memo(({ isOpen, onClose }) => {
 
     const [isLoading, setIsLoading] = useState(false)
 
@@ -1945,7 +1940,6 @@ const PatientProfileLayout = () => {
       <CreateMedicationScheduleModal
         isOpen={isOpenCreateMedicationModal}
         onClose={handleCloseCreateMedicationModal}
-        allMedicines={allMedicines}
       />
       
       <CreateTestResultModal

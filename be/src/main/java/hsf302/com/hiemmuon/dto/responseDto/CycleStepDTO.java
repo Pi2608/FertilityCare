@@ -20,6 +20,8 @@ public class CycleStepDTO {
     private LocalDateTime eventdate;
     private StatusCycle statusCycleStep;
     private String note;
+    private String failedReason;
+    private Boolean isReminded;
     private List<MedicineScheduleDTO> medicineSchedule;
     private List<AppointmentOverviewDTO> appointment;
 }

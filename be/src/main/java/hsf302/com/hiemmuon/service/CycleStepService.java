@@ -9,13 +9,13 @@ import hsf302.com.hiemmuon.exception.NotFoundException;
 import hsf302.com.hiemmuon.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.print.Doc;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,19 +31,10 @@ public class CycleStepService {
     private MedicineScheduleRepository medicineScheduleRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private DoctorRepository doctorRepository;
-
-    @Autowired
     private TestResultRepository testResultRepository;
 
     @Autowired
     private SendMailService sendMailService;
-
-    @Autowired
-    private CustomerRepository customerRepository;
 
 
     public List<CycleStepDTO> getAllCycleStep(int cycleId) {
@@ -68,67 +59,48 @@ public class CycleStepService {
         return convertToDTO(step);
     }
 
-    public CycleStepDTO updateCycleStepStatus(int cycleId, int stepId, StatusCycle status) {
-        CycleStep step = cycleStepRepository.findByCycle_CycleIdAndStepOrder(cycleId, stepId);
+    public CycleStepDTO updateCycleStepStatus(int cycleId,
+                                              int stepOrder,
+                                              StatusCycle status,
+                                              String reason,
+                                              LocalDateTime changeDate) {
 
+        // 1. Tìm bước theo Cycle và stepOrder
+        CycleStep step = cycleStepRepository.findByCycle_CycleIdAndStepOrder(cycleId, stepOrder);
+
+        // 2. Kiểm tra trạng thái không thể cập nhật
         if (step.getStatusCycleStep() == StatusCycle.finished || step.getStatusCycleStep() == StatusCycle.stopped) {
-            throw new IllegalStateException("Không thể cập nhật: Bước đã kết thúc hoặc đã bị dừng.");
+            throw new IllegalStateException("Không thể cập nhật: Bước đã kết thúc hoặc bị dừng.");
         }
 
         if (step.getStatusCycleStep() == status) {
             throw new IllegalStateException("Trạng thái đã là '" + status + "', không thể cập nhật lại.");
         }
 
-        List<CycleStep> previousSteps = cycleStepRepository
-                .findByCycle_CycleIdAndStepOrderLessThan(cycleId, step.getStepOrder());
+        // 3. Nếu không phải restart thì kiểm tra các bước trước đã hoàn thành chưa
+        if (status != StatusCycle.restarted) {
+            List<CycleStep> previousSteps = cycleStepRepository
+                    .findByCycle_CycleIdAndStepOrderLessThan(cycleId, step.getStepOrder());
 
-        boolean allPreviousFinished = previousSteps.stream()
-                .allMatch(s -> s.getStatusCycleStep() == StatusCycle.finished);
+            boolean allPreviousFinished = previousSteps.stream()
+                    .allMatch(s -> s.getStatusCycleStep() == StatusCycle.finished);
 
-        if (!allPreviousFinished) {
-            throw new IllegalStateException("Không thể cập nhật: Tất cả các bước trước phải hoàn thành trước.");
+            if (!allPreviousFinished) {
+                throw new IllegalStateException("Không thể cập nhật: Các bước trước chưa hoàn thành.");
+            }
         }
 
+        // 4. Cập nhật trạng thái
         step.setStatusCycleStep(status);
         cycleStepRepository.save(step);
 
-        if (status == StatusCycle.finished) {
-            // Gán eventDate cho bước kế tiếp nếu chưa có
-            CycleStep nextStep = cycleStepRepository.findByCycle_CycleIdAndStepOrder(
-                    cycleId, step.getStepOrder() + 1);
-
-            if (nextStep != null && nextStep.getEventdate() == null) {
-                LocalDateTime nextEventDate = step.getEventdate().plusDays(1);
-                nextStep.setEventdate(nextEventDate);
-                cycleStepRepository.save(nextStep);
-            }
-
-            // Nếu tất cả các bước đã hoàn thành -> kết thúc cycle
-            List<CycleStep> allSteps = cycleStepRepository.findByCycle_CycleId(cycleId);
-            boolean allStepsFinished = allSteps.stream()
-                    .allMatch(s -> s.getStatusCycleStep() == StatusCycle.finished);
-
-            if (allStepsFinished) {
-                Cycle cycle = step.getCycle();
-                cycle.setStatus(StatusCycle.finished);
-                cycleRepository.save(cycle);
-            }
+        // 5. Xử lý theo từng trạng thái cụ thể
+        switch (status) {
+            case finished -> handleStepFinished(step);
+            case stopped -> handleStepStopped(step, reason);
+            case restarted -> handleStepRestarted(step, reason, changeDate);
         }
 
-        if (status == StatusCycle.stopped) {
-            // Dừng các bước sau
-            List<CycleStep> lateSteps = cycleStepRepository
-                    .findByCycle_CycleIdAndStepOrderGreaterThan(cycleId, step.getStepOrder());
-
-            for (CycleStep lateStep : lateSteps) {
-                lateStep.setStatusCycleStep(StatusCycle.stopped);
-            }
-            cycleStepRepository.saveAll(lateSteps);
-
-            Cycle cycle = step.getCycle();
-            cycle.setStatus(StatusCycle.stopped);
-            cycleRepository.save(cycle);
-        }
         return convertToDTO(step);
     }
 
@@ -145,28 +117,18 @@ public class CycleStepService {
         List<MedicineSchedule> schedules = medicineScheduleRepository.findByCycleStep_StepId(cycleStep.getStepId());
 
         List<MedicineScheduleDTO> medicineScheduleDTOs = schedules.stream().map(schedule -> {
-            List<MedicineDTO> medicineDTOList = List.of(
-                    new MedicineDTO(
-                            schedule.getMedicine().getName(),
-                            schedule.getMedicine().getDiscription(),
-                            schedule.getMedicine().getDose(),
-                            schedule.getMedicine().getFrequency(),
-                            schedule.getMedicine().getUseAt()
-                    )
-            );
 
             return new MedicineScheduleDTO(
                     schedule.getMedicationId(),
                     schedule.getCycleStep().getStepOrder(),
-                    schedule.getMedicine().getName(),
-                    schedule.getMedicine().getDiscription(),
-                    schedule.getMedicine().getDose(),
-                    schedule.getMedicine().getFrequency(),
+                    schedule.getMedicineName(),
+                    schedule.getTime(),
                     schedule.getStartDate(),
                     schedule.getEndDate(),
                     schedule.getEventDate(),
                     schedule.getStatus(),
-                    schedule.getNote()
+                    schedule.getNote(),
+                    schedule.getIsReminded()
             );
         }).collect(Collectors.toList());
 
@@ -192,6 +154,8 @@ public class CycleStepService {
                 cycleStep.getEventdate(),
                 cycleStep.getStatusCycleStep(),
                 cycleStep.getNote(),
+                cycleStep.getFailedReason(),
+                cycleStep.getIsReminded(),
                 medicineScheduleDTOs,
                 appointmentDTOs
         );
@@ -220,11 +184,13 @@ public class CycleStepService {
             MedicineScheduleDTO dto = new MedicineScheduleDTO();
             dto.setScheduleId(m.getMedicationId());
             dto.setStepOrder(m.getCycleStep().getStepOrder());
-            dto.setMedicineName(m.getMedicine().getName());
-            dto.setDose(m.getMedicine().getDose());
+            dto.setMedicineName(m.getMedicineName());
+            dto.setTime(m.getTime());
             dto.setStartDate(m.getStartDate());
             dto.setEndDate(m.getEndDate());
             dto.setStatus(m.getStatus());
+            dto.setNote(m.getNote());
+            dto.setIsReminded(m.getIsReminded());
             return dto;
         }).collect(Collectors.toList());
 
@@ -246,10 +212,6 @@ public class CycleStepService {
         LocalDateTime to = from.plusDays(2);
 
         List<CycleStep> steps = cycleStepRepository.findByEventdateBetween(from, to);
-
-        if(steps.isEmpty()) {
-            System.err.println("bug");
-        }
 
         for (CycleStep step : steps) {
             String toEmail = step.getCycle().getCustomer().getUser().getEmail();
@@ -275,4 +237,72 @@ public class CycleStepService {
             step.setIsReminded(true);
         }
     }
+
+    private void handleStepFinished(CycleStep step) {
+        int cycleId = step.getCycle().getCycleId();
+
+        // Gán eventDate cho bước kế tiếp nếu chưa có
+        CycleStep nextStep = cycleStepRepository.findByCycle_CycleIdAndStepOrder(cycleId, step.getStepOrder() + 1);
+        if (nextStep != null && nextStep.getEventdate() == null && step.getEventdate() != null) {
+            nextStep.setEventdate(step.getEventdate().plusDays(1));
+            cycleStepRepository.save(nextStep);
+        }
+
+        // Kiểm tra nếu tất cả các bước đều hoàn thành thì kết thúc cycle
+        List<CycleStep> allSteps = cycleStepRepository.findByCycle_CycleId(cycleId);
+        boolean allStepsFinished = allSteps.stream()
+                .allMatch(s -> s.getStatusCycleStep() == StatusCycle.finished);
+
+        if (allStepsFinished) {
+            Cycle cycle = step.getCycle();
+            cycle.setStatus(StatusCycle.finished);
+            cycleRepository.save(cycle);
+        }
+    }
+
+    private void handleStepStopped(CycleStep step, String reason) {
+        step.setFailedReason(reason);
+
+        int cycleId = step.getCycle().getCycleId();
+        List<CycleStep> laterSteps = cycleStepRepository
+                .findByCycle_CycleIdAndStepOrderGreaterThan(cycleId, step.getStepOrder());
+
+        for (CycleStep s : laterSteps) {
+            s.setStatusCycleStep(StatusCycle.stopped);
+        }
+        cycleStepRepository.saveAll(laterSteps);
+
+        Cycle cycle = step.getCycle();
+        cycle.setStatus(StatusCycle.stopped);
+        cycleRepository.save(cycle);
+    }
+
+    private void handleStepRestarted(CycleStep step, String reason, LocalDateTime changeDate) {
+
+        // Mở lại trạng thái "processing" cho bước hiện tại
+        step.setStatusCycleStep(StatusCycle.ongoing);
+        step.setFailedReason(reason);
+        step.setEventdate(changeDate);
+        cycleStepRepository.save(step);
+
+        // Mở lại các bước sau nếu chúng bị stopped
+        int cycleId = step.getCycle().getCycleId();
+        List<CycleStep> laterSteps = cycleStepRepository
+                .findByCycle_CycleIdAndStepOrderGreaterThan(cycleId, step.getStepOrder());
+
+        for (CycleStep s : laterSteps) {
+            if (s.getStatusCycleStep() == StatusCycle.stopped) {
+                s.setStatusCycleStep(StatusCycle.ongoing); // hoặc `waiting` nếu bạn định nghĩa
+            }
+        }
+        cycleStepRepository.saveAll(laterSteps);
+
+        // Cập nhật lại trạng thái cycle nếu nó đang là stopped
+        Cycle cycle = step.getCycle();
+        if (cycle.getStatus() == StatusCycle.stopped) {
+            cycle.setStatus(StatusCycle.ongoing);
+            cycleRepository.save(cycle);
+        }
+    }
+
 }

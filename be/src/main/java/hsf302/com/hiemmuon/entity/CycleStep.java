@@ -43,6 +43,9 @@ public class CycleStep{
     @Column(name = "note", columnDefinition = "NVARCHAR(MAX)")
     private String note;
 
+    @Column(name = "failed_reason", columnDefinition = "NVARCHAR(MAX)")
+    private String failedReason;
+
     @OneToMany(mappedBy = "cycleStep", fetch = FetchType.LAZY)
     private List<Appointment> appointments;
 

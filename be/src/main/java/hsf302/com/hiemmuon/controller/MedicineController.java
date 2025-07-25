@@ -4,10 +4,8 @@ import hsf302.com.hiemmuon.dto.ApiResponse;
 import hsf302.com.hiemmuon.dto.createDto.CreateMedicationScheduleDTO;
 import hsf302.com.hiemmuon.dto.responseDto.MedicineScheduleDTO;
 import hsf302.com.hiemmuon.dto.responseDto.StatusMedicineDTO;
-import hsf302.com.hiemmuon.entity.Medicine;
 import hsf302.com.hiemmuon.enums.StatusMedicineSchedule;
 import hsf302.com.hiemmuon.service.MedicineScheduleService;
-import hsf302.com.hiemmuon.service.MedicineService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,26 +23,7 @@ import java.util.List;
 public class MedicineController {
 
     @Autowired
-    private MedicineService medicineService;
-
-    @Autowired
     private MedicineScheduleService medicineScheduleService;
-
-    @Operation(
-            summary = "Lấy danh sách thuốc",
-            description = "API cho phép lấy danh sách thông tin thuốc."
-    )
-    @GetMapping("/all")
-    public ResponseEntity<ApiResponse<?>> getAllMedicineSchedules() {
-        List<Medicine> medicines = medicineService.getAllMedicines();
-
-        ApiResponse<List<Medicine>> response = new ApiResponse<>(
-                200,
-                "Get all medicines successfully",
-                medicines
-        );
-        return ResponseEntity.ok(response);
-    }
 
     @Operation(
             summary = "Lấy lịch uống thuốc theo chu kỳ và bước điều trị",

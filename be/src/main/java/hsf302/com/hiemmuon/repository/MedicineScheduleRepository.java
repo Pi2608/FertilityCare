@@ -18,10 +18,6 @@ public interface MedicineScheduleRepository extends JpaRepository<MedicineSchedu
 
     List<MedicineSchedule> findByStatus(StatusMedicineSchedule status);
 
-    @Query("SELECT ms.eventDate FROM MedicineSchedule ms WHERE ms.medicine.medicinId = :medicineId AND ms.cycleStep.stepId = :stepId")
-    List<LocalDateTime> findAllEventTimesByMedicineAndStep(@Param("medicineId") int medicineId,
-                                                            @Param("stepId") int stepId);
-
     List<MedicineSchedule> findAllByCycleStep_Cycle_CycleIdAndCycleStep_StepOrderAndEventDateBetween(
             int cycleId,
             int stepOrder,
@@ -33,18 +29,16 @@ public interface MedicineScheduleRepository extends JpaRepository<MedicineSchedu
     SELECT new hsf302.com.hiemmuon.dto.responseDto.MedicineScheduleDTO(
         ms.medicationId,
         cs.stepOrder,
-        m.name,
-        m.discription,
-        m.dose,
-        m.frequency,
+        ms.medicineName,
+        ms.time,
         ms.startDate,
         ms.endDate,
         ms.eventDate,
         ms.status,
-        ms.note
+        ms.note,
+        ms.isReminded
     )
     FROM MedicineSchedule ms
-    JOIN ms.medicine m
     JOIN ms.cycleStep cs
     JOIN cs.cycle c
     WHERE c.customer.customerId = :customerId
