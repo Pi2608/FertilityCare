@@ -12,4 +12,6 @@ public interface TreatmentServiceRepository extends JpaRepository<TreatmentServi
     TreatmentService findById(int id);
     TreatmentService findByName(String name);
     List<TreatmentService> findByIsActive(boolean status);
+
+    boolean findByServiceId(int serviceId);
 }

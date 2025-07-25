@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import hsf302.com.hiemmuon.enums.StatusCycle;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,9 +16,10 @@ import java.util.List;
 public class CycleStepDTO {
     private int stepId;
     private int stepOrder;
-    private String serive;
+    private String service;
     private String description;
-    private LocalDateTime eventdate;
+    private LocalDate startDate;
+    private LocalDateTime eventDate;
     private StatusCycle statusCycleStep;
     private String note;
     private String failedReason;

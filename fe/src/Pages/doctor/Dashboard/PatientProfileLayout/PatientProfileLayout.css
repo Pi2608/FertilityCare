@@ -371,6 +371,7 @@
 
 .patient-profile-treatment-card {
   display: flex;
+  align-items: center;
   gap: 12px;
   padding: 16px;
   border: 1px solid #e2e8f0;
@@ -382,12 +383,9 @@
   flex-shrink: 0;
 }
 
-.patient-profile-icon-red {
-  color: #dc2626;
-}
-
-.patient-profile-icon-blue {
-  color: #2563eb;
+.patient-profile-icon {
+  display: flex;
+  justify-content: center;
 }
 
 .patient-profile-card-content h4 {
@@ -564,7 +562,7 @@
 }
 
 .patient-profile-appointment-details h5 {
-  margin: 0 0 4px 0;
+  margin: 0;
   font-size: 14px;
   font-weight: 600;
   color: #1e293b;
@@ -1293,6 +1291,9 @@
 }
 
 .patient-profile-btn-outline-small {
+  display: flex;
+  align-items: center;
+  gap: 3px;
   padding: 6px 12px;
   background: white;
   color: #64748b;
@@ -1421,7 +1422,7 @@
   animation: fadeIn 0.2s ease-in-out;
 }
 
-.patient-profile-modal-content {
+.patient-profile-modal-content-d {
   background-color: #fff;
   padding: 2rem;
   border-radius: 12px;
@@ -1433,19 +1434,19 @@
   overflow-y: auto;
 }
 
-.patient-profile-modal-content h3 {
+.patient-profile-modal-content-d h3 {
   margin-top: 0;
   font-size: 1.5rem;
   color: #333;
 }
 
-.patient-profile-modal-content form {
+.patient-profile-modal-content-d form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
 }
 
-.patient-profile-modal-content label {
+.patient-profile-modal-content-d label {
+  margin-bottom: .5rem;
   display: flex;
   flex-direction: column;
   font-weight: 500;
@@ -1453,9 +1454,9 @@
   color: #444;
 }
 
-.patient-profile-modal-content input,
-.patient-profile-modal-content select,
-.patient-profile-modal-content textarea {
+.patient-profile-modal-content-d input,
+.patient-profile-modal-content-d select,
+.patient-profile-modal-content-d textarea {
   margin-top: 0.4rem;
   padding: 0.5rem 0.75rem;
   border: 1px solid #ccc;
@@ -1464,7 +1465,7 @@
   font-family: inherit;
 }
 
-.patient-profile-modal-content textarea {
+.patient-profile-modal-content-d textarea {
   resize: vertical;
   min-height: 80px;
 }
@@ -1554,6 +1555,18 @@
 
 .patient-profile-confirm-actions button:last-child:hover{
   background: #131b27;
+}
+
+.fade-toggle {
+  transition: all 0.5s ease;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+}
+
+.fade-toggle.show {
+  max-height: 200px; /* đủ lớn để chứa nội dung */
+  opacity: 1;
 }
 
 /* Animations */

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Tag(name = "8. Cycle Step Controller")
+@Tag(name = "6. Cycle Step Controller")
 @RestController
 @RequestMapping("/api/cycle-steps")
 public class CycleStepController {

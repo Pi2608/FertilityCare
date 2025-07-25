@@ -366,7 +366,7 @@ export default class ApiGateway {
       console.log(`Re-exam Appointment DTO:`, apiDto);
       const response = await ApiGateway.axiosInstance.post(
         `appointment-services/appointments/reexam`,
-        dto
+        apiDto
       );
       return response.data;
     } catch (error) {
@@ -587,10 +587,11 @@ export default class ApiGateway {
    * @param {number} stepOrder
    * @param {string} status
    */
-  static async updateCycleStepStatus(cycleId, stepOrder, status) {
+  static async updateCycleStepStatus(cycleId, stepOrder, callbackParams) {
     try {
+      const queryString = new URLSearchParams(callbackParams).toString();
       const response = await ApiGateway.axiosInstance.patch(
-        `cycle-steps/cycleId/${cycleId}/step/${stepOrder}/status?status=${status}`
+        `cycle-steps/cycleId/${cycleId}/step/${stepOrder}/status?${queryString}`
       );
       return response.data;
     } catch (error) {
@@ -647,7 +648,7 @@ export default class ApiGateway {
       const scheduleDto = {
         stepId: parseInt(schedule.stepId),
         medicineName: parseInt(schedule.medicineName),
-        time: null,
+        time: `${schedule.time}:00`,
         startDate: schedule.startDate,
         endDate: schedule.endDate
       }
