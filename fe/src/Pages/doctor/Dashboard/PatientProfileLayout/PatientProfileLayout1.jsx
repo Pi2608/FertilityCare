@@ -127,7 +127,7 @@ const PatientProfileLayout1 = () => {
 
   const handleEndAppointment = async (status) => {
     try {
-      const payload = { status };
+      const payload = { status, markAsDone: true };
       await apiNote.updateNoteForAppointment(
         appointmentDetail.appointmentId,
         payload
@@ -624,12 +624,6 @@ const PatientProfileLayout1 = () => {
             <h3>Xác nhận cuộc hẹn</h3>
             <p>Bạn có chắc chắn muốn kết thúc cuộc hẹn này?</p>
             <div className="button-group">
-              <button
-                className="btn btn-danger"
-                onClick={() => handleEndAppointment("canceled")}
-              >
-                Đánh dấu Thất bại
-              </button>
               <button
                 className="btn btn-outline"
                 onClick={() => setShowConfirmPopup(false)}
