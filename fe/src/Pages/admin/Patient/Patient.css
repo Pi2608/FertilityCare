@@ -125,12 +125,9 @@
 }
 
 .patients-table th {
-  background-color: #f8fafc;
   padding: 16px 20px;
   text-align: left;
   font-weight: 600;
-  color: #374151;
-  font-size: 14px;
   border-bottom: 1px solid #e5e7eb;
 }
 
@@ -138,7 +135,6 @@
   padding: 16px 20px;
   border-bottom: 1px solid #f3f4f6;
   font-size: 14px;
-  color: #6b7280;
   vertical-align: middle;
 }
 
