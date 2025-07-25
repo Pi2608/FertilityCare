@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { BadgeCheck, Calendar, Clock, Check, Phone, FileText } from "lucide-react";
+import {
+  BadgeCheck,
+  Calendar,
+  Clock,
+  Check,
+  Phone,
+  FileText,
+} from "lucide-react";
 import "./Booking.css";
 import apiConsultant from "../../../features/service/apiConsultant";
 
 const Booking = () => {
-
   const appointmentTypes = [
     {
       id: "consultation",
@@ -24,7 +30,7 @@ const Booking = () => {
       title: "Thủ Thuật Điều Trị",
       description: "Lịch hẹn cho thủ thuật điều trị cụ thể",
       icon: Check,
-    }
+    },
   ];
 
   const procedureTypes = [
@@ -43,9 +49,6 @@ const Booking = () => {
   // State management
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
-  const [selectedAppointmentType, setSelectedAppointmentType] = useState("");
-  const [selectedProcedureType, setSelectedProcedureType] = useState("");
-  const [hasVisited, setHasVisited] = useState("no");
   const [selectedCategory, setSelectedCategory] = useState("Tất Cả");
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [selectedDate, setSelectedDate] = useState("");
@@ -101,9 +104,7 @@ const Booking = () => {
         );
 
   const handleStepNext = () => {
-    if (currentStep < 4) {
-      setCurrentStep(currentStep + 1);
-    }
+    if (currentStep < 3) setCurrentStep(currentStep + 1);
   };
 
   const handleStepBack = () => {
@@ -198,17 +199,13 @@ const Booking = () => {
 
       const res = await apiConsultant.registerAppointment(payload);
 
-      const appointmentTypeObj = appointmentTypes.find(
-        (type) => type.id === selectedAppointmentType
-      );
-
       const details = {
         doctor: selectedDoctor,
         date: selectedDate,
         time: selectedTime,
         reason: personalInfo.reason,
-        appointmentType: appointmentTypeObj, // <== THÊM DÒNG NÀY
       };
+      
 
       setAppointmentDetails(details);
       setBookingComplete(true);
@@ -217,88 +214,6 @@ const Booking = () => {
       alert("Đặt lịch thất bại. Vui lòng thử lại.");
     }
   };
-
-  // Step 1: Select Appointment Type
-  const renderStep1 = () => (
-    <div className="step-content">
-      <h2>Chọn Loại Lịch Hẹn</h2>
-      <p>Vui lòng chọn loại lịch hẹn phù hợp với nhu cầu của bạn</p>
-
-      <div className="appointment-types">
-        {appointmentTypes.map((type) => (
-          <div
-            key={type.id}
-            className={`appointment-type ${
-              selectedAppointmentType === type.id ? "selected" : ""
-            }`}
-            onClick={() => setSelectedAppointmentType(type.id)}
-          >
-            <div className="appointment-icon">
-              <type.icon size={24} />
-            </div>
-            <div className="appointment-info">
-              <h3>{type.title}</h3>
-              <p>{type.description}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {selectedAppointmentType === "procedure" && (
-        <div className="procedure-selection">
-          <h3>Loại Thủ Thuật</h3>
-          <select
-            value={selectedProcedureType}
-            onChange={(e) => setSelectedProcedureType(e.target.value)}
-            className="procedure-select"
-          >
-            {procedureTypes.map((procedure, index) => (
-              <option key={index} value={procedure}>
-                {procedure}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-
-      <div className="visited-question">
-        <p>Bạn Đã Từng Đến Phòng Khám Của Chúng Tôi Chưa?</p>
-        <div className="radio-group">
-          <label>
-            <input
-              type="radio"
-              name="visited"
-              value="yes"
-              checked={hasVisited === "yes"}
-              onChange={(e) => setHasVisited(e.target.value)}
-            />
-            Có
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="visited"
-              value="no"
-              checked={hasVisited === "no"}
-              onChange={(e) => setHasVisited(e.target.value)}
-            />
-            Không
-          </label>
-        </div>
-      </div>
-
-      <button
-        className="next-btn"
-        onClick={handleStepNext}
-        disabled={
-          !selectedAppointmentType ||
-          (selectedAppointmentType === "procedure" && !selectedProcedureType)
-        }
-      >
-        Tiếp Theo →
-      </button>
-    </div>
-  );
 
   // Step 2: Select Doctor
   const renderStep2 = () => (
@@ -345,9 +260,6 @@ const Booking = () => {
             </div>
 
             <div className="lower">
-              <span>
-                <Calendar size={16} /> Đang nhận khám
-              </span>
               <span>
                 <BadgeCheck size={16} /> Có {doctor.experience} năm kinh nghiệm
               </span>
@@ -518,10 +430,6 @@ const Booking = () => {
           <span>{appointmentDetails?.time}</span>
         </div>
         <div className="summary-item">
-          <span>Loại lịch hẹn:</span>
-          <span>{appointmentDetails?.appointmentType?.title}</span>
-        </div>
-        <div className="summary-item">
           <span>Lý do khám:</span>
           <span>{appointmentDetails?.reason}</span>
         </div>
@@ -569,7 +477,7 @@ const Booking = () => {
 
         {!bookingComplete && (
           <div className="progress-steps">
-            {[1, 2, 3, 4].map((step) => (
+            {[1, 2, 3].map((step) => (
               <div
                 key={step}
                 className={`step ${currentStep >= step ? "active" : ""} ${
@@ -578,10 +486,9 @@ const Booking = () => {
               >
                 <div className="step-number">{step}</div>
                 <div className="step-label">
-                  {step === 1 && "Loại Lịch Hẹn"}
-                  {step === 2 && "Chọn Bác Sĩ"}
-                  {step === 3 && "Ngày & Giờ"}
-                  {step === 4 && "Thông Tin Cá Nhân"}
+                  {step === 1 && "Chọn Bác Sĩ"}
+                  {step === 2 && "Ngày & Giờ"}
+                  {step === 3 && "Thông Tin Cá Nhân"}
                 </div>
               </div>
             ))}
@@ -593,10 +500,9 @@ const Booking = () => {
             renderBookingComplete()
           ) : (
             <>
-              {currentStep === 1 && renderStep1()}
-              {currentStep === 2 && renderStep2()}
-              {currentStep === 3 && renderStep3()}
-              {currentStep === 4 && renderStep4()}
+              {currentStep === 1 && renderStep2()}
+              {currentStep === 2 && renderStep3()}
+              {currentStep === 3 && renderStep4()}
             </>
           )}
         </div>
