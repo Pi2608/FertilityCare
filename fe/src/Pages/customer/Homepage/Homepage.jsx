@@ -1,11 +1,26 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import apiBlog from "@features/service/apiBlog";
 import "./Homepage.css";
 
 const Homepage = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.auth);
+  const [blogs, setBlogs] = useState([]);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await apiBlog.getAllBlogs();
+        setBlogs(response.data || []);
+      } catch (error) {
+        console.error("Lỗi khi tải blog:", error);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
 
   return (
     <div id="homepage">
@@ -37,25 +52,6 @@ const Homepage = () => {
         </div>
       </section>
 
-      <section className="stats">
-        <div className="stat">
-          <h2>95%</h2>
-          <p>Sự Hài Lòng Của Bệnh Nhân</p>
-        </div>
-        <div className="stat">
-          <h2>15+</h2>
-          <p>Năm Kinh Nghiệm</p>
-        </div>
-        <div className="stat">
-          <h2>5000+</h2>
-          <p>Ca Mang Thai Thành Công</p>
-        </div>
-        <div className="stat">
-          <h2>12</h2>
-          <p>Bác Sĩ Chuyên Khoa</p>
-        </div>
-      </section>
-
       <section className="services">
         <div className="services-intro">
           <span className="section-tag">Dịch Vụ Của Chúng Tôi</span>
@@ -66,133 +62,14 @@ const Homepage = () => {
           </p>
         </div>
         <div className="services-grid">
-          <div className="service-item">
-            <h3>Thụ Tinh Trong Ống Nghiệm (IVF)</h3>
-            <p>
-              Chương trình IVF tiên tiến kết hợp công nghệ hiện đại và chăm sóc
-              cá nhân hóa để đạt kết quả tối ưu.
-            </p>
-            <a href="#">
-              Tìm hiểu thêm
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="1em"
-                height="1em"
-                viewBox="0 0 1024 1024"
-              >
-                <path
-                  fill="currentColor"
-                  d="M754.752 480H160a32 32 0 1 0 0 64h594.752L521.344 777.344a32 32 0 0 0 45.312 45.312l288-288a32 32 0 0 0 0-45.312l-288-288a32 32 0 1 0-45.312 45.312z"
-                />
-              </svg>
-            </a>
-          </div>
-          <div className="service-item">
-            <h3>Bơm Tinh Trùng Vào Buồng Tử Cung</h3>
-            <p>
-              Phương pháp ít xâm lấn, đưa tinh trùng trực tiếp vào tử cung để
-              tạo điều kiện thụ tinh thuận lợi.
-            </p>
-            <a href="#">
-              Tìm hiểu thêm
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="1em"
-                height="1em"
-                viewBox="0 0 1024 1024"
-              >
-                <path
-                  fill="currentColor"
-                  d="M754.752 480H160a32 32 0 1 0 0 64h594.752L521.344 777.344a32 32 0 0 0 45.312 45.312l288-288a32 32 0 0 0 0-45.312l-288-288a32 32 0 1 0-45.312 45.312z"
-                />
-              </svg>
-            </a>
-          </div>
-          <div className="service-item">
-            <h3>Trữ Đông Trứng</h3>
-            <p>
-              Lưu trữ khả năng sinh sản trong tương lai bằng công nghệ trữ đông
-              hiện đại.
-            </p>
-            <a href="#">
-              Tìm hiểu thêm
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="1em"
-                height="1em"
-                viewBox="0 0 1024 1024"
-              >
-                <path
-                  fill="currentColor"
-                  d="M754.752 480H160a32 32 0 1 0 0 64h594.752L521.344 777.344a32 32 0 0 0 45.312 45.312l288-288a32 32 0 0 0 0-45.312l-288-288a32 32 0 1 0-45.312 45.312z"
-                />
-              </svg>
-            </a>
-          </div>
-          <div className="service-item">
-            <h3>Xét Nghiệm Di Truyền</h3>
-            <p>
-              Sàng lọc các rối loạn di truyền tiềm ẩn và cải thiện kết quả điều
-              trị.
-            </p>
-            <a href="#">
-              Tìm hiểu thêm
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="1em"
-                height="1em"
-                viewBox="0 0 1024 1024"
-              >
-                <path
-                  fill="currentColor"
-                  d="M754.752 480H160a32 32 0 1 0 0 64h594.752L521.344 777.344a32 32 0 0 0 45.312 45.312l288-288a32 32 0 0 0 0-45.312l-288-288a32 32 0 1 0-45.312 45.312z"
-                />
-              </svg>
-            </a>
-          </div>
-          <div className="service-item">
-            <h3>Điều Trị Vô Sinh Nam</h3>
-            <p>
-              Phác đồ điều trị dành riêng cho vô sinh nam với các kỹ thuật tiên
-              tiến.
-            </p>
-            <a href="#">
-              Tìm hiểu thêm
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="1em"
-                height="1em"
-                viewBox="0 0 1024 1024"
-              >
-                <path
-                  fill="currentColor"
-                  d="M754.752 480H160a32 32 0 1 0 0 64h594.752L521.344 777.344a32 32 0 0 0 45.312 45.312l288-288a32 32 0 0 0 0-45.312l-288-288a32 32 0 1 0-45.312 45.312z"
-                />
-              </svg>
-            </a>
-          </div>
-          <div className="service-item">
-            <h3>Bảo Tồn Khả Năng Sinh Sản</h3>
-            <p>
-              Lưu trữ khả năng sinh sản trước điều trị y tế có thể ảnh hưởng đến
-              sức khỏe sinh sản.
-            </p>
-            <a href="#">
-              Tìm hiểu thêm
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="1em"
-                height="1em"
-                viewBox="0 0 1024 1024"
-              >
-                <path
-                  fill="currentColor"
-                  d="M754.752 480H160a32 32 0 1 0 0 64h594.752L521.344 777.344a32 32 0 0 0 45.312 45.312l288-288a32 32 0 0 0 0-45.312l-288-288a32 32 0 1 0-45.312 45.312z"
-                />
-              </svg>
-            </a>
-          </div>
+          {blogs.slice(0, 6).map((blog, index) => (
+            <div className="service-item" key={index}>
+              <h3>{blog.title}</h3>
+              <p>{blog.content[0].split("\n")[0]}</p>
+            </div>
+          ))}
         </div>
+
         <div className="services-footer">
           <button
             className="all-services-btn"
