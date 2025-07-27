@@ -289,8 +289,6 @@ public class AppointmentService {
             throw new RuntimeException("Chỉ có thể cập nhật dịch vụ khi cuộc hẹn là confirmed");
         }
 
-        boolean hasImportantUpdate = false;
-
         if (appointment.getTypeAppointment().equals(TypeAppointment.tu_van) && dto.getServiceId() != null) {
             Optional<TreatmentService> optionalService = treatmentServiceRepository.findById(dto.getServiceId());
             if (optionalService.isPresent()) {
@@ -298,7 +296,6 @@ public class AppointmentService {
             } else {
                 throw new RuntimeException("Không tìm thấy dịch vụ!");
             }
-            hasImportantUpdate = true;
         }
 
         if (dto.getNote() != null && !dto.getNote().trim().isEmpty()) {
@@ -310,7 +307,6 @@ public class AppointmentService {
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy kết quả xét nghiệm"));
             testResult.setAppointment(appointment);
             testResultRepository.save(testResult);
-            hasImportantUpdate = true;
         }
 
         // ✅ Chỉ set trạng thái done nếu người dùng bấm nút “Kết thúc cuộc hẹn”
@@ -319,6 +315,25 @@ public class AppointmentService {
         }
         // ket thuc cuoc hen la true va them ghi chu moi la false
         appointmentRepository.save(appointment);
+
+        String subject = "Thông báo loại hình dịch vụ điều trị: ";
+        String content = String.format("""
+                Chào %s,
+                
+                Đây là thông báo về loại hình dịch vụ của bạn sẽ điều trị trong thời gian tới.
+                
+                Bác sĩ đã chỉ định dịch vụ %s phù hợp với bạn.
+                
+                Vui lòng thanh toán tại mục "Lịch hẹn" để bắt đầu quy trình điều trị bạn nhé!
+                
+                Trân trọng,
+                Hệ thống hỗ trợ điều trị HiemMuon.
+                """,appointment.getCustomer().getUser().getName(), appointment.getService().getName());
+
+        sendMailService.sendEmail(appointment.getCustomer().getUser().getEmail(), subject, content);
+        System.out.println("Sending email to: " + appointment.getCustomer().getUser().getEmail());
+        System.out.println("Service name: " + (appointment.getService() != null ? appointment.getService().getName() : "null"));
+
     }
 
     public List<AppointmentDetailDTO> getAppointmentsByDoctorId(int doctorId){

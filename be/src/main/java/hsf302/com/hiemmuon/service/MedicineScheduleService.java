@@ -87,10 +87,11 @@ public class MedicineScheduleService {
 
         // 2. Lặp qua từng ngày từ start đến end
         LocalDate current = dto.getStartDate();
+        MedicineSchedule schedule = null;
         while (!current.isAfter(dto.getEndDate())) {
 
             // 3. Tạo đối tượng entity
-            MedicineSchedule schedule = new MedicineSchedule();
+            schedule = new MedicineSchedule();
             schedule.setCycleStep(step);
             schedule.setMedicineName(dto.getMedicineName());
             schedule.setStartDate(dto.getStartDate());
@@ -118,6 +119,21 @@ public class MedicineScheduleService {
             result.add(dtoResponse);
             current = current.plusDays(1);
         }
+        String subject = "Thông báo lịch uống thuốc: ";
+        assert schedule != null;
+        String content = String.format("""
+                Chào %s,
+                
+                Đây là nhắc nhở rằng bạn có 1 lịch uống thuốc từ ngày %s đến ngày %s.
+                Vào lúc %s, bạn cần uống thuốc "%s".
+                
+                Vui lòng không quên thực hiện đúng giờ để đảm bảo hiệu quả điều trị.
+                
+                Trân trọng,
+                Hệ thống hỗ trợ điều trị HiemMuon.
+                """,schedule.getCycleStep().getCycle().getCustomer().getUser().getName(), schedule.getStartDate(), schedule.getEndDate(), schedule.getTime(), schedule.getMedicineName());
+
+        sendMailService.sendEmail(step.getCycle().getCustomer().getUser().getEmail(), subject, content);
         return result;
     }
 

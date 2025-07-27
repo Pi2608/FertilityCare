@@ -32,4 +32,12 @@ public class UserService {
         Integer userId = Integer.parseInt(userIdObj.toString());
         return userRepository.findById(userId).get();
     }
+
+    public void saveUser(User user) {
+        userRepository.save(user);
+    }
+
+    public int count() {
+        return (int) userRepository.count();
+    }
 }
