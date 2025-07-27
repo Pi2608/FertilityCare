@@ -60,7 +60,8 @@ public class HiemMuonApplication implements CommandLineRunner {
                     "1234567890",
                     encoder.encode("admin123"),
                     LocalDate.now(),
-                    LocalDate.now()
+                    LocalDate.now(),
+                    true
             ));
 
             userService.saveUser(new User(
@@ -72,7 +73,8 @@ public class HiemMuonApplication implements CommandLineRunner {
                     "0987654321",
                     encoder.encode("manager123"),
                     LocalDate.now(),
-                    LocalDate.now()
+                    LocalDate.now(),
+                    true
             ));
 
 

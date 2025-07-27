@@ -60,7 +60,9 @@ public class User {
     @Column(name = "update_at")
     private LocalDate updateAt;
 
-    public User(Role role, String name, Genders gender, LocalDate dob, String email, String phone, String password, LocalDate createAt, LocalDate updateAt) {
+    private Boolean isActive;
+
+    public User(Role role, String name, Genders gender, LocalDate dob, String email, String phone, String password, LocalDate createAt, LocalDate updateAt, Boolean isActive) {
         this.role = role;
         this.name = name;
         this.gender = gender;
@@ -70,5 +72,6 @@ public class User {
         this.password = password;
         this.createAt = createAt;
         this.updateAt = updateAt;
+        this.isActive = isActive;
     }
 }

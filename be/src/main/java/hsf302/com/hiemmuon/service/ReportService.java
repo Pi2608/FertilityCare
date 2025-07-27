@@ -27,22 +27,18 @@ public class ReportService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    @Autowired
-    private AdminRepository   adminRepository;
 
-    @Autowired
-    private ManagerRepository managerRepository;
 
     public Map<String, Object> getAccountStats() {
-        long totalDoctors = reportRepository.countTotalDoctors();
-        long activeDoctors = reportRepository.countActiveDoctors();
-        long newDoctorsThisMonth = reportRepository.countNewActiveDoctorsThisMonth();
+        long patients = customerRepository.findAll().size();
+        long doctors = doctorRepository.findAll().size();
+        long activeDoctors = doctorRepository.findByUser_IsActive(true).size();
+        long activeCustomers = customerRepository.findByUser_IsActive(true).size();
 
-        long totalCustomers = reportRepository.countTotalCustomers();
-        long activeCustomers = reportRepository.countActiveCustomers();
+        long newDoctorsThisMonth = reportRepository.countNewActiveDoctorsThisMonth();
         long newCustomersThisMonth = reportRepository.countNewActiveCustomersThisMonth();
 
-        long total = totalDoctors + totalCustomers;
+        long total = doctors + patients;
         long active = activeDoctors + activeCustomers;
         long inactive = total - active;
         long increaseThisMonth = newDoctorsThisMonth + newCustomersThisMonth;
@@ -60,6 +56,8 @@ public class ReportService {
 
         return result;
     }
+
+
 
     public Map<String, Object> getMonthlyRevenue() {
         Long revenue = paymentRepository.getRevenueThisMonth();
@@ -87,16 +85,18 @@ public class ReportService {
         return stats;
     }
 
-    public Map<String, Object> getUserStats() {
-        long patients = customerRepository.countAllCustomers();
-        long doctors = doctorRepository.countAllDoctors();
-        long admins = adminRepository.countAllAdmins();
-        long managers = managerRepository.countAllManagers();
 
-        long active = customerRepository.countActiveCustomers()
-                + doctorRepository.countActiveDoctors()
-                + adminRepository.countActiveAdmins()
-                + managerRepository.countActiveManagers();
+
+    public Map<String, Object> getUserStats() {
+        long patients = customerRepository.findAll().size();
+        long doctors = doctorRepository.findAll().size();
+        long admins = userRepository.countUserByRole_RoleId(1);
+        long managers = userRepository.countUserByRole_RoleId(2);
+
+        long active = customerRepository.findByUser_IsActive(true).size()
+                + doctorRepository.findByUser_IsActive(true).size()
+                + userRepository.countUserByRole_RoleIdAndIsActive(1,true)
+                + userRepository.countUserByRole_RoleIdAndIsActive(2,true);
 
         long total = patients + doctors + admins + managers;
         double activeRate = total == 0 ? 0 : ((double) active / total) * 100;
