@@ -788,7 +788,7 @@ export default class ApiGateway {
   static async getTreatmentSteps(treatmentId) {
     try {
       const response = await ApiGateway.axiosInstance.get(
-        `treatment-services/${treatmentId}/steps/all`
+        `service-steps/${treatmentId}`
       );
       return response.data;
     } catch (error) {
