@@ -17,4 +17,8 @@ public class Role {
 
     @Column(name = "role_name", nullable = false, unique = true)
     private String roleName;
+
+    public Role(String roleName) {
+        this.roleName = roleName;
+    }
 }

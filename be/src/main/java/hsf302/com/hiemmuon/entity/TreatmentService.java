@@ -44,4 +44,16 @@ public class TreatmentService {
 
     @Column(name = "isActive")
     private boolean isActive;
+
+    public TreatmentService(String name, String description, String targetPatient, Float successRate, String benefit, String faq, BigDecimal price, String specifications, boolean isActive) {
+        this.name = name;
+        this.description = description;
+        this.targetPatient = targetPatient;
+        this.successRate = successRate;
+        this.benefit = benefit;
+        this.faq = faq;
+        this.price = price;
+        this.specifications = specifications;
+        this.isActive = isActive;
+    }
 }
