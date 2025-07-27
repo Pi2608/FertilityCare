@@ -14,4 +14,6 @@ public interface TreatmentStepRepository extends JpaRepository<TreatmentStep, In
     List<TreatmentStep> findAllByService_ServiceId(int serviceId);
 
     List<TreatmentStep> findByService_ServiceIdOrderByStepOrderAsc(int serviceId);
+
+    TreatmentStep findByStepId(Integer stepId);
 }

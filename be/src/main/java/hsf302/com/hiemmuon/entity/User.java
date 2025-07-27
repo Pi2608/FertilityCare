@@ -59,4 +59,16 @@ public class User {
 
     @Column(name = "update_at")
     private LocalDate updateAt;
+
+    public User(Role role, String name, Genders gender, LocalDate dob, String email, String phone, String password, LocalDate createAt, LocalDate updateAt) {
+        this.role = role;
+        this.name = name;
+        this.gender = gender;
+        this.dob = dob;
+        this.email = email;
+        this.phone = phone;
+        this.password = password;
+        this.createAt = createAt;
+        this.updateAt = updateAt;
+    }
 }

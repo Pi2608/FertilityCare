@@ -13,7 +13,7 @@
 
 #homepage .tag {
   color: #be123c;
-  padding: .4rem 1rem;
+  padding: 0.4rem 1rem;
   border-radius: 9999px;
   font-size: 0.875rem;
   display: inline-block;
@@ -73,7 +73,7 @@
 
 #homepage .stat h2 {
   font-size: 2.5rem;
-  color: #e33464; /* Màu đỏ hồng như trong hình */
+  color: #e33464; 
   margin-bottom: 10px;
 }
 
@@ -83,7 +83,7 @@
 }
 
 #homepage .services {
-  padding: 80px 20px;
+  padding: 30px 20px;
   background-color: #fafafa;
   text-align: center;
 }
@@ -118,8 +118,8 @@
   gap: 24px;
   max-width: 900px;
   margin: 0 auto 40px;
+  align-items: stretch;
 }
-
 #homepage .service-item {
   background-color: #fff;
   border-radius: 12px;
@@ -144,8 +144,7 @@
 #homepage .service-item p {
   font-size: 0.95rem;
   color: #555;
-  margin-bottom: 16px;
-  height: 56px;
+  margin-bottom: 1px;
 }
 
 #homepage .service-item a {
@@ -159,7 +158,7 @@
 }
 
 #homepage .service-item a:hover {
-  color: #007B8F;
+  color: #007b8f;
 }
 
 #homepage .services .all-services-btn {
@@ -274,4 +273,12 @@
 #homepage .dashboards button:hover {
   background-color: #333;
   color: #fff;
+}
+
+.service-item p {
+  display: -webkit-box;
+  -webkit-line-clamp: 4; /* Số dòng hiển thị */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

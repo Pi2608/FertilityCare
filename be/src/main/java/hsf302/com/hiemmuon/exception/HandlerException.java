@@ -1,5 +1,6 @@
 package hsf302.com.hiemmuon.exception;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import hsf302.com.hiemmuon.dto.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -70,16 +71,6 @@ public class HandlerException {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
 
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ApiResponse<?>> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
-        ApiResponse<?> response = new ApiResponse<>(
-                400,
-                "Dữ liệu truyền vào không hợp lệ (JSON không đọc được).",
-                null
-        );
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-    }
-
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ApiResponse<?>> handleMissingParam(MissingServletRequestParameterException ex) {
         ApiResponse<?> response = new ApiResponse<>(
@@ -88,5 +79,26 @@ public class HandlerException {
                 null
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiResponse<?>> handleJsonParseError(HttpMessageNotReadableException ex) {
+        String message = "Dữ liệu JSON không đọc được.";
+
+        // Nếu là lỗi do enum không parse được
+        if (ex.getCause() instanceof InvalidFormatException formatException) {
+            var targetType = formatException.getTargetType();
+            var value = formatException.getValue();
+
+            message = "Lỗi khi chuyển giá trị [" + value + "] sang kiểu " + targetType.getSimpleName();
+        }
+
+        ex.printStackTrace(); // in ra console
+
+        return ResponseEntity.badRequest().body(new ApiResponse<>(
+                400,
+                message,
+                null
+        ));
     }
 }

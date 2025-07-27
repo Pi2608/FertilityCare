@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Tag(name = "14. Blog Controller")
+@Tag(name = "16. Blog Controller")
 @RestController
 @RequestMapping("/api/blogs")
 public class BlogController {

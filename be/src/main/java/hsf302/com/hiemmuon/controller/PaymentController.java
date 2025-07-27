@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
-@Tag(name = "10. Payment Controller")
+@Tag(name = "4. Payment Controller")
 @RestController
 @RequestMapping("/api/payments")
 public class PaymentController {

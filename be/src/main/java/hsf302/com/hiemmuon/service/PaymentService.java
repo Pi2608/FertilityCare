@@ -3,7 +3,6 @@ package hsf302.com.hiemmuon.service;
 import hsf302.com.hiemmuon.dto.createDto.CreateCycleDTO;
 import hsf302.com.hiemmuon.dto.createDto.ReExamAppointmentDTO;
 import hsf302.com.hiemmuon.dto.createDto.CreatePaymentWithReExamDTO;
-import hsf302.com.hiemmuon.dto.responseDto.AppointmentHistoryDTO;
 import hsf302.com.hiemmuon.dto.responseDto.CycleDTO;
 import hsf302.com.hiemmuon.dto.responseDto.PaymentResponsesDTO;
 import hsf302.com.hiemmuon.entity.*;
@@ -68,6 +67,8 @@ public class PaymentService {
 
     @Value("${vnpay.returnUrl}")
     private String vnp_Return;
+
+    private LocalDateTime firstAptDate;
 
     public PaymentService(PaymentRepository paymentRepository) {
         this.paymentRepository = paymentRepository;
@@ -154,9 +155,11 @@ public class PaymentService {
         CreateCycleDTO createCycle = new CreateCycleDTO();
         createCycle.setCustomerId(dto.getCustomerId());
         createCycle.setServiceId(dto.getServiceId());
-        createCycle.setStartDate(LocalDate.now());
+        createCycle.setStartDate(dto.getAppointmentDate().toLocalDate());
         createCycle.setNote("Bệnh nhân bắt đầu chu trình điều trị hiếm muộn tại cơ sở.");
         CycleDTO cycledDto = cycleService.createCycle(createCycle, request);
+
+        firstAptDate = dto.getAppointmentDate();
 
         Cycle cycle = cycleRepository.findById(cycledDto.getCycleId());
 
@@ -264,7 +267,7 @@ public class PaymentService {
                     ReExamAppointmentDTO newApt = new ReExamAppointmentDTO();
                     newApt.setCustomerId(payment.getCustomer().getCustomerId());
                     newApt.setServiceId(payment.getService().getServiceId());
-                    newApt.setDate(LocalDateTime.of(payment.getCycle().getStartdate(), LocalTime.of(8, 0)));
+                    newApt.setDate(firstAptDate);
                     newApt.setNote("");
                     List<Integer> stepIds = cycleStepRepository.findStepIdsByCycleIdOrdered(payment.getCycle().getCycleId());
                     if (stepIds.isEmpty()) throw new NotFoundException("No steps found");
