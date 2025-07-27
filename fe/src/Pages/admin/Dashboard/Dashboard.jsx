@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Users, UserRoundCheck, UserRoundX, HandCoins } from "lucide-react";
 import "./Dashboard.css";
 import apiDashboard from "@features/service/apiDashboard";
-import ApiGateway from "../../../features/service/apiGateway"; 
+import ApiGateway from "../../../features/service/apiGateway";
 import moment from "moment";
 
 const Dashboard = () => {
@@ -36,25 +36,26 @@ const Dashboard = () => {
           ApiGateway.getAllPayments(), // Sử dụng ApiGateway để gọi API
         ]);
 
-        const totalRevenue = payments.reduce((sum, p) => sum + p.total, 0); // Tổng doanh thu
+        const validPayments = payments.filter((p) => p.status !== "failed");
+        const totalRevenue = validPayments.reduce((sum, p) => sum + p.total, 0);
 
         setDashboardData({
-          totalPatients: userSummary.patients || 0,
-          totalDoctors: userSummary.doctors || 0,
-          totalManagers: userSummary.managers || 0,
+          totalPatients: userSummary.data.patients || 0,
+          totalDoctors: userSummary.data.doctors || 0,
+          totalManagers: userSummary.data.managers || 0,
           totalAppointments: 0,
           totalRevenue,
           newPatientsThisMonth: 0,
           completedAppointments: 0,
           pendingAppointments: 0,
           activeServices: 0,
-          totalAccounts: userSummary.total || 0,
-          activeAccounts: userSummary.total || 0,
+          totalAccounts: userSummary.data.total || 0,
+          activeAccounts: userSummary.data.total || 0,
           inactiveAccounts: accountStats.inactive || 0,
           newAccountsThisMonth: accountStats.increaseThisMonth || 0,
         });
 
-        processStats(payments); // Xử lý chart data
+        processStats(validPayments);
       } catch (error) {
         console.error("Lỗi khi tải dữ liệu:", error);
       } finally {
@@ -71,7 +72,8 @@ const Dashboard = () => {
       const refetchPayments = async () => {
         try {
           const payments = await ApiGateway.getAllPayments();
-          processStats(payments);
+          const validPayments = payments.filter((p) => p.status !== "failed");
+          processStats(validPayments);
         } catch (error) {
           console.error("Lỗi khi refetch payments:", error);
         }
@@ -265,7 +267,6 @@ const Dashboard = () => {
                   {formatNumber(dashboardData.totalManagers)}
                 </div>
               </div>
-
               <div className="quick-stat-item">
                 <div className="quick-stat-label">Tỷ lệ hoạt động</div>
                 <div className="quick-stat-value">
