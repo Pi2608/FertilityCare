@@ -52,6 +52,5 @@ public class Doctor {
     @Column(name = "rating_avg")
     private Float ratingAvg;
 
-    @Column(name = "is_active")
-    private Boolean isActive;
+
 }

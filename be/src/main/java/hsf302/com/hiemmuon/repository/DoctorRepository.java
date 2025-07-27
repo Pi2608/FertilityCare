@@ -14,12 +14,8 @@ public interface DoctorRepository extends JpaRepository<Doctor, Integer> {
 
     List<Doctor> findAll();
 
-    List<Doctor> findByIsActive(boolean isActive);
+    List<Doctor> findByUser_IsActive(boolean isActive);
 
-    @Query("SELECT COUNT(d) FROM Doctor d")
-    Long countAllDoctors();
 
-    @Query("SELECT COUNT(d) FROM Doctor d WHERE d.isActive = true")
-    Long countActiveDoctors();
 
 }
