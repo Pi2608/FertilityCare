@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
-@Tag(name = "5. Appointment Controller")
+@Tag(name = "2. Appointment Controller")
 @RestController
 @RequestMapping("/api/appointment-services")
 public class AppointmentController {

@@ -4,6 +4,7 @@ import hsf302.com.hiemmuon.enums.StatusCycle;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -37,11 +38,16 @@ public class CycleStep{
     @Column(name = "description", columnDefinition = "NVARCHAR(MAX)")
     private String description;
 
+    private LocalDate startDate;
+
     @Column(name = "eventdate", nullable = true)
     private LocalDateTime eventdate;
 
     @Column(name = "note", columnDefinition = "NVARCHAR(MAX)")
     private String note;
+
+    @Column(name = "failed_reason", columnDefinition = "NVARCHAR(MAX)")
+    private String failedReason;
 
     @OneToMany(mappedBy = "cycleStep", fetch = FetchType.LAZY)
     private List<Appointment> appointments;

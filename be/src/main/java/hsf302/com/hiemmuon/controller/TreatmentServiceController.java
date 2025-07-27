@@ -2,10 +2,8 @@ package hsf302.com.hiemmuon.controller;
 
 import hsf302.com.hiemmuon.dto.ApiResponse;
 import hsf302.com.hiemmuon.dto.createDto.CreateTreatmentServiceDTO;
-import hsf302.com.hiemmuon.dto.responseDto.TreatmentStepDTO;
 import hsf302.com.hiemmuon.dto.updateDto.UpdateServiceDTO;
 import hsf302.com.hiemmuon.entity.TreatmentService;
-import hsf302.com.hiemmuon.entity.TreatmentStep;
 import hsf302.com.hiemmuon.service.TreatmentServiceService;
 import hsf302.com.hiemmuon.service.TreatmentStepService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "4. Service Controller")
+@Tag(name = "8. Service Controller")
 @RestController
 @RequestMapping("/api/treatment-services")
 public class TreatmentServiceController {
@@ -136,43 +134,6 @@ public class TreatmentServiceController {
                 200,
                 "Service " + service.getName() + " has been " + statusText,
                 service
-        );
-        return ResponseEntity.ok(response);
-    }
-
-    @Operation(
-            summary = "Lấy bước điều trị theo thứ tự",
-            description = "Truy xuất một bước điều trị cụ thể theo thứ tự stepOrder trong dịch vụ đã chọn."
-    )
-    @GetMapping("/{serviceId}/step-order/{stepOrder}")
-    public ResponseEntity<ApiResponse<?>> getStepByServiceAndStepOrder(
-            @PathVariable int serviceId,
-            @PathVariable int stepOrder) {
-
-        TreatmentStep step = treatmentStepService.getStepByServiceAndStepOrder(serviceId, stepOrder);
-
-        ApiResponse<TreatmentStep> response = new ApiResponse<>(
-                200,
-                "Service step retrieved successfully",
-                step
-        );
-        return ResponseEntity.ok(response);
-    }
-
-    @Operation(
-            summary = "Lấy tất cả các bước điều trị",
-            description = "Truy xuất toàn bộ các bước điều trị liên quan đến một dịch vụ cụ thể."
-    )
-    @GetMapping("/{serviceId}/steps/all")
-    public ResponseEntity<ApiResponse<?>> getAllStep(
-            @PathVariable int serviceId) {
-
-        List<TreatmentStepDTO> steps = treatmentStepService.findAllStepsByServiceId(serviceId);
-
-        ApiResponse<List<TreatmentStepDTO>> response = new ApiResponse<>(
-                200,
-                "Service steps retrieved successfully",
-                steps
         );
         return ResponseEntity.ok(response);
     }

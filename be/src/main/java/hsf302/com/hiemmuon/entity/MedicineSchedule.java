@@ -21,12 +21,10 @@ public class MedicineSchedule {
     private int medicationId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "medicin_id", nullable = false)
-    private Medicine medicine;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "step_id", nullable = false)
     private CycleStep cycleStep;
+
+    private String medicineName;
 
     @Column(name = "startdate")
     private LocalDate startDate;

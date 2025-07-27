@@ -157,17 +157,6 @@
   font-weight: 500;
 }
 
-.patient-profile-status-badge.patient-profile-ongoing,
-.patient-profile-status-badge.patient-profile-active {
-  background-color: #dcfce7;
-  color: #166534;
-}
-
-.patient-profile-status-badge.patient-profile-completed {
-  background-color: #dcfce7;
-  color: #166534;
-}
-
 .patient-profile-patient-basic-info {
   margin-bottom: 24px;
 }
@@ -382,6 +371,7 @@
 
 .patient-profile-treatment-card {
   display: flex;
+  align-items: center;
   gap: 12px;
   padding: 16px;
   border: 1px solid #e2e8f0;
@@ -393,12 +383,9 @@
   flex-shrink: 0;
 }
 
-.patient-profile-icon-red {
-  color: #dc2626;
-}
-
-.patient-profile-icon-blue {
-  color: #2563eb;
+.patient-profile-icon {
+  display: flex;
+  justify-content: center;
 }
 
 .patient-profile-card-content h4 {
@@ -575,7 +562,7 @@
 }
 
 .patient-profile-appointment-details h5 {
-  margin: 0 0 4px 0;
+  margin: 0;
   font-size: 14px;
   font-weight: 600;
   color: #1e293b;
@@ -723,7 +710,7 @@
   gap: 16px;
 }
 
-.patient-profile-medication-card {
+.patient-profile-medication-dieu_tri-card {
   padding: 16px;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
@@ -1043,19 +1030,15 @@
   border-left: 4px solid #10b981;
 }
 
-
-.patient-profile-timeline-item.patient-profile-ongoing,
-.patient-profile-timeline-item.patient-profile-active {
+.patient-profile-timeline-item.patient-profile-ongoing {
   border-left: 4px solid #3b82f6;
   background: #f8fafc;
 }
 
-
-.patient-profile-timeline-item.patient-profile-upcoming {
-  border-left: 4px solid #94a3b8;
+.patient-profile-timeline-item.patient-profile-restart {
+  border-left: 4px solid #ffcd37;
   opacity: 0.8;
 }
-
 
 .patient-profile-timeline-marker {
   position: absolute;
@@ -1080,13 +1063,17 @@
   border-color: #10b981;
 }
 
-.patient-profile-timeline-item.patient-profile-ongoing  .patient-profile-timeline-marker,
-.patient-profile-timeline-item.patient-profile-active .patient-profile-timeline-marker {
+.patient-profile-timeline-item.patient-profile-ongoing  .patient-profile-timeline-marker {
   background: #3b82f6;
   color: white;
   border-color: #3b82f6;
 }
 
+.patient-profile-timeline-item.patient-profile-restart  .patient-profile-timeline-marker {
+  background: #ffcd37;
+  color: white;
+  border-color: #ffcd37;
+}
 
 .patient-profile-timeline-header {
   display: flex;
@@ -1255,17 +1242,25 @@
 
 
 /* Medication Card Completed Style */
-.patient-profile-medication-card.patient-profile-completed {
+
+.patient-profile-medication-dieu_tri-card.patient-profile-expired {
   opacity: 0.8;
-  border-left: 4px solid #94a3b8;
+  border-left: 4px solid #dc3545;
 }
 
-
-.patient-profile-medication-card.patient-profile-completed .patient-profile-status-badge.patient-profile-completed {
-  background: #f1f5f9;
-  color: #64748b;
+.patient-profile-medication-dieu_tri-card.patient-profile-expired .patient-profile-status-badge.patient-profile-expired {
+  background-color: #dc3545;
+  color: white;
 }
 
+.patient-profile-medication-dieu_tri-card.patient-profile-completed {
+  opacity: 0.8;
+  border-left: 4px solid #28a745;
+}
+.patient-profile-medication-dieu_tri-card.patient-profile-completed .patient-profile-status-badge.patient-profile-completed {
+  background-color: #28a745;
+  color: white;
+}
 
 /* Timeline Actions */
 .patient-profile-timeline-actions {
@@ -1287,10 +1282,18 @@
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  justify-content: space-between;
 }
 
+.patient-profile-quick-actions > div {
+  display: flex;
+  gap: 8px;
+}
 
 .patient-profile-btn-outline-small {
+  display: flex;
+  align-items: center;
+  gap: 3px;
   padding: 6px 12px;
   background: white;
   color: #64748b;
@@ -1302,6 +1305,10 @@
   transition: all 0.2s;
 }
 
+.patient-profile-btn-outline-small.fail {
+  background: #e11d48;
+  color: white;
+}
 
 .patient-profile-btn-outline-small:hover {
   border-color: #cbd5e1;
@@ -1309,6 +1316,10 @@
   color: #374151;
 }
 
+.patient-profile-btn-outline-small.fail:hover {
+  background-color: #c41a3b;
+  color: white;
+}
 
 .patient-profile-btn-primary-small {
   padding: 6px 12px;
@@ -1411,7 +1422,7 @@
   animation: fadeIn 0.2s ease-in-out;
 }
 
-.patient-profile-modal-content {
+.patient-profile-modal-content-d {
   background-color: #fff;
   padding: 2rem;
   border-radius: 12px;
@@ -1423,19 +1434,19 @@
   overflow-y: auto;
 }
 
-.patient-profile-modal-content h3 {
+.patient-profile-modal-content-d h3 {
   margin-top: 0;
   font-size: 1.5rem;
   color: #333;
 }
 
-.patient-profile-modal-content form {
+.patient-profile-modal-content-d form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
 }
 
-.patient-profile-modal-content label {
+.patient-profile-modal-content-d label {
+  margin-bottom: .5rem;
   display: flex;
   flex-direction: column;
   font-weight: 500;
@@ -1443,9 +1454,9 @@
   color: #444;
 }
 
-.patient-profile-modal-content input,
-.patient-profile-modal-content select,
-.patient-profile-modal-content textarea {
+.patient-profile-modal-content-d input,
+.patient-profile-modal-content-d select,
+.patient-profile-modal-content-d textarea {
   margin-top: 0.4rem;
   padding: 0.5rem 0.75rem;
   border: 1px solid #ccc;
@@ -1454,7 +1465,7 @@
   font-family: inherit;
 }
 
-.patient-profile-modal-content textarea {
+.patient-profile-modal-content-d textarea {
   resize: vertical;
   min-height: 80px;
 }
@@ -1501,6 +1512,9 @@
 }
 
 .patient-profile-confirm-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   background: white;
   padding: 24px;
   border-radius: 12px;
@@ -1541,6 +1555,18 @@
 
 .patient-profile-confirm-actions button:last-child:hover{
   background: #131b27;
+}
+
+.fade-toggle {
+  transition: all 0.5s ease;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+}
+
+.fade-toggle.show {
+  max-height: 200px; /* đủ lớn để chứa nội dung */
+  opacity: 1;
 }
 
 /* Animations */
