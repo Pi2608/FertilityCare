@@ -60,36 +60,37 @@ const PatientProfileLayout = () => {
     }))
   }
 
-  const patientData = {
-    name: "Nguyễn Thị Hoa",
-    id: "PT-2024-0123",
-    status: "Đang điều trị",
-    age: 34,
-    birthDate: "15/06/1989",
-    gender: "Nữ",
-    phone: "0912345678",
-    email: "hoa.nguyen@email.com",
-    address: "123 Đường Lê Lợi, Quận 1, TP.HCM",
-    treatment: "IVF Chu kỳ #2",
-    startDate: "01/04/2024",
-    doctor: "BS. Nguyễn Lan Anh",
-    medicalHistory: [
-      "Vô sinh nguyên phát",
-      "Lạc nội mạc tử cung nhẹ",
-      "Đã trải qua 1 chu kỳ IVF không thành công (12/2023)"
-    ],
-    familyHistory: [
-      "Không có tiền sử gia đình về vô sinh",
-      "Mẹ có tiền sử lạc nội mạc tử cung"
-    ],
-    allergies: ["Không có"],
-    currentAppointment: {
-      date: "20/05/2024",
-      time: "09:00 - 09:30",
-      status: "Đang diễn ra",
-     
-    }
-  }
+  const patientData = appointmentDetail
+    ? {
+        name: appointmentDetail.customerName,
+        id: `PT-${appointmentDetail.customerId}`,
+        status:
+          appointmentDetail.status === "done" ? "Hoàn thành" : "Đang điều trị",
+        age: appointmentDetail.customerAge,
+        birthDate: "",
+        gender: "",
+        phone: "",
+        email: "",
+        address: "",
+        treatment: "",
+        startDate: appointmentDetail.date
+          ? new Date(appointmentDetail.date).toLocaleDateString("vi-VN")
+          : "",
+
+        doctor: appointmentDetail.doctorName,
+        medicalHistory: [],
+        familyHistory: [],
+        allergies: [],
+        currentAppointment: {
+          date: appointmentDetail.date,
+          time: appointmentDetail.startTime?.slice(0, 5),
+          status: appointmentDetail.status,
+          type: appointmentDetail.type === "tu_van" ? "Tư vấn" : "Tái khám",
+          details: appointmentDetail.note,
+        },
+      }
+    : null;
+
 
   const tabs = [
     { id: "overview", label: "Tổng quan", icon: "👤" },
@@ -1695,125 +1696,12 @@ const PatientProfileLayout = () => {
               <span className="patient-profile-value">{patientData.age}</span>
             </div>
             <div className="patient-profile-info-row">
-              <span className="patient-profile-label">Ngày sinh:</span>
-              <span className="patient-profile-value">{patientData.birthDate}</span>
-            </div>
-            <div className="patient-profile-info-row">
-              <span className="patient-profile-label">Giới tính:</span>
-              <span className="patient-profile-value patient-profile-gender-female">{patientData.gender}</span>
-            </div>
-
-
-            <div className="patient-profile-info-row">
-              <span className="patient-profile-label">Điều trị:</span>
-              <span className="patient-profile-value">{patientData.treatment}</span>
-            </div>
-            <div className="patient-profile-info-row">
               <span className="patient-profile-label">Ngày bắt đầu:</span>
               <span className="patient-profile-value">{patientData.startDate}</span>
             </div>
             <div className="patient-profile-info-row">
               <span className="patient-profile-label">Bác sĩ phụ trách:</span>
               <span className="patient-profile-value">{patientData.doctor}</span>
-            </div>
-          </div>
-
-
-          <div className="patient-profile-collapsible-sections">
-            <div className="patient-profile-section">
-              <button className="patient-profile-section-header" onClick={() => toggleSection("medicalHistory")}>
-                <span>Tiền sử bệnh</span>
-                <span>{expandedSections.medicalHistory ? "▲" : "▼"}</span>
-              </button>
-              {expandedSections.medicalHistory && (
-                <div className="patient-profile-section-content">
-                  <ul>
-                    {patientData.medicalHistory.map((item, index) => (
-                      <li key={index}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-
-
-            <div className="patient-profile-section">
-              <button className="patient-profile-section-header" onClick={() => toggleSection("familyHistory")}>
-                <span>Tiền sử gia đình</span>
-                <span>{expandedSections.familyHistory ? "▲" : "▼"}</span>
-              </button>
-              {expandedSections.familyHistory && (
-                <div className="patient-profile-section-content">
-                  <ul>
-                    {patientData.familyHistory.map((item, index) => (
-                      <li key={index}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-
-
-            <div className="patient-profile-section">
-              <button className="patient-profile-section-header" onClick={() => toggleSection("allergies")}>
-                <span>Dị ứng</span>
-                <span>{expandedSections.allergies ? "▲" : "▼"}</span>
-              </button>
-              {expandedSections.allergies && (
-                <div className="patient-profile-section-content">
-                  <ul>
-                    {patientData.allergies.map((item, index) => (
-                      <li key={index}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-
-
-            <div className="patient-profile-section">
-              <button className="patient-profile-section-header" onClick={() => toggleSection("medicalRecords")}>
-                <span>Lịch sử y tế</span>
-                <span>{expandedSections.medicalRecords ? "▲" : "▼"}</span>
-              </button>
-              {expandedSections.medicalRecords && (
-                <div className="patient-profile-section-content">
-                  <div className="patient-profile-medical-record">
-                    <div className="patient-profile-record-date">15/05/2024</div>
-                    <div className="patient-profile-record-content">Siêu âm theo dõi - Phát triển nang trứng tốt</div>
-                  </div>
-                  <div className="patient-profile-medical-record">
-                    <div className="patient-profile-record-date">10/05/2024</div>
-                    <div className="patient-profile-record-content">Xét nghiệm hormone - Kết quả trong giới hạn bình thường</div>
-                  </div>
-                  <div className="patient-profile-medical-record">
-                    <div className="patient-profile-record-date">05/05/2024</div>
-                    <div className="patient-profile-record-content">Tư vấn khởi đầu chu kỳ IVF #2</div>
-                  </div>
-                </div>
-              )}
-            </div>
-
-
-            <div className="patient-profile-section">
-              <button className="patient-profile-section-header" onClick={() => toggleSection("prescribedMeds")}>
-                <span>Thuốc đã kê</span>
-                <span>{expandedSections.prescribedMeds ? "▲" : "▼"}</span>
-              </button>
-              {expandedSections.prescribedMeds && (
-                <div className="patient-profile-section-content">
-                  <div className="patient-profile-prescribed-med">
-                    <div className="patient-profile-med-name">Gonal-F 450 IU</div>
-                    <div className="patient-profile-med-usage">Tiêm dưới da, 1 lần/ngày, buổi tối</div>
-                    <div className="patient-profile-med-period">01/05/2024 - 15/05/2024</div>
-                  </div>
-                  <div className="patient-profile-prescribed-med">
-                    <div className="patient-profile-med-name">Cetrotide 0.25mg</div>
-                    <div className="patient-profile-med-usage">Tiêm dưới da, 1 lần/ngày, buổi sáng</div>
-                    <div className="patient-profile-med-period">10/05/2024 - 18/05/2024</div>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
 
