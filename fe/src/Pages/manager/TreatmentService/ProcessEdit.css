@@ -159,7 +159,7 @@
   align-items: center;
   gap: 8px;
   padding: 10px 16px;
-  background-color: #8b5cf6;
+  background-color: #3C82F6;
   color: white;
   border: none;
   border-radius: 6px;
@@ -170,7 +170,7 @@
 }
 
 .add-step-btn:hover {
-  background-color: #7c3aed;
+  background-color: #3C82F6;
 }
 
 .add-step-btn span {
@@ -200,9 +200,8 @@
 /* Step Header */
 .step-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 16px;
-  margin-bottom: 20px;
 }
 
 .step-number {
@@ -245,7 +244,7 @@
 
 /* Edit Inputs */
 .edit-title-input {
-  width: 100%;
+  width: 90%;
   padding: 8px 12px;
   border: 1px solid #d1d5db;
   border-radius: 6px;
@@ -262,7 +261,7 @@
 }
 
 .edit-description-textarea {
-  width: 100%;
+  width: 90%;
   padding: 8px 12px;
   border: 1px solid #d1d5db;
   border-radius: 6px;
@@ -423,7 +422,7 @@
   background-color: #2563eb;
 }
 
-.delete-btn,
+.delete-btne,
 .cancel-btn {
   padding: 6px 12px;
   background-color: #ef4444;
