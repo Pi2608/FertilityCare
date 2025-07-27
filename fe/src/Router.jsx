@@ -565,6 +565,10 @@ export const router = createBrowserRouter([
         path: "setting",
         element: <div>System Settings - Coming Soon</div>,
       },
+      {
+        path: "service/process/:serviceId",
+        element: <ProcessEdit />,
+      },
     ],
   },
 ]);
