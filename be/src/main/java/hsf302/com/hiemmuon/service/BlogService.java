@@ -77,4 +77,9 @@ public class BlogService {
     public List<Blog> getBlogsByUser(int userId){
         return blogRepository.findByUser_UserId(userId);
     }
+
+    public Blog save(Blog blog){
+        return blogRepository.save(blog);
+    }
 }
+

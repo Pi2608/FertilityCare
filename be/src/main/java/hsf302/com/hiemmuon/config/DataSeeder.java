@@ -4,10 +4,7 @@ import hsf302.com.hiemmuon.entity.*;
 import hsf302.com.hiemmuon.enums.Genders;
 import hsf302.com.hiemmuon.repository.TreatmentServiceRepository;
 import hsf302.com.hiemmuon.repository.TreatmentStepRepository;
-import hsf302.com.hiemmuon.service.DoctorService;
-import hsf302.com.hiemmuon.service.RoleService;
-import hsf302.com.hiemmuon.service.SuccessRateByAgeService;
-import hsf302.com.hiemmuon.service.UserService;
+import hsf302.com.hiemmuon.service.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -39,6 +36,9 @@ public class DataSeeder implements CommandLineRunner {
     @Autowired
     private SuccessRateByAgeService successRateByAgeService;
 
+    @Autowired
+    private BlogService blogService;
+
     @Override
     @Transactional
     public void run(String... args) throws Exception {
@@ -46,6 +46,7 @@ public class DataSeeder implements CommandLineRunner {
             seedRolesAndUsers();
             seedDoctors();
             seedTreatmentServices();
+            seedBlogs();
         }
     }
 
@@ -177,6 +178,62 @@ public class DataSeeder implements CommandLineRunner {
                 new SuccessRateByAge("35-37 tuổi", 65f, "+9% cao hơn", ivf),
                 new SuccessRateByAge("38-40 tuổi", 55f, "+7% cao hơn", ivf),
                 new SuccessRateByAge("41-42 tuổi", 40f, "+5% cao hơn", ivf)
+        ));
+    }
+
+    private void seedBlogs() {
+        User doc1 = userService.findByEmail("ivf.doctor@example.com");
+        User doc2 = userService.findByEmail("iui.doctor@example.com");
+        User admin = userService.findByEmail("admin@gmail.com");
+
+        blogService.save(new Blog(
+                0, // blogId sẽ được tự động sinh bởi @GeneratedValue
+                doc1,
+                "Thụ tinh trong ống nghiệm (IVF) – Cơ hội mới cho các cặp vợ chồng vô sinh",
+                "IVF (In Vitro Fertilization) là một bước tiến vượt bậc trong điều trị vô sinh. Đây là kỹ thuật trong đó trứng và tinh trùng được thụ tinh ngoài cơ thể, sau đó phôi được chuyển lại vào buồng tử cung. IVF thường được chỉ định trong các trường hợp ống dẫn trứng bị tắc, tinh trùng yếu hoặc sau khi IUI thất bại.\\n\\nQuy trình IVF bao gồm nhiều bước: kích thích buồng trứng, chọc hút trứng, thụ tinh trong ống nghiệm, nuôi phôi, và cuối cùng là chuyển phôi. Mỗi giai đoạn đều đòi hỏi sự theo dõi chặt chẽ từ bác sĩ chuyên môn và sự hợp tác của người bệnh.\\n\\nTỷ lệ thành công của IVF thường cao hơn IUI, dao động khoảng 40–60% tùy vào độ tuổi, chất lượng phôi, tình trạng nội mạc tử cung và chế độ sinh hoạt. Tuy nhiên, chi phí và áp lực tâm lý cũng lớn hơn. \\n\\nSự chuẩn bị tâm lý, thể chất và tài chính kỹ lưỡng là yếu tố cần thiết để quá trình IVF thành công và mang lại kết quả tốt nhất.",
+                "IVF, thụ tinh ống nghiệm, hỗ trợ sinh sản",
+                LocalDate.now().minusDays(7),
+                150
+        ));
+
+        blogService.save(new Blog(
+                0,
+                doc2,
+                "Hiểu đúng về phương pháp IUI trong điều trị hiếm muộn",
+                "IUI (Intrauterine Insemination - Bơm tinh trùng vào buồng tử cung) là một trong những phương pháp hỗ trợ sinh sản phổ biến nhất hiện nay. Đây là kỹ thuật tương đối đơn giản và ít xâm lấn, được áp dụng trong nhiều trường hợp vô sinh không rõ nguyên nhân hoặc yếu tố nhẹ về tinh trùng.\\n\\nQuy trình IUI bắt đầu bằng việc kích thích buồng trứng để tăng khả năng rụng trứng. Sau đó, bác sĩ theo dõi nang noãn bằng siêu âm và xét nghiệm hormone để xác định thời điểm rụng trứng. Khi thời điểm thích hợp đến, tinh trùng được lọc rửa và bơm vào tử cung thông qua một ống thông mỏng. \\n\\nƯu điểm lớn nhất của IUI là thủ thuật đơn giản, chi phí thấp và ít tác dụng phụ. Tỷ lệ thành công dao động khoảng 10–20% mỗi chu kỳ, tùy theo độ tuổi và nguyên nhân vô sinh. Phương pháp này thường được chỉ định trước IVF nếu vợ chồng có buồng trứng và tinh trùng đạt mức tối thiểu.\\n\\nNếu sau 3–6 chu kỳ IUI mà không thành công, bác sĩ có thể đề nghị chuyển sang IVF để tăng cơ hội có thai.",
+                "IUI, hỗ trợ sinh sản, vô sinh",
+                LocalDate.now().minusDays(5),
+                200
+        ));
+
+        blogService.save(new Blog(
+                0,
+                admin,
+                "Tâm lý tích cực – Chìa khóa nâng cao hiệu quả điều trị vô sinh",
+                "Nhiều nghiên cứu chỉ ra rằng yếu tố tâm lý ảnh hưởng đáng kể đến kết quả điều trị vô sinh. Căng thẳng, lo lắng hoặc trầm cảm có thể làm giảm hormone sinh sản và ảnh hưởng tiêu cực đến chu kỳ kinh nguyệt cũng như chất lượng tinh trùng.\\n\\nKhi đối mặt với hành trình điều trị kéo dài, các cặp vợ chồng dễ rơi vào trạng thái mệt mỏi, chán nản. Điều này không chỉ ảnh hưởng đến sức khỏe thể chất mà còn làm giảm hiệu quả điều trị. Do đó, việc giữ tâm lý tích cực, biết cách giảm stress, và đồng hành cùng nhau là rất quan trọng.\\n\\nMột số gợi ý hữu ích bao gồm: tham gia tư vấn tâm lý, tập yoga, thiền, chia sẻ với cộng đồng cùng hoàn cảnh hoặc đơn giản là cùng nhau đi dạo, ăn uống lành mạnh và ngủ đủ giấc.\\n\\nBên cạnh đó, việc lựa chọn bác sĩ và trung tâm điều trị uy tín, giao tiếp cởi mở với bác sĩ để hiểu rõ quá trình điều trị cũng giúp bệnh nhân giảm bớt lo lắng, tăng niềm tin và hy vọng.",
+                "tâm lý, điều trị vô sinh, stress",
+                LocalDate.now().minusDays(3),
+                100
+        ));
+
+        blogService.save(new Blog(
+                0,
+                doc1,
+                "Chế độ ăn uống giúp tăng khả năng thụ thai tự nhiên",
+                "Dinh dưỡng là yếu tố quan trọng hỗ trợ sức khỏe sinh sản. Các nghiên cứu chỉ ra rằng chế độ ăn uống cân bằng giúp điều hòa hormone, cải thiện chất lượng trứng và tinh trùng.\\n\\nĐối với phụ nữ, nên bổ sung thực phẩm giàu folate, vitamin D, omega-3 như rau xanh, trứng, cá hồi, hạt óc chó, sữa chua và trái cây tươi. Tránh thực phẩm chiên, nhiều đường và đồ uống có cồn. \\n\\nĐối với nam giới, cần tăng cường kẽm, selenium và chất chống oxy hóa để tăng số lượng và chất lượng tinh trùng. Nên dùng thực phẩm như hàu, hạt bí, thịt đỏ nạc, và các loại quả mọng.\\n\\nUống đủ nước, tập thể dục điều độ, và tránh chất kích thích (thuốc lá, rượu, cà phê quá mức) cũng rất cần thiết.\\n\\nCuối cùng, duy trì chỉ số BMI ở mức hợp lý (18.5–24.9) giúp cải thiện nội tiết và khả năng thụ thai một cách tự nhiên.",
+                "dinh dưỡng, thụ thai tự nhiên, sức khỏe sinh sản",
+                LocalDate.now().minusDays(3),
+                100
+        ));
+
+        blogService.save(new Blog(
+                0,
+                doc2,
+                "Khi nào nên chuyển từ IUI sang IVF?",
+                "Mặc dù IUI là phương pháp đơn giản và ít tốn kém, không phải lúc nào cũng mang lại kết quả mong đợi. Theo các chuyên gia, sau 3–6 chu kỳ IUI không thành công, cặp đôi nên cân nhắc chuyển sang IVF.\n\nCác yếu tố cần xem xét bao gồm: tuổi người vợ (trên 35 tuổi nên chuyển sớm), chất lượng tinh trùng kém, buồng trứng phản ứng yếu với thuốc kích thích, hoặc có tiền sử lạc nội mạc tử cung.\n\nIVF mang lại cơ hội cao hơn do có thể chọn lọc phôi chất lượng và can thiệp chính xác hơn trong quá trình tạo phôi. Ngoài ra, các kỹ thuật hỗ trợ như ICSI (tiêm tinh trùng vào bào tương trứng), xét nghiệm di truyền tiền làm tổ (PGT) cũng giúp tăng tỷ lệ thành công.\n\nViệc chuyển từ IUI sang IVF nên được quyết định bởi bác sĩ chuyên môn dựa trên từng trường hợp cụ thể để đảm bảo an toàn và hiệu quả cao nhất.",
+                "IUI, IVF, chuyển phương pháp",
+                LocalDate.now().minusDays(3),
+                100
         ));
     }
 }
