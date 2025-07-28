@@ -10,7 +10,9 @@ import ApiGateway from "../../features/service/apiGateway";
 
 const Authentication = () => {
   const now = new Date();
-  const minYear = new Date(now.setUTCFullYear(now.getUTCFullYear - 18))
+  // const minYear = new Date(now.setUTCFullYear(now.getUTCFullYear() - 100)); // 100 years ago
+  const maxYear = new Date(now.setUTCFullYear(now.getUTCFullYear() - 18)); // 1 year ago (must be in past)
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const otpRefs = useRef(Array(6).fill(null));
@@ -18,6 +20,8 @@ const Authentication = () => {
   const { loading, error, isAuthenticated, role  } = useSelector((state) => state.auth);
 
   const [showPassword, setShowPassword] = useState(false);
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false); // Thêm state cho mật khẩu đăng ký
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Thêm state cho xác nhận mật khẩu
   const [step, setStep] = useState("form");
   const [otpCode, setOtpCode] = useState("");
   const [isLogin, setIsLogin] = useState(true);
@@ -29,7 +33,7 @@ const Authentication = () => {
     confirmPassword: '',
     phone: '',
     gender: '',
-    dob: '',
+    dob: ''
   });
 
   const getRedirectPath = (userRole) => {
@@ -69,7 +73,6 @@ const Authentication = () => {
     }
   }, [isAuthenticated, role, navigate, location.state, dispatch]);
 
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -98,40 +101,59 @@ const Authentication = () => {
         newErrors.password = "Vui lòng nhập mật khẩu";
       }
     } else {
-      if (!formData.email) {
-        newErrors.email = "Vui lòng nhập email";
-      } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      // Validate name - @NotBlank, @Size(max = 100)
+      if (!formData.name || formData.name.trim() === '') {
+        newErrors.name = 'Tên không được để trống';
+      } else if (formData.name.length > 100) {
+        newErrors.name = 'Tên không được vượt quá 100 ký tự';
+      }
+
+      // Validate email - @NotBlank, @Email
+      if (!formData.email || formData.email.trim() === '') {
+        newErrors.email = "Email không được để trống";
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
         newErrors.email = "Email không hợp lệ";
       }
 
-      if (!formData.phone) {
-        newErrors.phone = "Vui lòng nhập số điện thoại";
-      } else if (!/^[0-9]{10}$/.test(formData.phone.replace(/\D/g, ""))) {
-        newErrors.phone = "Số điện thoại không hợp lệ";
+      // Validate phone - @NotBlank, @Pattern for Vietnamese phone
+      if (!formData.phone || formData.phone.trim() === '') {
+        newErrors.phone = "Số điện thoại không được để trống";
+      } else if (!/^(\+84|0)(\d{9,10})$/.test(formData.phone.replace(/\s/g, ''))) {
+        newErrors.phone = "Số điện thoại không hợp lệ (định dạng: 0xxxxxxxxx hoặc +84xxxxxxxxx)";
       }
 
-      if (!formData.name) {
-        newErrors.name = 'Vui lòng nhập họ và tên';
-      }
-
-      if (!formData.gender) {
-        newErrors.gender = "Vui lòng chọn giới tính";
-      }
-
-      if (!formData.dob) {
-        newErrors.dob = 'Vui lòng chọn ngày sinh';
-      }
-
-      if (!formData.password) {
-        newErrors.password = "Vui lòng nhập mật khẩu";
+      // Validate password - @NotBlank, @Size(min = 6, max = 50)
+      if (!formData.password || formData.password.trim() === '') {
+        newErrors.password = "Mật khẩu không được để trống";
       } else if (formData.password.length < 6) {
-        newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự";
+        newErrors.password = "Mật khẩu phải từ 6 đến 50 ký tự";
+      } else if (formData.password.length > 50) {
+        newErrors.password = "Mật khẩu phải từ 6 đến 50 ký tự";
       }
 
+      // Validate confirmPassword
       if (!formData.confirmPassword) {
         newErrors.confirmPassword = "Vui lòng xác nhận mật khẩu";
       } else if (formData.confirmPassword !== formData.password) {
         newErrors.confirmPassword = "Mật khẩu xác nhận không khớp";
+      }
+
+      // Validate gender - @NotNull
+      if (!formData.gender) {
+        newErrors.gender = "Giới tính không được để trống";
+      }
+
+      // Validate dob - @NotNull, @Past
+      if (!formData.dob) {
+        newErrors.dob = 'Ngày sinh không được để trống';
+      } else {
+        const dobDate = new Date(formData.dob);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Set to start of day for accurate comparison
+        
+        if (dobDate >= today) {
+          newErrors.dob = 'Ngày sinh phải là một ngày trong quá khứ';
+        }
       }
     }
 
@@ -175,12 +197,12 @@ const Authentication = () => {
         }
       } else {
         const userData = {
-          name: formData.name,
-          email: formData.email,
+          name: formData.name.trim(),
+          email: formData.email.trim(),
           password: formData.password,
-          phone: formData.phone,
-          gender: formData.gender,
-          dob: formData.dob,
+          phone: formData.phone.replace(/\s/g, ''), // Remove spaces
+          gender: formData.gender.toUpperCase(), // Convert to enum format (MALE/FEMALE)
+          dob: formData.dob
         };
 
         const resultAction = await dispatch(registerUser(userData));
@@ -206,6 +228,10 @@ const Authentication = () => {
       confirmPassword: ''
     });
     setErrors({});
+    // Reset tất cả state hiện mật khẩu
+    setShowPassword(false);
+    setShowRegisterPassword(false);
+    setShowConfirmPassword(false);
   };
 
   const handleToggle = (loginMode) => {
@@ -303,7 +329,7 @@ const Authentication = () => {
               <div>
                 <div className="form-row">
                   <div className="form-group">
-                    <label htmlFor="email">Email</label>
+                    <label htmlFor="email">Email *</label>
                     <input
                       type="email"
                       id="email"
@@ -312,43 +338,45 @@ const Authentication = () => {
                       onChange={handleInputChange}
                       placeholder="Email"
                       disabled={loading}
+                      maxLength={100}
                     />
                     {errors.email && <p className="error-text">{errors.email}</p>}
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="phone">Số điện thoại</label>
+                    <label htmlFor="phone">Số điện thoại *</label>
                     <input
                       type="tel"
                       id="phone"
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      placeholder="Số điện thoại"
-                      maxLength={10}
+                      placeholder="Nhập số điện thoại"
+                      maxLength={15}
                       disabled={loading}
                     />
                     {errors.phone && <p className="error-text">{errors.phone}</p>}
                   </div>
                 </div>
 
-                  <div className="form-group">
-                      <label htmlFor="name">Họ và tên</label>
-                      <input
-                          type="text"
-                          id="name"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleInputChange}
-                          placeholder="Họ và tên"
-                          disabled={loading}
-                      />
-                      {errors.name && <p className="error-text">{errors.name}</p>}
-                  </div>
+                <div className="form-group">
+                    <label htmlFor="name">Họ và tên *</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        placeholder="Họ và tên"
+                        disabled={loading}
+                        maxLength={100}
+                    />
+                    {errors.name && <p className="error-text">{errors.name}</p>}
+                </div>
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label htmlFor="gender">Giới tính</label>
+                    <label htmlFor="gender">Giới tính *</label>
                     <select
                       id="gender"
                       name="gender"
@@ -365,52 +393,95 @@ const Authentication = () => {
                     )}
                   </div>
 
-                      <div className="form-group">
-                      <label htmlFor="dob">Ngày sinh</label>
-                      <input
-                          type="date"
-                          id="dob"
-                          name="dob"
-                          value={formData.dob}
-                          min={minYear}
-                          onChange={handleInputChange}
-                          disabled={loading}
-                      />
-                      {errors.dob && <p className="error-text">{errors.dob}</p>}
-                      </div>
+                  <div className="form-group">
+                    <label htmlFor="dob">Ngày sinh *</label>
+                    <input
+                        type="date"
+                        id="dob"
+                        name="dob"
+                        value={formData.dob}
+                        max={maxYear.toISOString().split('T')[0]}
+                        onChange={handleInputChange}
+                        disabled={loading}
+                    />
+                    {errors.dob && <p className="error-text">{errors.dob}</p>}
                   </div>
+                </div>
 
                 <div className="form-group">
-                  <label htmlFor="registerPassword">Mật khẩu</label>
-                  <input
-                    type="password"
-                    id="registerPassword"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    placeholder="Nhập mật khẩu"
-                    disabled={loading}
-                  />
+                  <label htmlFor="registerPassword">Mật khẩu *</label>
+                  <div style={{ position: "relative" }}>
+                    <input
+                      type={showRegisterPassword ? "text" : "password"}
+                      id="registerPassword"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      placeholder="Nhập mật khẩu (từ 6 ký tự)"
+                      disabled={loading}
+                      maxLength={50}
+                    />
+                    <span
+                      onClick={() => setShowRegisterPassword((prev) => !prev)}
+                      style={{
+                        position: "absolute",
+                        right: "1rem",
+                        top: "50%",
+                        transform: "translateY(-40%)",
+                        cursor: "pointer",
+                        color: "#888",
+                      }}
+                      tabIndex={0}
+                      aria-label={showRegisterPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                    >
+                      {showRegisterPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+                    </span>
+                  </div>
                   {errors.password && (
                     <p className="error-text">{errors.password}</p>
                   )}
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="confirmPassword">Xác nhận mật khẩu</label>
-                  <input
-                    type="password"
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
-                    placeholder="Nhập lại mật khẩu"
-                    disabled={loading}
-                  />
+                  <label htmlFor="confirmPassword">Xác nhận mật khẩu *</label>
+                  <div style={{ position: "relative" }}>
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      value={formData.confirmPassword}
+                      onChange={handleInputChange}
+                      placeholder="Nhập lại mật khẩu"
+                      disabled={loading}
+                      maxLength={50}
+                    />
+                    <span
+                      onClick={() => setShowConfirmPassword((prev) => !prev)}
+                      style={{
+                        position: "absolute",
+                        right: "1rem",
+                        top: "50%",
+                        transform: "translateY(-40%)",
+                        cursor: "pointer",
+                        color: "#888",
+                      }}
+                      tabIndex={0}
+                      aria-label={showConfirmPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                    >
+                      {showConfirmPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+                    </span>
+                  </div>
                   {errors.confirmPassword && (
                     <p className="error-text">{errors.confirmPassword}</p>
                   )}
                 </div>
+
+                {/* Display Redux error */}
+                {error && (
+                  <div className="error-message">
+                    <p className="error-text">{error}</p>
+                  </div>
+                )}
 
                 <button type="submit" className="submit-btn" disabled={loading}>
                   {loading ? "Đang đăng ký..." : "Đăng ký"}
