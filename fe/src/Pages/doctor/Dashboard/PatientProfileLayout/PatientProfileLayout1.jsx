@@ -5,6 +5,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import apiAppointment from "@features/service/apiAppointment";
 import apiNote from "@features/service/apiNote";
 import apiMessage from "@features/service/apiMessage";
+import { NotebookPen, Stethoscope, MessageSquare, Clock9, FilePlus2 } from "lucide-react";
 import { showSuccess, showFail, confirmToast } from "@lib/toast/toast";
 
 const PatientProfileLayout1 = () => {
@@ -112,12 +113,12 @@ const PatientProfileLayout1 = () => {
         showFail("Vui lòng nhập nội dung tin nhắn.");
         return;
       }
-  
+
       const payload = {
         receiverId: appointmentDetail.customerId, // Lấy customerId từ appointmentDetail
         message: messageContent,
       };
-  
+
       await apiMessage.sendMessage(payload);
       showSuccess("Gửi tin nhắn thành công!");
       setMessageContent("");
@@ -135,6 +136,7 @@ const PatientProfileLayout1 = () => {
         appointmentDetail.appointmentId,
         payload
       );
+
       showSuccess(
         `Cập nhật thành công: ${
           status === "done" ? "Hoàn thành" : "Thất bại"
@@ -195,7 +197,6 @@ const PatientProfileLayout1 = () => {
     }
   }, [appointmentId]);
 
-  
   const getService = async () => {
     try {
       const res = await ApiGateway.getActiveTreatments();
@@ -204,7 +205,7 @@ const PatientProfileLayout1 = () => {
     } catch (error) {
       console.error("Lỗi khi lấy danh sách dịch vụ:", error);
     }
-  }
+  };
 
   const getCurrentCyclesOfPatient = async () => {
     try {
@@ -255,12 +256,11 @@ const PatientProfileLayout1 = () => {
     : null;
 
   const tabs = [
-    { id: "notes", label: "Ghi chú khám", icon: "📝" },
-    { id: "service", label: "Chỉ định dịch vụ", icon: "🧪" },
+    { id: "notes", label: "Ghi chú khám", icon: NotebookPen },
+    { id: "service", label: "Chỉ định dịch vụ", icon: Stethoscope },
   ];
 
   const renderServiceTab = () => <ServiceTabContent services={services} currentCycleStatus={currentPatientCycle?.status}/>;
-
 
   const renderNotesTab = () => (
     <div className="patient-profile-tab-content">
@@ -273,7 +273,7 @@ const PatientProfileLayout1 = () => {
           className="patient-profile-btn-primary"
           onClick={() => setIsAddingNote((prev) => !prev)}
         >
-          📝 Thêm ghi chú mới
+          <FilePlus2 size={17} className="mr-2" /> Thêm ghi chú mới
         </button>
 
         {isAddingNote && (
@@ -344,7 +344,7 @@ const PatientProfileLayout1 = () => {
 
   const renderResultsTab = () => {
     const testResults = appointmentDetail?.testResultViewDTOList || [];
-  
+
     return (
       <div className="patient-profile-tab-content">
         <div className="patient-profile-results-header">
@@ -359,7 +359,7 @@ const PatientProfileLayout1 = () => {
             ➕ Thêm kết quả mới
           </button>
         </div>
-  
+
         {showResultForm && (
           <div className="patient-profile-result-form">
             <div className="form-group">
@@ -438,7 +438,7 @@ const PatientProfileLayout1 = () => {
             </div>
           </div>
         )}
-  
+
         <div className="patient-profile-results-by-phase">
           {testResults.filter((r) => !isNaN(Number(r.value))).length > 0 ? (
             <div className="patient-profile-phase-results-container">
@@ -613,7 +613,8 @@ const PatientProfileLayout1 = () => {
                 {patientData.currentAppointment.type}
               </span>
               <span className="patient-profile-appointment-time">
-                🕘 {patientData.currentAppointment.date} |{" "}
+                <Clock9 className="time-icon" size={18} />
+                 {patientData.currentAppointment.date} |{" "}
                 {patientData.currentAppointment.time}
               </span>
               <span className="patient-profile-appointment-status">
@@ -631,7 +632,7 @@ const PatientProfileLayout1 = () => {
           </button>
         </div>
       </div>
-  
+
       {showConfirmPopup && (
         <div className="patient-profile-popup">
           <div className="patient-profile-popup-content">
@@ -687,9 +688,8 @@ const PatientProfileLayout1 = () => {
             </button>
           </div>
         </div>
-      </div>
-    )}
-  
+      )}
+
       <div className="patient-profile-container">
         <div className="patient-profile-sidebar">
           <div className="patient-profile-patient-info">
@@ -704,7 +704,7 @@ const PatientProfileLayout1 = () => {
               </span>
             </div>
           </div>
-  
+
           <div className="patient-profile-patient-basic-info">
             <div className="patient-profile-info-row">
               <span className="patient-profile-label">Tuổi:</span>
@@ -712,38 +712,47 @@ const PatientProfileLayout1 = () => {
             </div>
             <div className="patient-profile-info-row">
               <span className="patient-profile-label">Ngày bắt đầu:</span>
-              <span className="patient-profile-value">{patientData.startDate}</span>
+              <span className="patient-profile-value">
+                {patientData.startDate}
+              </span>
             </div>
             <div className="patient-profile-info-row">
               <span className="patient-profile-label">Bác sĩ phụ trách:</span>
-              <span className="patient-profile-value">{patientData.doctor}</span>
+              <span className="patient-profile-value">
+                {patientData.doctor}
+              </span>
             </div>
           </div>
-  
+
           <div className="patient-profile-sidebar-actions">
             <button
               className="patient-profile-btn-outline"
               onClick={() => setShowMessagePopup(true)}
             >
-              💬 Nhắn tin
+              <MessageSquare size={15} className="mr-2" /> Nhắn tin
             </button>
           </div>
         </div>
-  
+
         <div className="patient-profile-main-content">
-          <div className="patient-profile-tabs">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                className={`patient-profile-tab ${
-                  activeTab === tab.id ? "patient-profile-active" : ""
-                }`}
-                onClick={() => setActiveTab(tab.id)}
-              >
-                <span>{tab.icon}</span>
-                {tab.label}
-              </button>
-            ))}
+                    <div className="patient-profile-tabs">
+            {tabs.map((tab) => {
+              const TabIcon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  className={`patient-profile-tab ${
+                    activeTab === tab.id ? "patient-profile-active" : ""
+                  }`}
+                  onClick={() => setActiveTab(tab.id)}
+                >
+                  <span className="tab-icon">
+                    <TabIcon size={18} className="mr-2" />
+                  </span>
+                  {tab.label}
+                </button>
+              );
+            })}
           </div>
           {renderTabContent()}
         </div>
@@ -758,10 +767,10 @@ export default PatientProfileLayout1;
 const ServiceTabContent = ({services, currentCycleStatus}) => {
   const navigate = useNavigate();
   const { appointmentId, customerId } = useParams();
-  
+
   const FIXED_TIME_SLOTS = [
     "09:00",
-    "10:00", 
+    "10:00",
     "11:00",
     "12:00",
     "13:00",
@@ -771,10 +780,13 @@ const ServiceTabContent = ({services, currentCycleStatus}) => {
   ];
 
   const now = new Date();
-  const todayStr = now.getFullYear() + '-' + 
-    String(now.getMonth() + 1).padStart(2, '0') + '-' + 
-    String(now.getDate()).padStart(2, '0');
-  const minDate = new Date();
+  const todayStr =
+    now.getFullYear() +
+    "-" +
+    String(now.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(now.getDate()).padStart(2, "0");
+  const minDate = new Date(new Date().setDate(new Date().getDate() + 1));
 
   const [availableSchedules, setAvailableSchedules] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
@@ -790,9 +802,7 @@ const ServiceTabContent = ({services, currentCycleStatus}) => {
     type: "",
   });
 
-  const typeOptions = [
-    { value: "treatment", label: "Điều trị" },
-  ];
+  const typeOptions = [{ value: "treatment", label: "Điều trị" }];
 
   useEffect(() => {
     if (paymentForm.serviceId) {
@@ -810,14 +820,14 @@ const ServiceTabContent = ({services, currentCycleStatus}) => {
   const handleDateSelect = useCallback(async (dateStr) => {
     try {
       let available;
-      
+
       setSelectedDate(dateStr);
       setSelectedTime("");
-      
+
       setPaymentForm((prev) => ({ ...prev, appointmentDate: "" }));
 
       const unavailable = await ApiGateway.getMyUnavailableSchedules(dateStr);
-  
+
       let busyTimes = [];
       if (Array.isArray(unavailable)) {
         busyTimes = unavailable.map((slot) => slot.startTime?.slice(0, 5));
@@ -826,7 +836,7 @@ const ServiceTabContent = ({services, currentCycleStatus}) => {
         busyTimes = [];
       }
 
-      if (dateStr !== todayStr) {  
+      if (dateStr !== todayStr) {
         available = FIXED_TIME_SLOTS.filter(
           (slot) => !busyTimes.includes(slot)
         );
@@ -836,10 +846,10 @@ const ServiceTabContent = ({services, currentCycleStatus}) => {
 
         available = FIXED_TIME_SLOTS.filter((slot) => {
           const [hour, minute] = slot.split(":").map(Number);
-          const isAfterCurrentTime = 
-            hour > currentHour || 
+          const isAfterCurrentTime =
+            hour > currentHour ||
             (hour === currentHour && minute > currentMinute);
-          
+
           return isAfterCurrentTime && !busyTimes.includes(slot);
         });
       }
@@ -870,7 +880,7 @@ const ServiceTabContent = ({services, currentCycleStatus}) => {
   const handleSubmit = async () => {
     try {
       const res = await ApiGateway.createPayment(paymentForm);
-      console.log(paymentForm)
+      console.log(paymentForm);
       console.log("Tạo chỉ định thành công:", res);
       showSuccess("Tạo chỉ định thành công!");
     } catch (error) {
@@ -893,6 +903,7 @@ const ServiceTabContent = ({services, currentCycleStatus}) => {
     <div className="patient-profile-tab-content">
       <h3>Chỉ định dịch vụ</h3>
       <p>Điền thông tin chỉ định dịch vụ cho bệnh nhân</p>
+
       {currentCycleStatus === "ongoing" ?
         (
           <h4>Bệnh nhân hiện đã được chỉ định dịch vụ</h4>

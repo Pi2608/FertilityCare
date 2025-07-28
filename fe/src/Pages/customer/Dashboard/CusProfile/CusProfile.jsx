@@ -120,7 +120,7 @@ const ProfileLayout = () => {
       <div className="profile-content">
         {/* Left Column - Doctor Information */}
         <div className="doctor-info-section">
-          <h3>👤 Thông Tin Cá Nhân</h3>
+          <h3>Thông Tin Cá Nhân</h3>
           <div className="doctor-card">
             {/* <div className="doctor-avatar">
               <img src="/placeholder.svg?height=60&width=60" alt="Doctor Avatar" />

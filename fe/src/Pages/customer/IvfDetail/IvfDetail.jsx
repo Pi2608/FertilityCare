@@ -350,7 +350,7 @@ const IvfDetail = () => {
                 </h3>
               </div>
               <p>{step.description}</p>
-              <span className="duration">Thời gian: {step.durationInDays} ngày</span>
+              <span className="duration">Thời gian: {step.expectedDuration} ngày</span>
             </div>
           ))}
         </div>
@@ -455,15 +455,15 @@ const IvfDetail = () => {
   const parseFAQ = (faqRaw) => {
     if (!faqRaw) return [];
 
-    const rawPairs = faqRaw.split("<br><br>");
+    const rawPairs = faqRaw.split("\n\n");
     const questions = [];
 
     rawPairs.forEach((pair) => {
-      const parts = pair.split("<br>");
+      const parts = pair.split("\n");
       if (parts.length >= 2) {
         questions.push({
           q: parts[0].trim(),
-          a: parts.slice(1).join("<br>").trim(), // đề phòng có nhiều dòng hơn
+          a: parts.slice(1).join("\n").trim(), // đề phòng có nhiều dòng hơn
         });
       }
     });

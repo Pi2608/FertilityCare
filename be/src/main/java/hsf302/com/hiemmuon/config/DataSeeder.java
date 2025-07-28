@@ -160,18 +160,50 @@ public class DataSeeder implements CommandLineRunner {
         treatmentServiceRepository.save(ivf);
 
         treatmentStepRepository.saveAll(List.of(
-                new TreatmentStep(iui, 1, "Khám và xét nghiệm ban đầu", "Bác sĩ tiến hành thăm khám sức khỏe sinh sản tổng quát...", 2),
-                new TreatmentStep(iui, 2, "Kích thích buồng trứng", "Sử dụng thuốc kích thích rụng trứng nhẹ...", 5),
-                new TreatmentStep(iui, 3, "Theo dõi nang noãn và tiêm rụng trứng", "Bác sĩ theo dõi nang noãn qua siêu âm...", 3),
-                new TreatmentStep(iui, 4, "Lọc rửa tinh trùng và tiến hành bơm", "Mẫu tinh trùng được lọc rửa...", 1),
-                new TreatmentStep(iui, 5, "Nghỉ ngơi và thử thai", "Sau bơm, bệnh nhân nghỉ ngơi...", 14),
+                // --- IUI ---
+                new TreatmentStep(iui, 1, "Khám và xét nghiệm ban đầu",
+                        "Bác sĩ tiến hành thăm khám sức khỏe sinh sản tổng quát cho cả vợ và chồng, bao gồm: siêu âm tử cung và buồng trứng, xét nghiệm nội tiết tố, tinh dịch đồ, và các xét nghiệm cần thiết khác. Mục tiêu là đánh giá chính xác nguyên nhân gây hiếm muộn và lựa chọn thời điểm can thiệp phù hợp.",
+                        2),
 
-                new TreatmentStep(ivf, 1, "Khám và đánh giá", "Bác sĩ kiểm tra sức khỏe sinh sản tổng quát...", 2),
-                new TreatmentStep(ivf, 2, "Kích thích buồng trứng", "Sử dụng hormone kích thích để buồng trứng phát triển...", 10),
-                new TreatmentStep(ivf, 3, "Chọc hút trứng", "Khi nang noãn đạt đủ kích thước, bác sĩ chọc hút trứng...", 1),
-                new TreatmentStep(ivf, 4, "Tạo phôi và nuôi phôi", "Trứng và tinh trùng được kết hợp trong phòng lab...", 5),
-                new TreatmentStep(ivf, 5, "Chuyển phôi", "Phôi khỏe mạnh được chọn lọc và chuyển vào tử cung...", 1),
-                new TreatmentStep(ivf, 6, "Thử thai", "Sau khoảng 14 ngày từ ngày chuyển phôi...", 14)
+                new TreatmentStep(iui, 2, "Kích thích buồng trứng",
+                        "Người vợ sẽ được chỉ định dùng thuốc kích thích nhẹ để tăng khả năng rụng trứng. Quá trình này được theo dõi sát sao bằng siêu âm và xét nghiệm nội tiết nhằm đảm bảo sự phát triển của nang noãn một cách an toàn và hiệu quả.",
+                        5),
+
+                new TreatmentStep(iui, 3, "Theo dõi nang noãn và tiêm rụng trứng",
+                        "Khi nang noãn đạt đến kích thước phù hợp, bác sĩ sẽ tiêm hormone hCG để kích thích rụng trứng. Thời điểm này rất quan trọng, quyết định sự thành công của việc bơm tinh trùng, do đó cần theo dõi chính xác và đúng giờ.",
+                        3),
+
+                new TreatmentStep(iui, 4, "Lọc rửa tinh trùng và tiến hành bơm",
+                        "Tinh trùng của người chồng được lấy mẫu và xử lý bằng phương pháp lọc rửa để chọn ra những tinh trùng khỏe mạnh nhất. Sau đó, chúng được bơm trực tiếp vào buồng tử cung bằng ống thông nhỏ, không gây đau và chỉ mất vài phút.",
+                        1),
+
+                new TreatmentStep(iui, 5, "Nghỉ ngơi và thử thai",
+                        "Sau khi bơm, người vợ sẽ được hướng dẫn nghỉ ngơi nhẹ nhàng tại chỗ. Trong vòng 14 ngày tiếp theo, cần hạn chế căng thẳng và theo dõi dấu hiệu có thai. Sau đó, có thể thử thai bằng que thử hoặc xét nghiệm máu theo chỉ định bác sĩ.",
+                        14),
+
+                // --- IVF ---
+                new TreatmentStep(ivf, 1, "Khám và đánh giá",
+                        "Cặp vợ chồng được khám tổng quát để đánh giá khả năng sinh sản: nội tiết tố, dự trữ buồng trứng, cấu trúc tử cung, ống dẫn trứng và chất lượng tinh trùng. Giai đoạn này là nền tảng để xây dựng phác đồ IVF phù hợp và tối ưu hóa tỉ lệ thành công.",
+                        2),
+
+                new TreatmentStep(ivf, 2, "Kích thích buồng trứng",
+                        "Người vợ sẽ được tiêm hormone kích thích để buồng trứng phát triển nhiều nang noãn cùng lúc. Quá trình kéo dài khoảng 8–12 ngày, với các buổi siêu âm và xét nghiệm để theo dõi kích thước nang, điều chỉnh liều thuốc phù hợp nhằm đảm bảo chất lượng trứng thu được.",
+                        10),
+                new TreatmentStep(ivf, 3, "Chọc hút trứng",
+                        "Khi nang noãn đạt kích thước tối ưu, bác sĩ sẽ tiến hành chọc hút trứng qua ngả âm đạo dưới hướng dẫn siêu âm. Thủ thuật được thực hiện nhanh chóng, trong điều kiện gây mê nhẹ và hoàn toàn không gây đau đớn.",
+                        1),
+
+                new TreatmentStep(ivf, 4, "Tạo phôi và nuôi phôi",
+                        "Trứng sau khi chọc hút sẽ được thụ tinh với tinh trùng trong phòng lab hiện đại. Các phôi sau đó được nuôi cấy từ 3–5 ngày, dưới sự giám sát nghiêm ngặt để chọn lọc những phôi phát triển tốt nhất. Đây là giai đoạn quan trọng đòi hỏi kỹ thuật cao và môi trường tối ưu.",
+                        5),
+
+                new TreatmentStep(ivf, 5, "Chuyển phôi",
+                        "Một hoặc vài phôi chất lượng tốt sẽ được chuyển vào buồng tử cung bằng một ống catheter mềm. Quá trình diễn ra nhẹ nhàng, không đau và không cần gây mê. Người vợ sau đó được khuyên nghỉ ngơi để hỗ trợ quá trình làm tổ của phôi.",
+                        1),
+
+                new TreatmentStep(ivf, 6, "Thử thai",
+                        "Khoảng 14 ngày sau chuyển phôi, người vợ sẽ được xét nghiệm máu để kiểm tra nồng độ beta-hCG nhằm xác định có thai hay chưa. Nếu có thai, bác sĩ sẽ tiếp tục theo dõi thai kỳ sớm để đảm bảo an toàn cho mẹ và bé.",
+                        14)
         ));
 
         successRateByAgeService.saveAll(List.of(
