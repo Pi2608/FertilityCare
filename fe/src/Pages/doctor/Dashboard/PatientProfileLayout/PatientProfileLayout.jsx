@@ -3,7 +3,7 @@ import ApiGateway from "../../../../features/service/apiGateway"
 import { useNavigate, useParams } from "react-router-dom"
 import { HashLoader, BeatLoader } from "react-spinners";
 import { showSuccess, showFail, confirmToast } from "@lib/toast/toast"
-import { AlertTriangle, RefreshCcw, Hourglass, Check, CalendarDays, FileText, Pill, Zap, FilePen, User } from "lucide-react";
+import { AlertTriangle, RefreshCcw, Hourglass, Check, CalendarDays, FileText, Pill, Zap, FilePen, User, X, NotepadText} from "lucide-react";
 import "./PatientProfileLayout.css"
 
 const PatientProfileLayout = () => {
@@ -217,10 +217,12 @@ const PatientProfileLayout = () => {
 
   const filterFirstOngoingStep = (steps) => {
     const finishedPhases = steps.filter(p => p.statusCycleStep === "finished");
-
     const firstOngoingPhase = steps.find(p => p.statusCycleStep === "ongoing");
+    const firstStoppedPhase = steps.find(p => p.statusCycleStep === "stopped");
 
-    return firstOngoingPhase ? [...finishedPhases, firstOngoingPhase] : finishedPhases;
+    const activePhase = firstOngoingPhase || firstStoppedPhase;
+    
+    return activePhase ? [...finishedPhases, activePhase] : finishedPhases;
   }
 
   const currentStep = (steps) => {
@@ -254,7 +256,7 @@ const PatientProfileLayout = () => {
       setPastAndCurrentSteps([]);
       setMedicationSchedules([]);
       
-      let crtCycle = await getCurrentCyclesOfPatient(customerId);
+      let crtCycle = await getCurrentCyclesOfPatient(appointmentId);
       await getAppointmentDetail(appointmentId)
 
       await Promise.all([
@@ -281,12 +283,13 @@ const PatientProfileLayout = () => {
       await new Promise(resolve => setTimeout(resolve, 500));
       setLoading(false);
     }
-  }, [customerId]);
+  }, [appointmentId]);
 
   // 1. Lấy chu kỳ điều trị hiện tại của bệnh nhân (bác sĩ)
-  const getCurrentCyclesOfPatient = async (customerId) => {
+  const getCurrentCyclesOfPatient = async (appointmentId) => {
     try {
-      const res = await ApiGateway.getCurrentCyclesOfPatient(customerId);
+      const res = await ApiGateway.getCurrentCyclesOfPatient(appointmentId);
+      console.log(res.date)
       setCurrentCycle(res.data);
       return res;
     } catch (error) {
@@ -338,7 +341,6 @@ const PatientProfileLayout = () => {
   const getCycleStepsByCycle = async (cycleId) => {
     try {
       const res = await ApiGateway.getCycleStepsByCycleId(cycleId);
-      console.log(res.data)
       setCycleSteps(res.data);
       return res;
     } catch (error) {
@@ -470,7 +472,7 @@ const PatientProfileLayout = () => {
             </div>
             <div className="patient-profile-card-content">
               <h4>Giai đoạn hiện tại</h4>
-              <p>{allCycleStep.length > currentStep(allCycleStep) ? (mappingStepsName(currentStep(allCycleStep))) : "Đã hoàn thành"}</p>
+              <p>{allCycleStep.length > currentStep(allCycleStep) ? (mappingStepsName(currentStep(allCycleStep))) : currentCycle?.status !== "stopped" ? "Đã hoàn thành" : "Đã kết thúc"}</p>
             </div>
           </div>
 
@@ -492,10 +494,16 @@ const PatientProfileLayout = () => {
           <h3>Toàn bộ giai đoạn điều trị</h3>
           <div className="patient-profile-timeline">
             {filterFirstOngoingStep(allCycleStep)?.map((phase, idx) => (
-              <div key={`key-${phase.stepId}-${idx}`} className={`patient-profile-timeline-item patient-profile-${(phase.statusCycleStep === "ongoing" && phase.failedReason) ? "restart" : phase.statusCycleStep}`}>
+              <div key={`key-${phase.stepId}-${idx}`} className={`patient-profile-timeline-item patient-profile-${
+                (phase.statusCycleStep === "ongoing" && phase.failedReason) ? "restart" : 
+                phase.statusCycleStep === "stopped" ? "stopped" : 
+                phase.statusCycleStep
+              }`}>
                 <div className="patient-profile-timeline-marker">
                   {phase.statusCycleStep === "finished" ? (
                     <Check size={20} />
+                  ) : phase.statusCycleStep === "stopped" ? (
+                    <X size={20} />
                   ) : phase.statusCycleStep === "ongoing" && phase.failedReason ? (
                     <RefreshCcw size={20} />
                   ) : phase.statusCycleStep === "ongoing" ? (
@@ -510,37 +518,49 @@ const PatientProfileLayout = () => {
                     <span className="patient-profile-timeline-date">{getCurrentStepPeriod(phase.stepOrder)}</span>
                   </div>
                   <div className="patient-profile-timeline-details">
-                    {/* Lí do thất bại */}
-                    {(phase?.failedReason && phase.status === "restarted") && 
+                    {/* Lí do stopped */}
+                    {(phase?.failedReason && phase.statusCycleStep === "stopped") &&
                       <div className="patient-profile-timeline-section" style={{display: "flex", alignItems: "center"}}>
-                        <AlertTriangle size={18} color="#f59e0b"/><p style={{color: "#f59e0b", marginLeft:"5px", fontWeight: 600}}>{phase.failedReason}</p>
+                        {phase.statusCycleStep === "stopped" && <X size={18} color="#ef4444"/>}
+                        <p style={phase.statusCycleStep === "stopped" ? {color: "#ef4444", marginLeft:"5px", fontWeight: 600}:{fontWeight: 600}}>
+                          Đã dừng: {phase.failedReason}
+                        </p>
                       </div>
                     }
+                    {/* Lí do thất bại cho restart */}
+                    {(phase?.failedReason && phase.statusCycleStep === "ongoing") && 
+                      <div className="patient-profile-timeline-section" style={{display: "flex", alignItems: "center"}}>
+                        {phase?.failedReason && phase.statusCycleStep === "ongoing" && <AlertTriangle size={18} color="#ffcd37"/>}
+                        <p style={phase.statusCycleStep === "ongoing" ? {color: "#ffcd37", marginLeft:"5px", fontWeight: 600}:{color: "#373737ff", fontWeight: 600}}>
+                          Lý do thực hiện lại: {phase.failedReason}
+                        </p>
+                      </div>
+                    } 
                     {/* Ghi chú */}
-                    {phase?.note && 
+                    <div style={{display: "flex", alignItems: "center", gap: "5px"}}>
+                      <NotepadText size={16} color="#4a5666ff"/> 
+                      <h5>Ghi chú:</h5>
+                    </div>
+                    {phase?.note ? (
                       <div className="patient-profile-timeline-section">
-                        <h4>Ghi chú:</h4>
                         <div className="patient-profile-timeline-note">
                           <p>- {phase.note}</p>
                         </div>
                       </div>
-                    }
-                    {collectNotesFromAppointments(phase).length > 0 ? (
-                      <div className="patient-profile-timeline-section">
-                        
-                        {collectNotesFromAppointments(phase).map((note, index) => (
-                          <div key={index} className="patient-profile-timeline-note">
-                            <p><strong>{note.date}:</strong> {note.note}</p>
-                            {/* <span className="patient-profile-note-doctor">- BS. {note.doctor}</span> */}
-                          </div>
-                        ))}
-                      </div>
+                    // }
+                    // {collectNotesFromAppointments(phase).length > 0 ? (
+                    //   <div className="patient-profile-timeline-section">
+                    //     {collectNotesFromAppointments(phase).map((note, index) => (
+                    //       <div key={index} className="patient-profile-timeline-note">
+                    //         <p><strong>{note.date}:</strong> {note.note}</p>
+                    //       </div>
+                    //     ))}
+                    //   </div>
                     ) : (
                       <div className="patient-profile-timeline-section">
                         <p>{phase.statusCycleStep === "ongoing" ? "Chưa" : "Không"} có ghi chú cho giai đoạn này.</p>
                       </div>
                     )}
-
 
                     {/* Kết quả xét nghiệm */}
                     <div style={{display: "flex", alignItems: "center", gap: "5px"}}>
@@ -554,16 +574,14 @@ const PatientProfileLayout = () => {
                             <li key={index}>
                               <strong>{result.name}:</strong> {result.value} {result.unit} ({result.note} : {result.referenceRange}) - {formatDate(result.testDate)}
                             </li>
-                            ))}
-                          </ul>
-                        </div>
-                      ) : (
-                        <div className="patient-profile-timeline-section">
-                          <p>{phase.statusCycleStep === "ongoing" ? "Chưa" : "Không"} có kết quả xét nghiệm cho giai đoạn này.</p>
-                        </div>
-                      )
-                    }
-
+                          ))}
+                        </ul>
+                      </div>
+                    ) : (
+                      <div className="patient-profile-timeline-section">
+                        <p>{phase.statusCycleStep === "ongoing" ? "Chưa" : "Không"} có kết quả xét nghiệm cho giai đoạn này.</p>
+                      </div>
+                    )}
 
                     {/* Thuốc sử dụng */}
                     <div style={{display: "flex", alignItems: "center", gap: "5px"}}>
@@ -586,7 +604,7 @@ const PatientProfileLayout = () => {
                               }, {})
                             ).map((med, index) => (
                               <li key={index}>
-                                <strong>{med.medicineName}:</strong> {med.frequency} - Mỗi lần {med.dose}
+                                <strong>{med.medicineName}</strong>
                               </li>
                             ))
                           }
@@ -597,8 +615,6 @@ const PatientProfileLayout = () => {
                         <p>{phase.statusCycleStep === "ongoing" ? "Chưa" : "Không"} có thuốc sử dụng cho giai đoạn này.</p> 
                       </div>
                     )}
-
-
 
                     {/* Action buttons cho từng giai đoạn */}
                     {(phase.statusCycleStep === "ongoing" && appointmentDetail.status === "confirmed") &&
@@ -641,7 +657,9 @@ const PatientProfileLayout = () => {
                 </div>
               </div>
             ))}
-            {currentStep(allCycleStep) < allCycleStep.length ? (
+            
+            {/* Upcoming step - chỉ hiển thị nếu cycle chưa stopped và còn step */}
+            {currentStep(allCycleStep) < allCycleStep.length && currentCycle?.status !== "stopped" ? (
               <div className={`patient-profile-timeline-item patient-profile-upcoming`}>
                 <div className="patient-profile-timeline-marker" style={{background: "#a9b5c6", color: "white"}}>
                   <CalendarDays size={20}/>
@@ -669,8 +687,28 @@ const PatientProfileLayout = () => {
                   </div>
                 </div>
               </div>
-            ) :(
-              <button className="patient-profile-btn-primary-small" style={{backgroundColor: "#4caf50", padding: "10px 16px", fontSize: "1rem"}} onClick={() => handleOpenConfirmModalCycle()}>Hoàn thành chu kì</button>
+            ) : (
+              /* Complete cycle button - chỉ hiển thị nếu cycle chưa stopped */
+              currentCycle?.status === "ongoing" && (
+                <button 
+                  className="patient-profile-btn-primary-small" 
+                  style={{backgroundColor: "#4caf50", padding: "8px 14px", fontSize: "1rem", display: "flex", alignItems: "center"}} 
+                  onClick={() => handleOpenConfirmModalCycle()}
+                >
+                  Hoàn thành chu kì
+                </button>
+              ) 
+              // : (
+              //   /* Reassign button - hiển thị khi cycle đã stopped */
+              //   <button 
+              //     className="patient-profile-btn-primary-small" 
+              //     style={{backgroundColor: "#5f8cebff", padding: "8px 14px", fontSize: "1rem", display: "flex", alignItems: "center"}} 
+              //     onClick={() => handleOpenReassignModal()}
+              //   >
+              //     <RefreshCcw size={16} style={{marginRight: "8px"}} />
+              //     Tái chỉ định
+              //   </button>
+              // )
             )}
           </div>
         </div>
@@ -773,9 +811,9 @@ const PatientProfileLayout = () => {
                       <p>{phase.note}</p>
                     </div>
                     <div className="patient-profile-note-footer">
-                      <div className="patient-profile-note-date">
+                      {/* <div className="patient-profile-note-date">
                         <span>{formatDate(phase.eventdate)}</span>
-                      </div>
+                      </div> */}
                       {(phase.stepOrder == currentStep(allCycleStep) && appointmentDetail.status === "confirmed") &&
                       <button className="patient-profile-btn-outline-blue" 
                         onClick={() => 
@@ -918,17 +956,17 @@ const PatientProfileLayout = () => {
                   </span>
                 </div>
                 <div className="patient-profile-med-details">
-                  <p>
+                  {/* <p>
                     <strong>Liều dùng:</strong> {med.dose}
                   </p>
                   <p>
                     <strong>Tần suất:</strong> {med.frequency}
-                  </p>
+                  </p> */}
                   <p>
                     <strong>Thời gian:</strong> {med.startDate} → {med.endDate}
                   </p>
                   <p>
-                    <strong>Giai đoạn:</strong> Bước {step.stepOrder} – {step.serive}
+                    <strong>Giai đoạn:</strong> Bước {step.stepOrder} - {mappingStepsName(step.stepOrder)}
                   </p>
                   {step.medicineSchedule.note && (
                     <p>
@@ -1611,7 +1649,6 @@ const PatientProfileLayout = () => {
           cycleStepId: allCycleStep?.[currentStep(allCycleStep) - 1]?.stepId + 1 || "",
         }));
       }
-      console.log(minDate)
     }, [currentCycle]);
 
     if (!isOpen) return null;
@@ -1694,7 +1731,8 @@ const PatientProfileLayout = () => {
         await updateCycleStepStatus(currentCycle.cycleId, allCycleStep?.[currentStep(allCycleStep) - 1].stepOrder, callbackParams)
         showSuccess("Đặt lịch tái khám thành công");
         onClose();
-        await fetchData();
+        // await fetchData();
+        navigate("/doctor-dashboard/appointments");
       } catch {
         showFail("Đặt lịch thất bại");
       } finally {
@@ -1826,6 +1864,7 @@ const PatientProfileLayout = () => {
       note: "",
       cycleStepId: "",
       changeDate: "",
+      isEnd: true,
     });
     const isReasonReExam = ["Chưa đạt điều kiện", "Gặp vấn đề phát sinh"].includes(formData.reason) && formData.changeDate;
 
@@ -1912,19 +1951,21 @@ const PatientProfileLayout = () => {
         const dto = {
           markAsDone: true
         }
-        const callbackParams = isReasonReExam ? {
+        const callbackParams = formData.isEnd ? {
+          status: "stopped",
+          reason: `${formData.reason}`,
+        } : {
           status :  "restarted", 
           reason: `${formData.reason}`,
           changeDate: `${formData.changeDate}T08:00:00`
-        } : {
-          status: "stopped"
         }
-        if (isReasonReExam)
+        if (!formData.isEnd)
         {await createReExamAppointment(formData);}
         await updateAppointmentService(appointmentId, dto);
         await updateCycleStepStatus(currentCycle.cycleId, allCycleStep?.[currentStep(allCycleStep) - 1].stepOrder, callbackParams)
         showSuccess("Đã đánh dấu thất bại");
         onClose();
+        navigate("/doctor-dashboard/appointments");
         await fetchData();
       } catch {
         showFail("Lỗi đánh dấu thất bại");
@@ -1941,49 +1982,64 @@ const PatientProfileLayout = () => {
 
             <label>
               Lí do thất bại:
-              <select
+              <textarea
                 value={formData.reason}
                 onChange={(e) => handleChange("reason", e.target.value)}
-                required
-              >
-                <option value="">-- Chọn lí do --</option>
-                {REASONS.map((reason, idx) => (
-                  <option key={`rs-${idx}`} value={reason}>
-                    {reason}
-                  </option>
-                ))}
-              </select>
+                placeholder="Lí do"
+              />
             </label>
+          
+            <div style={{all: "unset", display: "flex", justifyContent: "space-around"}}>
+              <label style={{all: "unset"}}>
+                <input
+                  type="radio"
+                  name="isEnd"
+                  checked={formData.isEnd}
+                  onChange={() => handleChange("isEnd", true)}
+                />
+                Kết thúc quy trình
+              </label>
 
-            <label>
+              <label style={{all: "unset", marginLeft: '10px' }}>
+                <input
+                  type="radio"
+                  name="isEnd"
+                  checked={!formData.isEnd}
+                  onChange={() => handleChange("isEnd", false)}
+                />
+                Thực hiện lại bước này
+              </label>
+            </div>
+
+            <label className={`fade-toggle ${!formData.isEnd ? "show" : ""}`}>
               Dời thời điểm kết thúc bước này:
               <input
                 type="date"
                 value={formData.changeDate}
                 onChange={(e) => handleChange("changeDate", e.target.value)}
-                required
+                required={!formData.isEnd}
                 min={minChangeDate.toISOString().split("T")[0]}
               />
             </label>
 
-            <label className={`fade-toggle ${(["Chưa đạt điều kiện", "Gặp vấn đề phát sinh"].includes(formData.reason) && formData.changeDate) ? "show" : ""}`}>
+            <label className={`fade-toggle ${!formData.isEnd ? "show" : ""}`}>
               Ngày tái khám:
               <input
                 type="date"
                 value={selectedDate}
                 onChange={(e) => handleDateSelect(e.target.value)}
-                required = {isReasonReExam}
+                required={!formData.isEnd}
                 min={minDate.toISOString().split("T")[0]}
                 max={formData?.changeDate?.split("T")[0]}
               />
             </label>
           
-            <label className={`fade-toggle ${(["Chưa đạt điều kiện", "Gặp vấn đề phát sinh"].includes(formData.reason) && formData.changeDate) ? "show" : ""}`}>
+            <label className={`fade-toggle ${!formData.isEnd ? "show" : ""}`}>
               Giờ khám:
               <select
                 value={selectedTime}
                 onChange={(e) => handleTimeSelect(e.target.value)}
-                required = {isReasonReExam}
+                required={!formData.isEnd}
                 disabled={!availableSchedules.length > 0}
               >
                 <option value="">{availableSchedules.length > 0 ? "-- Chọn giờ khám --": "--Không có lịch trống--"}</option>
@@ -1993,12 +2049,12 @@ const PatientProfileLayout = () => {
                   </option>
                 ))}
               </select>
-            </label>             
+            </label>
 
             <button
               type="submit"
               className="patient-profile-btn-primary"
-              disabled={!formData.date}
+              disabled={formData.isEnd ? false : !formData.date}
             >
               {isLoading ? <BeatLoader /> : "Đánh dấu thất bại"}
             </button>
@@ -2046,13 +2102,16 @@ const PatientProfileLayout = () => {
         const dto = {
           markAsDone: true
         }
+        const callbackParams = {
+          status: "finished"
+        }
         if (type == "cycle") {
-          await updateCycleStepStatus(currentCycle.cycleId, allCycleStep?.[currentStep(allCycleStep) - 1].stepOrder, "finished")
+          await updateCycleStepStatus(currentCycle.cycleId, allCycleStep?.[currentStep(allCycleStep) - 1].stepOrder, callbackParams)
         }
         await updateAppointmentService(appointmentId, dto);
         showSuccess("Lịch hẹn đã cập nhật trạng thái");
         onClose();
-        navigate("/doctor-dashboard/appointments")
+        navigate("/doctor-dashboard/appointments");
       } catch (error) {
         showFail("Cập nhật trạng thái thất bại");
       }
@@ -2062,6 +2121,7 @@ const PatientProfileLayout = () => {
       <div className="patient-profile-confirm-overlay">
         <div className="patient-profile-confirm-modal">
           <p>{message || "Bạn có chắc chắn muốn tiếp tục?"}</p>
+          <p>(Xác nhận cũng sẽ kết thúc cuộc hẹn hiện tại)</p>
           <div className="patient-profile-confirm-actions">
             <button onClick={onClose}>Hủy</button>
             <button onClick={() => confirmSubmit()}>Xác nhận</button>
@@ -2111,6 +2171,12 @@ const PatientProfileLayout = () => {
             <div className="patient-profile-info-row">
               <span className="patient-profile-label">Tuổi:</span>
               <span className="patient-profile-value">{patientData.age}</span>
+            </div>
+            <div className="patient-profile-info-row">
+              <span className="patient-profile-label">Điều trị:</span>
+              <span className="patient-profile-value">
+                {patientData.treatment}
+              </span>
             </div>
             <div className="patient-profile-info-row">
               <span className="patient-profile-label">Ngày bắt đầu:</span>

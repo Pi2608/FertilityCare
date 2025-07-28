@@ -9,6 +9,8 @@ import { Eye, EyeOff } from "lucide-react"; // icon đóng hiện mật khẩu
 import ApiGateway from "../../features/service/apiGateway";
 
 const Authentication = () => {
+  const now = new Date();
+  const minYear = new Date(now.setUTCFullYear(now.getUTCFullYear - 18))
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const otpRefs = useRef(Array(6).fill(null));
@@ -370,6 +372,7 @@ const Authentication = () => {
                           id="dob"
                           name="dob"
                           value={formData.dob}
+                          min={minYear}
                           onChange={handleInputChange}
                           disabled={loading}
                       />

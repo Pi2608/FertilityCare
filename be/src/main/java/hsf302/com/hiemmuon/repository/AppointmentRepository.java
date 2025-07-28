@@ -38,4 +38,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
             LocalDateTime end,
             Boolean isReminded
     );
+
+    @Query(value = "SELECT TOP 1 * FROM appointments WHERE step_id = :stepId ORDER BY date ASC", nativeQuery = true)
+    Optional<Appointment> findFirstAppointmentByCycleStep(@Param("stepId") int stepId);
+
 }
