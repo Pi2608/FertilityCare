@@ -24,6 +24,5 @@ public class Customer {
     @Column(name = "medical_history", columnDefinition = "NVARCHAR(MAX)")
     private String medicalHistory;
 
-    @Column(name = "is_active")
-    private boolean isActive;
+
 }

@@ -49,7 +49,7 @@ public class CustomerService {
         return customers.stream().map(customer -> {
             CustomerDTO dto = new CustomerDTO();
             dto.setId(customer.getCustomerId());
-            dto.setActive(customer.isActive());
+            dto.setActive(customer.getUser().getIsActive());
             dto.setName(customer.getUser().getName());
             dto.setDob(customer.getUser().getDob());
             dto.setGender(customer.getUser().getGender());
@@ -69,7 +69,7 @@ public class CustomerService {
 
         CustomerDTO dto = new CustomerDTO();
         dto.setId(customer.getCustomerId());
-        dto.setActive(customer.isActive());
+        dto.setActive(customer.getUser().getIsActive());
         dto.setName(customer.getUser().getName());
         dto.setDob(customer.getUser().getDob());
         dto.setGender(customer.getUser().getGender());
@@ -125,7 +125,7 @@ public class CustomerService {
 
             Customer customer = new Customer();
             customer.setUser(user);
-            customer.setActive(true);
+            customer.getUser().setIsActive(true);
             customer.setMedicalHistory(dto.getMedicalHistory());
             customerRepository.save(customer);
         }

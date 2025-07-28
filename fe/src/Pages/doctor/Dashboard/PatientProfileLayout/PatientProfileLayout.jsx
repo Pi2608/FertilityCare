@@ -256,7 +256,7 @@ const PatientProfileLayout = () => {
       setPastAndCurrentSteps([]);
       setMedicationSchedules([]);
       
-      let crtCycle = await getCurrentCyclesOfPatient(customerId);
+      let crtCycle = await getCurrentCyclesOfPatient(appointmentId);
       await getAppointmentDetail(appointmentId)
 
       await Promise.all([
@@ -283,12 +283,12 @@ const PatientProfileLayout = () => {
       await new Promise(resolve => setTimeout(resolve, 500));
       setLoading(false);
     }
-  }, [customerId]);
+  }, [appointmentId]);
 
   // 1. Lấy chu kỳ điều trị hiện tại của bệnh nhân (bác sĩ)
-  const getCurrentCyclesOfPatient = async (customerId) => {
+  const getCurrentCyclesOfPatient = async (appointmentId) => {
     try {
-      const res = await ApiGateway.getCurrentCyclesOfPatient(customerId);
+      const res = await ApiGateway.getCurrentCyclesOfPatient(appointmentId);
       console.log(res.date)
       setCurrentCycle(res.data);
       return res;

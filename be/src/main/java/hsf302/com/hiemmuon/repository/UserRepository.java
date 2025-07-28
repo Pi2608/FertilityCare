@@ -13,4 +13,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     User getRoleByUserId(int userId);
 
     User getUserByUserId(int userId);
+
+
+    Long countUserByRole_RoleId(int roleId);
+
+    Long countUserByRole_RoleIdAndIsActive(int roleId, boolean isActive);
 }

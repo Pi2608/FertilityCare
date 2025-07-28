@@ -6,6 +6,7 @@ import hsf302.com.hiemmuon.dto.testresult.TestResultViewDTO;
 import hsf302.com.hiemmuon.entity.CycleStep;
 import hsf302.com.hiemmuon.entity.MedicineSchedule;
 import hsf302.com.hiemmuon.entity.TestResult;
+import hsf302.com.hiemmuon.entity.TreatmentStep;
 import hsf302.com.hiemmuon.enums.StatusCycle;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -48,4 +49,7 @@ public interface CycleStepRepository extends JpaRepository<CycleStep, Integer> {
     List<Integer> findStepIdsByCycleIdOrdered(@Param("cycleId") int cycleId);
 
     List<CycleStep> findByEventdateBetween(LocalDateTime from, LocalDateTime to);
+
+    List<CycleStep> findAllByTreatmentStep(TreatmentStep step);
+
 }

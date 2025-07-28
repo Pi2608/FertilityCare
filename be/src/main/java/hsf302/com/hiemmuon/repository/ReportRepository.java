@@ -9,22 +9,12 @@ import hsf302.com.hiemmuon.entity.Doctor; // Since you're querying Doctor entity
 
 @Repository
 public interface ReportRepository extends JpaRepository<Doctor, Long> {
-    @Query("SELECT COUNT(d) FROM Doctor d")
-    Long countTotalDoctors();
 
-    @Query("SELECT COUNT(d) FROM Doctor d WHERE d.isActive = true")
-    Long countActiveDoctors();
 
-    @Query("SELECT COUNT(d) FROM Doctor d WHERE d.isActive = true ")
+    @Query("SELECT COUNT(d) FROM User d WHERE d.isActive = true and d.role.roleId = 3 ")
     Long countNewActiveDoctorsThisMonth();
 
-    @Query("SELECT COUNT(c) FROM Customer c")
-    Long countTotalCustomers();
-
-    @Query("SELECT COUNT(c) FROM Customer c WHERE c.isActive = true")
-    Long countActiveCustomers();
-
-    @Query("SELECT COUNT(c) FROM Customer c WHERE c.isActive = true")
+    @Query("SELECT COUNT(c) FROM User c WHERE c.isActive = true and c.role.roleId = 4")
     Long countNewActiveCustomersThisMonth();
 
     @Query("SELECT COUNT(u) FROM User u")

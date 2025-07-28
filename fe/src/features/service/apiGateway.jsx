@@ -502,9 +502,9 @@ export default class ApiGateway {
   /**
    * [GET] Lấy chu kỳ điều trị hiện tại của bệnh nhân bác sĩ
    */
-  static async getCurrentCyclesOfPatient(customerId) {
+  static async getCurrentCyclesOfPatient(appointmentId) {
     try {
-      const response = await ApiGateway.axiosInstance.get(`cycles/current-cycle/${customerId}`);
+      const response = await ApiGateway.axiosInstance.get(`cycles/current-cycle/appointment/${appointmentId}`);
       return response.data;
     } catch (error) {
       console.error(`Get Current Cycle error:`, error);

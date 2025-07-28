@@ -52,6 +52,15 @@ public class Doctor {
     @Column(name = "rating_avg")
     private Float ratingAvg;
 
-    @Column(name = "is_active")
-    private Boolean isActive;
+    public Doctor(User user, String about, String specification, String approach, int experience, String workExperience, String education, String certificates, Float ratingAvg) {
+        this.user = user;
+        this.about = about;
+        this.specification = specification;
+        this.approach = approach;
+        this.experience = experience;
+        this.workExperience = workExperience;
+        this.education = education;
+        this.certificates = certificates;
+        this.ratingAvg = ratingAvg;
+    }
 }

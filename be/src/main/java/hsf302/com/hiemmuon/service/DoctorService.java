@@ -59,7 +59,7 @@ public class DoctorService {
     }
 
     public List<DoctorDTO> getDoctorByIsActive() {
-        return doctorRepository.findByIsActive(true).stream()
+        return doctorRepository.findByUser_IsActive(true).stream()
                 .map(this::convertToDoctorDTO)
                 .collect(Collectors.toList());
     }
@@ -93,7 +93,7 @@ public class DoctorService {
 
         Doctor doctor = new Doctor();
         doctor.setUser(savedUser);
-        doctor.setIsActive(true);
+        doctor.getUser().setIsActive(true);
 
         return doctorRepository.save(doctor);
     }
@@ -143,7 +143,7 @@ public class DoctorService {
 
     public Doctor updateDoctorActive(int id, boolean active) {
         Doctor doctor = getDoctorById(id);
-        doctor.setIsActive(active);
+        doctor.getUser().setIsActive(active);
         return saveDoctor(doctor);
     }
 
@@ -158,7 +158,7 @@ public class DoctorService {
         dto.setSpecification(doctor.getSpecification());
         dto.setExperience(doctor.getExperience());
         dto.setRatingAvg(doctor.getRatingAvg());
-        dto.setIsActive(doctor.getIsActive());
+        dto.setIsActive(doctor.getUser().getIsActive());
         dto.setAbout(doctor.getAbout());
         dto.setApproach(doctor.getApproach());
         dto.setEducation(doctor.getEducation());
