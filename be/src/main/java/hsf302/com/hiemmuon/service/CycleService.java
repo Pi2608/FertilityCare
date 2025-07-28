@@ -60,50 +60,11 @@ public class CycleService {
         return cycles.stream().map(this::convertToCycleDTO).toList();
     }
 
-    public CycleDTO getCurrentCycleByCustomerId(HttpServletRequest request, int customerId) {
+    public CycleDTO getCurrentCycleByCustomerId(HttpServletRequest request) {
         User user = userService.getUserByJwt(request);
-        if (user.getDoctor() == null) {
-            throw new RuntimeException("Bạn không phải là bác sĩ.");
-        }
 
-        List<Cycle> allCycles = cycleRepository.findByCustomer_CustomerId(customerId);
-
-        if (allCycles.isEmpty()) {
-            return null; // hoặc trả về new CycleDTO() tùy bạn xử lý ngoài frontend
-        }
-
-        // Kiểm tra quyền truy cập
-        allCycles.removeIf(c -> c.getDoctor() == null || c.getDoctor().getDoctorId() != user.getDoctor().getDoctorId());
-
-        if (allCycles.isEmpty()) {
-            throw new RuntimeException("Bạn không có quyền xem chu kỳ điều trị này.");
-        }
-
-        // Ưu tiên lấy chu kỳ có status = ongoing mới nhất
-        Optional<Cycle> ongoingCycle = allCycles.stream()
-//                .filter(c -> c.getStatus() == StatusCycle.ongoing)
-//                .sorted((c1, c2) -> c2.getStartDate().compareTo(c1.getStartDate()))
-                .findFirst();
-
-          return convertToCycleFODTO(ongoingCycle.get());
-//
-//        // Nếu không có ongoing → lấy finished mới nhất
-//        Optional<Cycle> latestFinished = allCycles.stream()
-//                .filter(c -> c.getStatus() == StatusCycle.finished)
-//                .sorted((c1, c2) -> c2.getStartDate().compareTo(c1.getStartDate()))
-//                .findFirst();
-//
-//        if (latestFinished.isPresent()) {
-//            return convertToCycleFODTO(latestFinished.get());
-//        }
-//
-//        // Nếu không có ongoing/finished → lấy stopped mới nhất
-//        Optional<Cycle> latestStopped = allCycles.stream()
-//                .filter(c -> c.getStatus() == StatusCycle.stopped)
-//                .sorted((c1, c2) -> c2.getStartDate().compareTo(c1.getStartDate()))
-//                .findFirst();
-//
-//        return latestStopped.map(this::convertToCycleFODTO).orElse(null);
+        Cycle currentCycle = cycleRepository.findByStatusAndCustomer_CustomerId(StatusCycle.ongoing, user.getUserId());
+        return convertToCycleDTO(currentCycle);
     }
 
 

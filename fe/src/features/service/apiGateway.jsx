@@ -478,7 +478,7 @@ export default class ApiGateway {
    */
   static async getMyCycle() {
     try {
-      const response = await ApiGateway.axiosInstance.get(`cycles/meC/cycle/all`);
+      const response = await ApiGateway.axiosInstance.get(`cycles/current-cycle/customer/`);
       return response.data;
     } catch (error) {
       console.error(`Get All Cycles error:`, error);

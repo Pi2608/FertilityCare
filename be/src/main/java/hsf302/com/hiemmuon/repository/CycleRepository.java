@@ -28,4 +28,6 @@ public interface CycleRepository extends JpaRepository<Cycle, Integer> {
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate,
             @Param("statuses") StatusCycle statuses);
+
+    Cycle findByStatusAndCustomer_CustomerId(StatusCycle statusCycle,  int customerId);
 }
