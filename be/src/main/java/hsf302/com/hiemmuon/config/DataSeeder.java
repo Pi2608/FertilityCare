@@ -83,13 +83,17 @@ public class DataSeeder implements CommandLineRunner {
                 LocalDate.now(), null, true
         ));
         User doc1 = userService.findByEmail("ivf.doctor@example.com");
-        doctorService.saveDoctor(new Doctor(doc1,
-                "Chuyên gia về thụ tinh trong ống nghiệm với hơn 12 năm kinh nghiệm.",
-                "IVF", "Tập trung vào chất lượng phôi và sức khỏe bệnh nhân.",
-                12, "Chứng chỉ IVF quốc tế - ESHRE 2019",
-                "Đại học Y Hà Nội, chuyên ngành Hỗ trợ sinh sản",
-                "Trưởng khoa IVF tại Bệnh viện A, cố vấn chuyên môn tại Bệnh viện B",
-                null));
+        doctorService.saveDoctor(new Doctor(
+                doc1,
+                "Bác sĩ chuyên ngành Hỗ trợ sinh sản với hơn 15 năm kinh nghiệm, đặc biệt trong lĩnh vực thụ tinh trong ống nghiệm (IVF), luôn đồng hành cùng các cặp vợ chồng trong hành trình tìm kiếm thiên thần nhỏ của đời mình.",
+                "Hỗ trợ sinh sản nâng cao, IVF, IUI, thụ tinh nhân tạo",
+                "Đặt y đức và sự đồng cảm lên hàng đầu, kết hợp giữa khoa học hiện đại và sự thấu hiểu tâm lý bệnh nhân để mang đến phương pháp điều trị tối ưu và nhân văn.",
+                15,
+                "Chứng chỉ IVF quốc tế do Hiệp hội Sinh sản Châu Âu (ESHRE) cấp năm 2019, chứng chỉ Hỗ trợ sinh sản nâng cao tại Nhật Bản năm 2022, cùng nhiều khóa đào tạo chuyên sâu tại Mỹ và Úc.",
+                "Tốt nghiệp loại Xuất sắc tại Đại học Y Hà Nội, chuyên ngành Sản Phụ khoa, sau đó hoàn thành chương trình Thạc sĩ Y học Sinh sản tại Đại học Monash – Úc.",
+                "Hiện đang là Trưởng khoa Hỗ trợ sinh sản tại Bệnh viện IVF Quốc tế Hồng Lĩnh, từng là cố vấn chuyên môn tại Bệnh viện Phụ sản Trung ương, đồng thời là giảng viên thỉnh giảng tại Đại học Y Dược TP.HCM.",
+                null
+        ));
 
         userService.saveUser(new User(
                 doctorRole, "BS. Trần Thị Minh Tâm", Genders.female,
@@ -98,13 +102,17 @@ public class DataSeeder implements CommandLineRunner {
                 LocalDate.now(), null, true
         ));
         User doc2 = userService.findByEmail("iui.doctor@example.com");
-        doctorService.saveDoctor(new Doctor(doc2,
-                "Hơn 15 năm kinh nghiệm trong lĩnh vực điều trị hiếm muộn bằng IUI.",
-                "IUI", "Luôn lắng nghe và đồng hành cùng bệnh nhân trong từng chu kỳ.",
-                15, "Chứng chỉ IUI nâng cao - Bộ Y tế Việt Nam",
-                "Đại học Y Dược TP.HCM, chuyên ngành Phụ sản",
-                "Trưởng khoa Hỗ trợ sinh sản tại Bệnh viện Phụ sản Tâm An",
-                null));
+        doctorService.saveDoctor(new Doctor(
+                doc2,
+                "Với hơn 15 năm kinh nghiệm điều trị hiếm muộn bằng phương pháp bơm tinh trùng vào buồng tử cung (IUI), bác sĩ không chỉ là người chữa bệnh mà còn là người bạn đồng hành trong từng khoảnh khắc mong chờ phép màu.",
+                "Điều trị hiếm muộn bằng IUI, tư vấn tâm lý sinh sản, theo dõi nội tiết sinh sản nữ",
+                "Luôn đặt bệnh nhân làm trung tâm, bác sĩ tin rằng sự thấu hiểu và đồng hành về mặt tâm lý chính là một phần quan trọng trong hiệu quả điều trị. Mỗi chu kỳ không chỉ là một liệu trình y khoa, mà còn là một hành trình cảm xúc thiêng liêng.",
+                15,
+                "Chứng chỉ điều trị IUI nâng cao được cấp bởi Bộ Y tế Việt Nam (2015), tham gia chương trình đào tạo chuyên sâu về hỗ trợ sinh sản tại Thái Lan (2018), chứng nhận tư vấn tâm lý sinh sản từ Hội đồng Y khoa Việt Nam (2020).",
+                "Tốt nghiệp Đại học Y Dược TP.HCM, chuyên ngành Phụ sản; tiếp tục theo học các chương trình đào tạo chuyên sâu về nội tiết sinh sản và hỗ trợ sinh sản tại Nhật Bản và Singapore.",
+                "Hiện đang là Trưởng khoa Hỗ trợ sinh sản tại Bệnh viện Phụ sản Tâm An, từng làm việc tại Bệnh viện Hùng Vương và là thành viên tích cực của Hội Nội tiết sinh sản TP.HCM.",
+                null
+        ));
 
         userService.saveUser(new User(
                 doctorRole, "BS. Lê Quốc Hưng", Genders.male,
@@ -114,36 +122,36 @@ public class DataSeeder implements CommandLineRunner {
         ));
         User doc3 = userService.findByEmail("endocrine.doctor@example.com");
         doctorService.saveDoctor(new Doctor(doc3,
-                "Chuyên gia nội tiết sinh sản, điều trị các bệnh lý ảnh hưởng khả năng thụ thai.",
-                "IUI", "Kết hợp điều trị nội khoa và hỗ trợ tâm lý để nâng cao tỷ lệ thành công.",
-                18, "Chứng chỉ Nội tiết học sinh sản - Đại học Y Harvard",
-                "Đại học Y Hà Nội, chuyên ngành Nội tiết",
-                "Cố vấn nội tiết tại Trung tâm IVF Việt Pháp",
+                "Chuyên gia về chẩn đoán di truyền tiền làm tổ (PGT), giúp phát hiện và sàng lọc các bất thường di truyền trước khi chuyển phôi.",
+                "PGT", "Tin rằng mỗi phôi thai là một món quà, và nhiệm vụ của bác sĩ là đảm bảo món quà đó đến với thế giới khỏe mạnh.",
+                20, "Chứng nhận quốc tế về PGT - Đại học Cambridge, Anh",
+                "Đại học Y Dược Huế, chuyên ngành Di truyền học",
+                "Nguyên trưởng bộ môn Di truyền học tại Viện Nghiên cứu Di truyền Quốc gia",
                 null));
     }
 
     private void seedTreatmentServices() {
         TreatmentService iui = new TreatmentService(
                 "IUI - Bơm tinh trùng vào buồng tử cung",
-                "Phương pháp hỗ trợ sinh sản bằng cách bơm tinh trùng đã lọc rửa vào buồng tử cung...",
-                "Các cặp vợ chồng hiếm muộn nhẹ hoặc nguyên nhân không rõ ràng",
-                0.25f,
-                "Ít xâm lấn, chi phí thấp hơn IVF, thời gian thực hiện nhanh",
-                "IUI có đau không? Có cần nằm viện không? Bao lâu thì có thể thử thai?",
-                new BigDecimal("5000000.00"),
-                "Thực hiện vào ngày rụng trứng, yêu cầu tinh trùng khỏe mạnh và tử cung bình thường",
+                "IUI là một phương pháp hỗ trợ sinh sản đơn giản nhưng hiệu quả, trong đó tinh trùng của người chồng được lọc rửa và chọn lọc để đảm bảo chất lượng tốt nhất, sau đó được bơm trực tiếp vào buồng tử cung của người vợ vào thời điểm rụng trứng. Quá trình này giúp tinh trùng đến gần trứng hơn, làm tăng khả năng thụ thai tự nhiên. Phương pháp này ít xâm lấn, không yêu cầu gây mê và thường được thực hiện ngay tại phòng khám trong thời gian ngắn.",
+                "Phù hợp với các cặp vợ chồng hiếm muộn ở mức độ nhẹ, những trường hợp chưa rõ nguyên nhân vô sinh, rối loạn rụng trứng hoặc người chồng có tinh trùng hơi yếu nhưng vẫn đạt ngưỡng khả thi. Ngoài ra, IUI cũng có thể áp dụng cho các cặp đôi sử dụng tinh trùng hiến tặng.",
+                25f,
+                "Chi phí điều trị thấp hơn nhiều so với phương pháp thụ tinh trong ống nghiệm (IVF), thời gian thực hiện nhanh chóng, không cần phẫu thuật hay can thiệp sâu. IUI là lựa chọn lý tưởng cho những cặp đôi muốn bắt đầu hành trình tìm kiếm con yêu bằng một giải pháp nhẹ nhàng và ít rủi ro.",
+                "IUI có đau không?\n Quá trình thực hiện thường không gây đau, chỉ hơi khó chịu nhẹ như khi khám phụ khoa.\n\n Có cần nằm viện không?\n Không. Sau khi thực hiện, người vợ có thể về ngay trong ngày, nghỉ ngơi nhẹ nhàng là đủ.\n\n Bao lâu thì có thể thử thai?\n Thông thường, có thể thử thai sau 14 ngày kể từ khi bơm tinh trùng.",
+                new BigDecimal("50000000.00"),
+                "Để thực hiện IUI hiệu quả, người vợ cần có ít nhất một vòi trứng thông thoáng và niêm mạc tử cung bình thường. Người chồng cần có tinh trùng đạt chất lượng tối thiểu sau khi lọc rửa. Phương pháp thường được thực hiện vào ngày rụng trứng, có thể kết hợp theo dõi siêu âm và thuốc kích thích nhẹ nếu cần thiết.",
                 true
         );
 
         TreatmentService ivf = new TreatmentService(
                 "IVF - Thụ tinh trong ống nghiệm",
-                "Phương pháp hỗ trợ sinh sản bằng cách lấy trứng và tinh trùng ra ngoài cơ thể để thụ tinh trong ống nghiệm, sau đó chuyển phôi vào tử cung.",
-                "Các cặp vợ chồng hiếm muộn nặng, tắc vòi trứng, suy buồng trứng, tinh trùng yếu, hoặc thất bại với IUI",
-                0.50f,
-                "Tỷ lệ thành công cao hơn, có thể chọn lọc phôi khỏe mạnh, phù hợp với nhiều nguyên nhân hiếm muộn",
-                "IVF có đau không? Có cần nằm viện không? Bao nhiêu lần là thành công?",
+                "IVF là phương pháp hỗ trợ sinh sản tiên tiến, trong đó trứng và tinh trùng được lấy ra khỏi cơ thể, sau đó được kết hợp với nhau trong môi trường phòng thí nghiệm để tạo thành phôi. Những phôi khỏe mạnh nhất sẽ được chọn lọc và chuyển vào buồng tử cung của người mẹ để bắt đầu quá trình mang thai. IVF cho phép theo dõi và kiểm soát từng bước trong quá trình thụ tinh, giúp tăng khả năng đậu thai, đặc biệt trong những trường hợp hiếm muộn nghiêm trọng.",
+                "Phù hợp cho các cặp vợ chồng hiếm muộn ở mức độ nặng, bao gồm: phụ nữ bị tắc vòi trứng, suy giảm chức năng buồng trứng, nam giới có tinh trùng yếu hoặc dị dạng, các trường hợp thất bại với phương pháp IUI, hoặc những cặp đôi sử dụng phôi đông lạnh hoặc tinh trùng hiến tặng. IVF cũng là lựa chọn phổ biến cho phụ nữ lớn tuổi mong muốn mang thai.",
+                50f,
+                "Tỷ lệ thành công cao hơn so với các phương pháp hỗ trợ sinh sản khác. Cho phép lựa chọn phôi chất lượng tốt nhất, tăng cơ hội mang thai khỏe mạnh. IVF cũng hỗ trợ kiểm tra di truyền tiền làm tổ (PGT), giúp phát hiện bất thường nhiễm sắc thể từ sớm. Đặc biệt, phương pháp này có thể lưu trữ trứng, tinh trùng hoặc phôi để sử dụng sau này.",
+                "IVF có đau không?\n Việc chọc hút trứng sẽ được gây mê nhẹ nên hầu như không gây đau. Sau thủ thuật có thể hơi khó chịu bụng nhẹ.\n\n Có cần nằm viện không?\n Không. Hầu hết các bước đều được thực hiện ngoại trú, chỉ cần nghỉ ngơi một thời gian ngắn tại cơ sở y tế sau mỗi lần làm thủ thuật.\n\n Bao nhiêu lần thì thành công?\n Trung bình, cần 1–3 chu kỳ IVF để đạt được thai kỳ thành công, tùy theo độ tuổi và sức khỏe sinh sản của từng người.",
                 new BigDecimal("80000000.00"),
-                "Yêu cầu kích thích buồng trứng, gây mê để chọc hút trứng, và theo dõi phôi trong phòng lab",
+                "Quy trình IVF bao gồm các bước chính: kích thích buồng trứng bằng thuốc để tạo nhiều trứng, sau đó chọc hút trứng (gây mê nhẹ), kết hợp trứng và tinh trùng trong phòng lab, nuôi phôi từ 3–5 ngày, chọn lọc phôi tốt và chuyển vào tử cung. Trong suốt quá trình, người vợ cần theo dõi sát với bác sĩ và thực hiện siêu âm, xét nghiệm định kỳ để đảm bảo hiệu quả điều trị.",
                 true
         );
 

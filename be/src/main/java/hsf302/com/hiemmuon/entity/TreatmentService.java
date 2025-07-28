@@ -31,8 +31,7 @@ public class TreatmentService {
     @Column(name = "success_rate")
     private Float successRate;
 
-    @Nationalized
-    @Column(name = "benefit")
+    @Column(name = "benefit", columnDefinition = "NVARCHAR(MAX)")
     private String benefit;
 
     @Column(name = "faq", columnDefinition = "NVARCHAR(MAX)")
