@@ -219,7 +219,7 @@ public class CycleStepService {
             String toEmail = step.getCycle().getCustomer().getUser().getEmail();
             String name = step.getCycle().getCustomer().getUser().getName();
             String service = step.getCycle().getService().getName();
-            String treatmentStep = step.getCycle().getService().getName();
+            String treatmentStep = step.getTreatmentStep().getTitle();
             LocalDateTime eventTime = step.getEventdate();
 
             String subject = "⏰ Nhắc lịch bước điều trị sắp tới";

@@ -2,6 +2,7 @@ package hsf302.com.hiemmuon.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Nationalized;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -30,6 +31,7 @@ public class TreatmentService {
     @Column(name = "success_rate")
     private Float successRate;
 
+    @Nationalized
     @Column(name = "benefit")
     private String benefit;
 
