@@ -711,7 +711,7 @@ const AppointmentsTuVan = () => {
               className="patient-profile-btn-outline"
               onClick={() => setShowMessagePopup(true)}
             >
-              <MessageSquare size={18} className="mr-2" /> Nhắn tin
+              <MessageSquare size={15} className="mr-2" /> Nhắn tin
             </button>
           </div>
         </div>

@@ -118,9 +118,9 @@
   padding-right: 40px;
 }
 .btn-save {
-  background: #10b981;
+  background: #E11D48;
   color: white;
-  border: 1px solid #10b981;
+  border: 1px solid #E11D48;
   padding: 10px 20px;
   border-radius: 6px;
   cursor: pointer;
@@ -129,7 +129,7 @@
 }
 
 .btn-save:hover {
-  background: #059669;
+  background: #E11D48;
 }
 .reviews-summary {
   text-align: center;
