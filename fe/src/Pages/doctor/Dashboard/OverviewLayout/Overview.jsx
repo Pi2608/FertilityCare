@@ -138,13 +138,6 @@ export default function Overview() {
 
   return (
     <div className="dashboard-wrapper">
-      {/* HEADER BÁC SĨ */}
-      <div className="doctor-header">
-        <div className="header-left">
-          <h1>Xin chào, Bác sĩ Lan Anh</h1>
-        </div>
-      </div>
-
       {/* LỊCH LÀM VIỆC */}
       <div className="schedule-header">
         <h2>Lịch làm việc</h2>
