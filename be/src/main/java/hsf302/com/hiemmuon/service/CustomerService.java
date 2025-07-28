@@ -134,4 +134,8 @@ public class CustomerService {
         Customer customer = customerRepository.findById(id).get();
         return customer;
     }
+
+    public void saveCustomer(Customer customer) {
+        customerRepository.save(customer);
+    }
 }

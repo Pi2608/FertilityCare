@@ -39,6 +39,9 @@ public class DataSeeder implements CommandLineRunner {
     @Autowired
     private BlogService blogService;
 
+    @Autowired
+    private CustomerService customerService;
+
     @Override
     @Transactional
     public void run(String... args) throws Exception {
@@ -47,6 +50,7 @@ public class DataSeeder implements CommandLineRunner {
             seedDoctors();
             seedTreatmentServices();
             seedBlogs();
+            seedCustomers();
         }
     }
 
@@ -71,6 +75,22 @@ public class DataSeeder implements CommandLineRunner {
 
         roleService.save(new Role("doctor"));
         roleService.save(new Role("customer"));
+    }
+
+    public void seedCustomers(){
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        Role customerRole = roleService.findByName("customer");
+        userService.saveUser(new User(
+                customerRole, "Minh Hieu", Genders.male,
+                LocalDate.parse("1990-01-01"), "customer@gmail.com",
+                "12345678", encoder.encode("customer123"),
+                LocalDate.now(), null, true
+        ));
+        User cus1 = userService.getUserByEmail("customer@gmail.com");
+        customerService.saveCustomer(new Customer(
+                cus1,
+                "Khoe manh"
+        ));
     }
 
     private void seedDoctors() {
