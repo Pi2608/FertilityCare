@@ -1555,3 +1555,16 @@
   border: 1px solid #ccc;
   color: #333;
 }
+
+.tab-icon {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 6px;
+}
+
+.time-icon {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 6px;
+}
+

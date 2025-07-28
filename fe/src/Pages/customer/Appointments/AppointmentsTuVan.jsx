@@ -5,6 +5,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import apiAppointment from "@features/service/apiAppointment";
 import apiNote from "@features/service/apiNote";
 import apiMessage from "@features/service/apiMessage";
+import { NotebookPen, Stethoscope, MessageSquare, Clock9 } from "lucide-react";
 
 const AppointmentsTuVan = () => {
   const [appointmentDetail, setAppointmentDetail] = useState(null);
@@ -223,8 +224,8 @@ const AppointmentsTuVan = () => {
     : null;
 
   const tabs = [
-    { id: "notes", label: "Ghi chú khám", icon: "📝" },
-    { id: "service", label: "Chỉ định dịch vụ", icon: "🧪" },
+    { id: "notes", label: "Ghi chú khám", icon: NotebookPen },
+    { id: "service", label: "Chỉ định dịch vụ", icon: Stethoscope },
   ];
 
   const renderServiceTab = () => {
@@ -598,7 +599,8 @@ const AppointmentsTuVan = () => {
                 {patientData.currentAppointment.type}
               </span>
               <span className="patient-profile-appointment-time">
-                🕘 {patientData.currentAppointment.date} |{" "}
+                <Clock9 className="time-icon" size={18} />
+                 {patientData.currentAppointment.date} |{" "}
                 {patientData.currentAppointment.time}
               </span>
               <span className="patient-profile-appointment-status">
@@ -709,26 +711,32 @@ const AppointmentsTuVan = () => {
               className="patient-profile-btn-outline"
               onClick={() => setShowMessagePopup(true)}
             >
-              💬 Nhắn tin
+              <MessageSquare size={18} className="mr-2" /> Nhắn tin
             </button>
           </div>
         </div>
 
         <div className="patient-profile-main-content">
           <div className="patient-profile-tabs">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                className={`patient-profile-tab ${
-                  activeTab === tab.id ? "patient-profile-active" : ""
-                }`}
-                onClick={() => setActiveTab(tab.id)}
-              >
-                <span>{tab.icon}</span>
-                {tab.label}
-              </button>
-            ))}
+            {tabs.map((tab) => {
+              const TabIcon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  className={`patient-profile-tab ${
+                    activeTab === tab.id ? "patient-profile-active" : ""
+                  }`}
+                  onClick={() => setActiveTab(tab.id)}
+                >
+                  <span className="tab-icon">
+                    <TabIcon size={18} className="mr-2" />
+                  </span>
+                  {tab.label}
+                </button>
+              );
+            })}
           </div>
+
           {renderTabContent()}
         </div>
       </div>
