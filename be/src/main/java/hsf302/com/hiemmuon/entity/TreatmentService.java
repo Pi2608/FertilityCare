@@ -2,6 +2,7 @@ package hsf302.com.hiemmuon.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Nationalized;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -30,7 +31,7 @@ public class TreatmentService {
     @Column(name = "success_rate")
     private Float successRate;
 
-    @Column(name = "benefit")
+    @Column(name = "benefit", columnDefinition = "NVARCHAR(MAX)")
     private String benefit;
 
     @Column(name = "faq", columnDefinition = "NVARCHAR(MAX)")
@@ -44,4 +45,16 @@ public class TreatmentService {
 
     @Column(name = "isActive")
     private boolean isActive;
+
+    public TreatmentService(String name, String description, String targetPatient, Float successRate, String benefit, String faq, BigDecimal price, String specifications, boolean isActive) {
+        this.name = name;
+        this.description = description;
+        this.targetPatient = targetPatient;
+        this.successRate = successRate;
+        this.benefit = benefit;
+        this.faq = faq;
+        this.price = price;
+        this.specifications = specifications;
+        this.isActive = isActive;
+    }
 }

@@ -1,25 +1,13 @@
 import { toast } from "react-toastify"
 
 export const showSuccess = (msg) => {
-    toast(msg, {
-        style: {
-            color: "#4caf50"
-        }
-    })
+    toast.success(msg)
 }
 
 export const showFail = (msg) => {
-    toast(msg, {
-        style: {
-            color: "#d6004c"
-        }
-    })
+    toast.error(msg)
 }
 
 export const confirmToast = (msg) => {
-    toast(msg, {
-        style: {
-            color: "#ff9800"
-        }
-    })
+    toast.warn(msg)
 }

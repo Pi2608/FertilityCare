@@ -20,7 +20,7 @@ public class Blog {
     private User user;
 
     @Nationalized
-    @Column(name = "title", length = 255, columnDefinition = "NVARCHAR(255)", nullable = false)
+    @Column(name = "title", columnDefinition = "NVARCHAR(255)", nullable = false)
     private String title;
 
     @Nationalized
@@ -28,7 +28,7 @@ public class Blog {
     private String content;
 
     @Nationalized
-    @Column(name = "tags", length = 255)
+    @Column(name = "tags")
     private String tags;
 
     @Column(name = "create_date", nullable = false)

@@ -102,9 +102,9 @@ const Overall = ({ userName = "Nguyễn Thị Hoa" }) => {
     try {
       const response = await ApiGateway.getMyCycle();
       console.log("🧪 FETCHED myTreatment:", response.data);
-      setMyTreatment(response.data[0]);
+      setMyTreatment(response.data);
       if (response.data) {
-        await getCycleSteps(response.data[0].cycleId);
+        await getCycleSteps(response.data.cycleId);
       }
     } catch (error) {
       console.error("Error fetching treatments:", error);
@@ -153,9 +153,11 @@ const Overall = ({ userName = "Nguyễn Thị Hoa" }) => {
   
     return (
       <div className="my-progress">
-        <h3>
-          Tiến trình điều trị {myTreatment?.serviceName} #{myTreatment?.cycleId}
-        </h3>
+        {myTreatment && 
+          <h3>
+            Tiến trình điều trị {myTreatment?.serviceName} #{myTreatment?.cycleId}
+          </h3>
+        }
         <div className="progress-header">
           <span></span>
           <span>

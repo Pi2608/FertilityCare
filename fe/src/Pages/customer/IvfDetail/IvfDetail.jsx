@@ -277,8 +277,8 @@ const IvfDetail = () => {
   const getTreatmentSteps = async () => {
     try {
       const res = await ApiGateway.getTreatmentSteps(treatmentId);
-      setTreatmentSteps(res);
-      console.log("Treatment Steps:", res);
+      setTreatmentSteps(res.data);
+      console.log("Treatment Steps:", res.data);
       return res;
     } catch (error) {
       console.error("Error fetching treatment steps:", error);
@@ -327,39 +327,32 @@ const IvfDetail = () => {
       <div className="treatment-protocol-section">
         <h2>Phác đồ {briefDescription?.name} của chúng tôi</h2>
         <div className="protocol-grid">
-          {splitContent("<br><br>", briefDescription?.specifications)
-            .filter((item) => item.trim().startsWith("Bước")) // bỏ dòng giới thiệu đầu tiên
-            .map((item, index) => (
-              <div key={index} className="protocol-step">
-                <div>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fill="none"
-                      stroke="#e11d48"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="m10.5 20.5l10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7m-2-12l7 7"
-                    />
-                  </svg>
-                  <h3>
-                    <Content content={splitContent("<br>", item)[0]} />
-                  </h3>
-                </div>
-                <p>
-                  {splitContent("<br>", item)
-                    .slice(1)
-                    .map((text, idx) => (
-                      <Content key={idx} content={text} />
-                    ))}
-                </p>
+          {treatmentSteps?.map((step, index) => (
+            <div key={index} className="protocol-step">
+              <div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="none"
+                    stroke="#e11d48"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m10.5 20.5l10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7m-2-12l7 7"
+                  />
+                </svg>
+                <h3>
+                  Bước {step.stepOrder}: {step.title}
+                </h3>
               </div>
-            ))}
+              <p>{step.description}</p>
+              <span className="duration">Thời gian: {step.expectedDuration} ngày</span>
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -462,15 +455,15 @@ const IvfDetail = () => {
   const parseFAQ = (faqRaw) => {
     if (!faqRaw) return [];
 
-    const rawPairs = faqRaw.split("<br><br>");
+    const rawPairs = faqRaw.split("\n\n");
     const questions = [];
 
     rawPairs.forEach((pair) => {
-      const parts = pair.split("<br>");
+      const parts = pair.split("\n");
       if (parts.length >= 2) {
         questions.push({
           q: parts[0].trim(),
-          a: parts.slice(1).join("<br>").trim(), // đề phòng có nhiều dòng hơn
+          a: parts.slice(1).join("\n").trim(), // đề phòng có nhiều dòng hơn
         });
       }
     });

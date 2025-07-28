@@ -63,9 +63,7 @@ const Booking = () => {
   const [customerId, setCustomerId] = useState(null);
   const [doctors, setDoctors] = useState([]);
   const [availableSchedules, setAvailableSchedules] = useState([]);
-  const minBookDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)
-    .toISOString()
-    .split("T")[0];
+  const minBookDate = new Date().toISOString().split("T")[0];
   const FIXED_TIME_SLOTS = [
     "09:00",
     "10:00",

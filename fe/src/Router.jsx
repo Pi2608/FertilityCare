@@ -1,99 +1,98 @@
-import React from 'react'
-import { HashLoader } from 'react-spinners';
+import React from "react";
+import { HashLoader } from "react-spinners";
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import { useSelector } from 'react-redux';
-import Authentication from '@/Pages/Authentication/Authentication';
-import PageLayout from '@components/Layout/PageLayout/PageLayout';
-import CusLayout from '@components/Layout/CusLayout/CusLayout';
-import DocLayout from '@components/Layout/DocLayout/DocLayout';
-import ManagerLayout from '@components/Layout/ManagerLayout/ManagerLayout.jsx';
+import { useSelector } from "react-redux";
+import Authentication from "@/Pages/Authentication/Authentication";
+import PageLayout from "@components/Layout/PageLayout/PageLayout";
+import CusLayout from "@components/Layout/CusLayout/CusLayout";
+import DocLayout from "@components/Layout/DocLayout/DocLayout";
+import ManagerLayout from "@components/Layout/ManagerLayout/ManagerLayout.jsx";
 
-
-
-
-import AdminLayout from '@components/Layout/AdminLayout/AdminLayout.jsx';
+import AdminLayout from "@components/Layout/AdminLayout/AdminLayout.jsx";
 import Homepage from "@customerpages/Homepage/Homepage";
-import TreatmentMethod from '@customerpages/TreatmentMethod/TreatmentMethod';
-import IvfDetail from '@customerpages/IvfDetail/IvfDetail';
-import DoctorList from '@customerpages/DoctorList/DoctorList';
-import Profile from '@customerpages/Profile/Profile';
-import Booking from '@customerpages/Booking/Booking';
-import Blog from '@customerpages/Blog/Blog';
-import Overall from '@customerpages/Dashboard/Overall/Overall';
-import PatientApt from '@customerpages/Dashboard/Appointment/PatientApt';
-import CusProfile from '@customerpages/Dashboard/CusProfile/CusProfile';
-import MessageCus from '@customerpages/Message/MessageCus';
-import TreatmentProcess from '@customerpages/TreatmentProcess/TreatmentProcess';
-import Notification from '@customerpages/Notification/Notification';
-import TreatmentHistory from '@customerpages/TreatmentHistory/TreatmentHistory';
-import Pill from '@customerpages/Dashboard/Pill/Pill';
-import Payment from '@customerpages/Payment/Payment';
-import PaymentList from '@customerpages/Dashboard/Payment/PaymentList';
-import AppointmentsTuVan from '@customerpages/Appointments/AppointmentsTuVan';
-import AppointmentsDieuTri from '@customerpages/Appointments/AppointmentsDieuTri';
+import TreatmentMethod from "@customerpages/TreatmentMethod/TreatmentMethod";
+import IvfDetail from "@customerpages/IvfDetail/IvfDetail";
+import DoctorList from "@customerpages/DoctorList/DoctorList";
+import Profile from "@customerpages/Profile/Profile";
+import Booking from "@customerpages/Booking/Booking";
+import Blog from "@customerpages/Blog/Blog";
+import Overall from "@customerpages/Dashboard/Overall/Overall";
+import PatientApt from "@customerpages/Dashboard/Appointment/PatientApt";
+import CusProfile from "@customerpages/Dashboard/CusProfile/CusProfile";
+import MessageCus from "@customerpages/Message/MessageCus";
+import TreatmentProcess from "@customerpages/TreatmentProcess/TreatmentProcess";
+import Notification from "@customerpages/Notification/Notification";
+import TreatmentHistory from "@customerpages/TreatmentHistory/TreatmentHistory";
+import Pill from "@customerpages/Dashboard/Pill/Pill";
+import Payment from "@customerpages/Payment/Payment";
+import PaymentList from "@customerpages/Dashboard/Payment/PaymentList";
+import AppointmentsTuVan from "@customerpages/Appointments/AppointmentsTuVan";
+import AppointmentsDieuTri from "@customerpages/Appointments/AppointmentsDieuTri";
 
 // Manager components
-import DocDashboard from '@doctorpages/Dashboard/DocDashboard';
-import Overview from './Pages/doctor/Dashboard/OverviewLayout/Overview';
-import Appointments from './Pages/doctor/Dashboard/AppointmentsLayout/Appointments';
-import Appointment from './Pages/manager/Appointment/Appointment';
-import Patients from './Pages/doctor/Dashboard/PatientsLayout/Patients';
-import Message from './Pages/doctor/Dashboard/MessageLayout/Message';
-import ProfileLayout from './Pages/doctor/Dashboard/ProfileLayout/ProfileLayout';
-import PatientRecord from './Pages/doctor/Dashboard/PatientRecord/PatientRecord';
+import DocDashboard from "@doctorpages/Dashboard/DocDashboard";
+import Overview from "./Pages/doctor/Dashboard/OverviewLayout/Overview";
+import Appointments from "./Pages/doctor/Dashboard/AppointmentsLayout/Appointments";
+import Appointment from "./Pages/manager/Appointment/Appointment";
+import Patients from "./Pages/doctor/Dashboard/PatientsLayout/Patients";
+import Message from "./Pages/doctor/Dashboard/MessageLayout/Message";
+import ProfileLayout from "./Pages/doctor/Dashboard/ProfileLayout/ProfileLayout";
+import PatientRecord from "./Pages/doctor/Dashboard/PatientRecord/PatientRecord";
 
+import PatientProfileLayout from "./Pages/doctor/Dashboard/PatientProfileLayout/PatientProfileLayout";
+import PatientProfileLayout1 from "./Pages/doctor/Dashboard/PatientProfileLayout/PatientProfileLayout1";
+import PatientAppointment from "./Pages/doctor/Dashboard/PatientAppointment/PatientAppointment";
 
-
-
-import PatientProfileLayout from './Pages/doctor/Dashboard/PatientProfileLayout/PatientProfileLayout';
-import PatientProfileLayout1 from './Pages/doctor/Dashboard/PatientProfileLayout/PatientProfileLayout1';
-import PatientAppointment from './Pages/doctor/Dashboard/PatientAppointment/PatientAppointment';
-
-
-
-
-import Doctor from './Pages/manager/Doctor/Doctor';
-import TreatmentService from './Pages/manager/TreatmentService/TreatmentService';
-import SuccessRate from './Pages/manager/TreatmentService/SuccessRate';
-import ProcessEdit from './Pages/manager/TreatmentService/ProcessEdit';
-
-
-
+import Doctor from "./Pages/manager/Doctor/Doctor";
+import TreatmentService from "./Pages/manager/TreatmentService/TreatmentService";
+import SuccessRate from "./Pages/manager/TreatmentService/SuccessRate";
+import ProcessEdit from "./Pages/manager/TreatmentService/ProcessEdit";
 
 // Admin components
-import AdminAppointment from './Pages/admin/Appointment/Appointment';
-import AdminPatient from './Pages/admin/Patient/Patient';
-import AdminDoctor from './Pages/admin/Doctor/Doctor';
-import AdminTreatmentService from './Pages/admin/TreatmentService/TreatmentService';
-import DoctorDetail from './Pages/customer/DoctorDetail/DoctorDetail';
-import Dashboard from './Pages/admin/Dashboard/Dashboard';
-
-
-
+import AdminAppointment from "./Pages/admin/Appointment/Appointment";
+import AdminPatient from "./Pages/admin/Patient/Patient";
+import AdminDoctor from "./Pages/admin/Doctor/Doctor";
+import AdminTreatmentService from "./Pages/admin/TreatmentService/TreatmentService";
+import DoctorDetail from "./Pages/customer/DoctorDetail/DoctorDetail";
+import Dashboard from "./Pages/admin/Dashboard/Dashboard";
+import RevenueDashboard from "./Pages/admin/RevenueDashboard/RevenueDashboard";
 
 const USER_ROLES = {
   CUSTOMER: "customer",
   ADMIN: "admin",
   DOCTOR: "doctor",
-  MANAGER: "manager"
+  MANAGER: "manager",
 };
 
-
-
-
 // Protected Route Components
-const ProtectedRoute = ({ children, allowedRoles = [], requireAuth = true }) => {
+const ProtectedRoute = ({
+  children,
+  allowedRoles = [],
+  requireAuth = true,
+}) => {
   const { isAuthenticated, role, loading } = useSelector((state) => state.auth);
 
   if (loading) {
     return (
-      <div className="loader-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <div
+        className="loader-container"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
         <HashLoader
           className="loader"
           loading={loading}
           size={150}
           color="#36d7b7"
-          cssOverride={{ display: 'block', margin: '0 auto', borderColor: 'red' }}
+          cssOverride={{
+            display: "block",
+            margin: "0 auto",
+            borderColor: "red",
+          }}
         />
       </div>
     );
@@ -102,11 +101,11 @@ const ProtectedRoute = ({ children, allowedRoles = [], requireAuth = true }) => 
   if (requireAuth && !isAuthenticated) {
     return <Navigate to="/authentication" replace />;
   }
- 
+
   if (allowedRoles.length === 0) {
     return <>{children}</>;
   }
- 
+
   if (!allowedRoles.includes(role)) {
     switch (role) {
       case USER_ROLES.ADMIN:
@@ -121,28 +120,18 @@ const ProtectedRoute = ({ children, allowedRoles = [], requireAuth = true }) => 
         return <Navigate to="/homepage" replace />;
     }
   }
- 
+
   return <>{children}</>;
 };
 
 // Specific role-based route components for cleaner code
 const AdminRoute = ({ children }) => (
-  <ProtectedRoute allowedRoles={[USER_ROLES.ADMIN]}>
-    {children}
-  </ProtectedRoute>
+  <ProtectedRoute allowedRoles={[USER_ROLES.ADMIN]}>{children}</ProtectedRoute>
 );
-
-
-
 
 const DoctorRoute = ({ children }) => (
-  <ProtectedRoute allowedRoles={[USER_ROLES.DOCTOR]}>
-    {children}
-  </ProtectedRoute>
+  <ProtectedRoute allowedRoles={[USER_ROLES.DOCTOR]}>{children}</ProtectedRoute>
 );
-
-
-
 
 const ManagerRoute = ({ children }) => (
   <ProtectedRoute allowedRoles={[USER_ROLES.MANAGER]}>
@@ -150,32 +139,21 @@ const ManagerRoute = ({ children }) => (
   </ProtectedRoute>
 );
 
-
-
-
 const CustomerRoute = ({ children }) => (
   <ProtectedRoute allowedRoles={[USER_ROLES.CUSTOMER]}>
     {children}
   </ProtectedRoute>
 );
 
-
-
-
 // Public routes (no authentication required)
 const PublicRoute = ({ children }) => (
-  <ProtectedRoute requireAuth={false}>
-    {children}
-  </ProtectedRoute>
+  <ProtectedRoute requireAuth={false}>{children}</ProtectedRoute>
 );
-
-
-
 
 // Guest routes (only for non-authenticated users)
 const GuestRoute = ({ children }) => {
   const { isAuthenticated, role } = useSelector((state) => state.auth);
- 
+
   if (isAuthenticated) {
     switch (role) {
       case USER_ROLES.ADMIN:
@@ -190,12 +168,9 @@ const GuestRoute = ({ children }) => {
         return <Navigate to="/homepage" replace />;
     }
   }
- 
+
   return <>{children}</>;
 };
-
-
-
 
 export const router = createBrowserRouter([
   {
@@ -212,9 +187,9 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Authentication />
+        element: <Authentication />,
       },
-    ]
+    ],
   },
   {
     path: "/homepage",
@@ -240,8 +215,8 @@ export const router = createBrowserRouter([
             index: false,
             path: "detail/:treatmentId",
             element: <IvfDetail />,
-          }
-        ]
+          },
+        ],
       },
       {
         index: false,
@@ -256,7 +231,7 @@ export const router = createBrowserRouter([
             path: "doctor-detail/:doctorId",
             element: <DoctorDetail />,
           },
-        ]
+        ],
       },
       {
         index: false,
@@ -272,7 +247,7 @@ export const router = createBrowserRouter([
         path: "blog",
         element: <Blog />,
       },
-    ]
+    ],
   },
   {
     path: "/profile",
@@ -286,7 +261,7 @@ export const router = createBrowserRouter([
         index: true,
         element: <Profile />,
       },
-    ]
+    ],
   },
   {
     path: "/payment",
@@ -300,13 +275,13 @@ export const router = createBrowserRouter([
         index: true,
         element: <Payment />,
       },
-    ]
+    ],
   },
   {
     path: "doctor-dashboard/appointments/tu_van/:appointmentId/:customerId",
     element: (
       // <DoctorRoute>
-        <PageLayout />
+      <PageLayout />
       // </DoctorRoute>
     ),
     children: [
@@ -314,15 +289,14 @@ export const router = createBrowserRouter([
         index: true,
         element: <PatientProfileLayout1 />,
       },
-    ]
+    ],
   },
-
 
   {
     path: "doctor-dashboard/appointments/dieu_tri/:appointmentId/:customerId",
     element: (
       // <DoctorRoute>
-        <PageLayout />
+      <PageLayout />
       // </DoctorRoute>
     ),
     children: [
@@ -330,13 +304,13 @@ export const router = createBrowserRouter([
         index: true,
         element: <PatientProfileLayout />,
       },
-    ]
+    ],
   },
   {
     path: "/doctor-dashboard/patients/patient-record",
     element: (
       // <DoctorRoute>
-        <PageLayout />
+      <PageLayout />
       // </DoctorRoute>
     ),
     children: [
@@ -344,13 +318,13 @@ export const router = createBrowserRouter([
         index: true,
         element: <PatientRecord />,
       },
-    ]
+    ],
   },
   {
     path: "/patient-dashboard/appointments/tu_van/:appointmentId/:customerId",
     element: (
       // <DoctorRoute>
-        <PageLayout />
+      <PageLayout />
       // </DoctorRoute>
     ),
     children: [
@@ -358,13 +332,13 @@ export const router = createBrowserRouter([
         index: true,
         element: <AppointmentsTuVan />,
       },
-    ]
+    ],
   },
   {
     path: "/patient-dashboard/appointments/dieu_tri/:appointmentId/:customerId",
     element: (
       // <DoctorRoute>
-        <PageLayout />
+      <PageLayout />
       // </DoctorRoute>
     ),
     children: [
@@ -372,9 +346,9 @@ export const router = createBrowserRouter([
         index: true,
         element: <AppointmentsDieuTri />,
       },
-    ]
+    ],
   },
-  { 
+  {
     path: "/patient-dashboard/treatment-process",
     element: (
       <CustomerRoute>
@@ -386,7 +360,7 @@ export const router = createBrowserRouter([
         index: true,
         element: <TreatmentProcess />,
       },
-    ]
+    ],
   },
   {
     path: "/patient-appointment",
@@ -400,7 +374,7 @@ export const router = createBrowserRouter([
         index: true,
         element: <PatientAppointment />,
       },
-    ]
+    ],
   },
   {
     path: "/patient-dashboard",
@@ -458,8 +432,8 @@ export const router = createBrowserRouter([
         index: false,
         path: "profile",
         element: <CusProfile />,
-      }
-    ]
+      },
+    ],
   },
   {
     path: "/doctor-dashboard",
@@ -502,8 +476,8 @@ export const router = createBrowserRouter([
         index: false,
         path: "profile",
         element: <ProfileLayout />,
-      }
-    ]
+      },
+    ],
   },
   {
     path: "/manager-dashboard",
@@ -523,27 +497,27 @@ export const router = createBrowserRouter([
       },
       {
         path: "doctor",
-        element: <Doctor/>,
+        element: <Doctor />,
       },
       {
         path: "treatment-service",
-        element: <TreatmentService/>,
+        element: <TreatmentService />,
       },
       {
         path: "treatment-service/success-rate/:serviceId",
-        element: <SuccessRate/>,
+        element: <SuccessRate />,
       },
       {
         path: "treatment-service/process/:serviceId",
-        element: <ProcessEdit/>,
+        element: <ProcessEdit />,
       },
       {
         path: "message",
-        element: <TreatmentService/>,
+        element: <TreatmentService />,
       },
       {
         path: "setting",
-        element: <TreatmentService/>,
+        element: <TreatmentService />,
       },
     ],
   },
@@ -561,23 +535,27 @@ export const router = createBrowserRouter([
       },
       {
         path: "appointment",
-        element: <AdminAppointment/>,
+        element: <AdminAppointment />,
       },
       {
         path: "user",
-        element: <AdminPatient/>,
+        element: <AdminPatient />,
       },
       {
         path: "doctor",
-        element: <AdminDoctor/>,
+        element: <AdminDoctor />,
       },
       {
         path: "service",
-        element: <AdminTreatmentService/>,
+        element: <AdminTreatmentService />,
       },
       {
         path: "report",
-        element: <Dashboard/>,
+        element: <Dashboard />,
+      },
+      {
+        path: "revenue-dashboard",
+        element: <RevenueDashboard />,
       },
       {
         path: "message",
@@ -586,6 +564,10 @@ export const router = createBrowserRouter([
       {
         path: "setting",
         element: <div>System Settings - Coming Soon</div>,
+      },
+      {
+        path: "service/process/:serviceId",
+        element: <ProcessEdit />,
       },
     ],
   },

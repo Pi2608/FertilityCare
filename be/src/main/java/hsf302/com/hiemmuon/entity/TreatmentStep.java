@@ -32,5 +32,13 @@ public class TreatmentStep {
     private String description;
 
     @Column(name = "expected_duration", columnDefinition = "NVARCHAR(255)")
-    private String expectedDuration;
+    private int expectedDuration;
+
+    public TreatmentStep(TreatmentService service, int stepOrder, String title, String description, int expectedDuration) {
+        this.service = service;
+        this.stepOrder = stepOrder;
+        this.title = title;
+        this.description = description;
+        this.expectedDuration = expectedDuration;
+    }
 }

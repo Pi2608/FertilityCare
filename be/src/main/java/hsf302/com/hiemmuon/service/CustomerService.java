@@ -49,7 +49,7 @@ public class CustomerService {
         return customers.stream().map(customer -> {
             CustomerDTO dto = new CustomerDTO();
             dto.setId(customer.getCustomerId());
-            dto.setActive(customer.isActive());
+            dto.setActive(customer.getUser().getIsActive());
             dto.setName(customer.getUser().getName());
             dto.setDob(customer.getUser().getDob());
             dto.setGender(customer.getUser().getGender());
@@ -69,7 +69,7 @@ public class CustomerService {
 
         CustomerDTO dto = new CustomerDTO();
         dto.setId(customer.getCustomerId());
-        dto.setActive(customer.isActive());
+        dto.setActive(customer.getUser().getIsActive());
         dto.setName(customer.getUser().getName());
         dto.setDob(customer.getUser().getDob());
         dto.setGender(customer.getUser().getGender());
@@ -101,34 +101,34 @@ public class CustomerService {
         customerRepository.save(customer);
     }
 
-        @Transactional
-        public void registerCustomer(RegisterCustomerDTO dto) {
-            if (userRepository.existsByEmail(dto.getEmail())) {
-                throw new RuntimeException("Email đã tồn tại");
-            }
-
-            Role customerRole = roleRepository.findByRoleName("CUSTOMER");
-            if (customerRole == null) {
-                throw new RuntimeException("Không tìm thấy role CUSTOMER");
-            }
-
-            User user = new User();
-            user.setName(dto.getName());
-            user.setEmail(dto.getEmail());
-            user.setPassword(passwordEncoder.encode(dto.getPassword()));
-            user.setPhone(dto.getPhone());
-            user.setDob(dto.getDob());
-            user.setGender(dto.getGender());
-            user.setRole(customerRole);
-            user.setCreateAt(LocalDate.now());
-            userRepository.save(user);
-
-            Customer customer = new Customer();
-            customer.setUser(user);
-            customer.setActive(true);
-            customer.setMedicalHistory(dto.getMedicalHistory());
-            customerRepository.save(customer);
+    @Transactional
+    public void registerCustomer(RegisterCustomerDTO dto) {
+        if (userRepository.existsByEmail(dto.getEmail())) {
+            throw new RuntimeException("Email đã tồn tại");
         }
+
+        Role customerRole = roleRepository.findByRoleName("CUSTOMER");
+        if (customerRole == null) {
+            throw new RuntimeException("Không tìm thấy role CUSTOMER");
+        }
+
+        User user = new User();
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setPhone(dto.getPhone());
+        user.setDob(dto.getDob());
+        user.setGender(dto.getGender());
+        user.setRole(customerRole);
+        user.setCreateAt(LocalDate.now());
+        userRepository.save(user);
+
+        Customer customer = new Customer();
+        customer.setUser(user);
+        customer.getUser().setIsActive(true);
+        customer.setMedicalHistory(dto.getMedicalHistory());
+        customerRepository.save(customer);
+    }
 
     public Customer getCustomerById(int id) {
         Customer customer = customerRepository.findById(id).get();

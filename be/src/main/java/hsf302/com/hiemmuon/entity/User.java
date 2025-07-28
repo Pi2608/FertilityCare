@@ -45,13 +45,13 @@ public class User {
     @Column(name = "dob")
     private LocalDate dob;
 
-    @Column(name = "email", length = 100, nullable = false, unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "phone", length = 20)
     private String phone;
 
-    @Column(name = "password", length = 255, nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "create_at")
@@ -59,4 +59,19 @@ public class User {
 
     @Column(name = "update_at")
     private LocalDate updateAt;
+
+    private Boolean isActive;
+
+    public User(Role role, String name, Genders gender, LocalDate dob, String email, String phone, String password, LocalDate createAt, LocalDate updateAt, Boolean isActive) {
+        this.role = role;
+        this.name = name;
+        this.gender = gender;
+        this.dob = dob;
+        this.email = email;
+        this.phone = phone;
+        this.password = password;
+        this.createAt = createAt;
+        this.updateAt = updateAt;
+        this.isActive = isActive;
+    }
 }

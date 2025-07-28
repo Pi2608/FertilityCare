@@ -20,7 +20,7 @@ const TreatmentService = () => {
             order: index + 1,
             name: item.name || "Không rõ",
             overview: item.description || "Không có mô tả",
-            successRate: "Xem chi tiết",
+            successRate: item.successRate?.toString() || "0",
             process: "Xem quy trình",
             price: item.price?.toString() || "0",
             isActive: item.active,
@@ -55,6 +55,7 @@ const TreatmentService = () => {
     const updateData = {
       description: service.overview,
       price: Number(service.price),
+      successRate: Number(service.successRate),
     };
 
     try {
@@ -116,6 +117,7 @@ const TreatmentService = () => {
       specifications: "string",
       targetPatient: "string",
       faq: "string",
+      benefit: "string",
       isActive: true,
     };
 
@@ -128,7 +130,7 @@ const TreatmentService = () => {
         order: services.length + 1,
         name: created.name,
         overview: created.description,
-        successRate: "Xem chi tiết",
+        successRate: created.successRate?.toString() || "0",
         process: "Xem quy trình",
         price: created.price.toString(),
         isActive: created.active,
@@ -149,11 +151,11 @@ const TreatmentService = () => {
   };
 
   const handleSuccessRateEdit = (serviceId) => {
-    navigate(`/manager-dashboard/treatment-service/success-rate/${serviceId}`);
+    navigate(`/admin-dashboard/service/success-rate/${serviceId}`);
   };
 
   const handleProcessEdit = (serviceId) => {
-    navigate(`/manager-dashboard/treatment-service/process/${serviceId}`);
+    navigate(`/admin-dashboard/service/process/${serviceId}`);
   };
 
   const handleToggleStatus = async (serviceId) => {
@@ -186,10 +188,7 @@ const TreatmentService = () => {
       {/* Header */}
       <header className="treatment-service-header">
         <h1 className="page-title">Dịch vụ điều trị</h1>
-        <div className="header-actions">
-        </div>
       </header>
-
       {/* Content */}
       <main className="treatment-service-content">
         {/* Search and Add Button */}
@@ -314,13 +313,24 @@ const TreatmentService = () => {
                     )}
                   </td>
                   <td>
-                    <button
-                      className="link-btn"
-                      onClick={() => handleSuccessRateEdit(service.id)}
-                    >
-                      {service.successRate}
-                    </button>
+                    {service.isEditing ? (
+                      <input
+                        type="text"
+                        value={service.successRate}
+                        onChange={(e) =>
+                          handleInputChange(
+                            service.id,
+                            "successRate",
+                            e.target.value
+                          )
+                        }
+                        className="edit-input"
+                      />
+                    ) : (
+                      service.successRate + " %"
+                    )}
                   </td>
+
                   <td>
                     <button
                       className="link-btn"
@@ -353,7 +363,7 @@ const TreatmentService = () => {
                       {service.isActive ? "Hoạt động" : "Không hoạt động"}
                     </button>
                   </td>
-                  <td className="action-cell">
+                  <td>
                     {service.isEditing ? (
                       <div className="edit-actions">
                         <button

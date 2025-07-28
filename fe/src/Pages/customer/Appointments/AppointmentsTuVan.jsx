@@ -593,7 +593,7 @@ const AppointmentsTuVan = () => {
             ← Quay lại
           </a>
           <div className="patient-profile-header-info">
-            <h1>Cuộc hẹn với {patientData.name}</h1>
+            <h1>Cuộc hẹn với {patientData.doctor}</h1>
             <div className="patient-profile-appointment-info">
               <span className="patient-profile-appointment-type">
                 {patientData.currentAppointment.type}

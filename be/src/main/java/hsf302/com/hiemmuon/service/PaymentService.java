@@ -85,7 +85,7 @@ public class PaymentService {
     public List<PaymentResponsesDTO> getAllPayments() {
         List<Payment> payments = paymentRepository.findAll();
         return payments.stream()
-                .map(PaymentResponsesDTO::fromPayment)
+                .map(this::convertToPayment)
                 .collect(Collectors.toList());
     }
 
@@ -98,7 +98,7 @@ public class PaymentService {
         Integer customerId = Integer.parseInt(customerIdObj.toString());
         List<Payment> payments = paymentRepository.findByCustomerId(customerId);
         return payments.stream()
-                .map(PaymentResponsesDTO::fromPayment)
+                .map(this::convertToPayment)
                 .collect(Collectors.toList());
     }
 
@@ -111,7 +111,7 @@ public class PaymentService {
         Integer customerId = Integer.parseInt(customerIdObj.toString());
         List<Payment> pendingPayments = paymentRepository.findByCustomerIdAndStatus(customerId, StatusPayment.pending);
         return pendingPayments.stream()
-                .map(PaymentResponsesDTO::fromPayment)
+                .map(this::convertToPayment)
                 .collect(Collectors.toList());
     }
 
@@ -172,9 +172,10 @@ public class PaymentService {
         payment.setPaid(dto.getPaidDate());
         payment.setStatus(dto.getStatus() != null ? dto.getStatus() : StatusPayment.pending);
         payment.setType(dto.getType());
+        payment.setPlannedAppointmentDate(dto.getAppointmentDate());
 
         Payment savedPayment = paymentRepository.save(payment);
-        return PaymentResponsesDTO.fromPayment(savedPayment);
+        return convertToPayment(savedPayment);
     }
 
     public void updatePaymentStatus(int paymentId, StatusPayment status) {
@@ -210,7 +211,7 @@ public class PaymentService {
         payment.getCycle().setStatus(StatusCycle.stopped);
         payment.setStatus(StatusPayment.failed);
         Payment savedPayment = paymentRepository.save(payment);
-        return PaymentResponsesDTO.fromPayment(savedPayment);
+        return convertToPayment(savedPayment);
     }
 
     public String createVNPayRedirectUrl(int paymentId) {
@@ -285,5 +286,46 @@ public class PaymentService {
         } catch (Exception e) {
             throw e;
         }
+    }
+
+    private PaymentResponsesDTO convertToPayment(Payment payment) {
+        if (payment == null) return null;
+
+        LocalDateTime appointmentDate = null;
+
+        // Nếu payment đã paid, tìm appointment thực tế trong cycle
+        if (payment.getStatus() == StatusPayment.paid && payment.getCycle() != null) {
+            CycleStep firstCycleStep = cycleStepRepository.findByCycle_CycleIdAndStepOrder(
+                    payment.getCycle().getCycleId(), 1);
+
+            if (firstCycleStep != null) {
+                appointmentDate = appointmentRepository
+                        .findFirstAppointmentByCycleStep(firstCycleStep.getStepId())
+                        .map(Appointment::getDate)
+                        .orElse(null);
+            }
+        }
+
+        // Nếu chưa có appointment thực tế, dùng planned date
+        if (appointmentDate == null) {
+            appointmentDate = payment.getPlannedAppointmentDate();
+        }
+
+        return PaymentResponsesDTO.builder()
+                .paymentId(payment.getPaymentId())
+                .doctorId(payment.getAppointment().getDoctor().getDoctorId())
+                .customerId(payment.getCustomer().getCustomerId())
+                .appointmentId(payment.getAppointment().getAppointmentId())
+                .serviceId(payment.getService().getServiceId())
+                .cycleId(payment.getCycle() != null ? payment.getCycle().getCycleId() : null)
+                .total(payment.getTotal())
+                .paid(payment.getPaid())
+                .status(payment.getStatus())
+                .type(payment.getType())
+                .doctorName(payment.getAppointment().getDoctor().getUser().getName())
+                .customerName(payment.getCustomer().getUser().getName())
+                .serviceName(payment.getService().getName())
+                .appointmentDate(appointmentDate)
+                .build();
     }
 }

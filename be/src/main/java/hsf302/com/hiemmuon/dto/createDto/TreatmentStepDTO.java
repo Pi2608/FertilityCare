@@ -8,7 +8,7 @@ public class TreatmentStepDTO {
     private Integer stepOrder;
     private String title;
     private String description;
-    private String expectedDuration;
+    private Integer expectedDuration;
 
 }
 

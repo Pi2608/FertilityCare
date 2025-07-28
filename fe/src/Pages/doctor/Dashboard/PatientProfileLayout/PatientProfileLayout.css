@@ -953,7 +953,7 @@
 
 .patient-profile-note-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: right;
   align-items: center;
   padding-top: 16px;
   border-top: 1px solid #e2e8f0;
@@ -1040,6 +1040,11 @@
   opacity: 0.8;
 }
 
+.patient-profile-timeline-item.patient-profile-stopped {
+  border-left: 4px solid #ef4444;
+  opacity: 0.8;
+}
+
 .patient-profile-timeline-marker {
   position: absolute;
   left: -48px;
@@ -1073,6 +1078,12 @@
   background: #ffcd37;
   color: white;
   border-color: #ffcd37;
+}
+
+.patient-profile-timeline-item.patient-profile-stopped  .patient-profile-timeline-marker {
+  background: #ef4444;
+  color: white;
+  border-color: #ef4444;
 }
 
 .patient-profile-timeline-header {
@@ -1259,6 +1270,24 @@
 }
 .patient-profile-medication-dieu_tri-card.patient-profile-completed .patient-profile-status-badge.patient-profile-completed {
   background-color: #28a745;
+  color: white;
+}
+
+.patient-profile-medication-dieu_tri-card.patient-profile-active {
+  opacity: 0.8;
+  border-left: 4px solid #007bff;
+}
+.patient-profile-medication-dieu_tri-card.patient-profile-active .patient-profile-status-badge.patient-profile-active {
+  background-color: #007bff;
+  color: white;
+}
+
+.patient-profile-medication-dieu_tri-card.patient-profile-inactive {
+  opacity: 0.8;
+  border-left: 4px solid #64748b;
+}
+.patient-profile-medication-dieu_tri-card.patient-profile-inactive .patient-profile-status-badge.patient-profile-inactive {
+  background-color: #64748b;
   color: white;
 }
 
