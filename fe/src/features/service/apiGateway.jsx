@@ -647,7 +647,7 @@ export default class ApiGateway {
     try {
       const scheduleDto = {
         stepId: parseInt(schedule.stepId),
-        medicineName: parseInt(schedule.medicineName),
+        medicineName: schedule.medicineName,
         time: `${schedule.time}:00`,
         startDate: schedule.startDate,
         endDate: schedule.endDate

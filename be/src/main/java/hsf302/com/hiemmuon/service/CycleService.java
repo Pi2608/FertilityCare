@@ -78,21 +78,29 @@ public class CycleService {
 
         // Ưu tiên lấy chu kỳ có status = ongoing mới nhất
         Optional<Cycle> ongoingCycle = allCycles.stream()
-                .filter(c -> c.getStatus() == StatusCycle.ongoing)
-                .sorted((c1, c2) -> c2.getStartDate().compareTo(c1.getStartDate()))
+//                .filter(c -> c.getStatus() == StatusCycle.ongoing)
+//                .sorted((c1, c2) -> c2.getStartDate().compareTo(c1.getStartDate()))
                 .findFirst();
 
-        if (ongoingCycle.isPresent()) {
-            return convertToCycleFODTO(ongoingCycle.get());
-        }
-
-        // Nếu không có ongoing → lấy finished mới nhất
-        Optional<Cycle> latestFinished = allCycles.stream()
-                .filter(c -> c.getStatus() == StatusCycle.finished)
-                .sorted((c1, c2) -> c2.getStartDate().compareTo(c1.getStartDate()))
-                .findFirst();
-
-        return latestFinished.map(this::convertToCycleFODTO).orElse(null);
+          return convertToCycleFODTO(ongoingCycle.get());
+//
+//        // Nếu không có ongoing → lấy finished mới nhất
+//        Optional<Cycle> latestFinished = allCycles.stream()
+//                .filter(c -> c.getStatus() == StatusCycle.finished)
+//                .sorted((c1, c2) -> c2.getStartDate().compareTo(c1.getStartDate()))
+//                .findFirst();
+//
+//        if (latestFinished.isPresent()) {
+//            return convertToCycleFODTO(latestFinished.get());
+//        }
+//
+//        // Nếu không có ongoing/finished → lấy stopped mới nhất
+//        Optional<Cycle> latestStopped = allCycles.stream()
+//                .filter(c -> c.getStatus() == StatusCycle.stopped)
+//                .sorted((c1, c2) -> c2.getStartDate().compareTo(c1.getStartDate()))
+//                .findFirst();
+//
+//        return latestStopped.map(this::convertToCycleFODTO).orElse(null);
     }
 
 
@@ -248,9 +256,10 @@ public class CycleService {
         List<CycleStepDTO> stepDTOs = new ArrayList<>();
 
         // 1. Lấy tất cả các bước đã hoàn thành
+        List<StatusCycle> includedStatuses = List.of(StatusCycle.finished, StatusCycle.stopped);
         List<CycleStep> finishedSteps = cycleStepRepository
-                .findByCycle_CycleIdAndStatusCycleStepOrderByStepOrderAsc(
-                        cycle.getCycleId(), StatusCycle.finished);
+                .findByCycle_CycleIdAndStatusCycleStepInOrderByStepOrderAsc(
+                        cycle.getCycleId(), includedStatuses);
 
         for (CycleStep step : finishedSteps) {
             stepDTOs.add(convertToCycleStepDTO(step));

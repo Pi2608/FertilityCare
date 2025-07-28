@@ -49,4 +49,7 @@ public class Payment {
     @OneToOne
     @JoinColumn(name = "cycle_id")
     private Cycle cycle;
+
+    @Column(name = "planned_appointment_date")
+    private LocalDateTime plannedAppointmentDate;
 }

@@ -5,8 +5,10 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import apiAppointment from "@features/service/apiAppointment";
 import apiNote from "@features/service/apiNote";
 import apiMessage from "@features/service/apiMessage";
+import { showSuccess, showFail, confirmToast } from "@lib/toast/toast";
 
 const PatientProfileLayout1 = () => {
+  const { customerId } = useParams();
   const [appointmentDetail, setAppointmentDetail] = useState(null);
   const [activeTab, setActiveTab] = useState("notes");
   const [showResultForm, setShowResultForm] = useState(false);
@@ -16,6 +18,7 @@ const PatientProfileLayout1 = () => {
   const [newNote, setNewNote] = useState("");
   const [showMessagePopup, setShowMessagePopup] = useState(false);
   const [messageContent, setMessageContent] = useState("");
+  const [currentPatientCycle, setCurrentPatientCycle] = useState([])
 
   const [newResult, setNewResult] = useState({
     name: "",
@@ -44,7 +47,7 @@ const PatientProfileLayout1 = () => {
       };
 
       await apiAppointment.createTestResult(payload);
-      alert("Tạo kết quả xét nghiệm thành công!");
+      showSuccess("Tạo kết quả xét nghiệm thành công!");
       setShowResultForm(false);
       setNewResult({
         name: "",
@@ -61,14 +64,14 @@ const PatientProfileLayout1 = () => {
       setAppointmentDetail(updated);
     } catch (err) {
       console.error("Lỗi khi tạo kết quả:", err);
-      alert("Không thể tạo kết quả.");
+      showFail("Không thể tạo kết quả.");
     }
   };
 
   const handleAddNote = async () => {
     try {
       if (!newNote.trim()) {
-        alert("Vui lòng nhập ghi chú.");
+        showFail("Vui lòng nhập ghi chú.");
         return;
       }
 
@@ -85,7 +88,7 @@ const PatientProfileLayout1 = () => {
       );
       console.log("Response từ server:", response); // Log phản hồi từ server
 
-      alert("Cập nhật ghi chú thành công!");
+      showSuccess("Cập nhật ghi chú thành công!");
 
       const updated = await apiAppointment.getAppointmentDetailById(
         appointmentDetail.appointmentId
@@ -99,14 +102,14 @@ const PatientProfileLayout1 = () => {
         "Chi tiết lỗi:",
         err.response ? err.response.data : err.message
       ); // Log chi tiết lỗi
-      alert("Không thể cập nhật ghi chú.");
+      showFail("Không thể cập nhật ghi chú.");
     }
   };
 
   const handleSendMessage = async () => {
     try {
       if (!messageContent.trim()) {
-        alert("Vui lòng nhập nội dung tin nhắn.");
+        showFail("Vui lòng nhập nội dung tin nhắn.");
         return;
       }
   
@@ -116,12 +119,12 @@ const PatientProfileLayout1 = () => {
       };
   
       await apiMessage.sendMessage(payload);
-      alert("Gửi tin nhắn thành công!");
+      showSuccess("Gửi tin nhắn thành công!");
       setMessageContent("");
       setShowMessagePopup(false);
     } catch (err) {
       console.error("Lỗi khi gửi tin nhắn:", err);
-      alert("Không thể gửi tin nhắn.");
+      showFail("Không thể gửi tin nhắn.");
     }
   };
 
@@ -132,7 +135,7 @@ const PatientProfileLayout1 = () => {
         appointmentDetail.appointmentId,
         payload
       );
-      alert(
+      showSuccess(
         `Cập nhật thành công: ${
           status === "done" ? "Hoàn thành" : "Thất bại"
         }!`
@@ -144,7 +147,7 @@ const PatientProfileLayout1 = () => {
       setShowConfirmPopup(false);
     } catch (err) {
       console.error("Lỗi khi cập nhật trạng thái cuộc hẹn:", err);
-      alert("Không thể cập nhật trạng thái cuộc hẹn.");
+      showFail("Không thể cập nhật trạng thái cuộc hẹn.");
     }
   };
 
@@ -162,11 +165,12 @@ const PatientProfileLayout1 = () => {
 
   useEffect(() => {
     getService();
+    getCurrentCyclesOfPatient();
   }, []);
 
   useEffect(() => {
     if (!appointmentId) {
-      alert(
+      showFail(
         "Thiếu thông tin lịch hẹn. Vui lòng quay lại danh sách và chọn lại."
       );
       navigate("/doctor-dashboard/appointments");
@@ -199,6 +203,16 @@ const PatientProfileLayout1 = () => {
       setServices(res);
     } catch (error) {
       console.error("Lỗi khi lấy danh sách dịch vụ:", error);
+    }
+  }
+
+  const getCurrentCyclesOfPatient = async () => {
+    try {
+      const res = await ApiGateway.getCurrentCyclesOfPatient(customerId)
+      console.log(res.data)
+      setCurrentPatientCycle(res.data);
+    } catch (error) {
+      throw error
     }
   }
 
@@ -245,7 +259,7 @@ const PatientProfileLayout1 = () => {
     { id: "service", label: "Chỉ định dịch vụ", icon: "🧪" },
   ];
 
-  const renderServiceTab = () => <ServiceTabContent services={services} />;
+  const renderServiceTab = () => <ServiceTabContent services={services} currentCycleStatus={currentPatientCycle?.status}/>;
 
 
   const renderNotesTab = () => (
@@ -641,7 +655,7 @@ const PatientProfileLayout1 = () => {
         </div>
       )}
 
-{showMessagePopup && (
+    {showMessagePopup && (
       <div className="patient-profile-popup">
         <div className="patient-profile-popup-content">
           <h3>Gửi tin nhắn</h3>
@@ -707,13 +721,13 @@ const PatientProfileLayout1 = () => {
           </div>
   
           <div className="patient-profile-sidebar-actions">
-  <button
-    className="patient-profile-btn-outline"
-    onClick={() => setShowMessagePopup(true)}
-  >
-    💬 Nhắn tin
-  </button>
-</div>
+            <button
+              className="patient-profile-btn-outline"
+              onClick={() => setShowMessagePopup(true)}
+            >
+              💬 Nhắn tin
+            </button>
+          </div>
         </div>
   
         <div className="patient-profile-main-content">
@@ -741,7 +755,7 @@ const PatientProfileLayout1 = () => {
 export default PatientProfileLayout1;
 
 
-const ServiceTabContent = ({services}) => {
+const ServiceTabContent = ({services, currentCycleStatus}) => {
   const navigate = useNavigate();
   const { appointmentId, customerId } = useParams();
   
@@ -760,7 +774,7 @@ const ServiceTabContent = ({services}) => {
   const todayStr = now.getFullYear() + '-' + 
     String(now.getMonth() + 1).padStart(2, '0') + '-' + 
     String(now.getDate()).padStart(2, '0');
-  const minDate = new Date(new Date().setDate(new Date().getDate() + 1));
+  const minDate = new Date();
 
   const [availableSchedules, setAvailableSchedules] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
@@ -858,10 +872,10 @@ const ServiceTabContent = ({services}) => {
       const res = await ApiGateway.createPayment(paymentForm);
       console.log(paymentForm)
       console.log("Tạo chỉ định thành công:", res);
-      alert("Tạo chỉ định thành công!");
+      showSuccess("Tạo chỉ định thành công!");
     } catch (error) {
       console.error("Tạo chỉ định thất bại:", error);
-      alert("Đã xảy ra lỗi khi tạo chỉ định.");
+      showFail("Đã xảy ra lỗi khi tạo chỉ định.");
     }
   };
 
@@ -879,99 +893,110 @@ const ServiceTabContent = ({services}) => {
     <div className="patient-profile-tab-content">
       <h3>Chỉ định dịch vụ</h3>
       <p>Điền thông tin chỉ định dịch vụ cho bệnh nhân</p>
-      <div className="form-group">
-        <label className="form-label required">Phương pháp</label>
-        <select
-          className="form-select"
-          name="serviceId"
-          value={paymentForm.serviceId}
-          onChange={handleInputChange}
-        >
-          <option value="">Chọn phương pháp</option>
-          {services?.map((service) => (
-            <option key={service.serviceId} value={service.serviceId}>
-              {service.name}
-            </option>
-          ))}
-        </select>
-      </div>
+      {currentCycleStatus === "ongoing" ?
+        (
+          <h4>Bệnh nhân hiện đã được chỉ định dịch vụ</h4>
+        )
+      : 
+        (
+          <>
+            <div className="form-group">
+              <label className="form-label required">Phương pháp</label>
+              <select
+                className="form-select"
+                name="serviceId"
+                value={paymentForm.serviceId}
+                onChange={handleInputChange}
+              >
+                <option value="">Chọn phương pháp</option>
+                {services?.map((service) => (
+                  <option key={service.serviceId} value={service.serviceId}>
+                    {service.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            
+            {/* Updated Date & Time Selection - Similar to NewOnNewCycleModal */}
+            <div className="form-group">
+              <label className="form-label required">Ngày khám</label>
+              <input
+                type="date"
+                className="form-input"
+                value={selectedDate}
+                onChange={(e) => handleDateSelect(e.target.value)}
+                required
+                min={minDate.toISOString().split("T")[0]}
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label required">Giờ khám</label>
+              <select
+                className="form-select"
+                value={selectedTime}
+                onChange={(e) => handleTimeSelect(e.target.value)}
+                required
+                disabled={!availableSchedules.length > 0}
+              >
+                <option value="">{availableSchedules.length > 0 ? "-- Chọn giờ khám --": "--Không có lịch trống--"}</option>
+                {availableSchedules.map((time) => (
+                  <option key={time} value={time}>
+                    {time}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label required">Loại</label>
+              <select
+                className="form-select"
+                name="type"
+                value={paymentForm.type}
+                onChange={handleInputChange}
+              >
+                <option value="">Chọn loại khám</option>
+                {typeOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label className="form-label">Ghi chú</label>
+              <textarea
+                className="form-textarea"
+                name="note"
+                rows={3}
+                value={paymentForm.note}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Tổng số tiền</label>
+              <input
+                type="text"
+                className="form-input"
+                value={formatCurrency(paymentForm.total)}
+                disabled
+              />
+            </div>
+            <div className="button-group">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleSubmit}
+                disabled={!isFormValid}
+              >
+                Tạo lịch khám
+              </button>
+            </div>
+          </>
+        )
+      }
       
-      {/* Updated Date & Time Selection - Similar to NewOnNewCycleModal */}
-      <div className="form-group">
-        <label className="form-label required">Ngày khám</label>
-        <input
-          type="date"
-          className="form-input"
-          value={selectedDate}
-          onChange={(e) => handleDateSelect(e.target.value)}
-          required
-          min={minDate.toISOString().split("T")[0]}
-        />
-      </div>
-
-      <div className="form-group">
-        <label className="form-label required">Giờ khám</label>
-        <select
-          className="form-select"
-          value={selectedTime}
-          onChange={(e) => handleTimeSelect(e.target.value)}
-          required
-          disabled={!availableSchedules.length > 0}
-        >
-          <option value="">{availableSchedules.length > 0 ? "-- Chọn giờ khám --": "--Không có lịch trống--"}</option>
-          {availableSchedules.map((time) => (
-            <option key={time} value={time}>
-              {time}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className="form-group">
-        <label className="form-label required">Loại</label>
-        <select
-          className="form-select"
-          name="type"
-          value={paymentForm.type}
-          onChange={handleInputChange}
-        >
-          <option value="">Chọn loại khám</option>
-          {typeOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="form-group">
-        <label className="form-label">Ghi chú</label>
-        <textarea
-          className="form-textarea"
-          name="note"
-          rows={3}
-          value={paymentForm.note}
-          onChange={handleInputChange}
-        />
-      </div>
-      <div className="form-group">
-        <label className="form-label">Tổng số tiền</label>
-        <input
-          type="text"
-          className="form-input"
-          value={formatCurrency(paymentForm.total)}
-          disabled
-        />
-      </div>
-      <div className="button-group">
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={handleSubmit}
-          disabled={!isFormValid}
-        >
-          Tạo lịch khám
-        </button>
-      </div>
     </div>
   );
 };

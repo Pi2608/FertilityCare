@@ -400,7 +400,7 @@ const PaymentNotification = ({
       <div className="notification-info">
         <div className="notification-header">
           <p>
-            đã đặt lịch khám vào lúc{" "}
+            Bác sĩ <strong>{payment?.doctorName}</strong> đã đặt lịch khám vào lúc{" "}
             <strong>
               {formatDatetimeWithWeekday(payment?.appointmentDate)}
             </strong>
