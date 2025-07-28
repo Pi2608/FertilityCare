@@ -33,11 +33,15 @@ public class UserService {
         return userRepository.findById(userId).get();
     }
 
-    public void saveUser(User user) {
-        userRepository.save(user);
+    public User saveUser(User user) {
+        return userRepository.save(user);
     }
 
     public int count() {
         return (int) userRepository.count();
+    }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }

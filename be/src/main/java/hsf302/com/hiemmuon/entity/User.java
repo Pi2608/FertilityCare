@@ -45,13 +45,13 @@ public class User {
     @Column(name = "dob")
     private LocalDate dob;
 
-    @Column(name = "email", length = 100, nullable = false, unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "phone", length = 20)
     private String phone;
 
-    @Column(name = "password", length = 255, nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "create_at")

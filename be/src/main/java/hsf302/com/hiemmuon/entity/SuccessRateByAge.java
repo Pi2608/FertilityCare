@@ -30,4 +30,11 @@ public class SuccessRateByAge {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "treatment_service_id")
     private TreatmentService treatmentService;
+
+    public SuccessRateByAge(String ageGroup, Float clinicalPregnancyRate, String comparedToNationalAverage, TreatmentService treatmentService) {
+        this.ageGroup = ageGroup;
+        this.clinicalPregnancyRate = clinicalPregnancyRate;
+        this.comparedToNationalAverage = comparedToNationalAverage;
+        this.treatmentService = treatmentService;
+    }
 }

@@ -79,4 +79,8 @@ public class SuccessRateByAgeService {
                 success.getTreatmentService().getServiceId()
         );
     }
+
+    public void saveAll(List<SuccessRateByAge> rates) {
+        repository.saveAll(rates);
+    }
 }
