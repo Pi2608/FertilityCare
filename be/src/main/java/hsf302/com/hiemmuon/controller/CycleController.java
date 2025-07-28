@@ -58,11 +58,10 @@ public class CycleController {
         summary = "Bác sĩ xem chu kỳ điều trị hiện tại của khách hàng",
         description = "API cho phép bác sĩ lấy chu kỳ điều trị đang diễn ra mới nhất của khách hàng, chỉ khi bác sĩ là người điều trị."
     )
-    @GetMapping("/current-cycle/customer/{customerId}")
+    @GetMapping("/current-cycle/customer/")
     public ResponseEntity<ApiResponse<?>> getCurrentCycleByCustomerId(
-            HttpServletRequest request,
-            @PathVariable("customerId") int customerId) {
-            CycleDTO cycle = cycleService.getCurrentCycleByCustomerId(request, customerId);
+            HttpServletRequest request) {
+            CycleDTO cycle = cycleService.getCurrentCycleByCustomerId(request);
 
             ApiResponse<CycleDTO> response = new ApiResponse<>(
                     200,

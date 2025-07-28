@@ -528,7 +528,7 @@ const PatientProfileLayout = () => {
                       </div>
                     }
                     {/* Lí do thất bại cho restart */}
-                    {(phase?.failedReason && phase.statusCycleStep === "ongoing") && 
+                    {(phase?.failedReason && (phase.statusCycleStep === "ongoing" || phase.statusCycleStep === "finished")) &&
                       <div className="patient-profile-timeline-section" style={{display: "flex", alignItems: "center"}}>
                         {phase?.failedReason && phase.statusCycleStep === "ongoing" && <AlertTriangle size={18} color="#ffcd37"/>}
                         <p style={phase.statusCycleStep === "ongoing" ? {color: "#ffcd37", marginLeft:"5px", fontWeight: 600}:{color: "#373737ff", fontWeight: 600}}>
