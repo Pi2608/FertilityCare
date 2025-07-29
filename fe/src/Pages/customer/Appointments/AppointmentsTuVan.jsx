@@ -324,9 +324,6 @@ const AppointmentsTuVan = () => {
                   <span className="patient-profile-doctor-name">
                     {appointmentDetail.doctorName}
                   </span>
-                  <button className="patient-profile-btn-outline-blue">
-                    Chỉnh sửa
-                  </button>
                 </div>
               </div>
             ) : (
