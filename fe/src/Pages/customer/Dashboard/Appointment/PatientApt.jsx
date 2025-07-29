@@ -105,11 +105,20 @@ const PatientApt = ({ userName = "Nguyễn Thị Hoa" }) => {
   const fetchAppointments = async () => {
     try {
       const data = await apiAppointment.getAllAppointments();
-      setAppointments(data);
+  
+      // Sort theo ngày và giờ giảm dần (mới nhất trước)
+      const sorted = data.sort((a, b) => {
+        const dateA = new Date(`${a.date}T${a.startTime}`);
+        const dateB = new Date(`${b.date}T${b.startTime}`);
+        return dateB - dateA;
+      });
+  
+      setAppointments(sorted);
     } catch (error) {
       console.error("Lỗi khi lấy lịch hẹn:", error);
     }
   };
+  
 
   const cancelAppointment = async (appointmentId) => {
     const isConfirmed = window.confirm(
