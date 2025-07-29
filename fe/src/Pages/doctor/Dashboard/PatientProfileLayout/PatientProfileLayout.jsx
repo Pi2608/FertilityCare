@@ -1985,7 +1985,8 @@ const PatientProfileLayout = () => {
               <textarea
                 value={formData.reason}
                 onChange={(e) => handleChange("reason", e.target.value)}
-                placeholder="Lí do"
+                placeholder="Lý do"
+                required
               />
             </label>
           
