@@ -431,5 +431,47 @@ public class AppointmentService {
 
             appt.setIsReminded(true);
         }
+
     }
+
+    public void updateAppointmentStatus(int appointmentId, int doctorId) {
+        Appointment appointment = appointmentRepository.findById(appointmentId);
+        if (appointment == null) {
+            throw new RuntimeException("Không có cuộc hẹn đó!");
+        }
+
+        if (appointment.getDoctor().getDoctorId() != doctorId) {
+            throw new RuntimeException("Bạn không có quyền truy cập cuộc hẹn này.");
+        }
+
+        StatusAppointment currentStatus = appointment.getStatusAppointment();
+
+        if (currentStatus == StatusAppointment.confirmed) {
+            appointment.setStatusAppointment(StatusAppointment.done);
+            appointmentRepository.save(appointment);
+        } else {
+            // Nếu là canceled hoặc done thì giữ nguyên, không cập nhật
+            System.out.println("Cuộc hẹn đã ở trạng thái: " + currentStatus + ", không thay đổi.");
+        }
+    }
+
+    public void updateAppointmentNote(int appointmentId, int doctorId, String note) {
+        Appointment appointment = appointmentRepository.findById(appointmentId);
+        if (appointment == null) {
+            throw new RuntimeException("Không có cuộc hẹn đó!");
+        }
+
+        if (appointment.getDoctor().getDoctorId() != doctorId) {
+            throw new RuntimeException("Bạn không có quyền truy cập cuộc hẹn này.");
+        }
+
+        if (note == null || note.trim().isEmpty()) {
+            throw new RuntimeException("Ghi chú không được để trống.");
+        }
+
+        appointment.setNote(note.trim());
+        appointmentRepository.save(appointment);
+    }
+
+
 }

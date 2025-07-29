@@ -17,16 +17,16 @@ public class TestResult {
     @Column(name = "result_id")
     private int resultId;
 
-    @Column(name = "name", length = 100, nullable = false)
+    @Column(name = "name", columnDefinition = "NVARCHAR(MAX)", length = 100, nullable = false)
     private String name;
 
     @Column(name = "value")
     private Float value;
 
-    @Column(name = "unit", length = 50)
+    @Column(name = "unit", columnDefinition = "NVARCHAR(MAX)", length = 50)
     private String unit;
 
-    @Column(name = "reference_range", length = 100)
+    @Column(name = "reference_range", columnDefinition = "NVARCHAR(MAX)", length = 100)
     private String referenceRange;
 
     @Column(name = "test_date", nullable = false)

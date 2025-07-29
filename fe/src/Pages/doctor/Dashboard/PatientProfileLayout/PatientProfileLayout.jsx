@@ -3,7 +3,7 @@ import ApiGateway from "../../../../features/service/apiGateway"
 import { useNavigate, useParams } from "react-router-dom"
 import { HashLoader, BeatLoader } from "react-spinners";
 import { showSuccess, showFail, confirmToast } from "@lib/toast/toast"
-import { AlertTriangle, RefreshCcw, Hourglass, Check, CalendarDays, FileText, Pill, Zap, FilePen, User, X, NotepadText} from "lucide-react";
+import { AlertTriangle, RefreshCcw, Hourglass, Check, CalendarDays, FileText, Pill, Zap, FilePen, User, X, NotepadText, NotebookPen, MessageSquare, Clock9} from "lucide-react";
 import "./PatientProfileLayout.css"
 
 const PatientProfileLayout = () => {
@@ -791,7 +791,9 @@ const PatientProfileLayout = () => {
                 }),
                 handleOpenUpdateCycleStepNoteModal()
               }}
-          >📝 Thêm ghi chú</button>
+          >
+            <NotebookPen size={15} strokeWidth={1.5} />
+             Thêm ghi chú</button>
         }
       </div>
 
@@ -1731,7 +1733,6 @@ const PatientProfileLayout = () => {
         await updateCycleStepStatus(currentCycle.cycleId, allCycleStep?.[currentStep(allCycleStep) - 1].stepOrder, callbackParams)
         showSuccess("Đặt lịch tái khám thành công");
         onClose();
-        // await fetchData();
         navigate("/doctor-dashboard/appointments");
       } catch {
         showFail("Đặt lịch thất bại");
@@ -1985,7 +1986,8 @@ const PatientProfileLayout = () => {
               <textarea
                 value={formData.reason}
                 onChange={(e) => handleChange("reason", e.target.value)}
-                placeholder="Lí do"
+                placeholder="Lý do"
+                required
               />
             </label>
           
@@ -2141,7 +2143,11 @@ const PatientProfileLayout = () => {
             <h1>Cuộc hẹn với {appointmentDetail.customerName}</h1>
             <div className="patient-profile-appointment-info">
               <span className="patient-profile-appointment-type">{patientData.currentAppointment.type}</span>
-              <span className="patient-profile-appointment-time">🕘 {patientData.currentAppointment.date} | {patientData.currentAppointment.time}</span>
+              <span className="patient-profile-appointment-time">
+                <span className="time-icon">
+                <Clock9 size={16} strokeWidth={1.5} />
+              </span> 
+                 {patientData.currentAppointment.date} | {patientData.currentAppointment.time}</span>
               <span className="patient-profile-appointment-status">{appointmentDetail.status}</span>
             </div>
             <p className="patient-profile-appointment-details">{patientData.currentAppointment.details}</p>
@@ -2190,7 +2196,11 @@ const PatientProfileLayout = () => {
 
 
           <div className="patient-profile-sidebar-actions">
-            <button className="patient-profile-btn-outline">💬 Nhắn tin</button>
+            <button className="patient-profile-btn-outline">              
+              <span className="message-icon">
+                <MessageSquare size={16} strokeWidth={1.5} />
+              </span>
+              Nhắn tin</button>
           </div>
         </div>
 

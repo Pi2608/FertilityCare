@@ -24,6 +24,7 @@ public class MedicineSchedule {
     @JoinColumn(name = "step_id", nullable = false)
     private CycleStep cycleStep;
 
+    @Column(name = "medicineName", columnDefinition = "NVARCHAR(MAX)")
     private String medicineName;
 
     @Column(name = "startdate")

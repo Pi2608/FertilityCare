@@ -3,6 +3,7 @@ package hsf302.com.hiemmuon.controller;
 import hsf302.com.hiemmuon.dto.createDto.CreateAppointmentDTO;
 import hsf302.com.hiemmuon.dto.createDto.ReExamAppointmentDTO;
 import hsf302.com.hiemmuon.dto.responseDto.*;
+import hsf302.com.hiemmuon.dto.updateDto.UpdateAppointmentNoteDTO;
 import hsf302.com.hiemmuon.entity.Customer;
 import hsf302.com.hiemmuon.entity.Doctor;
 import hsf302.com.hiemmuon.entity.User;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Tag(name = "2. Appointment Controller")
 @RestController
@@ -222,4 +224,45 @@ public class AppointmentController {
     public void runAppointmentReminder() {
         appointmentService.sendAppointmentReminders();
     }
+
+
+    @Operation(
+            summary = "Cập nhật trạng thái cuộc hẹn",
+            description = "Bác sĩ có thể cập nhật trạng thái cuộc hẹn từ confirmed sang done. Nếu đã là done hoặc canceled thì giữ nguyên."
+    )
+    @PatchMapping("/appointments/{appointmentId}/update-status")
+    public ResponseEntity<String> updateAppointmentStatus(
+            @PathVariable int appointmentId) {
+
+        // Lấy doctor đang đăng nhập
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUserByEmail(email);
+        Doctor doctor = doctorService.getDoctorById(user.getUserId());
+
+        appointmentService.updateAppointmentStatus(appointmentId, doctor.getDoctorId());
+
+        return ResponseEntity.ok("Cập nhật trạng thái cuộc hẹn thành công");
+    }
+
+    @Operation(
+            summary = "Cập nhật ghi chú cho cuộc hẹn",
+            description = "Bác sĩ có thể cập nhật ghi chú cho cuộc hẹn của mình."
+    )
+    @PatchMapping("/appointments/{appointmentId}/update-note")
+    public ResponseEntity<String> updateAppointmentNote(
+            @PathVariable int appointmentId,
+            @RequestBody UpdateAppointmentNoteDTO dto) {
+
+        // Lấy doctor đang đăng nhập
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUserByEmail(email);
+        Doctor doctor = doctorService.getDoctorById(user.getUserId());
+
+        appointmentService.updateAppointmentNote(appointmentId, doctor.getDoctorId(), dto.getNote());
+
+        return ResponseEntity.ok("Cập nhật ghi chú thành công");
+    }
+
+
+
 }

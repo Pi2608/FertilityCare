@@ -36,13 +36,13 @@
 }
 
 /* .patient-profile-appointment-type {
-    background: #dbeafe;
-    color: #1e40af;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 500;
-  } */
+  background: #dbeafe;
+  color: #1e40af;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+} */
 
 .patient-profile-appointment-time {
   color: #64748b;
@@ -149,17 +149,6 @@
   font-weight: 500;
 }
 
-.patient-profile-status-badge.patient-profile-ongoing,
-.patient-profile-status-badge.patient-profile-active {
-  background-color: #dcfce7;
-  color: #166534;
-}
-
-.patient-profile-status-badge.patient-profile-completed {
-  background-color: #dcfce7;
-  color: #166534;
-}
-
 .patient-profile-patient-basic-info {
   margin-bottom: 24px;
 }
@@ -191,9 +180,9 @@
 }
 
 /* .patient-profile-gender-female {
-    color: #dc2626;
-    font-weight: 500;
-  } */
+  color: #dc2626;
+  font-weight: 500;
+} */
 
 /* Collapsible Sections */
 .patient-profile-collapsible-sections {
@@ -374,6 +363,7 @@
 
 .patient-profile-treatment-card {
   display: flex;
+  align-items: center;
   gap: 12px;
   padding: 16px;
   border: 1px solid #e2e8f0;
@@ -385,12 +375,9 @@
   flex-shrink: 0;
 }
 
-.patient-profile-icon-red {
-  color: #dc2626;
-}
-
-.patient-profile-icon-blue {
-  color: #2563eb;
+.patient-profile-icon {
+  display: flex;
+  justify-content: center;
 }
 
 .patient-profile-card-content h4 {
@@ -536,6 +523,7 @@
 .patient-profile-appointment-list {
   display: flex;
   flex-direction: column;
+  margin-bottom: 1rem;
   gap: 12px;
 }
 
@@ -566,7 +554,7 @@
 }
 
 .patient-profile-appointment-details h5 {
-  margin: 0 0 4px 0;
+  margin: 0;
   font-size: 14px;
   font-weight: 600;
   color: #1e293b;
@@ -714,7 +702,7 @@
   gap: 16px;
 }
 
-.patient-profile-medication-card {
+.patient-profile-medication-dieu_tri-card {
   padding: 16px;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
@@ -920,6 +908,7 @@
 
 .patient-profile-note-content {
   margin-bottom: 16px;
+  margin-left: 0.5rem;
 }
 
 .patient-profile-note-content h5 {
@@ -938,7 +927,7 @@
 
 .patient-profile-note-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: right;
   align-items: center;
   padding-top: 16px;
   border-top: 1px solid #e2e8f0;
@@ -1002,18 +991,22 @@
   padding: 20px;
 }
 
-.patient-profile-timeline-item.patient-profile-completed {
+.patient-profile-timeline-item.patient-profile-finished {
   border-left: 4px solid #10b981;
 }
 
-.patient-profile-timeline-item.patient-profile-ongoing,
-.patient-profile-timeline-item.patient-profile-active {
+.patient-profile-timeline-item.patient-profile-ongoing {
   border-left: 4px solid #3b82f6;
   background: #f8fafc;
 }
 
-.patient-profile-timeline-item.patient-profile-upcoming {
-  border-left: 4px solid #94a3b8;
+.patient-profile-timeline-item.patient-profile-restart {
+  border-left: 4px solid #ffcd37;
+  opacity: 0.8;
+}
+
+.patient-profile-timeline-item.patient-profile-stopped {
+  border-left: 4px solid #ef4444;
   opacity: 0.8;
 }
 
@@ -1033,7 +1026,7 @@
   border: 2px solid #e2e8f0;
 }
 
-.patient-profile-timeline-item.patient-profile-completed
+.patient-profile-timeline-item.patient-profile-finished
   .patient-profile-timeline-marker {
   background: #10b981;
   color: white;
@@ -1041,12 +1034,24 @@
 }
 
 .patient-profile-timeline-item.patient-profile-ongoing
-  .patient-profile-timeline-marker,
-.patient-profile-timeline-item.patient-profile-active
   .patient-profile-timeline-marker {
   background: #3b82f6;
   color: white;
   border-color: #3b82f6;
+}
+
+.patient-profile-timeline-item.patient-profile-restart
+  .patient-profile-timeline-marker {
+  background: #ffcd37;
+  color: white;
+  border-color: #ffcd37;
+}
+
+.patient-profile-timeline-item.patient-profile-stopped
+  .patient-profile-timeline-marker {
+  background: #ef4444;
+  color: white;
+  border-color: #ef4444;
 }
 
 .patient-profile-timeline-header {
@@ -1193,22 +1198,53 @@
 }
 
 /* Medication Card Completed Style */
-.patient-profile-medication-card.patient-profile-completed {
+
+.patient-profile-medication-dieu_tri-card.patient-profile-expired {
   opacity: 0.8;
-  border-left: 4px solid #94a3b8;
+  border-left: 4px solid #dc3545;
 }
 
-.patient-profile-medication-card.patient-profile-completed
+.patient-profile-medication-dieu_tri-card.patient-profile-expired
+  .patient-profile-status-badge.patient-profile-expired {
+  background-color: #dc3545;
+  color: white;
+}
+
+.patient-profile-medication-dieu_tri-card.patient-profile-completed {
+  opacity: 0.8;
+  border-left: 4px solid #28a745;
+}
+.patient-profile-medication-dieu_tri-card.patient-profile-completed
   .patient-profile-status-badge.patient-profile-completed {
-  background: #f1f5f9;
-  color: #64748b;
+  background-color: #28a745;
+  color: white;
+}
+
+.patient-profile-medication-dieu_tri-card.patient-profile-active {
+  opacity: 0.8;
+  border-left: 4px solid #007bff;
+}
+.patient-profile-medication-dieu_tri-card.patient-profile-active
+  .patient-profile-status-badge.patient-profile-active {
+  background-color: #007bff;
+  color: white;
+}
+
+.patient-profile-medication-dieu_tri-card.patient-profile-inactive {
+  opacity: 0.8;
+  border-left: 4px solid #64748b;
+}
+.patient-profile-medication-dieu_tri-card.patient-profile-inactive
+  .patient-profile-status-badge.patient-profile-inactive {
+  background-color: #64748b;
+  color: white;
 }
 
 /* Timeline Actions */
 .patient-profile-timeline-actions {
   /* margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid #e2e8f0; */
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0; */
 }
 
 .patient-profile-phase-actions h5 {
@@ -1222,9 +1258,18 @@
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.patient-profile-quick-actions > div {
+  display: flex;
+  gap: 8px;
 }
 
 .patient-profile-btn-outline-small {
+  display: flex;
+  align-items: center;
+  gap: 3px;
   padding: 6px 12px;
   background: white;
   color: #64748b;
@@ -1236,10 +1281,20 @@
   transition: all 0.2s;
 }
 
+.patient-profile-btn-outline-small.fail {
+  background: #e11d48;
+  color: white;
+}
+
 .patient-profile-btn-outline-small:hover {
   border-color: #cbd5e1;
   background-color: #f8fafc;
   color: #374151;
+}
+
+.patient-profile-btn-outline-small.fail:hover {
+  background-color: #c41a3b;
+  color: white;
 }
 
 .patient-profile-btn-primary-small {
@@ -1333,7 +1388,7 @@
   animation: fadeIn 0.2s ease-in-out;
 }
 
-.patient-profile-modal-content {
+.patient-profile-modal-content-d {
   background-color: #fff;
   padding: 2rem;
   border-radius: 12px;
@@ -1345,19 +1400,19 @@
   overflow-y: auto;
 }
 
-.patient-profile-modal-content h3 {
+.patient-profile-modal-content-d h3 {
   margin-top: 0;
   font-size: 1.5rem;
   color: #333;
 }
 
-.patient-profile-modal-content form {
+.patient-profile-modal-content-d form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
 }
 
-.patient-profile-modal-content label {
+.patient-profile-modal-content-d label {
+  margin-bottom: 0.5rem;
   display: flex;
   flex-direction: column;
   font-weight: 500;
@@ -1365,9 +1420,9 @@
   color: #444;
 }
 
-.patient-profile-modal-content input,
-.patient-profile-modal-content select,
-.patient-profile-modal-content textarea {
+.patient-profile-modal-content-d input,
+.patient-profile-modal-content-d select,
+.patient-profile-modal-content-d textarea {
   margin-top: 0.4rem;
   padding: 0.5rem 0.75rem;
   border: 1px solid #ccc;
@@ -1376,7 +1431,7 @@
   font-family: inherit;
 }
 
-.patient-profile-modal-content textarea {
+.patient-profile-modal-content-d textarea {
   resize: vertical;
   min-height: 80px;
 }
@@ -1412,6 +1467,74 @@
   background-color: rgba(25, 118, 210, 0.1);
 }
 
+.patient-profile-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.patient-profile-confirm-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+}
+
+.patient-profile-confirm-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.patient-profile-confirm-actions button:first-child {
+  width: 100%;
+  padding: 10px 16px;
+  background-color: white;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.patient-profile-confirm-actions button:last-child {
+  width: 100%;
+  padding: 10px 16px;
+  background: #1e293b;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.patient-profile-confirm-actions button:first-child:hover {
+  background-color: #eaeaea;
+}
+
+.patient-profile-confirm-actions button:last-child:hover {
+  background: #131b27;
+}
+
+.fade-toggle {
+  transition: all 0.5s ease;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+}
+
+.fade-toggle.show {
+  max-height: 200px; /* đủ lớn để chứa nội dung */
+  opacity: 1;
+}
+
 /* Animations */
 @keyframes fadeIn {
   from {
@@ -1432,45 +1555,3 @@
     opacity: 1;
   }
 }
-
-.patient-profile-timeline-notes:empty,
-.patient-profile-note-content:empty {
-  display: none;
-}
-
-/* Trong AppointmentsDieuTri.css */
-.patient-profile-timeline-notes:empty,
-.patient-profile-note-content:empty,
-.patient-profile-med-details p:empty {
-  display: none;
-}
-
-/* Đảm bảo không có khoảng trống dư thừa */
-.patient-profile-timeline-notes,
-.patient-profile-note-content,
-.patient-profile-med-details {
-  margin: 0;
-  padding: 0;
-}
-
-/* Ẩn các phần tử không có nội dung con */
-.patient-profile-timeline-notes:empty,
-.patient-profile-note-content:empty,
-.patient-profile-med-details p:empty {
-  display: none !important;
-}
-
-/* Loại bỏ khoảng trống dư thừa */
-.patient-profile-timeline-notes,
-.patient-profile-note-content,
-.patient-profile-med-details {
-  margin: 0;
-  padding: 0;
-}
-
-/* Đảm bảo không có chiều cao tối thiểu gây ra hiển thị không mong muốn */
-.patient-profile-timeline-notes,
-.patient-profile-note-content {
-  min-height: 0;
-}
-

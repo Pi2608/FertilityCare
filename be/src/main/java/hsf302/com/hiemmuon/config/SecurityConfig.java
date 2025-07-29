@@ -95,6 +95,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "api/login/roles").hasAnyRole("CUSTOMER", "DOCTOR", "ADMIN", "MANAGER")
                         .requestMatchers(HttpMethod.PATCH, "api/appointment-services/appointments/{appointmentId}/update-service").hasRole("DOCTOR")
                         .requestMatchers(HttpMethod.GET, "api/appointment-services/appointments/detail").hasAnyRole("CUSTOMER", "DOCTOR")
+                        .requestMatchers(HttpMethod.PATCH, "api/appointment-services/appointments/{appointmentId}/update-status").hasRole( "DOCTOR")
+                        .requestMatchers(HttpMethod.PATCH, "api/appointment-services/appointments/{appointmentId}/update-note").hasRole( "DOCTOR")
 
 
                         // Test Result APIs

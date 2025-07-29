@@ -5,6 +5,13 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import apiAppointment from "@features/service/apiAppointment";
 import apiNote from "@features/service/apiNote";
 import apiMessage from "@features/service/apiMessage";
+import {
+  NotebookPen,
+  Stethoscope,
+  MessageSquare,
+  Clock9,
+  Calendar,
+} from "lucide-react";
 
 const AppointmentsTuVan = () => {
   const [appointmentDetail, setAppointmentDetail] = useState(null);
@@ -223,8 +230,8 @@ const AppointmentsTuVan = () => {
     : null;
 
   const tabs = [
-    { id: "notes", label: "Ghi chú khám", icon: "📝" },
-    { id: "service", label: "Chỉ định dịch vụ", icon: "🧪" },
+    { id: "notes", label: "Ghi chú khám", icon: NotebookPen },
+    { id: "service", label: "Chỉ định dịch vụ", icon: Stethoscope },
   ];
 
   const renderServiceTab = () => {
@@ -296,7 +303,11 @@ const AppointmentsTuVan = () => {
               <div className="patient-profile-note-item">
                 <div className="patient-profile-note-header">
                   <div className="patient-profile-note-date">
-                    <span className="patient-profile-date-icon">📅</span>
+                    <span className="patient-profile-date-icon">
+                      <span className="calendar-icon">
+                        <Calendar size={18} strokeWidth={1.5} />
+                      </span>
+                    </span>
                     <span>
                       {new Date(appointmentDetail.date).toLocaleDateString(
                         "vi-VN"
@@ -592,13 +603,14 @@ const AppointmentsTuVan = () => {
             ← Quay lại
           </a>
           <div className="patient-profile-header-info">
-            <h1>Cuộc hẹn với {patientData.name}</h1>
+            <h1>Cuộc hẹn với {patientData.doctor}</h1>
             <div className="patient-profile-appointment-info">
               <span className="patient-profile-appointment-type">
                 {patientData.currentAppointment.type}
               </span>
               <span className="patient-profile-appointment-time">
-                🕘 {patientData.currentAppointment.date} |{" "}
+                <Clock9 className="time-icon" size={18} />
+                {patientData.currentAppointment.date} |{" "}
                 {patientData.currentAppointment.time}
               </span>
               <span className="patient-profile-appointment-status">
@@ -709,26 +721,32 @@ const AppointmentsTuVan = () => {
               className="patient-profile-btn-outline"
               onClick={() => setShowMessagePopup(true)}
             >
-              💬 Nhắn tin
+              <MessageSquare size={15} className="mr-2" /> Nhắn tin
             </button>
           </div>
         </div>
 
         <div className="patient-profile-main-content">
           <div className="patient-profile-tabs">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                className={`patient-profile-tab ${
-                  activeTab === tab.id ? "patient-profile-active" : ""
-                }`}
-                onClick={() => setActiveTab(tab.id)}
-              >
-                <span>{tab.icon}</span>
-                {tab.label}
-              </button>
-            ))}
+            {tabs.map((tab) => {
+              const TabIcon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  className={`patient-profile-tab ${
+                    activeTab === tab.id ? "patient-profile-active" : ""
+                  }`}
+                  onClick={() => setActiveTab(tab.id)}
+                >
+                  <span className="tab-icon">
+                    <TabIcon size={18} className="mr-2" />
+                  </span>
+                  {tab.label}
+                </button>
+              );
+            })}
           </div>
+
           {renderTabContent()}
         </div>
       </div>
