@@ -1294,7 +1294,7 @@ const PatientProfileLayout = () => {
                 value={formData.endDate}
                 onChange={(e) => handleChange('endDate', e.target.value)}
                 required
-                min={minDate}
+                min={formData.startDate ? formData.startDate : minDate}
                 max={maxDate?.toISOString().split('T')[0]}
               />
             </label>
@@ -2099,7 +2099,10 @@ const PatientProfileLayout = () => {
   const ConfirmModal = memo(({ isOpen, onClose, type, message }) => {
     if (!isOpen) return null;
 
+    const [isLoading, setIsLoading] = useState(true)
+
     const confirmSubmit = async () => {
+      setIsLoading(true)
       try {
         const dto = {
           markAsDone: true
@@ -2116,6 +2119,8 @@ const PatientProfileLayout = () => {
         navigate("/doctor-dashboard/appointments");
       } catch (error) {
         showFail("Cập nhật trạng thái thất bại");
+      } finally {
+        setIsLoading(false)
       }
     }
 
@@ -2126,7 +2131,7 @@ const PatientProfileLayout = () => {
           <p>(Xác nhận cũng sẽ kết thúc cuộc hẹn hiện tại)</p>
           <div className="patient-profile-confirm-actions">
             <button onClick={onClose}>Hủy</button>
-            <button onClick={() => confirmSubmit()}>Xác nhận</button>
+            <button onClick={() => confirmSubmit()}>{isLoading ? <BeatLoader/> : "Xác nhận"}</button>
           </div>
         </div>
       </div>

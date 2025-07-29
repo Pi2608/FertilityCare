@@ -35,7 +35,7 @@ public class AppointmentService {
     private TreatmentServiceRepository treatmentServiceRepository;
 
     @Autowired
-    private CustomerRepository  customerRepository;
+    private CustomerRepository customerRepository;
 
     @Autowired
     private AppointmentRepository appointmentRepository;
@@ -53,7 +53,7 @@ public class AppointmentService {
         List<DoctorSchedule> schedules = doctorScheduleRepository
                 .findByDoctor_DoctorIdAndDateAndStatus(doctorId, date, false);
 
-        return schedules.stream().map(schedule ->{
+        return schedules.stream().map(schedule -> {
             AvailableScheduleDTO dto = new AvailableScheduleDTO();
             dto.setDoctorId(schedule.getDoctor().getDoctorId());
             dto.setName(schedule.getDoctor().getUser().getName());
@@ -133,9 +133,9 @@ public class AppointmentService {
         }
 
         CycleStep cycleStep = cycleStepRepository.findById(dto.getCycleStepId());
-        if(cycleStep == null || cycleStep.getStatusCycleStep() != StatusCycle.ongoing){
-                    throw new RuntimeException("bác sĩ chọn sai cycleStep cho bênh nhân hoặc bênh nhân not ongoing - bênh nhân không trong giai đoanaj này ");
-                }
+        if (cycleStep == null || cycleStep.getStatusCycleStep() != StatusCycle.ongoing) {
+            throw new RuntimeException("bác sĩ chọn sai cycleStep cho bênh nhân hoặc bênh nhân not ongoing - bênh nhân không trong giai đoanaj này ");
+        }
 
         // Lấy thông tin thời gian hẹn
         LocalDateTime appointmentTime = dto.getDate();
@@ -187,7 +187,7 @@ public class AppointmentService {
     }
 
 
-    public List<ReExamAppointmentResponseDTO> getReExamAppointmentsForCustomer(int customerId){
+    public List<ReExamAppointmentResponseDTO> getReExamAppointmentsForCustomer(int customerId) {
         List<Appointment> appointments = appointmentRepository.findByCustomer_CustomerIdAndTypeAppointment(
                 customerId, TypeAppointment.tai_kham
         );
@@ -255,7 +255,6 @@ public class AppointmentService {
         List<Appointment> appointments = appointmentRepository.findAll();
 
 
-
         return appointments.stream().map(app -> {
             AppointmentOverviewDTO dto = new AppointmentOverviewDTO();
             dto.setAppointmentId(app.getAppointmentId());
@@ -315,33 +314,31 @@ public class AppointmentService {
         }
         // ket thuc cuoc hen la true va them ghi chu moi la false
         appointmentRepository.save(appointment);
+        if (appointment.getStatusAppointment().equals(StatusAppointment.confirmed)) {
+            String subject = "Thông báo loại hình dịch vụ điều trị: ";
+            String content = String.format("""
+                    Chào %s,
+                    
+                    Đây là thông báo về loại hình dịch vụ của bạn sẽ điều trị trong thời gian tới.
+                    
+                    Bác sĩ đã chỉ định dịch vụ %s phù hợp với bạn.
+                    
+                    Vui lòng thanh toán tại mục "Lịch hẹn" để bắt đầu quy trình điều trị bạn nhé!
+                    
+                    Trân trọng,
+                    Hệ thống hỗ trợ điều trị HiemMuon.
+                    """, appointment.getCustomer().getUser().getName(), appointment.getService().getName());
 
-        String subject = "Thông báo loại hình dịch vụ điều trị: ";
-        String content = String.format("""
-                Chào %s,
-                
-                Đây là thông báo về loại hình dịch vụ của bạn sẽ điều trị trong thời gian tới.
-                
-                Bác sĩ đã chỉ định dịch vụ %s phù hợp với bạn.
-                
-                Vui lòng thanh toán tại mục "Lịch hẹn" để bắt đầu quy trình điều trị bạn nhé!
-                
-                Trân trọng,
-                Hệ thống hỗ trợ điều trị HiemMuon.
-                """,appointment.getCustomer().getUser().getName(), appointment.getService().getName());
-
-        sendMailService.sendEmail(appointment.getCustomer().getUser().getEmail(), subject, content);
-        System.out.println("Sending email to: " + appointment.getCustomer().getUser().getEmail());
-        System.out.println("Service name: " + (appointment.getService() != null ? appointment.getService().getName() : "null"));
-
+            sendMailService.sendEmail(appointment.getCustomer().getUser().getEmail(), subject, content);
+        }
     }
 
-    public List<AppointmentDetailDTO> getAppointmentsByDoctorId(int doctorId){
-     List<Appointment> appointments = appointmentRepository.findByDoctor_DoctorId(doctorId);
-     return appointments.stream().map(this::convertToDto).collect(Collectors.toList());
+    public List<AppointmentDetailDTO> getAppointmentsByDoctorId(int doctorId) {
+        List<Appointment> appointments = appointmentRepository.findByDoctor_DoctorId(doctorId);
+        return appointments.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
-    public List<AppointmentDetailDTO> getAppointmentsByCustomerId(int customerId){
+    public List<AppointmentDetailDTO> getAppointmentsByCustomerId(int customerId) {
         List<Appointment> appointments = appointmentRepository.findByCustomer_CustomerId(customerId);
         return appointments.stream().map(this::convertToDto).collect(Collectors.toList());
     }
@@ -402,11 +399,10 @@ public class AppointmentService {
     @Transactional
     public void sendAppointmentReminders() {
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime from = now.plusMinutes(10);
         LocalDateTime to = now.plusDays(1);
 
         List<Appointment> appointments = appointmentRepository.findByStatusAppointmentAndDateBetweenAndIsReminded(
-                StatusAppointment.confirmed, from, to, false
+                StatusAppointment.confirmed, now, to, false
         );
 
         for (Appointment appt : appointments) {
@@ -417,15 +413,15 @@ public class AppointmentService {
 
             String subject = "⏰ Nhắc nhở lịch hẹn với bác sĩ " + doctor;
             String content = String.format("""
-                Chào %s,
-
-                Bạn có lịch hẹn với bác sĩ %s vào lúc %s.
-
-                Vui lòng đến đúng giờ và chuẩn bị các giấy tờ cần thiết nếu có.
-
-                Trân trọng,
-                Hệ thống hỗ trợ điều trị HiemMuon.
-                """, name, doctor, time);
+                    Chào %s,
+                    
+                    Bạn có lịch hẹn với bác sĩ %s vào lúc %s.
+                    
+                    Vui lòng đến đúng giờ và chuẩn bị các giấy tờ cần thiết nếu có.
+                    
+                    Trân trọng,
+                    Hệ thống hỗ trợ điều trị HiemMuon.
+                    """, name, doctor, time);
 
             sendMailService.sendEmail(email, subject, content);
 

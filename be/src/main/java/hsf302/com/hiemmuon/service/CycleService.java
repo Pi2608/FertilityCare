@@ -129,7 +129,7 @@ public class CycleService {
 
             if (i == 0) {
                 cycleStep.setStartDate(dto.getStartDate());
-                cycleStep.setEventdate(dto.getStartDate().plusDays(1).atTime(10, 0));
+                cycleStep.setEventDate(dto.getStartDate().plusDays(1).atTime(10, 0));
             }
 
             cycleStepRepository.save(cycleStep);
@@ -140,7 +140,7 @@ public class CycleService {
                     .service(cycle.getService().getName())
                     .description(cycleStep.getDescription())
                     .startDate(cycleStep.getStartDate())
-                    .eventDate(cycleStep.getEventdate())
+                    .eventDate(cycleStep.getEventDate())
                     .statusCycleStep(cycleStep.getStatusCycleStep())
                     .note(cycleStep.getNote())
                     .build();
@@ -231,7 +231,7 @@ public class CycleService {
                 .stepOrder(step.getStepOrder())
                 .service(step.getCycle().getService().getName())
                 .description(step.getDescription())
-                .eventDate(step.getEventdate())
+                .eventDate(step.getEventDate())
                 .statusCycleStep(step.getStatusCycleStep())
                 .note(step.getNote())
                 .startDate(step.getStartDate())

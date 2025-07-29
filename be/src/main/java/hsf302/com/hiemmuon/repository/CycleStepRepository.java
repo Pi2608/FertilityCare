@@ -48,7 +48,11 @@ public interface CycleStepRepository extends JpaRepository<CycleStep, Integer> {
     @Query("SELECT cs.stepId FROM CycleStep cs WHERE cs.cycle.cycleId = :cycleId ORDER BY cs.stepOrder ASC")
     List<Integer> findStepIdsByCycleIdOrdered(@Param("cycleId") int cycleId);
 
-    List<CycleStep> findByEventdateBetween(LocalDateTime from, LocalDateTime to);
+    List<CycleStep> findByStatusCycleStepAndEventDateBetweenAndIsReminded(
+            StatusCycle statusCycle,
+            LocalDateTime from,
+            LocalDateTime to,
+            boolean isReminded);
 
     List<CycleStep> findAllByTreatmentStep(TreatmentStep step);
 
