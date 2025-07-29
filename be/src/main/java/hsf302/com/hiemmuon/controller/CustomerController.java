@@ -1,9 +1,11 @@
 package hsf302.com.hiemmuon.controller;
 
 import hsf302.com.hiemmuon.dto.ApiResponse;
+import hsf302.com.hiemmuon.dto.createDto.CreateManagerRequest;
 import hsf302.com.hiemmuon.dto.createDto.RegisterCustomerDTO;
 import hsf302.com.hiemmuon.dto.responseDto.CustomerDTO;
 import hsf302.com.hiemmuon.dto.updateDto.UpdateCustomerDTO;
+import hsf302.com.hiemmuon.entity.User;
 import hsf302.com.hiemmuon.service.CustomerService;
 import hsf302.com.hiemmuon.service.SendMailService;
 import hsf302.com.hiemmuon.service.UserService;

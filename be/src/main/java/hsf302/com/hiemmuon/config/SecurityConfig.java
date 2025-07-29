@@ -155,6 +155,9 @@ public class SecurityConfig {
                         // Blog
                         .requestMatchers("/api/blogs/**").permitAll()
 
+                        // User
+                        .requestMatchers("/api/users/**").hasRole("ADMIN")
+
                         /// Payment APIs
                         .requestMatchers(HttpMethod.GET, "/api/payments/all").hasAnyRole("ADMIN", "MANAGER")
                         .requestMatchers(HttpMethod.GET,

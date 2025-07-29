@@ -1,11 +1,19 @@
 package hsf302.com.hiemmuon.service;
 
+import hsf302.com.hiemmuon.dto.createDto.CreateManagerRequest;
+import hsf302.com.hiemmuon.dto.createDto.RegisterCustomerDTO;
+import hsf302.com.hiemmuon.entity.Role;
 import hsf302.com.hiemmuon.entity.User;
+import hsf302.com.hiemmuon.enums.Genders;
+import hsf302.com.hiemmuon.repository.RoleRepository;
 import hsf302.com.hiemmuon.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 
 @Service
 public class UserService {
@@ -14,6 +22,12 @@ public class UserService {
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     public boolean isEmailExists(String email) {
         return userRepository.existsByEmail(email);
@@ -44,4 +58,27 @@ public class UserService {
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
+
+    public User createManager(CreateManagerRequest dto) {
+        if (userRepository.existsByEmail(dto.getEmail())) {
+            throw new RuntimeException("Email đã tồn tại");
+        }
+
+        Role customerRole = roleRepository.findByRoleName("MANAGER");
+        if (customerRole == null) {
+            throw new RuntimeException("Không tìm thấy role MANAGER");
+        }
+
+        User user = new User();
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setPhone(dto.getPhone());
+        user.setDob(dto.getDob());
+        user.setGender(dto.getGender());
+        user.setRole(customerRole);
+        user.setCreateAt(LocalDate.now());
+        userRepository.save(user);
+        return user;
+}
 }
