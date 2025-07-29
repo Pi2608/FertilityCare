@@ -51,6 +51,7 @@ export default function RevenueDashboard() {
 
       <div className="revenue-content">
         {/* Filters */}
+        <div className="filter-container"> {/* moi them vao */} 
         <div className="filter-section">
           <div className="filter-input">
             <label htmlFor="fromDate">Từ ngày</label>
@@ -74,6 +75,7 @@ export default function RevenueDashboard() {
             <CalendarSearch size={16} />
             Lọc
           </button>
+        </div>
         </div>
 
         {/* Summary */}

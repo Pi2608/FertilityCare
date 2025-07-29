@@ -28,7 +28,14 @@
   gap: 16px;
   margin-bottom: 16px;
   flex-wrap: wrap;
+  margin-left: auto; /*moi them */
 }
+
+.filter-container {
+  display: flex;
+  justify-content: flex-end; /* 👈 Căn nội dung con sang phải */
+}
+
 
 .filter-input {
   display: flex;
