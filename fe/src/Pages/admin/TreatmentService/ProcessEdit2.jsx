@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ApiGateway from "../../../features/service/apiGateway";
+import apiServiceStep from "../../../features/service/apiServiceStep";
 import "./ProcessEdit.css";
 
 const ProcessEdit2 = () => {
@@ -13,8 +14,7 @@ const ProcessEdit2 = () => {
     const fetchProcessSteps = async () => {
       try {
         const response = await ApiGateway.getTreatmentSteps(serviceId);
-        const stepsData = response.data;
-        const mappedSteps = stepsData.map((step) => ({
+        const mappedSteps = response.data.map((step) => ({
           id: step.stepOrder,
           stepNumber: step.stepOrder,
           title: step.title,
@@ -44,12 +44,23 @@ const ProcessEdit2 = () => {
     );
   };
 
-  const handleSave = (stepId) => {
-    setProcessSteps((steps) =>
-      steps.map((step) =>
-        step.id === stepId ? { ...step, isEditing: false } : step
-      )
-    );
+  const handleSave = async (stepId) => {
+    const step = processSteps.find((s) => s.id === stepId);
+    try {
+      await apiServiceStep.updateServiceStep(
+        stepId,
+        step.stepNumber,
+        step.title,
+        step.description
+      );
+      setProcessSteps((steps) =>
+        steps.map((step) =>
+          step.id === stepId ? { ...step, isEditing: false } : step
+        )
+      );
+    } catch (error) {
+      console.error("Lỗi khi lưu bước:", error);
+    }
   };
 
   const handleCancel = (stepId) => {
@@ -83,7 +94,7 @@ const ProcessEdit2 = () => {
     );
   };
 
-  const handleAddStep = () => {
+  const handleAddStep = async () => {
     const newStep = {
       id: Date.now(),
       stepNumber: processSteps.length + 1,
@@ -96,10 +107,20 @@ const ProcessEdit2 = () => {
           content: "Nội dung chi tiết",
         },
       ],
-
       isEditing: true,
     };
-    setProcessSteps([...processSteps, newStep]);
+    try {
+      const response = await apiServiceStep.createServiceStep(
+        serviceId,
+        newStep.stepNumber,
+        newStep.title,
+        newStep.description
+      );
+      const createdStep = { ...newStep, id: response.data.stepOrder }; // Cập nhật id từ server response
+      setProcessSteps([...processSteps, createdStep]);
+    } catch (error) {
+      console.error("Lỗi khi thêm bước mới:", error);
+    }
   };
 
   const handleDeleteStep = (stepId) => {
@@ -220,12 +241,6 @@ const ProcessEdit2 = () => {
                       >
                         Sửa
                       </button>
-                      <button
-                        className="delete-btne"
-                        onClick={() => handleDeleteStep(step.id)}
-                      >
-                        Xóa
-                      </button>
                     </>
                   )}
                 </div>
@@ -238,4 +253,4 @@ const ProcessEdit2 = () => {
   );
 };
 
-export default ProcessEdit;
+export default ProcessEdit2;

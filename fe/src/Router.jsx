@@ -56,6 +56,7 @@ import AdminTreatmentService from "./Pages/admin/TreatmentService/TreatmentServi
 import DoctorDetail from "./Pages/customer/DoctorDetail/DoctorDetail";
 import Dashboard from "./Pages/admin/Dashboard/Dashboard";
 import RevenueDashboard from "./Pages/admin/RevenueDashboard/RevenueDashboard";
+import ProcessEdit2 from "./Pages/admin/TreatmentService/ProcessEdit2";
 
 const USER_ROLES = {
   CUSTOMER: "customer",
@@ -567,7 +568,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "service/process/:serviceId",
-        element: <ProcessEdit />,
+        element: <ProcessEdit2 />,
       },
     ],
   },
