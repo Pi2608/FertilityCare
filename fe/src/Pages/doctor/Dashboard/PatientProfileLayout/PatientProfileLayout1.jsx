@@ -86,9 +86,9 @@ const PatientProfileLayout1 = () => {
       console.log("Payload gửi đi:", payload); // Log payload
       console.log("Appointment ID:", appointmentDetail.appointmentId); // Log appointmentId
 
-      const response = await apiNote.updateNoteForAppointment(
+      const response = await apiNote.updateNoteForAppointment1(
         appointmentDetail.appointmentId,
-        payload
+        payload.note
       );
       console.log("Response từ server:", response); // Log phản hồi từ server
 
