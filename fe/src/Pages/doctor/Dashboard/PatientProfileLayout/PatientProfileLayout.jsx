@@ -2186,7 +2186,7 @@ const PatientProfileLayout = () => {
             <div className="patient-profile-info-row">
               <span className="patient-profile-label">Điều trị:</span>
               <span className="patient-profile-value">
-                {patientData.treatment}
+              {currentCycle?.serviceName}
               </span>
             </div>
             <div className="patient-profile-info-row">
