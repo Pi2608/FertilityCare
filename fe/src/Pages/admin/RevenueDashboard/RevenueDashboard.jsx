@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./RevenueDashboard.css";
 import ApiGateway from "@features/service/ApiGateway";
 import { format } from "date-fns";
-import { CalendarSearch } from "lucide-react";
+import { CalendarSearch, X } from "lucide-react";
 
 export default function RevenueDashboard() {
   const [transactions, setTransactions] = useState([]);
@@ -37,6 +37,12 @@ export default function RevenueDashboard() {
     setFilteredData(filtered);
   };
 
+  const handleClearFilter = () => {
+    setFromDate("");
+    setToDate("");
+    setFilteredData(transactions); // reset lại dữ liệu ban đầu
+  };
+
   const totalRevenue = filteredData
     .filter((tx) => tx.status !== "failed" && tx.status !== "pending")
     .reduce((sum, tx) => sum + (tx.total || 0), 0);
@@ -51,29 +57,41 @@ export default function RevenueDashboard() {
 
       <div className="revenue-content">
         {/* Filters */}
-        <div className="filter-section">
-          <div className="filter-input">
-            <label htmlFor="fromDate">Từ ngày</label>
-            <input
-              type="date"
-              id="fromDate"
-              value={fromDate}
-              onChange={(e) => setFromDate(e.target.value)}
-            />
+        <div className="filter-container">
+          {" "}
+          {/* moi them vao */}
+          <div className="filter-section">
+            <div className="filter-input">
+              <label htmlFor="fromDate">Từ ngày</label>
+              <input
+                type="date"
+                id="fromDate"
+                value={fromDate}
+                onChange={(e) => setFromDate(e.target.value)}
+              />
+            </div>
+            <div className="filter-input">
+              <label htmlFor="toDate">Đến ngày</label>
+              <input
+                type="date"
+                id="toDate"
+                value={toDate}
+                onChange={(e) => setToDate(e.target.value)}
+              />
+            </div>
+            <button className="filter-btn" onClick={handleFilter}>
+              <CalendarSearch size={16} />
+              Lọc
+            </button>
+            {/* Nút huỷ lọc mới thêm */}
+            <button
+              className="filter-btn cancel"
+              onClick={handleClearFilter}
+            >
+              <X size={16} className="btn-icon" />
+              Huỷ lọc
+            </button>
           </div>
-          <div className="filter-input">
-            <label htmlFor="toDate">Đến ngày</label>
-            <input
-              type="date"
-              id="toDate"
-              value={toDate}
-              onChange={(e) => setToDate(e.target.value)}
-            />
-          </div>
-          <button className="filter-btn" onClick={handleFilter}>
-            <CalendarSearch size={16} />
-            Lọc
-          </button>
         </div>
 
         {/* Summary */}
