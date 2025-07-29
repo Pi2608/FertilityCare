@@ -148,25 +148,31 @@ const Overall = ({ userName = "Nguyễn Thị Hoa" }) => {
 
   const renderProgressBar = () => {
     const total = treatmentSteps?.length || 1;
-    const completed = treatmentSteps.filter(step => step.statusCycleStep === 'finished').length;
+    const completed = treatmentSteps.filter(
+      (step) => step.statusCycleStep === "finished"
+    ).length;
     const percent = (completed / total) * 100;
-  
+
     return (
       <div className="my-progress">
-        {myTreatment && 
+        {myTreatment && (
           <h3>
-            Tiến trình điều trị {myTreatment?.serviceName} #{myTreatment?.cycleId}
+            Tiến trình điều trị {myTreatment?.serviceName} #
+            {myTreatment?.cycleId}
           </h3>
-        }
+        )}
         <div className="progress-header">
           <span></span>
           <span>
-            {formatDate(myTreatment?.startDate)} -{" "}
-            {formatDate(myTreatment?.endDate)}
+            {myTreatment?.startDate && myTreatment?.endDate
+              ? `${formatDate(myTreatment.startDate)} - ${formatDate(
+                  myTreatment.endDate
+                )}`
+              : "Chưa có tiến trình điều trị nào"}
           </span>
           <span>{Math.round(percent)}%</span>
         </div>
-  
+
         <div className="progress-bar-wrapper">
           <div className="progress-bar-bg">
             <div
@@ -174,7 +180,7 @@ const Overall = ({ userName = "Nguyễn Thị Hoa" }) => {
               style={{ width: `${percent}%` }}
             />
           </div>
-  
+
           <div className="progress-steps">
             {treatmentSteps.map((step, idx) => {
               let className = "";
@@ -182,7 +188,7 @@ const Overall = ({ userName = "Nguyễn Thị Hoa" }) => {
               else if (step.statusCycleStep === "ongoing")
                 className = "in-progress";
               else className = "pending";
-  
+
               return (
                 <div key={idx} className={`step-item ${className}`}>
                   <div className="step-no">
@@ -204,15 +210,10 @@ const Overall = ({ userName = "Nguyễn Thị Hoa" }) => {
       </div>
     );
   };
-  
 
   return (
     <div className="patient-dashboard-main">
-      <div className="welcome-section">
-        
-
-        
-      </div>
+      <div className="welcome-section"></div>
 
       <div className="tab-content">
         <div className="overview-container">
