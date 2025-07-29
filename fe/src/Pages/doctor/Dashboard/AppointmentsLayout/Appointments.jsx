@@ -166,7 +166,7 @@ export default function Appointments() {
             onChange={(e) => setFilterType(e.target.value)}
             value={filterType}
           >
-            <option value="all">Tất cả loại</option>
+            <option value="all">Đang diễn ra</option>
             <option value="tu_van">Tư vấn</option>
             <option value="tai_kham">Tái khám</option>
             <option value="khac">Đã hoàn thành</option>
