@@ -166,9 +166,9 @@ public class CycleService {
 
     public CycleDTO getCycleByAppointmentId(HttpServletRequest request, int appointmentId) {
         User user = userService.getUserByJwt(request);
-        if (user.getDoctor() == null) {
-            throw new RuntimeException("Bạn không phải là bác sĩ.");
-        }
+//        if (user.getDoctor() == null) {
+//            throw new RuntimeException("Bạn không phải là bác sĩ.");
+//        }
 
         // Tìm appointment trước để lấy thông tin cycle
         Appointment appointment = appointmentRepository.findById(appointmentId);
@@ -179,10 +179,10 @@ public class CycleService {
             throw new RuntimeException("Cuộc hẹn này không có chu kỳ điều trị liên kết.");
         }
 
-        // Kiểm tra quyền truy cập - chỉ bác sĩ phụ trách cycle mới được xem
-        if (cycle.getDoctor() == null || cycle.getDoctor().getDoctorId() != user.getDoctor().getDoctorId()) {
-            throw new RuntimeException("Bạn không có quyền xem chu kỳ điều trị này.");
-        }
+//        // Kiểm tra quyền truy cập - chỉ bác sĩ phụ trách cycle mới được xem
+//        if (cycle.getDoctor() == null || cycle.getDoctor().getDoctorId() != user.getDoctor().getDoctorId()) {
+//            throw new RuntimeException("Bạn không có quyền xem chu kỳ điều trị này.");
+//        }
 
         return convertToCycleFODTO(cycle);
     }
