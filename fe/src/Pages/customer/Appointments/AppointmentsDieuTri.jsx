@@ -3,6 +3,7 @@ import ApiGateway from "@features/service/apiGateway";
 import { useNavigate, useParams } from "react-router-dom";
 import { HashLoader, BeatLoader } from "react-spinners";
 import { showSuccess, showFail, confirmToast } from "@lib/toast/toast";
+import apiMessage from "@features/service/apiMessage";
 import {
   AlertTriangle,
   RefreshCcw,
@@ -43,6 +44,8 @@ const PatientProfileLayout = () => {
   const [pastAndCurrentSteps, setPastAndCurrentSteps] = useState([]); // Các bước đã và đang thực hiện
   const [medicationSchedules, setMedicationSchedules] = useState([]); // Lịch uống thuốc theo bước
   const [loading, setLoading] = useState(false); // Loading chung cho các thao tác async
+  const [showMessagePopup, setShowMessagePopup] = useState(false);
+  const [messageContent, setMessageContent] = useState("");
 
   const [updateCycleStepNoteForm, setUpdateCycleStepNoteForm] = useState({
     cycleId: "",
@@ -227,6 +230,28 @@ const PatientProfileLayout = () => {
     }
     const step = cycleStepNames.find((name) => name.stepOrder === stepOrder);
     return step ? step.title : `Bước ${stepOrder}`;
+  };
+
+  const handleSendMessage = async () => {
+    try {
+      if (!messageContent.trim()) {
+        alert("Vui lòng nhập nội dung tin nhắn.");
+        return;
+      }
+
+      const payload = {
+        receiverId: appointmentDetail.customerId, // Lấy customerId từ appointmentDetail
+        message: messageContent,
+      };
+
+      await apiMessage.sendMessage(payload);
+      alert("Gửi tin nhắn thành công!");
+      setMessageContent("");
+      setShowMessagePopup(false);
+    } catch (err) {
+      console.error("Lỗi khi gửi tin nhắn:", err);
+      alert("Không thể gửi tin nhắn.");
+    }
   };
 
   const getCurrentStepPeriod = (stepOrder) => {
@@ -811,16 +836,7 @@ const PatientProfileLayout = () => {
                 </div>
                 <div className="patient-profile-timeline-actions">
                   <div className="patient-profile-phase-actions">
-                    <div className="patient-profile-quick-actions">
-                      {appointmentDetail.status === "confirmed" && (
-                        <button
-                          className="patient-profile-btn-primary-small"
-                          onClick={() => handleOpenNewCycleModal()}
-                        >
-                          Bắt đầu
-                        </button>
-                      )}
-                    </div>
+                    <div className="patient-profile-quick-actions"></div>
                   </div>
                 </div>
               </div>
@@ -921,23 +937,6 @@ const PatientProfileLayout = () => {
           <h3>Ghi chú khám bệnh</h3>
           <p>Ghi chú và theo dõi quá trình điều trị</p>
         </div>
-        {!allCycleStep?.[currentStep(allCycleStep) - 1]?.note &&
-          appointmentDetail.status === "confirmed" && (
-            <button
-              className="patient-profile-btn-primary"
-              onClick={() => {
-                setUpdateCycleStepNoteForm({
-                  cycleId: currentCycle?.cycleId,
-                  stepOrder: currentCycle?.cycleStep?.length,
-                  note:
-                    allCycleStep?.[currentStep(allCycleStep) - 1]?.note || "",
-                }),
-                  handleOpenUpdateCycleStepNoteModal();
-              }}
-            >
-              📝 Thêm ghi chú
-            </button>
-          )}
       </div>
 
       <div className="patient-profile-notes-section">
@@ -965,22 +964,6 @@ const PatientProfileLayout = () => {
                       {/* <div className="patient-profile-note-date">
                         <span>{formatDate(phase.eventdate)}</span>
                       </div> */}
-                      {phase.stepOrder == currentStep(allCycleStep) &&
-                        appointmentDetail.status === "confirmed" && (
-                          <button
-                            className="patient-profile-btn-outline-blue"
-                            onClick={() => {
-                              setUpdateCycleStepNoteForm({
-                                cycleId: currentCycle?.cycleId,
-                                stepOrder: phase.stepOrder,
-                                note: phase.note || "",
-                              }),
-                                handleOpenUpdateCycleStepNoteModal();
-                            }}
-                          >
-                            Thêm ghi chú
-                          </button>
-                        )}
                     </div>
                   </div>
                 </>
@@ -998,14 +981,6 @@ const PatientProfileLayout = () => {
           <h3>Kết quả xét nghiệm</h3>
           <p>Lịch sử các xét nghiệm và kết quả</p>
         </div>
-        {appointmentDetail.status === "confirmed" && (
-          <button
-            className="patient-profile-btn-primary"
-            onClick={() => handleOpenCreateTestResultModal()}
-          >
-            ➕ Thêm kết quả mới
-          </button>
-        )}
       </div>
 
       <div className="patient-profile-results-by-phase">
@@ -1039,25 +1014,6 @@ const PatientProfileLayout = () => {
                     <p>
                       Trạng thái: <strong>{phase.note}</strong>
                     </p>
-                    {appointmentDetail.status === "confirmed" && (
-                      <button
-                        className="patient-profile-btn-outline"
-                        onClick={() => {
-                          setUpdateTestResultForm({
-                            id: phase.resultId,
-                            name: phase.name,
-                            value: phase.value,
-                            unit: phase.unit,
-                            referenceRange: phase.referenceRange,
-                            note: phase.note || "",
-                            testDate: phase.testDate,
-                          });
-                          handleOpenUpdateTestResultModal();
-                        }}
-                      >
-                        Chỉnh sửa
-                      </button>
-                    )}
                   </div>
                   {/* <span className="patient-profile-status-badge patient-profile-completed">Hoàn thành</span> */}
                 </div>
@@ -1076,14 +1032,6 @@ const PatientProfileLayout = () => {
           <h3>Thuốc</h3>
           <p>Thuốc hiện tại và lịch sử thuốc</p>
         </div>
-        {appointmentDetail.status === "confirmed" && (
-          <button
-            className="patient-profile-btn-primary"
-            onClick={() => handleOpenCreateMedicationModal()}
-          >
-            ➕ Thêm thuốc mới
-          </button>
-        )}
       </div>
 
       <div className="patient-profile-medications-section">
@@ -2410,12 +2358,10 @@ const PatientProfileLayout = () => {
                 {patientData.currentAppointment.type}
               </span>
               <span className="patient-profile-appointment-time">
-
                 <span className="time-icon">
-                <Clock9 size={16} strokeWidth={1.5} />
-              </span> 
-
-              {patientData.currentAppointment.date} |{" "}
+                  <Clock9 size={16} strokeWidth={1.5} />
+                </span>
+                {patientData.currentAppointment.date} |{" "}
                 {patientData.currentAppointment.time}
               </span>
               <span className="patient-profile-appointment-status">
