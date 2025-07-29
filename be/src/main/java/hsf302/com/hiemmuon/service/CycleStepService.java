@@ -153,7 +153,7 @@ public class CycleStepService {
                 cycleStep.getCycle().getService().getName(),
                 cycleStep.getDescription(),
                 cycleStep.getStartDate(),
-                cycleStep.getEventdate(),
+                cycleStep.getEventDate(),
                 cycleStep.getStatusCycleStep(),
                 cycleStep.getNote(),
                 cycleStep.getFailedReason(),
@@ -211,16 +211,16 @@ public class CycleStepService {
     @Transactional
     public void sendCycleStepReminders() {
         LocalDateTime from = LocalDate.now().atStartOfDay();
-        LocalDateTime to = from.plusDays(2);
-
-        List<CycleStep> steps = cycleStepRepository.findByEventdateBetween(from, to);
+        LocalDateTime to = from.plusDays(10);
+        boolean isReminded = false;
+        List<CycleStep> steps = cycleStepRepository.findByStatusCycleStepAndEventDateBetweenAndIsReminded(StatusCycle.ongoing ,from, to,  isReminded);
 
         for (CycleStep step : steps) {
             String toEmail = step.getCycle().getCustomer().getUser().getEmail();
             String name = step.getCycle().getCustomer().getUser().getName();
             String service = step.getCycle().getService().getName();
             String treatmentStep = step.getTreatmentStep().getTitle();
-            LocalDateTime eventTime = step.getEventdate();
+            LocalDateTime eventTime = step.getEventDate();
 
             String subject = "⏰ Nhắc lịch bước điều trị sắp tới";
             String text = String.format("""
@@ -248,10 +248,10 @@ public class CycleStepService {
         CycleStep nextStep = cycleStepRepository.findByCycle_CycleIdAndStepOrder(
                 cycleId, currentStep.getStepOrder() + 1);
 
-        if (nextStep != null && nextStep.getStartDate() == null && currentStep.getEventdate() != null) {
+        if (nextStep != null && nextStep.getStartDate() == null && currentStep.getEventDate() != null) {
 
             // Gán startDate = eventDate của step hiện tại + 1 ngày
-            LocalDate nextStart = currentStep.getEventdate().plusDays(1).toLocalDate();
+            LocalDate nextStart = currentStep.getEventDate().plusDays(1).toLocalDate();
             nextStep.setStartDate(nextStart);
 
             // Tính eventDate dựa trên dịch vụ
@@ -281,7 +281,7 @@ public class CycleStepService {
                     offsetDays = 1;
                 }
 
-                nextStep.setEventdate(nextStart.plusDays(offsetDays).atTime(LocalTime.of(10, 0)));
+                nextStep.setEventDate(nextStart.plusDays(offsetDays).atTime(LocalTime.of(10, 0)));
             }
 
             cycleStepRepository.save(nextStep);
@@ -321,7 +321,7 @@ public class CycleStepService {
         // Mở lại trạng thái "processing" cho bước hiện tại
         step.setStatusCycleStep(StatusCycle.ongoing);
         step.setFailedReason(reason);
-        step.setEventdate(changeDate);
+        step.setEventDate(changeDate);
         cycleStepRepository.save(step);
 
         // Mở lại các bước sau nếu chúng bị stopped

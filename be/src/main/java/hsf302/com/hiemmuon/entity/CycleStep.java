@@ -41,7 +41,7 @@ public class CycleStep{
     private LocalDate startDate;
 
     @Column(name = "eventdate", nullable = true)
-    private LocalDateTime eventdate;
+    private LocalDateTime eventDate;
 
     @Column(name = "note", columnDefinition = "NVARCHAR(MAX)")
     private String note;
