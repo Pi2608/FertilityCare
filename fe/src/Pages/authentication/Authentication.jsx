@@ -201,7 +201,7 @@ const Authentication = () => {
           email: formData.email.trim(),
           password: formData.password,
           phone: formData.phone.replace(/\s/g, ''), // Remove spaces
-          gender: formData.gender.toUpperCase(), // Convert to enum format (MALE/FEMALE)
+          gender: formData.gender,
           dob: formData.dob
         };
 
