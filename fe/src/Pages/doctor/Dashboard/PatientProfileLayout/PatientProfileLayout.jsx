@@ -1733,7 +1733,6 @@ const PatientProfileLayout = () => {
         await updateCycleStepStatus(currentCycle.cycleId, allCycleStep?.[currentStep(allCycleStep) - 1].stepOrder, callbackParams)
         showSuccess("Đặt lịch tái khám thành công");
         onClose();
-        // await fetchData();
         navigate("/doctor-dashboard/appointments");
       } catch {
         showFail("Đặt lịch thất bại");
