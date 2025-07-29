@@ -5,7 +5,13 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import apiAppointment from "@features/service/apiAppointment";
 import apiNote from "@features/service/apiNote";
 import apiMessage from "@features/service/apiMessage";
-import { NotebookPen, Stethoscope, MessageSquare, Clock9 } from "lucide-react";
+import {
+  NotebookPen,
+  Stethoscope,
+  MessageSquare,
+  Clock9,
+  Calendar,
+} from "lucide-react";
 
 const AppointmentsTuVan = () => {
   const [appointmentDetail, setAppointmentDetail] = useState(null);
@@ -297,7 +303,11 @@ const AppointmentsTuVan = () => {
               <div className="patient-profile-note-item">
                 <div className="patient-profile-note-header">
                   <div className="patient-profile-note-date">
-                    <span className="patient-profile-date-icon">📅</span>
+                    <span className="patient-profile-date-icon">
+                      <span className="calendar-icon">
+                        <Calendar size={18} strokeWidth={1.5} />
+                      </span>
+                    </span>
                     <span>
                       {new Date(appointmentDetail.date).toLocaleDateString(
                         "vi-VN"
@@ -600,7 +610,7 @@ const AppointmentsTuVan = () => {
               </span>
               <span className="patient-profile-appointment-time">
                 <Clock9 className="time-icon" size={18} />
-                 {patientData.currentAppointment.date} |{" "}
+                {patientData.currentAppointment.date} |{" "}
                 {patientData.currentAppointment.time}
               </span>
               <span className="patient-profile-appointment-status">
