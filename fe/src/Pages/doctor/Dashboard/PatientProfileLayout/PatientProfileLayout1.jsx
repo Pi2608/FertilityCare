@@ -135,7 +135,7 @@ const PatientProfileLayout1 = () => {
   const handleEndAppointment = async (status) => {
     try {
       const payload = { status, markAsDone: true };
-      await apiNote.updateNoteForAppointment(
+      await apiNote.updateNoteForAppointment3(
         appointmentDetail.appointmentId,
         payload
       );
