@@ -2,6 +2,7 @@ package hsf302.com.hiemmuon.service;
 
 import hsf302.com.hiemmuon.dto.createDto.TreatmentStepDTO;
 import hsf302.com.hiemmuon.entity.CycleStep;
+import hsf302.com.hiemmuon.entity.TreatmentService;
 import hsf302.com.hiemmuon.entity.TreatmentStep;
 import hsf302.com.hiemmuon.repository.CycleStepRepository;
 import hsf302.com.hiemmuon.repository.TreatmentServiceRepository;
@@ -32,15 +33,15 @@ public class TreatmentStepService {
     }
 
     public TreatmentStep createStep(Integer serviceId, TreatmentStepDTO dto) {
-
+        TreatmentService treatmentService = treatmentServiceRepository.findById(serviceId).orElseThrow(null);
         TreatmentStep step = new TreatmentStep();
 
-        if (treatmentServiceRepository.findByServiceId(serviceId)) {
+        if (treatmentService != null) {
+            step.setService(treatmentService);
             step.setStepOrder(dto.getStepOrder());
             step.setTitle(dto.getTitle());
             step.setDescription(dto.getDescription());
             step.setExpectedDuration(dto.getExpectedDuration());
-
         }
         return treatmentStepRepository.save(step);
     }
