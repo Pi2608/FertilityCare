@@ -1401,10 +1401,10 @@
   display: flex;
   gap: 12px;
   margin-top: 24px;
+  justify-content: flex-start;
 }
 
 .patient-profile-tab-content .btn {
-  flex: 1;
   padding: 12px 16px;
   border: none;
   border-radius: 6px;

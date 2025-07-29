@@ -11,6 +11,7 @@ import {
   MessageSquare,
   Clock9,
   FilePlus2,
+  Calendar
 } from "lucide-react";
 
 const PatientProfileLayout1 = () => {
@@ -300,7 +301,9 @@ const PatientProfileLayout1 = () => {
               <div className="patient-profile-note-item">
                 <div className="patient-profile-note-header">
                   <div className="patient-profile-note-date">
-                    <span className="patient-profile-date-icon">📅</span>
+                    <span className="patient-profile-date-icon">
+                      <Calendar size={18} strokeWidth={1.5} />
+                    </span>
                     <span>
                       {new Date(appointmentDetail.date).toLocaleDateString(
                         "vi-VN"
