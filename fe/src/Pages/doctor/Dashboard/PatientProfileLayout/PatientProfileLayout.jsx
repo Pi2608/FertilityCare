@@ -2099,7 +2099,7 @@ const PatientProfileLayout = () => {
   const ConfirmModal = memo(({ isOpen, onClose, type, message }) => {
     if (!isOpen) return null;
 
-    const [isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(false)
 
     const confirmSubmit = async () => {
       setIsLoading(true)
