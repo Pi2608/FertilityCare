@@ -39,6 +39,7 @@ const Appointment = () => {
             age: "--", // vì API không trả tuổi
             doctor: item.doctorName,
             type: item.type === "tu_van" ? "Tư vấn" : "Tái khám",
+            status: item.status,
           };
         });
 
@@ -54,6 +55,10 @@ const Appointment = () => {
   const currentAppointments = appointments;
 
   const filteredAppointments = currentAppointments.filter((appointment) => {
+    const matchesTab =
+      (activeTab === "new" && appointment.status === "confirm") ||
+      (activeTab === "completed" && appointment.status === "done");
+
     const matchesSearch =
       appointment.patient.name
         .toLowerCase()
@@ -63,7 +68,7 @@ const Appointment = () => {
     const matchesDate =
       selectedDate === "" || appointment.date === selectedDate;
 
-    return matchesSearch && matchesDate;
+    return matchesTab && matchesSearch && matchesDate;
   });
 
   return (
@@ -71,8 +76,7 @@ const Appointment = () => {
       {/* Header */}
       <header className="appointment-header">
         <h1 className="page-title">Thông tin cuộc hẹn</h1>
-        <div className="header-actions">
-        </div>
+        <div className="header-actions"></div>
       </header>
 
       {/* Content */}
@@ -137,6 +141,7 @@ const Appointment = () => {
                       <th>Tuổi</th>
                       <th>Bác sĩ</th>
                       <th>Phân loại</th>
+                      <th>Trạng thái</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -163,6 +168,18 @@ const Appointment = () => {
                             }`}
                           >
                             {appointment.type}
+                          </span>
+                        </td>
+
+                        <td>
+                          <span
+                            className={`status-badge ${
+                              appointment.status === "done" ? "done" : "confirm"
+                            }`}
+                          >
+                            {appointment.status === "done"
+                              ? "Hoàn tất"
+                              : "Đã xác nhận"}
                           </span>
                         </td>
                       </tr>
