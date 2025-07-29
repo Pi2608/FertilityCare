@@ -33,9 +33,24 @@
 
 .filter-container {
   display: flex;
-  justify-content: flex-end; /* 👈 Căn nội dung con sang phải */
+  justify-content: flex-end; /* Căn nội dung con sang phải */
 }
 
+.filter-btn.cancel {
+  background-color: #e5e7eb; /* xám nhạt */
+  color: #374151; /* xám đậm */
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+.filter-btn.cancel:hover {
+  background-color: #d1d5db;
+}
 
 .filter-input {
   display: flex;
