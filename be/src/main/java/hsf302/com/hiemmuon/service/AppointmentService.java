@@ -402,11 +402,10 @@ public class AppointmentService {
     @Transactional
     public void sendAppointmentReminders() {
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime from = now.plusMinutes(10);
         LocalDateTime to = now.plusDays(1);
 
         List<Appointment> appointments = appointmentRepository.findByStatusAppointmentAndDateBetweenAndIsReminded(
-                StatusAppointment.confirmed, from, to, false
+                StatusAppointment.confirmed, now, to, false
         );
 
         for (Appointment appt : appointments) {
