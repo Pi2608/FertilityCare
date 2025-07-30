@@ -800,7 +800,7 @@ const PatientProfileLayout = () => {
 
             {/* Upcoming step - chỉ hiển thị nếu cycle chưa stopped và còn step */}
             {currentStep(allCycleStep) < allCycleStep.length &&
-            currentCycle?.status !== "stopped" ? (
+            currentCycle?.status !== "stopped" && (
               <div
                 className={`patient-profile-timeline-item patient-profile-upcoming`}
               >
@@ -840,34 +840,6 @@ const PatientProfileLayout = () => {
                   </div>
                 </div>
               </div>
-            ) : (
-              /* Complete cycle button - chỉ hiển thị nếu cycle chưa stopped */
-              currentCycle?.status === "ongoing" && (
-                <button
-                  className="patient-profile-btn-primary-small"
-                  style={{
-                    backgroundColor: "#4caf50",
-                    padding: "8px 14px",
-                    fontSize: "1rem",
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                  onClick={() => handleOpenConfirmModalCycle()}
-                >
-                  Hoàn thành chu kì
-                </button>
-              )
-              // : (
-              //   /* Reassign button - hiển thị khi cycle đã stopped */
-              //   <button
-              //     className="patient-profile-btn-primary-small"
-              //     style={{backgroundColor: "#5f8cebff", padding: "8px 14px", fontSize: "1rem", display: "flex", alignItems: "center"}}
-              //     onClick={() => handleOpenReassignModal()}
-              //   >
-              //     <RefreshCcw size={16} style={{marginRight: "8px"}} />
-              //     Tái chỉ định
-              //   </button>
-              // )
             )}
           </div>
         </div>
@@ -2352,7 +2324,7 @@ const PatientProfileLayout = () => {
             ← Quay lại
           </a>
           <div className="patient-profile-header-info">
-            <h1>Cuộc hẹn với {appointmentDetail.customerName}</h1>
+            <h1>Cuộc hẹn với {appointmentDetail.doctorName}</h1>
             <div className="patient-profile-appointment-info">
               <span className="patient-profile-appointment-type">
                 {patientData.currentAppointment.type}
